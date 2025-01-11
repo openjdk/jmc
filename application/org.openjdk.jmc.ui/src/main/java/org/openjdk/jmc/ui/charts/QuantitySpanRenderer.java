@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -132,6 +132,9 @@ public class QuantitySpanRenderer implements IXDataRenderer {
 				int bucket = points.floorIndexAtX(x);
 				if (bucket < points.getSize()) {
 					Span span = new Span(bucket, offset);
+					if (visitor.isChartTextCanvas() && bucket == -1) {
+						bucket = 0;
+					}
 					while (bucket >= 0) {
 						double x2 = points.getPixelY(bucket);
 						if (x < x2) {

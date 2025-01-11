@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024 Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +32,11 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.pages;
 
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_PEAK;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_SIZE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.HEAP_SUMMARY;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.OS_MEMORY_SUMMARY;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkQueries.RSS_SIMPLE_QUERY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +44,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,7 +53,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -58,6 +61,7 @@ import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IItemQuery;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.item.ItemIterableToolkit;
@@ -195,6 +199,8 @@ public class HeapPage extends AbstractDataPage {
 			IItemCollection allItems = getDataSource().getItems();
 			String classCount = classCount(selection.getRowCount());
 			IItemCollection selectedItems = selection.getRowCount() == 0 ? itemsInTable : selection.getItems();
+
+			// Allocation section
 			if (allocationAction.isChecked()) {
 				boolean hasObjectAllocSampleEvent = hasObjectAllocSampleEvent();
 				IAggregator<IQuantity, ?> allocTotalAggregator = hasObjectAllocSampleEvent
@@ -205,34 +211,28 @@ public class HeapPage extends AbstractDataPage {
 						allocTotalAggregator, DataPageToolkit.ALLOCATION_COLOR));
 			}
 
+			// Memory usage renderer - multiple events and attributes, all as memory usage
 			XYDataRenderer heapRenderer = new XYDataRenderer(UnitLookup.MEMORY.getDefaultUnit().quantity(0),
 					Messages.HeapPage_ROW_MEMORY_USAGE, Messages.HeapPage_ROW_MEMORY_USAGE_DESC);
-			IItemCollection allEvents = null;
-			IItemCollection heapSummaryEvents = allItems.apply(HEAP_SUMMARY.getFilter());
-			Stream<IAttribute<IQuantity>> hsAttributes = DataPageToolkit.getQuantityAttributes(HEAP_SUMMARY)
-					.filter(this::isAttributeEnabled);
-			if (DataPageToolkit.addEndTimeLines(heapRenderer, heapSummaryEvents, false, hsAttributes)) {
-				allEvents = heapSummaryEvents;
+
+			Supplier<Stream<IItemCollection>> memoryEventsSupplier = () -> Stream
+					.of(getMemoryEvents(allItems, HEAP_SUMMARY, heapRenderer), getRssEvents(allItems, heapRenderer),
+							getMemoryEvents(allItems, OS_MEMORY_SUMMARY, heapRenderer))
+					.filter(Optional::isPresent).map(Optional::get);
+
+			IItemCollection mergedEvents = ItemCollectionToolkit.merge(memoryEventsSupplier);
+			if (mergedEvents.hasItems()) {
+				rows.add(new ItemRow(Messages.HeapPage_ROW_MEMORY_USAGE, Messages.HeapPage_ROW_MEMORY_USAGE_DESC,
+						heapRenderer, mergedEvents));
 			}
 
-			IItemCollection memorySummaryEvents = allItems.apply(OS_MEMORY_SUMMARY.getFilter());
-			Stream<IAttribute<IQuantity>> msAttributes = DataPageToolkit.getQuantityAttributes(OS_MEMORY_SUMMARY)
-					.filter(this::isAttributeEnabled);
-			if (DataPageToolkit.addEndTimeLines(heapRenderer, memorySummaryEvents, false, msAttributes)) {
-				allEvents = allEvents == null ? memorySummaryEvents
-						: ItemCollectionToolkit.merge(() -> Stream.of(heapSummaryEvents, memorySummaryEvents));
-			}
-			if (allEvents != null) {
-				rows.add(new ItemRow(Messages.HeapPage_ROW_MEMORY_USAGE, Messages.HeapPage_ROW_MEMORY_USAGE_DESC,
-						heapRenderer, allEvents));
-			}
+			// Live size section
 			if (sizeAction.isChecked()) {
 				boolean noSelection = selection.getRowCount() == 0;
 				HistogramSelection selectedOrAll = noSelection ? table.getAllRows() : selection;
 				ObjectCountLane ocLane = new ObjectCountLane(noSelection);
 				long noClasses = selectedOrAll.getSelectedRows(ocLane::addClass).filter(Optional::isPresent).count();
 				if (noClasses > 0) {
-					// FIXME: Add a better description.
 					rows.add(new ItemRow(Messages.HeapPage_ROW_LIVE_SIZE + classCount((int) noClasses),
 							Messages.HeapPage_ROW_LIVE_SIZE_DESC, ocLane.renderer,
 							selectedItems.apply(JdkFilters.OBJECT_COUNT)));
@@ -243,6 +243,22 @@ public class HeapPage extends AbstractDataPage {
 			IXDataRenderer root = gcPauseAction.isChecked()
 					? RendererToolkit.layers(rr, DataPageToolkit.buildGcPauseRow(allItems)) : rr;
 			return new ItemRow(root, selectedItems.apply(JdkFilters.ALLOC_ALL));
+		}
+
+		private Optional<IItemCollection> getMemoryEvents(
+			IItemCollection allItems, IItemQuery query, XYDataRenderer heapRenderer) {
+			IItemCollection filteredEvents = allItems.apply(query.getFilter());
+			Stream<IAttribute<IQuantity>> attributes = DataPageToolkit.getQuantityAttributes(query)
+					.filter(this::isAttributeEnabled);
+			return DataPageToolkit.addEndTimeLines(heapRenderer, filteredEvents, false, attributes)
+					? Optional.of(filteredEvents) : Optional.empty();
+		}
+
+		private Optional<IItemCollection> getRssEvents(IItemCollection allItems, XYDataRenderer heapRenderer) {
+			IItemCollection rssEvents = allItems.apply(JdkFilters.RSS);
+			Stream<IAttribute<IQuantity>> attributes = Stream.of(RSS_SIZE, RSS_PEAK).filter(this::isAttributeEnabled);
+			return DataPageToolkit.addEndTimeLines(heapRenderer, rssEvents, false, attributes) ? Optional.of(rssEvents)
+					: Optional.empty();
 		}
 
 		@Override
@@ -263,7 +279,9 @@ public class HeapPage extends AbstractDataPage {
 			allocationAction = DataPageToolkit.createAggregatorCheckAction(allocTotalAggregator, ALLOCATION_COL,
 					DataPageToolkit.ALLOCATION_COLOR, b -> buildChart());
 			Stream<IAction> attributeActions = Stream
-					.concat(HEAP_SUMMARY.getAttributes().stream(), OS_MEMORY_SUMMARY.getAttributes().stream())
+					.concat(RSS_SIMPLE_QUERY.getAttributes().stream(),
+							Stream.concat(HEAP_SUMMARY.getAttributes().stream(),
+									OS_MEMORY_SUMMARY.getAttributes().stream()))
 					.map(a -> DataPageToolkit.createAttributeCheckAction(a, b -> buildChart()));
 
 			return Stream.concat(Stream.concat(Stream.of(gcPauseAction, allocationAction), attributeActions),
@@ -345,6 +363,5 @@ public class HeapPage extends AbstractDataPage {
 			}
 			return klass;
 		}
-
 	}
 }

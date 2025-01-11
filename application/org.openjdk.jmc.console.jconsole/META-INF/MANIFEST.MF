@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JConsole Meta Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.console.jconsole; singleton:=true
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.1.0.qualifier
 Bundle-Activator: org.openjdk.jmc.console.jconsole.Activator
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  jakarta.inject.jakarta.inject-api
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openjdk.jmc.console.jconsole
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: .,
  external:$java.home$/../lib/jconsole.jar
 Eclipse-BuddyPolicy: app 

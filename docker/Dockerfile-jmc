@@ -30,9 +30,12 @@
 #  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
 #  WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-FROM eclipse-temurin:17-jammy AS builder
+FROM eclipse-temurin:17-jammy AS java-17
 
-RUN apt-get update && apt-get install -y maven
+FROM maven:3.9-eclipse-temurin-21-jammy AS builder
+
+#Until core is on Java 21, we also need a Java 17
+COPY --from=java-17 /opt/java/openjdk /opt/java/openjdk-17
 
 VOLUME [ "/root/.m2", "/target" ]
 

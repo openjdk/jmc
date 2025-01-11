@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,6 +51,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RunnableFuture;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -106,6 +107,7 @@ import org.xml.sax.SAXException;
  */
 @SuppressWarnings("nls")
 public class TestRulesWithJfr {
+	private static final String XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE = "http://apache.org/xml/features/disallow-doctype-decl"; //$NON-NLS-1$
 	private static final String JFR_RULE_BASELINE_JFR = "JfrRuleBaseline.xml";
 	private static final String BASELINE_DIR = "baseline";
 	static final String RECORDINGS_DIR = "jfr";
@@ -199,6 +201,9 @@ public class TestRulesWithJfr {
 	private static void writeDomToStream(Document doc, OutputStream os) {
 		try {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+			transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+			transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			Transformer transformer = transformerFactory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			DOMSource source = new DOMSource(doc);
@@ -216,7 +221,10 @@ public class TestRulesWithJfr {
 			File dir = TestToolkit.materialize(TestRulesWithJfr.class, directory, fileName);
 			File file = new File(dir, fileName);
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			docFactory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
+			docFactory.setValidating(true);
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			docBuilder.setErrorHandler(null);
 			Document baselineDoc = docBuilder.parse(file);
 			collection = ReportCollection.fromXml(baselineDoc, reportName);
 		} catch (ParserConfigurationException | SAXException | IOException e) {

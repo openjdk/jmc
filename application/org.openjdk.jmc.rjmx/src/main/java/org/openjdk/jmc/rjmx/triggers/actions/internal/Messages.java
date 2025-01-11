@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,6 +46,8 @@ public class Messages extends NLS {
 	public static String TriggerActionMail_SUBJECT_TRIGGERED;
 	public static String TriggerActionSystemOut_FOOTER;
 	public static String TriggerActionSystemOut_HEADER;
+	public static String TriggerActionValidator_INVALID_PATH;
+	public static String TriggerActionValidator_INVALID_EMAIL;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

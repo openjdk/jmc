@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,7 +41,8 @@ import org.openjdk.jmc.rjmx.triggers.TriggerRule;
 
 public class DefaultExceptionHandler implements IExceptionHandler {
 	@Override
-	public void handleException(IConnectionHandle connectionHandle, TriggerRule rule, Throwable throwable) {
+	public void handleException(
+		IConnectionHandle connectionHandle, TriggerRule rule, Throwable throwable, String triggerMessage) {
 		RJMXPlugin.getDefault().getLogger().log(Level.SEVERE, "Could not invoke the action for the rule " //$NON-NLS-1$
 				+ rule.toString(), throwable);
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -49,7 +49,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>http://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2024, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -74,8 +74,8 @@
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<jmc.config.path>${project.basedir}/../configuration</jmc.config.path>
 		<!-- Plugin Versions -->
 		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
@@ -91,7 +91,7 @@
 		<nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
 		<maven.gpg.version>3.1.0</maven.gpg.version>
 		<!-- Dependency Versions -->
-		<asm.version>8.0.1</asm.version>
+		<asm.version>9.7.1</asm.version>
 		<junit.version>4.13.2</junit.version>
 	</properties>
 	<scm>
@@ -220,7 +220,7 @@
 								<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
 								<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
 								<Can-Retransform-Classes>true</Can-Retransform-Classes>
-								<Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
+								<Bundle-RequiredExecutionEnvironment>JavaSE-17</Bundle-RequiredExecutionEnvironment>
 								<Built-By></Built-By>
 							</manifestEntries>
 						</transformer>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,7 +39,7 @@ import static org.openjdk.jmc.common.jvm.Connectable.NO;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Thread.State;
-import java.net.URISyntaxException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,12 +48,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 import javax.management.remote.JMXServiceURL;
@@ -63,6 +63,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.openjdk.jmc.attach.AttachToolkit;
 import org.openjdk.jmc.browser.attach.internal.ExecuteTunnler;
+import org.openjdk.jmc.browser.attach.internal.MonitoredHostWrapper;
+import org.openjdk.jmc.browser.attach.internal.MonitoredVmWrapper;
 import org.openjdk.jmc.browser.attach.preferences.PreferenceConstants;
 import org.openjdk.jmc.common.jvm.Connectable;
 import org.openjdk.jmc.common.jvm.JVMArch;
@@ -77,15 +79,6 @@ import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
-
-import sun.jvmstat.monitor.HostIdentifier;
-import sun.jvmstat.monitor.MonitorException;
-import sun.jvmstat.monitor.MonitoredHost;
-import sun.jvmstat.monitor.MonitoredVm;
-import sun.jvmstat.monitor.MonitoredVmUtil;
-import sun.jvmstat.monitor.StringMonitor;
-import sun.jvmstat.monitor.VmIdentifier;
-import sun.tools.attach.HotSpotVirtualMachine;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -109,6 +102,7 @@ public class LocalJVMToolkit {
 		}
 	}
 
+	private static Class<?> CLASS_HOTSPOT_VIRTUAL_MACHINE;
 	private static long SEQ_NUMBER = 0;
 	private static boolean isErrorMessageSent = false;
 	private static boolean isPreferenceStoreListenerEnabled;
@@ -125,6 +119,15 @@ public class LocalJVMToolkit {
 	static final String JAVA_COMMAND_PROP = "sun.java.command"; //$NON-NLS-1$
 
 	private static final int TIMEOUT_THRESHOLD = 5;
+
+	static {
+		try {
+			CLASS_HOTSPOT_VIRTUAL_MACHINE = Class.forName("sun.tools.attach.HotSpotVirtualMachine");
+		} catch (ClassNotFoundException e) {
+			CLASS_HOTSPOT_VIRTUAL_MACHINE = null;
+			BrowserAttachPlugin.getPluginLogger().log(Level.WARNING, MonitoredHostWrapper.ERROR_MESSAGE_ATTACH, e); //$NON-NLS-1$
+		}
+	}
 
 	private LocalJVMToolkit() {
 		// Toolkit
@@ -162,13 +165,11 @@ public class LocalJVMToolkit {
 	}
 
 	private static void populateMonitoredVMs(HashMap<Object, DiscoveryEntry> map, boolean includeUnconnectables) {
-		MonitoredHost host = getMonitoredHost();
-		Set<?> vms;
-		try {
-			vms = host.activeVms();
-		} catch (MonitorException mx) {
-			throw new InternalError(mx.getMessage());
+		MonitoredHostWrapper monitoredHost = MonitoredHostWrapper.getMonitoredHost();
+		if (monitoredHost == null) {
+			return;
 		}
+		Set<?> vms = monitoredHost.activeVms();
 		for (Object vmid : vms) {
 			if (vmid instanceof Integer) {
 				// Check if the map already contains a descriptor for this
@@ -178,7 +179,7 @@ public class LocalJVMToolkit {
 				// Check if we already have a descriptor *first*, to avoid unnecessary attach which may leak handles
 				DiscoveryEntry connDesc = last.get(vmid);
 				if (connDesc == null) {
-					connDesc = createMonitoredJvmDescriptor(host, (Integer) vmid);
+					connDesc = createMonitoredJvmDescriptor(monitoredHost, (Integer) vmid);
 				}
 
 				if ((includeUnconnectables && connDesc != null)
@@ -189,7 +190,7 @@ public class LocalJVMToolkit {
 		}
 	}
 
-	private static DiscoveryEntry createMonitoredJvmDescriptor(MonitoredHost host, Integer vmid) {
+	private static DiscoveryEntry createMonitoredJvmDescriptor(MonitoredHostWrapper host, Integer vmid) {
 		try {
 			// Enforce a timeout here to make sure we don't block forever if the JVM is busy/suspended. See JMC-5398
 			ExecutorService service = Executors.newSingleThreadExecutor();
@@ -211,47 +212,29 @@ public class LocalJVMToolkit {
 
 					try {
 						// This used to leak one \BaseNamedObjects\hsperfdata_* Section handle on Windows
-						MonitoredVm mvm = host.getMonitoredVm(new VmIdentifier(name));
+						MonitoredVmWrapper mvm = host.getMonitoredVm(name);
 						try {
 							// use the command line as the display name
-							name = MonitoredVmUtil.commandLine(mvm);
-							jvmArgs = MonitoredVmUtil.jvmArgs(mvm);
-							StringMonitor sm = (StringMonitor) mvm.findByName("java.property.java.vm.name"); //$NON-NLS-1$
-							if (sm != null) {
-								jvmName = sm.stringValue();
-								type = JVMType.getJVMType(sm.stringValue());
-							}
-
-							sm = (StringMonitor) mvm.findByName("java.property.java.version"); //$NON-NLS-1$
-							if (sm != null) {
-								version = sm.stringValue();
-							}
+							name = mvm.commandLine();
+							jvmArgs = mvm.jvmArgs();
+							jvmName = mvm.jvmName();
+							type = JVMType.getJVMType(jvmName);
+							version = mvm.javaVersion();
 
 							if (version == null) {
 								// Use java.vm.version when java.version is not exposed as perfcounter (HotSpot 1.5 and JRockit)
-								sm = (StringMonitor) mvm.findByName("java.property.java.vm.version"); //$NON-NLS-1$
-								if (sm != null) {
-									String vmVersion = sm.stringValue();
-									if (type == JVMType.JROCKIT) {
-										version = JavaVMVersionToolkit.decodeJavaVersion(vmVersion);
-									} else {
-										version = JavaVMVersionToolkit.parseJavaVersion(vmVersion);
-									}
+								String vmVersion = mvm.jvmVersion();
+								if (type == JVMType.JROCKIT) {
+									version = JavaVMVersionToolkit.decodeJavaVersion(vmVersion);
+								} else {
+									version = JavaVMVersionToolkit.parseJavaVersion(vmVersion);
 								}
 							}
 							if (version == null) {
 								version = "0"; //$NON-NLS-1$
 							}
-
-							if (sm != null) {
-								isDebug = isDebug(sm.stringValue());
-							}
-
-							sm = (StringMonitor) mvm.findByName("java.property.java.vm.vendor"); //$NON-NLS-1$
-							if (sm != null) {
-								jvmVendor = sm.stringValue();
-							}
-
+							isDebug = isDebug(version);
+							jvmVendor = mvm.jvmVendor();
 							// NOTE: isAttachable seems to return true even if a real attach is not possible.
 							// attachable = MonitoredVmUtil.isAttachable(mvm);
 
@@ -421,8 +404,12 @@ public class LocalJVMToolkit {
 								try {
 									// try to force finish init the attached JVM
 									// to ensure properties are correctly populated
-									// see JMC-4454 for details
-									((HotSpotVirtualMachine) vm).startLocalManagementAgent();
+									// see JMC-4454 for details. Best effort.
+									if (CLASS_HOTSPOT_VIRTUAL_MACHINE != null) {
+										Method methodStartLocalManagementAgent = CLASS_HOTSPOT_VIRTUAL_MACHINE
+												.getMethod("startLocalManagementAgent");
+										methodStartLocalManagementAgent.invoke(vm);
+									}
 								} catch (Exception ex) {
 									// swallow exceptions
 								}
@@ -475,16 +462,6 @@ public class LocalJVMToolkit {
 				isErrorMessageSent = true;
 			}
 			return null;
-		}
-	}
-
-	private static MonitoredHost getMonitoredHost() {
-		try {
-			return MonitoredHost.getMonitoredHost(new HostIdentifier((String) null));
-		} catch (MonitorException e) {
-			throw new InternalError(e.getMessage());
-		} catch (URISyntaxException e) {
-			throw new InternalError(e.getMessage());
 		}
 	}
 
@@ -604,8 +581,7 @@ public class LocalJVMToolkit {
 	public static String executeCommandForPid(
 		VirtualMachine vm, String pid, String command, boolean throwCausingException)
 			throws AttachNotSupportedException, IOException, AgentLoadException {
-		HotSpotVirtualMachine hvm = (HotSpotVirtualMachine) vm;
-		InputStream in = ExecuteTunnler.execute(hvm, "jcmd", new Object[] {command}, throwCausingException); //$NON-NLS-1$
+		InputStream in = ExecuteTunnler.execute(vm, "jcmd", new Object[] {command}, throwCausingException); //$NON-NLS-1$
 		byte b[] = new byte[256];
 		int n;
 		StringBuffer buf = new StringBuffer();

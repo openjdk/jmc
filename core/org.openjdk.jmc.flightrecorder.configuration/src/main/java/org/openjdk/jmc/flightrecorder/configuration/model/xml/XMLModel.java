@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -157,6 +157,7 @@ public final class XMLModel extends Observable {
 			SAXParser sp = spf.newSAXParser();
 			XMLReader xr = sp.getXMLReader();
 			XMLModelBuilder dataHandler = new XMLModelBuilder(dummyRoot);
+			xr.setErrorHandler(null);
 			xr.setContentHandler(dataHandler);
 			xr.parse(input);
 			List<XMLTagInstance> instances = dummyRoot.getTagsInstances();
@@ -218,6 +219,7 @@ public final class XMLModel extends Observable {
 
 		try {
 			SAXParserFactory factory = XmlToolkit.createSAXParserFactory();
+			factory.setValidating(false);
 			factory.setNamespaceAware(true);
 			factory.setSchema(schema);
 

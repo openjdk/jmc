@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: Japanese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.greychart.ui.ja
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
-Fragment-Host: org.openjdk.jmc.greychart.ui;bundle-version="9.0.0"
+Fragment-Host: org.openjdk.jmc.greychart.ui;bundle-version="9.1.0"
 Automatic-Module-Name: org.openjdk.jmc.greychart.ui.ja

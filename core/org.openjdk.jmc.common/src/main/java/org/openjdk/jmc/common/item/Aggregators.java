@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -140,13 +140,13 @@ public class Aggregators {
 		double sum = 0.0;
 		IUnit unit = null;
 
-		Predicate predicate;
+		Predicate<Double> predicate;
 
 		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor) {
 			super(accessor);
 		}
 
-		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor, Predicate predicate) {
+		SumConsumer(IMemberAccessor<? extends IQuantity, IItem> accessor, Predicate<Double> predicate) {
 			this(accessor);
 			this.predicate = predicate;
 		}
@@ -1091,6 +1091,31 @@ public class Aggregators {
 				return val1 != null ? valuebuilder.getValue(val1) : null;
 			}
 		};
+	}
+
+	public static <T> IAggregator<IQuantity, ?> getJvmPid(String typeId, IAttribute<T> attribute) {
+		IAggregator<Set<T>, ?> aggregator = Aggregators.distinct(attribute);
+		aggregator = filter(aggregator, ItemFilters.type(typeId));
+		return Aggregators.valueBuilderAggregator(aggregator, new IValueBuilder<IQuantity, Set<T>>() {
+			@Override
+			public IType<? super IQuantity> getValueType() {
+				return UnitLookup.NUMBER;
+			}
+
+			@Override
+			public IQuantity getValue(Set<T> source) {
+				Long value = 0L;
+				if (source.isEmpty()) {
+					return null;
+				} else {
+					Iterator<?> itr = source.iterator();
+					while (itr.hasNext()) {
+						value = Long.valueOf((String) itr.next());
+					}
+					return UnitLookup.NUMBER_UNITY.quantity(value);
+				}
+			}
+		}, attribute.getName(), attribute.getDescription());
 	}
 
 	public static <T> IAggregator<IQuantity, ?> countDistinct(

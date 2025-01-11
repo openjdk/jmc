@@ -1,2338 +1,283 @@
-%% The following notice is provided with respect to Eclipse Platform 4.24.0,
-and Eclipse Babel 0.19.2 which may be included with this product.
+%% The following notice is provided with respect to Eclipse Platform 4.32.0,
+and Eclipse Babel 0.20.0 which may be included with this product.
 
 Eclipse Public License - v 2.0
 
-THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
+    THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
+    PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
+    OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
+
 1. DEFINITIONS
 
-“Contribution” means:
+"Contribution" means:
 
-    a) in the case of the initial Contributor, the initial content Distributed under this Agreement, and
-    b) in the case of each subsequent Contributor:
-        i) changes to the Program, and
-        ii) additions to the Program;
-    where such changes and/or additions to the Program originate from and are Distributed by that particular Contributor. A Contribution “originates” from a Contributor if it was added to the Program by such Contributor itself or anyone acting on such Contributor's behalf. Contributions do not include changes or additions to the Program that are not Modified Works.
+  a) in the case of the initial Contributor, the initial content
+     Distributed under this Agreement, and
 
-“Contributor” means any person or entity that Distributes the Program.
+  b) in the case of each subsequent Contributor:
+     i) changes to the Program, and
+     ii) additions to the Program;
+  where such changes and/or additions to the Program originate from
+  and are Distributed by that particular Contributor. A Contribution
+  "originates" from a Contributor if it was added to the Program by
+  such Contributor itself or anyone acting on such Contributor's behalf.
+  Contributions do not include changes or additions to the Program that
+  are not Modified Works.
 
-“Licensed Patents” mean patent claims licensable by a Contributor which are necessarily infringed by the use or sale of its Contribution alone or when combined with the Program.
+"Contributor" means any person or entity that Distributes the Program.
 
-“Program” means the Contributions Distributed in accordance with this Agreement.
+"Licensed Patents" mean patent claims licensable by a Contributor which
+are necessarily infringed by the use or sale of its Contribution alone
+or when combined with the Program.
 
-“Recipient” means anyone who receives the Program under this Agreement or any Secondary License (as applicable), including Contributors.
+"Program" means the Contributions Distributed in accordance with this
+Agreement.
 
-“Derivative Works” shall mean any work, whether in Source Code or other form, that is based on (or derived from) the Program and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship.
+"Recipient" means anyone who receives the Program under this Agreement
+or any Secondary License (as applicable), including Contributors.
 
-“Modified Works” shall mean any work in Source Code or other form that results from an addition to, deletion from, or modification of the contents of the Program, including, for purposes of clarity any new file in Source Code form that contains any contents of the Program. Modified Works shall not include works that contain only declarations, interfaces, types, classes, structures, or files of the Program solely in each case in order to link to, bind by name, or subclass the Program or Modified Works thereof.
+"Derivative Works" shall mean any work, whether in Source Code or other
+form, that is based on (or derived from) the Program and for which the
+editorial revisions, annotations, elaborations, or other modifications
+represent, as a whole, an original work of authorship.
 
-“Distribute” means the acts of a) distributing or b) making available in any manner that enables the transfer of a copy.
+"Modified Works" shall mean any work in Source Code or other form that
+results from an addition to, deletion from, or modification of the
+contents of the Program, including, for purposes of clarity any new file
+in Source Code form that contains any contents of the Program. Modified
+Works shall not include works that contain only declarations,
+interfaces, types, classes, structures, or files of the Program solely
+in each case in order to link to, bind by name, or subclass the Program
+or Modified Works thereof.
 
-“Source Code” means the form of a Program preferred for making modifications, including but not limited to software source code, documentation source, and configuration files.
+"Distribute" means the acts of a) distributing or b) making available
+in any manner that enables the transfer of a copy.
 
-“Secondary License” means either the GNU General Public License, Version 2.0, or any later versions of that license, including any exceptions or additional permissions as identified by the initial Contributor.
+"Source Code" means the form of a Program preferred for making
+modifications, including but not limited to software source code,
+documentation source, and configuration files.
+
+"Secondary License" means either the GNU General Public License,
+Version 2.0, or any later versions of that license, including any
+exceptions or additional permissions as identified by the initial
+Contributor.
+
 2. GRANT OF RIGHTS
 
-    a) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, Distribute and sublicense the Contribution of such Contributor, if any, and such Derivative Works.
-    b) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free patent license under Licensed Patents to make, use, sell, offer to sell, import and otherwise transfer the Contribution of such Contributor, if any, in Source Code or other form. This patent license shall apply to the combination of the Contribution and the Program if, at the time the Contribution is added by the Contributor, such addition of the Contribution causes such combination to be covered by the Licensed Patents. The patent license shall not apply to any other combinations which include the Contribution. No hardware per se is licensed hereunder.
-    c) Recipient understands that although each Contributor grants the licenses to its Contributions set forth herein, no assurances are provided by any Contributor that the Program does not infringe the patent or other intellectual property rights of any other entity. Each Contributor disclaims any liability to Recipient for claims brought by any other entity based on infringement of intellectual property rights or otherwise. As a condition to exercising the rights and licenses granted hereunder, each Recipient hereby assumes sole responsibility to secure any other intellectual property rights needed, if any. For example, if a third party patent license is required to allow Recipient to Distribute the Program, it is Recipient's responsibility to acquire that license before distributing the Program.
-    d) Each Contributor represents that to its knowledge it has sufficient copyright rights in its Contribution, if any, to grant the copyright license set forth in this Agreement.
-    e) Notwithstanding the terms of any Secondary License, no Contributor makes additional grants to any Recipient (other than those set forth in this Agreement) as a result of such Recipient's receipt of the Program under the terms of a Secondary License (if permitted under the terms of Section 3).
+  a) Subject to the terms of this Agreement, each Contributor hereby
+  grants Recipient a non-exclusive, worldwide, royalty-free copyright
+  license to reproduce, prepare Derivative Works of, publicly display,
+  publicly perform, Distribute and sublicense the Contribution of such
+  Contributor, if any, and such Derivative Works.
+
+  b) Subject to the terms of this Agreement, each Contributor hereby
+  grants Recipient a non-exclusive, worldwide, royalty-free patent
+  license under Licensed Patents to make, use, sell, offer to sell,
+  import and otherwise transfer the Contribution of such Contributor,
+  if any, in Source Code or other form. This patent license shall
+  apply to the combination of the Contribution and the Program if, at
+  the time the Contribution is added by the Contributor, such addition
+  of the Contribution causes such combination to be covered by the
+  Licensed Patents. The patent license shall not apply to any other
+  combinations which include the Contribution. No hardware per se is
+  licensed hereunder.
+
+  c) Recipient understands that although each Contributor grants the
+  licenses to its Contributions set forth herein, no assurances are
+  provided by any Contributor that the Program does not infringe the
+  patent or other intellectual property rights of any other entity.
+  Each Contributor disclaims any liability to Recipient for claims
+  brought by any other entity based on infringement of intellectual
+  property rights or otherwise. As a condition to exercising the
+  rights and licenses granted hereunder, each Recipient hereby
+  assumes sole responsibility to secure any other intellectual
+  property rights needed, if any. For example, if a third party
+  patent license is required to allow Recipient to Distribute the
+  Program, it is Recipient's responsibility to acquire that license
+  before distributing the Program.
+
+  d) Each Contributor represents that to its knowledge it has
+  sufficient copyright rights in its Contribution, if any, to grant
+  the copyright license set forth in this Agreement.
+
+  e) Notwithstanding the terms of any Secondary License, no
+  Contributor makes additional grants to any Recipient (other than
+  those set forth in this Agreement) as a result of such Recipient's
+  receipt of the Program under the terms of a Secondary License
+  (if permitted under the terms of Section 3).
 
 3. REQUIREMENTS
 
 3.1 If a Contributor Distributes the Program in any form, then:
 
-    a) the Program must also be made available as Source Code, in accordance with section 3.2, and the Contributor must accompany the Program with a statement that the Source Code for the Program is available under this Agreement, and informs Recipients how to obtain it in a reasonable manner on or through a medium customarily used for software exchange; and
-    b) the Contributor may Distribute the Program under a license different than this Agreement, provided that such license:
-        i) effectively disclaims on behalf of all other Contributors all warranties and conditions, express and implied, including warranties or conditions of title and non-infringement, and implied warranties or conditions of merchantability and fitness for a particular purpose;
-        ii) effectively excludes on behalf of all other Contributors all liability for damages, including direct, indirect, special, incidental and consequential damages, such as lost profits;
-        iii) does not attempt to limit or alter the recipients' rights in the Source Code under section 3.2; and
-        iv) requires any subsequent distribution of the Program by any party to be under a license that satisfies the requirements of this section 3.
+  a) the Program must also be made available as Source Code, in
+  accordance with section 3.2, and the Contributor must accompany
+  the Program with a statement that the Source Code for the Program
+  is available under this Agreement, and informs Recipients how to
+  obtain it in a reasonable manner on or through a medium customarily
+  used for software exchange; and
+
+  b) the Contributor may Distribute the Program under a license
+  different than this Agreement, provided that such license:
+     i) effectively disclaims on behalf of all other Contributors all
+     warranties and conditions, express and implied, including
+     warranties or conditions of title and non-infringement, and
+     implied warranties or conditions of merchantability and fitness
+     for a particular purpose;
+
+     ii) effectively excludes on behalf of all other Contributors all
+     liability for damages, including direct, indirect, special,
+     incidental and consequential damages, such as lost profits;
+
+     iii) does not attempt to limit or alter the recipients' rights
+     in the Source Code under section 3.2; and
+
+     iv) requires any subsequent distribution of the Program by any
+     party to be under a license that satisfies the requirements
+     of this section 3.
 
 3.2 When the Program is Distributed as Source Code:
 
-    a) it must be made available under this Agreement, or if the Program (i) is combined with other material in a separate file or files made available under a Secondary License, and (ii) the initial Contributor attached to the Source Code the notice described in Exhibit A of this Agreement, then the Program may be made available under the terms of such Secondary Licenses, and
-    b) a copy of this Agreement must be included with each copy of the Program.
-
-3.3 Contributors may not remove or alter any copyright, patent, trademark, attribution notices, disclaimers of warranty, or limitations of liability (‘notices’) contained within the Program from any copy of the Program which they Distribute, provided that Contributors may add their own appropriate notices.
-4. COMMERCIAL DISTRIBUTION
-
-Commercial distributors of software may accept certain responsibilities with respect to end users, business partners and the like. While this license is intended to facilitate the commercial use of the Program, the Contributor who includes the Program in a commercial product offering should do so in a manner which does not create potential liability for other Contributors. Therefore, if a Contributor includes the Program in a commercial product offering, such Contributor (“Commercial Contributor”) hereby agrees to defend and indemnify every other Contributor (“Indemnified Contributor”) against any losses, damages and costs (collectively “Losses”) arising from claims, lawsuits and other legal actions brought by a third party against the Indemnified Contributor to the extent caused by the acts or omissions of such Commercial Contributor in connection with its distribution of the Program in a commercial product offering. The obligations in this section do not apply to any claims or Losses relating to any actual or alleged intellectual property infringement. In order to qualify, an Indemnified Contributor must: a) promptly notify the Commercial Contributor in writing of such claim, and b) allow the Commercial Contributor to control, and cooperate with the Commercial Contributor in, the defense and any related settlement negotiations. The Indemnified Contributor may participate in any such claim at its own expense.
-
-For example, a Contributor might include the Program in a commercial product offering, Product X. That Contributor is then a Commercial Contributor. If that Commercial Contributor then makes performance claims, or offers warranties related to Product X, those performance claims and warranties are such Commercial Contributor's responsibility alone. Under this section, the Commercial Contributor would have to defend claims against the other Contributors related to those performance claims and warranties, and if a court requires any other Contributor to pay any damages as a result, the Commercial Contributor must pay those damages.
-5. NO WARRANTY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely responsible for determining the appropriateness of using and distributing the Program and assumes all risks associated with its exercise of rights under this Agreement, including but not limited to the risks and costs of program errors, compliance with applicable laws, damage to or loss of data, programs or equipment, and unavailability or interruption of operations.
-6. DISCLAIMER OF LIABILITY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement, and without further action by the parties hereto, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Program itself (excluding combinations of the Program with other software or hardware) infringes such Recipient's patent(s), then such Recipient's rights granted under Section 2(b) shall terminate as of the date such litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it fails to comply with any of the material terms or conditions of this Agreement and does not cure such failure in a reasonable period of time after becoming aware of such noncompliance. If all Recipient's rights under this Agreement terminate, Recipient agrees to cease use and distribution of the Program as soon as reasonably practicable. However, Recipient's obligations under this Agreement and any licenses granted by Recipient relating to the Program shall continue and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement, but in order to avoid inconsistency the Agreement is copyrighted and may only be modified in the following manner. The Agreement Steward reserves the right to publish new versions (including revisions) of this Agreement from time to time. No one other than the Agreement Steward has the right to modify this Agreement. The Eclipse Foundation is the initial Agreement Steward. The Eclipse Foundation may assign the responsibility to serve as the Agreement Steward to a suitable separate entity. Each new version of the Agreement will be given a distinguishing version number. The Program (including Contributions) may always be Distributed subject to the version of the Agreement under which it was received. In addition, after a new version of the Agreement is published, Contributor may elect to Distribute the Program (including its Contributions) under the new version.
-
-Except as expressly stated in Sections 2(a) and 2(b) above, Recipient receives no rights or licenses to the intellectual property of any Contributor under this Agreement, whether expressly, by implication, estoppel or otherwise. All rights in the Program not expressly granted under this Agreement are reserved. Nothing in this Agreement is intended to be enforceable by any entity that is not a Contributor or Recipient. No third-party beneficiary rights are created under this Agreement.
-Exhibit A – Form of Secondary Licenses Notice
-
-“This Source Code may also be made available under the following Secondary Licenses when the conditions for such availability set forth in the Eclipse Public License, v. 2.0 are satisfied: {name license(s), version(s), and exceptions or additional permissions here}.”
-
-    Simply including a copy of this Agreement, including this Exhibit A is not sufficient to license the Source Code under Secondary Licenses.
-
-    If it is not possible or desirable to put the notice in a particular file, then You may include the notice in a location (such as a LICENSE file in a relevant directory) where a recipient would be likely to look for such a notice.
-
-    You may add additional accurate notices of copyright ownership.
-
-----------------------------------------------------------------------
-3rd Party dependencies, jar files, their licenses and copyright notices
-----------------------------------------------------------------------
----------------------------------------------------------------------------
-com.ibm.icu_67.1.0.v20200706-1749.jar	(ICU License)
----------------------------------------------------------------------------
-
-COPYRIGHT AND PERMISSION NOTICE (ICU 58 and later)
-
-Copyright © 1991-2019 Unicode, Inc. All rights reserved.
-Distributed under the Terms of Use in http://www.unicode.org/copyright.html
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of the Unicode data files and any associated documentation
-(the "Data Files") or Unicode software and any associated documentation
-(the "Software") to deal in the Data Files or Software
-without restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, and/or sell copies of
-the Data Files or Software, and to permit persons to whom the Data Files
-or Software are furnished to do so, provided that either
-(a) this copyright and permission notice appear with all copies
-of the Data Files or Software, or
-(b) this copyright and permission notice appear in associated
-Documentation.
-
-THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF
-ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT OF THIRD PARTY RIGHTS.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS
-NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL
-DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THE DATA FILES OR SOFTWARE.
-
-Except as contained in this notice, the name of a copyright holder
-shall not be used in advertising or otherwise to promote the sale,
-use or other dealings in these Data Files or Software without prior
-written authorization of the copyright holder.
-
-
-
------------------------------------------------------------------------------
-javax.inject_1.0.0.v20220405-0441.jar	(Apache 2.0)
------------------------------------------------------------------------------
-/*
- * Copyright (C) 2009 The JSR-330 Expert Group
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-----------------------------------------------------------------
-APACHE LICENSE, VERSION 2.0
-----------------------------------------------------------------
-http://www.apache.org/licenses/LICENSE-2.0
-Apache License
-
-Version 2.0, January 2004
-
-http://www.apache.org/licenses/
-
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-1. Definitions.
-
-"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
-
-"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
-
-"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
-
-"You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
-
-"Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
-
-"Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types.
-
-"Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below).
-
-"Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof.
-
-"Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution."
-
-"Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work.
-
-2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form.
-
-3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed.
-
-4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions:
-
-You must give any other recipients of the Work or Derivative Works a copy of this License; and
-You must cause any modified files to carry prominent notices stating that You changed the files; and
-You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and
-If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License.
-
-You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License.
-5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions.
-
-6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
-
-7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License.
-
-8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
-
-9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
-
-END OF TERMS AND CONDITIONS
-------------------------------------------------------------------------------------------
-
-----------------------------------------------------------------------------
-org.apache.batik.constants_1.14.0.v20210324-0332.jar (Apache 2.0 )
-org.apache.batik.css_1.14.0.v20210324-0332.jar (Apache 2.0 )
-org.apache.batik.i18n_1.14.0.v20210324-0332.jar (Apache 2.0 )
-org.apache.batik.util_1.14.0.v20210324-0332.jar (Apache 2.0 )
-
-----------------------------------------------------------------------------
-/*
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
- */
---------------------------------
-NOTICE file for org.apache.batik
---------------------------------
-Apache Batik
-Copyright 1999-2020 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-This software contains code from the World Wide Web Consortium (W3C) for the
-Document Object Model API (DOM API) and SVG Document Type Definition (DTD).
-
-This software contains code from the International Organisation for
-Standardization for the definition of character entities used in the software's
-documentation.
-
-This product includes images from the Tango Desktop Project
-(http://tango.freedesktop.org/).
-
-This product includes images from the Pasodoble Icon Theme
-(http://www.jesusda.com/projects/pasodoble).
-----------------------------------------------------------------------------
-org.apache.commons.codec_1.14.0.v20200818-1422.jar (Apache 2.0 )
-org.apache.commons.io_2.8.0.v20210415-0900.jar (Apache 2.0 )
-org.apache.commons.jxpath_1.3.0.v200911051830.jar (Apache 2.0 )
-org.apache.commons.logging_1.2.0.v20180409-1502.jar (Apache 2.0 )
-
-----------------------------------------------------------------------------
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
------------------------------------
-NOTICE file for org.apache.commons
-------------------------------------
-Apache Commons IO
-Copyright 2002-2017 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-Apache Commons Logging
-Copyright 2003-2014 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
--------------------------------------------
-NOTICE file for org.apache.commons.codec
--------------------------------------------
-Apache Commons Codec
-Copyright 2002-2019 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (https://www.apache.org/).
-
-src/test/org/apache/commons/codec/language/DoubleMetaphoneTest.java
-contains test data from http://aspell.net/test/orig/batch0.tab.
-Copyright (C) 2002 Kevin Atkinson (kevina@gnu.org)
-
-	===============================================================================
-
-The content of package org.apache.commons.codec.language.bm has been translated
-from the original php source code available at http://stevemorse.org/phoneticinfo.htm
-with permission from the original authors.
-Original source copyright:
-Copyright (c) 2008 Alexander Beider & Stephen P. Morse.
-
-----------------------------------------------------------------------------
-
-org.apache.felix.gogo.command_1.1.2.v20210111-1007.jar (Apache 2.0 )
-org.apache.felix.gogo.runtime_1.1.4.v20210111-1007.jar (Apache 2.0 )
-org.apache.felix.gogo.shell_1.1.4.v20210111-1007.jar   (Apache 2.0 )
-org.apache.felix.scr_2.1.24.v20200924-1939.jar	       (Apache 2.0 )
-
-----------------------------------------------------------------------------
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
------------------------------------
-NOTICE file for org.apache.felix.*
------------------------------------
-Apache Felix Gogo Command
-Copyright 2014 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-Licensed under the Apache License 2.0.
-
-This product includes software developed at
-The OSGi Alliance (http://www.osgi.org/).
-Copyright (c) OSGi Alliance (2000, 2009).
-Licensed under the Apache License 2.0..
-
-
-Apache Felix Gogo Runtime
-Copyright 2014 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-Licensed under the Apache License 2.0.
-
-This product includes software developped by
-Udo Klimaschewski (http://UdoJava.com/).
-Licensed under the MIT License.
-
-------------
-MIT License
-------------
-Copyright 2012 Udo Klimaschewski
-
-http://about.me/udo.klimaschewski
-http://UdoJava.com/
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------
-
-Apache Felix Gogo Shell
-Copyright 2011 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-Licensed under the Apache License 2.0.
-
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-Apache Felix Declarative Services
-Copyright 2006-2020 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-
-This product includes software developed at
-The OSGi Alliance (http://www.osgi.org/).
-Copyright (c) OSGi Alliance (2000, 2009).
-Licensed under the Apache License 2.0.
-----------------------------------------------------------------------------------
-org.apache.jasper.glassfish_2.2.2.v201501141630.jar	(Apache 2.0 and EPL 1.0)
-----------------------------------------------------------------------------------
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- *
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common Development
- * and Distribution License("CDDL") (collectively, the "License").  You
- * may not use this file except in compliance with the License.  You can
- * obtain a copy of the License at
- * https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
- * or packager/legal/LICENSE.txt.  See the License for the specific
- * language governing permissions and limitations under the License.
- *
- * When distributing the software, include this License Header Notice in each
- * file and include the License file at packager/legal/LICENSE.txt.
- *
- * GPL Classpath Exception:
- * Oracle designates this particular file as subject to the "Classpath"
- * exception as provided by Oracle in the GPL Version 2 section of the License
- * file that accompanied this code.
- *
- * Modifications:
- * If applicable, add the following below the License Header, with the fields
- * enclosed by brackets [] replaced by your own identifying information:
- * "Portions Copyright [year] [name of copyright owner]"
- *
- * Contributor(s):
- * If you wish your version of this file to be governed by only the CDDL or
- * only the GPL Version 2, indicate your decision by adding "[Contributor]
- * elects to include this software in this distribution under the [CDDL or GPL
- * Version 2] license."  If you don't indicate a single choice of license, a
- * recipient has the option to distribute your version of this file under
- * either the CDDL, the GPL Version 2 or to extend the choice of license to
- * its licensees as provided above.  However, if you add GPL Version 2 code
- * and therefore, elected the GPL Version 2 license, then the option applies
- * only if the new code is made subject to such option by the copyright
- * holder.
- *
- *
- * This file incorporates work covered by the following copyright and
- * permission notice:
- *
- * Copyright 2004 The Apache Software Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
----------------------------------------
-Eclipse Public License 1.0 (EPL-1.0)
----------------------------------------
-
-(NOTE: This license has been superseded by the Eclipse Public License version 2.0)
-
-Further resources on the EPL-1.0
- 
-Eclipse Public License, Version 1.0 (EPL-1.0)
-THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-
-1. DEFINITIONS
-
-"Contribution" means:
-
-a) in the case of the initial Contributor, the initial code and documentation distributed under this Agreement, and
-b) in the case of each subsequent Contributor:
-i) changes to the Program, and
-ii) additions to the Program;
-where such changes and/or additions to the Program originate from and are distributed by that particular Contributor. A Contribution 'originates' from a Contributor if it was added to the Program by such Contributor itself or anyone acting on such Contributor's behalf. Contributions do not include additions to the Program which: (i) are separate modules of software distributed in conjunction with the Program under their own license agreement, and (ii) are not derivative works of the Program. "Contributor" means any person or entity that distributes the Program.
-
-"Licensed Patents" mean patent claims licensable by a Contributor which are necessarily infringed by the use or sale of its Contribution alone or when combined with the Program.
-
-"Program" means the Contributions distributed in accordance with this Agreement.
-
-"Recipient" means anyone who receives the Program under this Agreement, including all Contributors.
-
-2. GRANT OF RIGHTS
-
-a) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, distribute and sublicense the Contribution of such Contributor, if any, and such derivative works, in source code and object code form.
-b) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free patent license under Licensed Patents to make, use, sell, offer to sell, import and otherwise transfer the Contribution of such Contributor, if any, in source code and object code form. This patent license shall apply to the combination of the Contribution and the Program if, at the time the Contribution is added by the Contributor, such addition of the Contribution causes such combination to be covered by the Licensed Patents. The patent license shall not apply to any other combinations which include the Contribution. No hardware per se is licensed hereunder.
-c) Recipient understands that although each Contributor grants the licenses to its Contributions set forth herein, no assurances are provided by any Contributor that the Program does not infringe the patent or other intellectual property rights of any other entity. Each Contributor disclaims any liability to Recipient for claims brought by any other entity based on infringement of intellectual property rights or otherwise. As a condition to exercising the rights and licenses granted hereunder, each Recipient hereby assumes sole responsibility to secure any other intellectual property rights needed, if any. For example, if a third party patent license is required to allow Recipient to distribute the Program, it is Recipient's responsibility to acquire that license before distributing the Program.
-d) Each Contributor represents that to its knowledge it has sufficient copyright rights in its Contribution, if any, to grant the copyright license set forth in this Agreement.
- 
- 
-3. REQUIREMENTS
-
-A Contributor may choose to distribute the Program in object code form under its own license agreement, provided that:
-
-a) it complies with the terms and conditions of this Agreement; and
-b) its license agreement:
-i) effectively disclaims on behalf of all Contributors all warranties and conditions, express and implied, including warranties or conditions of title and non-infringement, and implied warranties or conditions of merchantability and fitness for a particular purpose;
-ii) effectively excludes on behalf of all Contributors all liability for damages, including direct, indirect, special, incidental and consequential damages, such as lost profits;
-iii) states that any provisions which differ from this Agreement are offered by that Contributor alone and not by any other party; and
-iv) states that source code for the Program is available from such Contributor, and informs licensees how to obtain it in a reasonable manner on or through a medium customarily used for software exchange.
-
- 
-When the Program is made available in source code form:
-
-a) it must be made available under this Agreement; and
-b) a copy of this Agreement must be included with each copy of the Program.
-
- 
-Contributors may not remove or alter any copyright notices contained within the Program.
-
-Each Contributor must identify itself as the originator of its Contribution, if any, in a manner that reasonably allows subsequent Recipients to identify the originator of the Contribution.
+  a) it must be made available under this Agreement, or if the
+  Program (i) is combined with other material in a separate file or
+  files made available under a Secondary License, and (ii) the initial
+  Contributor attached to the Source Code the notice described in
+  Exhibit A of this Agreement, then the Program may be made available
+  under the terms of such Secondary Licenses, and
+
+  b) a copy of this Agreement must be included with each copy of
+  the Program.
+
+3.3 Contributors may not remove or alter any copyright, patent,
+trademark, attribution notices, disclaimers of warranty, or limitations
+of liability ("notices") contained within the Program from any copy of
+the Program which they Distribute, provided that Contributors may add
+their own appropriate notices.
 
 4. COMMERCIAL DISTRIBUTION
 
-Commercial distributors of software may accept certain responsibilities with respect to end users, business partners and the like. While this license is intended to facilitate the commercial use of the Program, the Contributor who includes the Program in a commercial product offering should do so in a manner which does not create potential liability for other Contributors. Therefore, if a Contributor includes the Program in a commercial product offering, such Contributor ("Commercial Contributor") hereby agrees to defend and indemnify every other Contributor ("Indemnified Contributor") against any losses, damages and costs (collectively "Losses") arising from claims, lawsuits and other legal actions brought by a third party against the Indemnified Contributor to the extent caused by the acts or omissions of such Commercial Contributor in connection with its distribution of the Program in a commercial product offering. The obligations in this section do not apply to any claims or Losses relating to any actual or alleged intellectual property infringement. In order to qualify, an Indemnified Contributor must: a) promptly notify the Commercial Contributor in writing of such claim, and b) allow the Commercial Contributor to control, and cooperate with the Commercial Contributor in, the defense and any related settlement negotiations. The Indemnified Contributor may participate in any such claim at its own expense.
+Commercial distributors of software may accept certain responsibilities
+with respect to end users, business partners and the like. While this
+license is intended to facilitate the commercial use of the Program,
+the Contributor who includes the Program in a commercial product
+offering should do so in a manner which does not create potential
+liability for other Contributors. Therefore, if a Contributor includes
+the Program in a commercial product offering, such Contributor
+("Commercial Contributor") hereby agrees to defend and indemnify every
+other Contributor ("Indemnified Contributor") against any losses,
+damages and costs (collectively "Losses") arising from claims, lawsuits
+and other legal actions brought by a third party against the Indemnified
+Contributor to the extent caused by the acts or omissions of such
+Commercial Contributor in connection with its distribution of the Program
+in a commercial product offering. The obligations in this section do not
+apply to any claims or Losses relating to any actual or alleged
+intellectual property infringement. In order to qualify, an Indemnified
+Contributor must: a) promptly notify the Commercial Contributor in
+writing of such claim, and b) allow the Commercial Contributor to control,
+and cooperate with the Commercial Contributor in, the defense and any
+related settlement negotiations. The Indemnified Contributor may
+participate in any such claim at its own expense.
 
-For example, a Contributor might include the Program in a commercial product offering, Product X. That Contributor is then a Commercial Contributor. If that Commercial Contributor then makes performance claims, or offers warranties related to Product X, those performance claims and warranties are such Commercial Contributor's responsibility alone. Under this section, the Commercial Contributor would have to defend claims against the other Contributors related to those performance claims and warranties, and if a court requires any other Contributor to pay any damages as a result, the Commercial Contributor must pay those damages.
+For example, a Contributor might include the Program in a commercial
+product offering, Product X. That Contributor is then a Commercial
+Contributor. If that Commercial Contributor then makes performance
+claims, or offers warranties related to Product X, those performance
+claims and warranties are such Commercial Contributor's responsibility
+alone. Under this section, the Commercial Contributor would have to
+defend claims against the other Contributors related to those performance
+claims and warranties, and if a court requires any other Contributor to
+pay any damages as a result, the Commercial Contributor must pay
+those damages.
 
 5. NO WARRANTY
 
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely responsible for determining the appropriateness of using and distributing the Program and assumes all risks associated with its exercise of rights under this Agreement , including but not limited to the risks and costs of program errors, compliance with applicable laws, damage to or loss of data, programs or equipment, and unavailability or interruption of operations.
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
+PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN "AS IS"
+BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
+TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
+PURPOSE. Each Recipient is solely responsible for determining the
+appropriateness of using and distributing the Program and assumes all
+risks associated with its exercise of rights under this Agreement,
+including but not limited to the risks and costs of program errors,
+compliance with applicable laws, damage to or loss of data, programs
+or equipment, and unavailability or interruption of operations.
 
 6. DISCLAIMER OF LIABILITY
 
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement, and without further action by the parties hereto, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Program itself (excluding combinations of the Program with other software or hardware) infringes such Recipient's patent(s), then such Recipient's rights granted under Section 2(b) shall terminate as of the date such litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it fails to comply with any of the material terms or conditions of this Agreement and does not cure such failure in a reasonable period of time after becoming aware of such noncompliance. If all Recipient's rights under this Agreement terminate, Recipient agrees to cease use and distribution of the Program as soon as reasonably practicable. However, Recipient's obligations under this Agreement and any licenses granted by Recipient relating to the Program shall continue and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement, but in order to avoid inconsistency the Agreement is copyrighted and may only be modified in the following manner. The Agreement Steward reserves the right to publish new versions (including revisions) of this Agreement from time to time. No one other than the Agreement Steward has the right to modify this Agreement. The Eclipse Foundation is the initial Agreement Steward. The Eclipse Foundation may assign the responsibility to serve as the Agreement Steward to a suitable separate entity. Each new version of the Agreement will be given a distinguishing version number. The Program (including Contributions) may always be distributed subject to the version of the Agreement under which it was received. In addition, after a new version of the Agreement is published, Contributor may elect to distribute the Program (including its Contributions) under the new version. Except as expressly stated in Sections 2(a) and 2(b) above, Recipient receives no rights or licenses to the intellectual property of any Contributor under this Agreement, whether expressly, by implication, estoppel or otherwise. All rights in the Program not expressly granted under this Agreement are reserved.
-
-This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
-License
-
-------------------------------------------------------------------------------
-org.apache.lucene.analyzers-common_8.4.1.v20200122-1459.jar	(Apache 2.0 )
-org.apache.lucene.analyzers-smartcn_8.4.1.v20200122-1459.jar	(Apache 2.0 )
-org.apache.lucene.core_8.4.1.v20200122-1459.jar	                (Apache 2.0 )
-
------------------------------------------------------------------------------
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-----------------------------------
-NOTICE for for org.apache.lucene.*
-----------------------------------
-Apache Lucene
-Copyright 2001-2019 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-Includes software from other Apache Software Foundation projects,
-including, but not limited to:
- - Apache Ant
- - Apache Jakarta Regexp
- - Apache Commons
- - Apache Xerces
-
-ICU4J, (under analysis/icu) is licensed under an MIT styles license
-and Copyright (c) 1995-2008 International Business Machines Corporation and others
----------------------
-MIT LIcense
---------------------
-Copyright (c) 1995-2013 International Business Machines Corporation and others
-
-All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, provided that the above copyright notice(s) and this permission notice appear in all copies of the Software and that both the above copyright notice(s) and this permission notice appear in supporting documentation.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
----------------------------
-
-Some data files (under analysis/icu/src/data) are derived from Unicode data such
-as the Unicode Character Database. See http://unicode.org/copyright.html for more
-details.
-
-Brics Automaton (under core/src/java/org/apache/lucene/util/automaton) is
-BSD-licensed, created by Anders Møller. See http://www.brics.dk/automaton/
-----------------------------
-The 2-Clause BSD License
-----------------------------
-Copyright  
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------
-
-The levenshtein automata tables (under core/src/java/org/apache/lucene/util/automaton) were
-automatically generated with the moman/finenight FSA library, created by
-Jean-Philippe Barrette-LaPierre. This library is available under an MIT license,
-see http://sites.google.com/site/rrettesite/moman and
-http://bitbucket.org/jpbarrette/moman/overview/
-
--------------------
-MIT License
--------------------
-Copyright  
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
--------------------------------
-
-The class org.apache.lucene.util.WeakIdentityMap was derived from
-the Apache CXF project and is Apache License 2.0.
-
-The Google Code Prettify is Apache License 2.0.
-See http://code.google.com/p/google-code-prettify/
-
-JUnit (junit-4.10) is licensed under the Common Public License v. 1.0
-See http://junit.sourceforge.net/cpl-v10.html
-
-Common Public License - v 1.0
-THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS COMMON PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-1. DEFINITIONS
-"Contribution" means:
-a) in the case of the initial Contributor, the initial code and documentation distributed under this Agreement, and
-b) in the case of each subsequent Contributor:
-i) changes to the Program, and
-ii) additions to the Program;
-where such changes and/or additions to the Program originate from and are distributed by that particular Contributor. A Contribution 'originates' from a Contributor if it was added to the Program by such Contributor itself or anyone acting on such Contributor's behalf. Contributions do not include additions to the Program which: (i) are separate modules of software distributed in conjunction with the Program under their own license agreement, and (ii) are not derivative works of the Program.
-"Contributor" means any person or entity that distributes the Program.
-"Licensed Patents " mean patent claims licensable by a Contributor which are necessarily infringed by the use or sale of its Contribution alone or when combined with the Program.
-"Program" means the Contributions distributed in accordance with this Agreement.
-"Recipient" means anyone who receives the Program under this Agreement, including all Contributors.
-2. GRANT OF RIGHTS
-a) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, distribute and sublicense the Contribution of such Contributor, if any, and such derivative works, in source code and object code form.
-b) Subject to the terms of this Agreement, each Contributor hereby grants Recipient a non-exclusive, worldwide, royalty-free patent license under Licensed Patents to make, use, sell, offer to sell, import and otherwise transfer the Contribution of such Contributor, if any, in source code and object code form. This patent license shall apply to the combination of the Contribution and the Program if, at the time the Contribution is added by the Contributor, such addition of the Contribution causes such combination to be covered by the Licensed Patents. The patent license shall not apply to any other combinations which include the Contribution. No hardware per se is licensed hereunder.
-c) Recipient understands that although each Contributor grants the licenses to its Contributions set forth herein, no assurances are provided by any Contributor that the Program does not infringe the patent or other intellectual property rights of any other entity. Each Contributor disclaims any liability to Recipient for claims brought by any other entity based on infringement of intellectual property rights or otherwise. As a condition to exercising the rights and licenses granted hereunder, each Recipient hereby assumes sole responsibility to secure any other intellectual property rights needed, if any. For example, if a third party patent license is required to allow Recipient to distribute the Program, it is Recipient's responsibility to acquire that license before distributing the Program.
-d) Each Contributor represents that to its knowledge it has sufficient copyright rights in its Contribution, if any, to grant the copyright license set forth in this Agreement.
-3. REQUIREMENTS
-A Contributor may choose to distribute the Program in object code form under its own license agreement, provided that:
-a) it complies with the terms and conditions of this Agreement; and
-b) its license agreement:
-i) effectively disclaims on behalf of all Contributors all warranties and conditions, express and implied, including warranties or conditions of title and non-infringement, and implied warranties or conditions of merchantability and fitness for a particular purpose;
-ii) effectively excludes on behalf of all Contributors all liability for damages, including direct, indirect, special, incidental and consequential damages, such as lost profits;
-iii) states that any provisions which differ from this Agreement are offered by that Contributor alone and not by any other party; and
-iv) states that source code for the Program is available from such Contributor, and informs licensees how to obtain it in a reasonable manner on or through a medium customarily used for software exchange.
-When the Program is made available in source code form:
-a) it must be made available under this Agreement; and
-b) a copy of this Agreement must be included with each copy of the Program.
-Contributors may not remove or alter any copyright notices contained within the Program.
-Each Contributor must identify itself as the originator of its Contribution, if any, in a manner that reasonably allows subsequent Recipients to identify the originator of the Contribution.
-4. COMMERCIAL DISTRIBUTION
-Commercial distributors of software may accept certain responsibilities with respect to end users, business partners and the like. While this license is intended to facilitate the commercial use of the Program, the Contributor who includes the Program in a commercial product offering should do so in a manner which does not create potential liability for other Contributors. Therefore, if a Contributor includes the Program in a commercial product offering, such Contributor ("Commercial Contributor") hereby agrees to defend and indemnify every other Contributor ("Indemnified Contributor") against any losses, damages and costs (collectively "Losses") arising from claims, lawsuits and other legal actions brought by a third party against the Indemnified Contributor to the extent caused by the acts or omissions of such Commercial Contributor in connection with its distribution of the Program in a commercial product offering. The obligations in this section do not apply to any claims or Losses relating to any actual or alleged intellectual property infringement. In order to qualify, an Indemnified Contributor must: a) promptly notify the Commercial Contributor in writing of such claim, and b) allow the Commercial Contributor to control, and cooperate with the Commercial Contributor in, the defense and any related settlement negotiations. The Indemnified Contributor may participate in any such claim at its own expense.
-For example, a Contributor might include the Program in a commercial product offering, Product X. That Contributor is then a Commercial Contributor. If that Commercial Contributor then makes performance claims, or offers warranties related to Product X, those performance claims and warranties are such Commercial Contributor's responsibility alone. Under this section, the Commercial Contributor would have to defend claims against the other Contributors related to those performance claims and warranties, and if a court requires any other Contributor to pay any damages as a result, the Commercial Contributor must pay those damages.
-5. NO WARRANTY
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely responsible for determining the appropriateness of using and distributing the Program and assumes all risks associated with its exercise of rights under this Agreement, including but not limited to the risks and costs of program errors, compliance with applicable laws, damage to or loss of data, programs or equipment, and unavailability or interruption of operations.
-6. DISCLAIMER OF LIABILITY
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-7. GENERAL
-If any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement, and without further action by the parties hereto, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.
-If Recipient institutes patent litigation against a Contributor with respect to a patent applicable to software (including a cross-claim or counterclaim in a lawsuit), then any patent licenses granted by that Contributor to such Recipient under this Agreement shall terminate as of the date such litigation is filed. In addition, if Recipient institutes patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Program itself (excluding combinations of the Program with other software or hardware) infringes such Recipient's patent(s), then such Recipient's rights granted under Section 2(b) shall terminate as of the date such litigation is filed.
-All Recipient's rights under this Agreement shall terminate if it fails to comply with any of the material terms or conditions of this Agreement and does not cure such failure in a reasonable period of time after becoming aware of such noncompliance. If all Recipient's rights under this Agreement terminate, Recipient agrees to cease use and distribution of the Program as soon as reasonably practicable. However, Recipient's obligations under this Agreement and any licenses granted by Recipient relating to the Program shall continue and survive.
-Everyone is permitted to copy and distribute copies of this Agreement, but in order to avoid inconsistency the Agreement is copyrighted and may only be modified in the following manner. The Agreement Steward reserves the right to publish new versions (including revisions) of this Agreement from time to time. No one other than the Agreement Steward has the right to modify this Agreement. IBM is the initial Agreement Steward. IBM may assign the responsibility to serve as the Agreement Steward to a suitable separate entity. Each new version of the Agreement will be given a distinguishing version number. The Program (including Contributions) may always be distributed subject to the version of the Agreement under which it was received. In addition, after a new version of the Agreement is published, Contributor may elect to distribute the Program (including its Contributions) under the new version. Except as expressly stated in Sections 2(a) and 2(b) above, Recipient receives no rights or licenses to the intellectual property of any Contributor under this Agreement, whether expressly, by implication, estoppel or otherwise. All rights in the Program not expressly granted under this Agreement are reserved.
-This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
-
-This product includes code (JaspellTernarySearchTrie) from Java Spelling Checkin
-g Package (jaspell): http://jaspell.sourceforge.net/
-License: The BSD License (http://www.opensource.org/licenses/bsd-license.php)
-------------------------------
-The 2-Clause BSD License
-------------------------------
-
-Copyright  
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-------------------------------------
-
-
-The snowball stemmers in
-  analysis/common/src/java/net/sf/snowball
-were developed by Martin Porter and Richard Boulton.
-The snowball stopword lists in
-  analysis/common/src/resources/org/apache/lucene/analysis/snowball
-were developed by Martin Porter and Richard Boulton.
-The full snowball package is available from
-  http://snowball.tartarus.org/
-
-Copyright (c) 2001, Dr Martin Porter
-Copyright (c) 2002, Richard Boulton
-All rights reserved.
-
-The KStem stemmer in
-  analysis/common/src/org/apache/lucene/analysis/en
-was developed by Bob Krovetz and Sergio Guzman-Lara (CIIR-UMass Amherst)
-under the BSD-license.
-
-Copyright © 2003,
-Center for Intelligent Information Retrieval,
-University of Massachusetts, Amherst.
-All rights reserved.
-
---------------------------
-The 2-Clause BSD License
---------------------------
-
-Copyright  
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-------------------------------------
-
-The Arabic,Persian,Romanian,Bulgarian, Hindi and Bengali analyzers (common) come with a default
-stopword list that is BSD-licensed created by Jacques Savoy.  These files reside in:
-analysis/common/src/resources/org/apache/lucene/analysis/ar/stopwords.txt,
-analysis/common/src/resources/org/apache/lucene/analysis/fa/stopwords.txt,
-analysis/common/src/resources/org/apache/lucene/analysis/ro/stopwords.txt,
-analysis/common/src/resources/org/apache/lucene/analysis/bg/stopwords.txt,
-analysis/common/src/resources/org/apache/lucene/analysis/hi/stopwords.txt,
-analysis/common/src/resources/org/apache/lucene/analysis/bn/stopwords.txt
-See http://members.unine.ch/jacques.savoy/clef/index.html.
-
-------------------------
-The 2-Clause BSD License
-------------------------
-Copyright (c) 2005, Jacques Savoy
-
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
----------------
-
-The German,Spanish,Finnish,French,Hungarian,Italian,Portuguese,Russian and Swedish light stemmers
-(common) are based on BSD-licensed reference implementations created by Jacques Savoy and
-Ljiljana Dolamic. These files reside in:
-analysis/common/src/java/org/apache/lucene/analysis/de/GermanLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/de/GermanMinimalStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/es/SpanishLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/fi/FinnishLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/fr/FrenchLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/fr/FrenchMinimalStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/hu/HungarianLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/it/ItalianLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/pt/PortugueseLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/ru/RussianLightStemmer.java
-analysis/common/src/java/org/apache/lucene/analysis/sv/SwedishLightStemmer.java
-
-------------------------
-The 2-Clause BSD License
-------------------------
-Copyright  
-
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
----------------
-
-The Stempel analyzer (stempel) includes BSD-licensed software developed
-by the Egothor project http://egothor.sf.net/, created by Leo Galambos, Martin Kvapil,
-and Edmond Nolan.
-
-------------------------
-The 2-Clause BSD License
-------------------------
-Copyright  
-
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
----------------
-
-The Polish analyzer (stempel) comes with a default
-stopword list that is BSD-licensed created by the Carrot2 project. The file resides
-in stempel/src/resources/org/apache/lucene/analysis/pl/stopwords.txt.
-See http://project.carrot2.org/license.html.
-
-------------------------
-The 2-Clause BSD License
-------------------------
-Copyright (C) 2002-2021, Dawid Weiss, Stanislaw Osinski.
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
----------------
-
-The SmartChineseAnalyzer source code (smartcn) was
-provided by Xiaoping Gao and copyright 2009 by www.imdict.net.
----------------------------------------------------------------
-License for SmartChineseAnalyzer
----------------------------------------------------------------
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
---------------------------------------------------------------------
-
-WordBreakTestUnicode_*.java (under modules/analysis/common/src/test/)
-is derived from Unicode data such as the Unicode Character Database.
-See http://unicode.org/copyright.html for more details.
-
----------------------------------------------------------------------------------
-License for Unicode data --  Unicode Data Files and Software 
----------------------------------------------------------------------------------
-
-
-COPYRIGHT AND PERMISSION NOTICE
-
-Copyright © 1991-2021 Unicode, Inc. All rights reserved.
-Distributed under the Terms of Use in https://www.unicode.org/copyright.html.
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of the Unicode data files and any associated documentation
-(the "Data Files") or Unicode software and any associated documentation
-(the "Software") to deal in the Data Files or Software
-without restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, and/or sell copies of
-the Data Files or Software, and to permit persons to whom the Data Files
-or Software are furnished to do so, provided that either
-(a) this copyright and permission notice appear with all copies
-of the Data Files or Software, or
-(b) this copyright and permission notice appear in associated
-Documentation.
-
-THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF
-ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT OF THIRD PARTY RIGHTS.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS
-NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL
-DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THE DATA FILES OR SOFTWARE.
-
-Except as contained in this notice, the name of a copyright holder
-shall not be used in advertising or otherwise to promote the sale,
-use or other dealings in these Data Files or Software without prior
-written authorization of the copyright holder.
------------------------------------------------------------------
-
-The Morfologik analyzer (morfologik) includes BSD-licensed software
-developed by Dawid Weiss and Marcin Milkowski (http://morfologik.blogspot.com/).
---------------------------
-The 2-Clause BSD License
---------------------------
-Copyright (c) 2006 Dawid Weiss
-Copyright (c) 2007-2011 Dawid Weiss, Marcin Milkowski
-All rights reserved.
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-----------------------------------------------------------
-
-Morfologik uses data from Polish ispell/myspell dictionary
-(http://www.sjp.pl/slownik/en/) licenced on the terms of (inter alia)
-LGPL and Creative Commons ShareAlike.
-
-Morfologic includes data from BSD-licensed dictionary of Polish (SGJP)
-(http://sgjp.pl/morfeusz/)
-
---------------------------
-The 2-Clause BSD License
---------------------------
-Copyright © 2011 Zygmunt Saloni, Wlodzimierz Gruszczynski,
-Marcin Wolinski, Robert Wolosz
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-----------------------------------------------------------
-Servlet-api.jar and javax.servlet-*.jar are under the CDDL license, the original
-source code for this can be found at http://www.eclipse.org/jetty/downloads.php
-===========================================================================
-Kuromoji Japanese Morphological Analyzer - Apache Lucene Integration
-===========================================================================
-
-This software includes a binary and/or source version of data from
-
-  mecab-ipadic-2.7.0-20070801
-
-which can be obtained from
-
-  http://atilika.com/releases/mecab-ipadic/mecab-ipadic-2.7.0-20070801.tar.gz
-
-or
-
-  http://jaist.dl.sourceforge.net/project/mecab/mecab-ipadic/2.7.0-20070801/mecab-ipadic-2.7.0-20070801.tar.gz
-
-===========================================================================
-mecab-ipadic-2.7.0-20070801 Notice
-===========================================================================
-
-Nara Institute of Science and Technology (NAIST),
-the copyright holders, disclaims all warranties with regard to this
-software, including all implied warranties of merchantability and
-fitness, in no event shall NAIST be liable for
-any special, indirect or consequential damages or any damages
-whatsoever resulting from loss of use, data or profits, whether in an
-action of contract, negligence or other tortuous action, arising out
-of or in connection with the use or performance of this software.
-
-A large portion of the dictionary entries
-originate from ICOT Free Software.  The following conditions for ICOT
-Free Software applies to the current dictionary as well.
-
-Each User may also freely distribute the Program, whether in its
-original form or modified, to any third party or parties, PROVIDED
-that the provisions of Section 3 ("NO WARRANTY") will ALWAYS appear
-on, or be attached to, the Program, which is distributed substantially
-in the same form as set out herein and that such intended
-distribution, if actually made, will neither violate or otherwise
-contravene any of the laws and regulations of the countries having
-jurisdiction over the User or the intended distribution itself.
-
-NO WARRANTY
-
-The program was produced on an experimental basis in the course of the
-research and development conducted during the project and is provided
-to users as so produced on an experimental basis.  Accordingly, the
-program is provided without any warranty whatsoever, whether express,
-implied, statutory or otherwise.  The term "warranty" used herein
-includes, but is not limited to, any warranty of the quality,
-performance, merchantability and fitness for a particular purpose of
-the program and the nonexistence of any infringement or violation of
-any right of any third party.
-
-Each user of the program will agree and understand, and be deemed to
-have agreed and understood, that there is no warranty whatsoever for
-the program and, accordingly, the entire risk arising from or
-otherwise connected with the program is assumed by the user.
-
-Therefore, neither ICOT, the copyright holder, or any other
-organization that participated in or was otherwise related to the
-development of the program and their respective officials, directors,
-officers and other employees shall be held liable for any and all
-damages, including, without limitation, general, special, incidental
-and consequential damages, arising out of or otherwise in connection
-with the use or inability to use the program or any product, material
-or result produced or otherwise obtained by using the program,
-regardless of whether they have been advised of, or otherwise had
-knowledge of, the possibility of such damages at any time during the
-project or thereafter.  Each user will be deemed to have agreed to the
-foregoing by his or her commencement of use of the program.  The term
-"use" as used herein includes, but is not limited to, the use,
-modification, copying and distribution of the program and the
-production of secondary products from the program.
-
-In the case where the program, whether in its original form or
-modified, was distributed or delivered to or received by a user from
-any person, organization or entity other than ICOT, unless it makes or
-grants independently of ICOT any specific warranty to the user in
-writing, such person, organization or entity, will also be exempted
-from and not be held liable to the user for any such damages as noted
-above as far as the program is concerned.
-
-===========================================================================
-Nori Korean Morphological Analyzer - Apache Lucene Integration
-===========================================================================
-
-This software includes a binary and/or source version of data from
-
-  mecab-ko-dic-2.0.3-20170922
-
-which can be obtained from
-
-  https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.3-20170922.tar.gz
-
-------------------------------------------------------------------------------------------
-
-
-org.eclipse.jetty.http_10.0.9.jar 	 (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.io_10.0.9.jar 	 (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.security_10.0.9.jar 	 (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.server_10.0.9.jar 	 (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.servlet_10.0.9.jar	 (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.util.ajax_10.0.9.jar   (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.util_10.0.9.jar 	 (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.webapp_10.0.9.jar   (Apache 2.0 or EPL 2.0)
-org.eclipse.jetty.xml_10.0.9.jar     (Apache 2.0 or EPL 2.0)
-
-
--------------------------------------------------------------------------------------------
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0, or the Apache Software License
-2.0 which is available at https://www.apache.org/licenses/LICENSE-2.0.
-
-------------------------------
-NOTICE for org.eclipse.jetty.*
-------------------------------
-
-==============================================================
- Jetty Web Container
- Copyright (c) 1995-2022 Mort Bay Consulting Pty Ltd and others.
-==============================================================
-
-The Jetty Web Container is Copyright Mort Bay Consulting Pty Ltd
-unless otherwise noted.
-
-This artifacts of this project are made available under the terms of:
-
-  * the Eclipse Public License v2.0
-    https://www.eclipse.org/legal/epl-2.0
-    SPDX-License-Identifier: EPL-2.0
-
-  or
-
-  * the Apache License, Version 2.0
-    https://www.apache.org/licenses/LICENSE-2.0
-    SPDX-License-Identifier: Apache-2.0
-
-Jetty may be distributed under either license.
-
-------
-Eclipse
-
-The following artifacts are EPL.
- * org.eclipse.jetty.orbit:org.eclipse.jdt.core
-
-The following artifacts are EPL and ASL2.
- * org.eclipse.jetty.orbit:javax.security.auth.message
-
-
-The following artifacts are EPL and CDDL 1.0.
- * org.eclipse.jetty.orbit:javax.mail.glassfish
-----------------------------------------------------------------------------
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- *
- * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common Development
- * and Distribution License("CDDL") (collectively, the "License").  You
- * may not use this file except in compliance with the License. You can obtain
- * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
- * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
- * language governing permissions and limitations under the License.
- *
- * When distributing the software, include this License Header Notice in each
- * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
- * Sun designates this particular file as subject to the "Classpath" exception
- * as provided by Sun in the GPL Version 2 section of the License file that
- * accompanied this code.  If applicable, add the following below the License
- * Header, with the fields enclosed by brackets [] replaced by your own
- * identifying information: "Portions Copyrighted [year]
- * [name of copyright owner]"
- *
- * Contributor(s):
- *
- * If you wish your version of this file to be governed by only the CDDL or
- * only the GPL Version 2, indicate your decision by adding "[Contributor]
- * elects to include this software in this distribution under the [CDDL or GPL
- * Version 2] license."  If you don't indicate a single choice of license, a
- * recipient has the option to distribute your version of this file under
- * either the CDDL, the GPL Version 2 or to extend the choice of license to
- * its licensees as provided above.  However, if you add GPL Version 2 code
- * and therefore, elected the GPL Version 2 license, then the option applies
- * only if the new code is made subject to such option by the copyright
- * holder.
- */
-----------------------------------------------------------------------------------------------------
-Oracle OpenJDK
-If ALPN is used to negotiate HTTP/2 connections, then the following
-artifacts may be included in the distribution or downloaded when ALPN 
-module is selected. 
-
- * java.sun.security.ssl
-
-These artifacts replace/modify OpenJDK classes.  The modififications
-are hosted at github and both modified and original are under GPL v2 with 
-classpath exceptions.
-http://openjdk.java.net/legal/gplv2+ce.html
-------
-OW2
-
-The following artifacts are licensed by the OW2 Foundation according to the
-terms of http://asm.ow2.org/license.html
-
-org.ow2.asm:asm-commons
-org.ow2.asm:asm
-
--------------------------------------------------------------------------------------------------
-org.ow2.asm:asm-commons, org.ow2.asm:asm are licensed under OW2  http://asm.ow2.org/license.html
--------------------------------------------------------------------------------------------------
-ASM is released under the following 3-Clause BSD License:
-
-ASM: a very small and fast Java bytecode manipulation framework
-Copyright (c) 2000-2011 INRIA, France Telecom
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-1. Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-3. Neither the name of the copyright holders nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
+PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
+SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
+PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-THE POSSIBILITY OF SUCH DAMAGE.
-
-------
-Apache
-
-The following artifacts are ASL2 licensed.
-
-org.apache.taglibs:taglibs-standard-spec
-org.apache.taglibs:taglibs-standard-impl
-----------------------------------------------------
-Apache Standard Taglib Specification API
-Copyright 2001-2015 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-------------------------------------------------------
-
-
-------
-MortBay
-
-The following artifacts are ASL2 licensed.  Based on selected classes from 
-following Apache Tomcat jars, all ASL2 licensed.
-
-org.mortbay.jasper:apache-jsp
-  org.apache.tomcat:tomcat-jasper
-  org.apache.tomcat:tomcat-juli
-  org.apache.tomcat:tomcat-jsp-api
-  org.apache.tomcat:tomcat-el-api
-  org.apache.tomcat:tomcat-jasper-el
-  org.apache.tomcat:tomcat-api
-  org.apache.tomcat:tomcat-util-scan
-  org.apache.tomcat:tomcat-util
-
-org.mortbay.jasper:apache-el
-  org.apache.tomcat:tomcat-jasper-el
-  org.apache.tomcat:tomcat-el-api
-
--------------------------------------------------------------
-org.mortbay.jasper:apache-jsp v10.0.14
-org.apache.tomcat:tomcat* v10.1.0-M10  License - Alache 2.0
--------------------------------------------------------------
-Apache Tomcat
-Copyright 1999-2021 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
--------------------------------------------------------------
-
-------
-Mortbay
-
-The following artifacts are CDDL + GPLv2 with classpath exception.
-
-https://glassfish.dev.java.net/nonav/public/CDDL+GPL.html
-
-org.eclipse.jetty.toolchain:jetty-schemas
-
-----------------------------------------------------
-org.eclipse.jetty.toolchain:jetty-schemas v5.2
-Licenses - CDDL + GPLv2 with classpath exception
-------------------------------------------------------
- Jetty Web Container
- Copyright 1995-2018 Mort Bay Consulting Pty Ltd.
-------------------------------------------------------
-Licenses - CDDL + GPLv2 with classpath exception
----------------------------------------------------------------
-COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
-----------------------------------------------------------------
-1. Definitions.
- 
-  1.1. "Contributor" means each individual or entity that creates or
-  contributes to the creation of Modifications.
-
-  1.2. "Contributor Version" means the combination of the Original
-  Software, prior Modifications used by a Contributor (if any), and
-  the Modifications made by that particular Contributor.
-
-  1.3. "Covered Software" means (a) the Original Software, or (b)
-  Modifications, or (c) the combination of files containing Original
-  Software with files containing Modifications, in each case including
-  portions thereof.
-
-  1.4. "Executable" means the Covered Software in any form other than
-  Source Code.
-
-  1.5. "Initial Developer" means the individual or entity that first
-  makes Original Software available under this License.
-
-  1.6. "Larger Work" means a work which combines Covered Software or
-  portions thereof with code not governed by the terms of this License.
-
-  1.7. "License" means this document.
-
-  1.8. "Licensable" means having the right to grant, to the maximum
-  extent possible, whether at the time of the initial grant or
-  subsequently acquired, any and all of the rights conveyed herein.
-
-  1.9. "Modifications" means the Source Code and Executable form of
-  any of the following:
-
-  A. Any file that results from an addition to, deletion from or
-  modification of the contents of a file containing Original Software
-  or previous Modifications;
-
-  B. Any new file that contains any part of the Original Software or
-  previous Modification; or
-
-  C. Any new file that is contributed or otherwise made available
-  under the terms of this License.
-
-  1.10. "Original Software" means the Source Code and Executable form
-  of computer software code that is originally released under this
-  License.
-
-  1.11. "Patent Claims" means any patent claim(s), now owned or
-  hereafter acquired, including without limitation, method, process,
-  and apparatus claims, in any patent Licensable by grantor.
-
-  1.12. "Source Code" means (a) the common form of computer software
-  code in which modifications are made and (b) associated
-  documentation included in or with such code.
-
-  1.13. "You" (or "Your") means an individual or a legal entity
-  exercising rights under, and complying with all of the terms of,
-  this License. For legal entities, "You" includes any entity which
-  controls, is controlled by, or is under common control with You. For
-  purposes of this definition, "control" means (a) the power, direct
-  or indirect, to cause the direction or management of such entity,
-  whether by contract or otherwise, or (b) ownership of more than
-  fifty percent (50%) of the outstanding shares or beneficial
-  ownership of such entity.
-
-2. License Grants.
-
-  2.1. The Initial Developer Grant.
-
-  Conditioned upon Your compliance with Section 3.1 below and subject
-  to third party intellectual property claims, the Initial Developer
-  hereby grants You a world-wide, royalty-free, non-exclusive license:
-
-  (a) under intellectual property rights (other than patent or
-  trademark) Licensable by Initial Developer, to use, reproduce,
-  modify, display, perform, sublicense and distribute the Original
-  Software (or portions thereof), with or without Modifications,
-  and/or as part of a Larger Work; and
-
-  (b) under Patent Claims infringed by the making, using or selling of
-  Original Software, to make, have made, use, practice, sell, and
-  offer for sale, and/or otherwise dispose of the Original Software
-  (or portions thereof).
-
-  (c) The licenses granted in Sections 2.1(a) and (b) are effective on
-  the date Initial Developer first distributes or otherwise makes the
-  Original Software available to a third party under the terms of this
-  License.
-
-  (d) Notwithstanding Section 2.1(b) above, no patent license is
-  granted: (1) for code that You delete from the Original Software, or
-  (2) for infringements caused by: (i) the modification of the
-  Original Software, or (ii) the combination of the Original Software
-  with other software or devices.
-
-  2.2. Contributor Grant.
-
-  Conditioned upon Your compliance with Section 3.1 below and subject
-  to third party intellectual property claims, each Contributor hereby
-  grants You a world-wide, royalty-free, non-exclusive license:
-
-  (a) under intellectual property rights (other than patent or
-  trademark) Licensable by Contributor to use, reproduce, modify,
-  display, perform, sublicense and distribute the Modifications
-  created by such Contributor (or portions thereof), either on an
-  unmodified basis, with other Modifications, as Covered Software
-  and/or as part of a Larger Work; and
-
-  (b) under Patent Claims infringed by the making, using, or selling
-  of Modifications made by that Contributor either alone and/or in
-  combination with its Contributor Version (or portions of such
-  combination), to make, use, sell, offer for sale, have made, and/or
-  otherwise dispose of: (1) Modifications made by that Contributor (or
-  portions thereof); and (2) the combination of Modifications made by
-  that Contributor with its Contributor Version (or portions of such
-  combination).
-
-  (c) The licenses granted in Sections 2.2(a) and 2.2(b) are effective
-  on the date Contributor first distributes or otherwise makes the
-  Modifications available to a third party.
-
-  (d) Notwithstanding Section 2.2(b) above, no patent license is
-  granted: (1) for any code that Contributor has deleted from the
-  Contributor Version; (2) for infringements caused by: (i) third
-  party modifications of Contributor Version, or (ii) the combination
-  of Modifications made by that Contributor with other software
-  (except as part of the Contributor Version) or other devices; or (3)
-  under Patent Claims infringed by Covered Software in the absence of
-  Modifications made by that Contributor.
-
-3. Distribution Obligations.
-
-  3.1. Availability of Source Code.
-
-  Any Covered Software that You distribute or otherwise make available
-  in Executable form must also be made available in Source Code form
-  and that Source Code form must be distributed only under the terms
-  of this License. You must include a copy of this License with every
-  copy of the Source Code form of the Covered Software You distribute
-  or otherwise make available. You must inform recipients of any such
-  Covered Software in Executable form as to how they can obtain such
-  Covered Software in Source Code form in a reasonable manner on or
-  through a medium customarily used for software exchange.
-
-  3.2. Modifications.
-
-  The Modifications that You create or to which You contribute are
-  governed by the terms of this License. You represent that You
-  believe Your Modifications are Your original creation(s) and/or You
-  have sufficient rights to grant the rights conveyed by this License.
-
-  3.3. Required Notices.
-
-  You must include a notice in each of Your Modifications that
-  identifies You as the Contributor of the Modification. You may not
-  remove or alter any copyright, patent or trademark notices contained
-  within the Covered Software, or any notices of licensing or any
-  descriptive text giving attribution to any Contributor or the
-  Initial Developer.
-
-  3.4. Application of Additional Terms.
-
-  You may not offer or impose any terms on any Covered Software in
-  Source Code form that alters or restricts the applicable version of
-  this License or the recipients' rights hereunder. You may choose to
-  offer, and to charge a fee for, warranty, support, indemnity or
-  liability obligations to one or more recipients of Covered Software.
-  However, you may do so only on Your own behalf, and not on behalf of
-  the Initial Developer or any Contributor. You must make it
-  absolutely clear that any such warranty, support, indemnity or
-  liability obligation is offered by You alone, and You hereby agree
-  to indemnify the Initial Developer and every Contributor for any
-  liability incurred by the Initial Developer or such Contributor as a
-  result of warranty, support, indemnity or liability terms You offer.
-
-  3.5. Distribution of Executable Versions.
-
-  You may distribute the Executable form of the Covered Software under
-  the terms of this License or under the terms of a license of Your
-  choice, which may contain terms different from this License,
-  provided that You are in compliance with the terms of this License
-  and that the license for the Executable form does not attempt to
-  limit or alter the recipient's rights in the Source Code form from
-  the rights set forth in this License. If You distribute the Covered
-  Software in Executable form under a different license, You must make
-  it absolutely clear that any terms which differ from this License
-  are offered by You alone, not by the Initial Developer or
-  Contributor. You hereby agree to indemnify the Initial Developer and
-  every Contributor for any liability incurred by the Initial
-  Developer or such Contributor as a result of any such terms You offer.
-
-  3.6. Larger Works.
-
-  You may create a Larger Work by combining Covered Software with
-  other code not governed by the terms of this License and distribute
-  the Larger Work as a single product. In such a case, You must make
-  sure the requirements of this License are fulfilled for the Covered
-  Software.
-
-4. Versions of the License.
-
-  4.1. New Versions.
-
-  Oracle is the initial license steward and may publish revised and/or
-  new versions of this License from time to time. Each version will be
-  given a distinguishing version number. Except as provided in Section
-  4.3, no one other than the license steward has the right to modify
-  this License.
-
-  4.2. Effect of New Versions.
-
-  You may always continue to use, distribute or otherwise make the
-  Covered Software available under the terms of the version of the
-  License under which You originally received the Covered Software. If
-  the Initial Developer includes a notice in the Original Software
-  prohibiting it from being distributed or otherwise made available
-  under any subsequent version of the License, You must distribute and
-  make the Covered Software available under the terms of the version
-  of the License under which You originally received the Covered
-  Software. Otherwise, You may also choose to use, distribute or
-  otherwise make the Covered Software available under the terms of any
-  subsequent version of the License published by the license steward.
-
-  4.3. Modified Versions.
-
-  When You are an Initial Developer and You want to create a new
-  license for Your Original Software, You may create and use a
-  modified version of this License if You: (a) rename the license and
-  remove any references to the name of the license steward (except to
-  note that the license differs from this License); and (b) otherwise
-  make it clear that the license contains terms which differ from this
-  License.
-
-5. DISCLAIMER OF WARRANTY.
-
-  COVERED SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS,
-  WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
-  INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE COVERED SOFTWARE
-  IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR
-  NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF
-  THE COVERED SOFTWARE IS WITH YOU. SHOULD ANY COVERED SOFTWARE PROVE
-  DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL DEVELOPER OR ANY
-  OTHER CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY SERVICING,
-  REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN
-  ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY COVERED SOFTWARE IS
-  AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER.
-
-6. TERMINATION.
-
-  6.1. This License and the rights granted hereunder will terminate
-  automatically if You fail to comply with terms herein and fail to
-  cure such breach within 30 days of becoming aware of the breach.
-  Provisions which, by their nature, must remain in effect beyond the
-  termination of this License shall survive.
-
-  6.2. If You assert a patent infringement claim (excluding
-  declaratory judgment actions) against Initial Developer or a
-  Contributor (the Initial Developer or Contributor against whom You
-  assert such claim is referred to as "Participant") alleging that the
-  Participant Software (meaning the Contributor Version where the
-  Participant is a Contributor or the Original Software where the
-  Participant is the Initial Developer) directly or indirectly
-  infringes any patent, then any and all rights granted directly or
-  indirectly to You by such Participant, the Initial Developer (if the
-  Initial Developer is not the Participant) and all Contributors under
-  Sections 2.1 and/or 2.2 of this License shall, upon 60 days notice
-  from Participant terminate prospectively and automatically at the
-  expiration of such 60 day notice period, unless if within such 60
-  day period You withdraw Your claim with respect to the Participant
-  Software against such Participant either unilaterally or pursuant to
-  a written agreement with Participant.
-
-  6.3. If You assert a patent infringement claim against Participant
-  alleging that the Participant Software directly or indirectly
-  infringes any patent where such claim is resolved (such as by
-  license or settlement) prior to the initiation of patent
-  infringement litigation, then the reasonable value of the licenses
-  granted by such Participant under Sections 2.1 or 2.2 shall be taken
-  into account in determining the amount or value of any payment or
-  license.
-
-  6.4. In the event of termination under Sections 6.1 or 6.2 above,
-  all end user licenses that have been validly granted by You or any
-  distributor hereunder prior to termination (excluding licenses
-  granted to You by any distributor) shall survive termination.
-
-7. LIMITATION OF LIABILITY.
-
-  UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT
-  (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL YOU, THE
-  INITIAL DEVELOPER, ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF
-  COVERED SOFTWARE, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE
-  TO ANY PERSON FOR ANY INDIRECT, SPECIAL, INCIDENTAL, OR
-  CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT
-  LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER
-  FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER COMMERCIAL DAMAGES OR
-  LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE
-  POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF LIABILITY SHALL NOT
-  APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY RESULTING FROM SUCH
-  PARTY'S NEGLIGENCE TO THE EXTENT APPLICABLE LAW PROHIBITS SUCH
-  LIMITATION. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR
-  LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THIS EXCLUSION
-  AND LIMITATION MAY NOT APPLY TO YOU.
-
-8. U.S. GOVERNMENT END USERS.
-
-  The Covered Software is a "commercial item," as that term is defined
-  in 48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial computer
-  software" (as that term is defined at 48 C.F.R. §
-  252.227-7014(a)(1)) and "commercial computer software documentation"
-  as such terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent
-  with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4
-  (June 1995), all U.S. Government End Users acquire Covered Software
-  with only those rights set forth herein. This U.S. Government Rights
-  clause is in lieu of, and supersedes, any other FAR, DFAR, or other
-  clause or provision that addresses Government rights in computer
-  software under this License.
-
-9. MISCELLANEOUS.
-
-  This License represents the complete agreement concerning subject
-  matter hereof. If any provision of this License is held to be
-  unenforceable, such provision shall be reformed only to the extent
-  necessary to make it enforceable. This License shall be governed by
-  the law of the jurisdiction specified in a notice contained within
-  the Original Software (except to the extent applicable law, if any,
-  provides otherwise), excluding such jurisdiction's conflict-of-law
-  provisions. Any litigation relating to this License shall be subject
-  to the jurisdiction of the courts located in the jurisdiction and
-  venue specified in a notice contained within the Original Software,
-  with the losing party responsible for costs, including, without
-  limitation, court costs and reasonable attorneys' fees and expenses.
-  The application of the United Nations Convention on Contracts for
-  the International Sale of Goods is expressly excluded. Any law or
-  regulation which provides that the language of a contract shall be
-  construed against the drafter shall not apply to this License. You
-  agree that You alone are responsible for compliance with the United
-  States export administration regulations (and the export control
-  laws and regulation of any other countries) when You use, distribute
-  or otherwise make available any Covered Software.
-
-10. RESPONSIBILITY FOR CLAIMS.
-
-  As between Initial Developer and the Contributors, each party is
-  responsible for claims and damages arising, directly or indirectly,
-  out of its utilization of rights under this License and You agree to
-  work with Initial Developer and Contributors to distribute such
-  responsibility on an equitable basis. Nothing herein is intended or
-  shall be deemed to constitute any admission of liability.
-
-NOTICE PURSUANT TO SECTION 9 OF THE COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
-
-The code released under the CDDL shall be governed by the laws of the
-State of California (excluding conflict-of-law provisions). Any
-litigation relating to this License shall be subject to the jurisdiction
-of the Federal Courts of the Northern District of California and the
-state courts of the State of California, with venue lying in Santa Clara
-County, California.
--------------------------------------------------------------------------------------
-The GNU General Public License (GPL) Version 2, June 1991
-------------------------------------------------------------------------------------------
-Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-51 Franklin Street, Fifth Floor
-Boston, MA 02110-1335
-USA
-
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-Preamble
-
-The licenses for most software are designed to take away your freedom to
-share and change it. By contrast, the GNU General Public License is
-intended to guarantee your freedom to share and change free software--to
-make sure the software is free for all its users. This General Public
-License applies to most of the Free Software Foundation's software and
-to any other program whose authors commit to using it. (Some other Free
-Software Foundation software is covered by the GNU Library General
-Public License instead.) You can apply it to your programs, too.
-
-When we speak of free software, we are referring to freedom, not price.
-Our General Public Licenses are designed to make sure that you have the
-freedom to distribute copies of free software (and charge for this
-service if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs; and that you know you can do these things.
-
-To protect your rights, we need to make restrictions that forbid anyone
-to deny you these rights or to ask you to surrender the rights. These
-restrictions translate to certain responsibilities for you if you
-distribute copies of the software, or if you modify it.
-
-For example, if you distribute copies of such a program, whether gratis
-or for a fee, you must give the recipients all the rights that you have.
-You must make sure that they, too, receive or can get the source code.
-And you must show them these terms so they know their rights.
-
-We protect your rights with two steps: (1) copyright the software, and
-(2) offer you this license which gives you legal permission to copy,
-distribute and/or modify the software.
-
-Also, for each author's protection and ours, we want to make certain
-that everyone understands that there is no warranty for this free
-software. If the software is modified by someone else and passed on, we
-want its recipients to know that what they have is not the original, so
-that any problems introduced by others will not reflect on the original
-authors' reputations.
-
-Finally, any free program is threatened constantly by software patents.
-We wish to avoid the danger that redistributors of a free program will
-individually obtain patent licenses, in effect making the program
-proprietary. To prevent this, we have made it clear that any patent must
-be licensed for everyone's free use or not licensed at all.
-
-The precise terms and conditions for copying, distribution and
-modification follow.
-
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-0. This License applies to any program or other work which contains a
-notice placed by the copyright holder saying it may be distributed under
-the terms of this General Public License. The "Program", below, refers
-to any such program or work, and a "work based on the Program" means
-either the Program or any derivative work under copyright law: that is
-to say, a work containing the Program or a portion of it, either
-verbatim or with modifications and/or translated into another language.
-(Hereinafter, translation is included without limitation in the term
-"modification".) Each licensee is addressed as "you".
-
-Activities other than copying, distribution and modification are not
-covered by this License; they are outside its scope. The act of running
-the Program is not restricted, and the output from the Program is
-covered only if its contents constitute a work based on the Program
-(independent of having been made by running the Program). Whether that
-is true depends on what the Program does.
-
-1. You may copy and distribute verbatim copies of the Program's source
-code as you receive it, in any medium, provided that you conspicuously
-and appropriately publish on each copy an appropriate copyright notice
-and disclaimer of warranty; keep intact all the notices that refer to
-this License and to the absence of any warranty; and give any other
-recipients of the Program a copy of this License along with the Program.
-
-You may charge a fee for the physical act of transferring a copy, and
-you may at your option offer warranty protection in exchange for a fee.
-
-2. You may modify your copy or copies of the Program or any portion of
-it, thus forming a work based on the Program, and copy and distribute
-such modifications or work under the terms of Section 1 above, provided
-that you also meet all of these conditions:
-
-    a) You must cause the modified files to carry prominent notices
-    stating that you changed the files and the date of any change.
-
-    b) You must cause any work that you distribute or publish, that in
-    whole or in part contains or is derived from the Program or any part
-    thereof, to be licensed as a whole at no charge to all third parties
-    under the terms of this License.
-
-    c) If the modified program normally reads commands interactively
-    when run, you must cause it, when started running for such
-    interactive use in the most ordinary way, to print or display an
-    announcement including an appropriate copyright notice and a notice
-    that there is no warranty (or else, saying that you provide a
-    warranty) and that users may redistribute the program under these
-    conditions, and telling the user how to view a copy of this License.
-    (Exception: if the Program itself is interactive but does not
-    normally print such an announcement, your work based on the Program
-    is not required to print an announcement.)
-
-These requirements apply to the modified work as a whole. If
-identifiable sections of that work are not derived from the Program, and
-can be reasonably considered independent and separate works in
-themselves, then this License, and its terms, do not apply to those
-sections when you distribute them as separate works. But when you
-distribute the same sections as part of a whole which is a work based on
-the Program, the distribution of the whole must be on the terms of this
-License, whose permissions for other licensees extend to the entire
-whole, and thus to each and every part regardless of who wrote it.
-
-Thus, it is not the intent of this section to claim rights or contest
-your rights to work written entirely by you; rather, the intent is to
-exercise the right to control the distribution of derivative or
-collective works based on the Program.
-
-In addition, mere aggregation of another work not based on the Program
-with the Program (or with a work based on the Program) on a volume of a
-storage or distribution medium does not bring the other work under the
-scope of this License.
-
-3. You may copy and distribute the Program (or a work based on it,
-under Section 2) in object code or executable form under the terms of
-Sections 1 and 2 above provided that you also do one of the following:
-
-    a) Accompany it with the complete corresponding machine-readable
-    source code, which must be distributed under the terms of Sections 1
-    and 2 above on a medium customarily used for software interchange; or,
-
-    b) Accompany it with a written offer, valid for at least three
-    years, to give any third party, for a charge no more than your cost
-    of physically performing source distribution, a complete
-    machine-readable copy of the corresponding source code, to be
-    distributed under the terms of Sections 1 and 2 above on a medium
-    customarily used for software interchange; or,
-
-    c) Accompany it with the information you received as to the offer to
-    distribute corresponding source code. (This alternative is allowed
-    only for noncommercial distribution and only if you received the
-    program in object code or executable form with such an offer, in
-    accord with Subsection b above.)
-
-The source code for a work means the preferred form of the work for
-making modifications to it. For an executable work, complete source code
-means all the source code for all modules it contains, plus any
-associated interface definition files, plus the scripts used to control
-compilation and installation of the executable. However, as a special
-exception, the source code distributed need not include anything that is
-normally distributed (in either source or binary form) with the major
-components (compiler, kernel, and so on) of the operating system on
-which the executable runs, unless that component itself accompanies the
-executable.
-
-If distribution of executable or object code is made by offering access
-to copy from a designated place, then offering equivalent access to copy
-the source code from the same place counts as distribution of the source
-code, even though third parties are not compelled to copy the source
-along with the object code.
-
-4. You may not copy, modify, sublicense, or distribute the Program
-except as expressly provided under this License. Any attempt otherwise
-to copy, modify, sublicense or distribute the Program is void, and will
-automatically terminate your rights under this License. However, parties
-who have received copies, or rights, from you under this License will
-not have their licenses terminated so long as such parties remain in
-full compliance.
-
-5. You are not required to accept this License, since you have not
-signed it. However, nothing else grants you permission to modify or
-distribute the Program or its derivative works. These actions are
-prohibited by law if you do not accept this License. Therefore, by
-modifying or distributing the Program (or any work based on the
-Program), you indicate your acceptance of this License to do so, and all
-its terms and conditions for copying, distributing or modifying the
-Program or works based on it.
-
-6. Each time you redistribute the Program (or any work based on the
-Program), the recipient automatically receives a license from the
-original licensor to copy, distribute or modify the Program subject to
-these terms and conditions. You may not impose any further restrictions
-on the recipients' exercise of the rights granted herein. You are not
-responsible for enforcing compliance by third parties to this License.
-
-7. If, as a consequence of a court judgment or allegation of patent
-infringement or for any other reason (not limited to patent issues),
-conditions are imposed on you (whether by court order, agreement or
-otherwise) that contradict the conditions of this License, they do not
-excuse you from the conditions of this License. If you cannot distribute
-so as to satisfy simultaneously your obligations under this License and
-any other pertinent obligations, then as a consequence you may not
-distribute the Program at all. For example, if a patent license would
-not permit royalty-free redistribution of the Program by all those who
-receive copies directly or indirectly through you, then the only way you
-could satisfy both it and this License would be to refrain entirely from
-distribution of the Program.
-
-If any portion of this section is held invalid or unenforceable under
-any particular circumstance, the balance of the section is intended to
-apply and the section as a whole is intended to apply in other
-circumstances.
-
-It is not the purpose of this section to induce you to infringe any
-patents or other property right claims or to contest validity of any
-such claims; this section has the sole purpose of protecting the
-integrity of the free software distribution system, which is implemented
-by public license practices. Many people have made generous
-contributions to the wide range of software distributed through that
-system in reliance on consistent application of that system; it is up to
-the author/donor to decide if he or she is willing to distribute
-software through any other system and a licensee cannot impose that choice.
-
-This section is intended to make thoroughly clear what is believed to be
-a consequence of the rest of this License.
-
-8. If the distribution and/or use of the Program is restricted in
-certain countries either by patents or by copyrighted interfaces, the
-original copyright holder who places the Program under this License may
-add an explicit geographical distribution limitation excluding those
-countries, so that distribution is permitted only in or among countries
-not thus excluded. In such case, this License incorporates the
-limitation as if written in the body of this License.
-
-9. The Free Software Foundation may publish revised and/or new
-versions of the General Public License from time to time. Such new
-versions will be similar in spirit to the present version, but may
-differ in detail to address new problems or concerns.
-
-Each version is given a distinguishing version number. If the Program
-specifies a version number of this License which applies to it and "any
-later version", you have the option of following the terms and
-conditions either of that version or of any later version published by
-the Free Software Foundation. If the Program does not specify a version
-number of this License, you may choose any version ever published by the
-Free Software Foundation.
-
-10. If you wish to incorporate parts of the Program into other free
-programs whose distribution conditions are different, write to the
-author to ask for permission. For software which is copyrighted by the
-Free Software Foundation, write to the Free Software Foundation; we
-sometimes make exceptions for this. Our decision will be guided by the
-two goals of preserving the free status of all derivatives of our free
-software and of promoting the sharing and reuse of software generally.
-
-NO WARRANTY
-
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
-WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
-EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
-OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
-YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
-WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
-AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
-DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
-DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
-(INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
-INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
-THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
-OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-END OF TERMS AND CONDITIONS
-
-How to Apply These Terms to Your New Programs
-
-If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.
-
-To do so, attach the following notices to the program. It is safest to
-attach them to the start of each source file to most effectively convey
-the exclusion of warranty; and each file should have at least the
-"copyright" line and a pointer to where the full notice is found.
-
-    One line to give the program's name and a brief idea of what it does.
-    Copyright (C) <year> <name of author>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335 USA
-
-Also add information on how to contact you by electronic and paper mail.
-
-If the program is interactive, make it output a short notice like this
-when it starts in an interactive mode:
-
-    Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
-    `show w'. This is free software, and you are welcome to redistribute
-    it under certain conditions; type `show c' for details.
-
-The hypothetical commands `show w' and `show c' should show the
-appropriate parts of the General Public License. Of course, the commands
-you use may be called something other than `show w' and `show c'; they
-could even be mouse-clicks or menu items--whatever suits your program.
-
-You should also get your employer (if you work as a programmer) or your
-school, if any, to sign a "copyright disclaimer" for the program, if
-necessary. Here is a sample; alter the names:
-
-    Yoyodyne, Inc., hereby disclaims all copyright interest in the
-    program `Gnomovision' (which makes passes at compilers) written by
-    James Hacker.
-
-    signature of Ty Coon, 1 April 1989
-    Ty Coon, President of Vice
-
-This General Public License does not permit incorporating your program
-into proprietary programs. If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications
-with the library. If this is what you want to do, use the GNU Library
-General Public License instead of this License.
-
-Certain source files distributed by Oracle America, Inc. and/or its
-affiliates are subject to the following clarification and special
-exception to the GPLv2, based on the GNU Project exception for its
-Classpath libraries, known as the GNU Classpath Exception, but only
-where Oracle has expressly included in the particular source file's
-header the words "Oracle designates this particular file as subject to
-the "Classpath" exception as provided by Oracle in the LICENSE file
-that accompanied this code."
-
-You should also note that Oracle includes multiple, independent
-programs in this software package. Some of those programs are provided
-under licenses deemed incompatible with the GPLv2 by the Free Software
-Foundation and others.  For example, the package includes programs
-licensed under the Apache License, Version 2.0.  Such programs are
-licensed to you under their original licenses.
-
-Oracle facilitates your further distribution of this package by adding
-the Classpath Exception to the necessary parts of its GPLv2 code, which
-permits you to use that code in combination with other independent
-modules not licensed under the GPLv2.  However, note that this would
-not permit you to commingle code under an incompatible license with
-Oracle's GPLv2 licensed code by, for example, cutting and pasting such
-code into a file also containing Oracle's GPLv2 licensed code and then
-distributing the result.  Additionally, if you were to remove the
-Classpath Exception from any of the files to which it applies and
-distribute the result, you would likely be required to license some or
-all of the other code in that distribution under the GPLv2 as well, and
-since the GPLv2 is incompatible with the license terms of some items
-included in the distribution by Oracle, removing the Classpath
-Exception could therefore effectively compromise your ability to
-further distribute the package.
-
-Proceed with caution and we recommend that you obtain the advice of a
-lawyer skilled in open source matters before removing the Classpath
-Exception or making modifications to this package which may
-subsequently be redistributed and/or involve the use of third party
-software.
-
-CLASSPATH EXCEPTION
-
-Linking this library statically or dynamically with other modules is
-making a combined work based on this library.  Thus, the terms and
-conditions of the GNU General Public License version 2 cover the whole
-combination.
-
-As a special exception, the copyright holders of this library give you
-permission to link this library with independent modules to produce an
-executable, regardless of the license terms of these independent
-modules, and to copy and distribute the resulting executable under
-terms of your choice, provided that you also meet, for each linked
-independent module, the terms and conditions of the license of that
-module.  An independent module is a module which is not derived from or
-based on this library.  If you modify this library, you may extend this
-exception to your version of the library, but you are not obligated to
-do so.  If you do not wish to do so, delete this exception statement
-from your version.
-
-
-------
-Assorted
-
-The UnixCrypt.java code implements the one way cryptography used by
-Unix systems for simple password protection.  Copyright 1996 Aki Yoshida,
-modified April 2001  by Iris Van den Broeke, Daniel Deville.
-Permission to use, copy, modify and distribute UnixCrypt
-for non-commercial or commercial purposes and without fee is
-granted provided that the copyright notice appears in all copies.
-
---------------------------------------------------------------------
-org.osgi.service.prefs_1.1.2.202109301733.jar   (Apache 2.0)
-org.osgi.util.function_1.2.0.202109301733.jar   (Apache 2.0)
-org.osgi.util.measurement_1.0.2.201802012109.jar (Apache 2.0)
-org.osgi.util.position_1.0.1.201505202026.jar    (Apache 2.0)
-org.osgi.util.promise_1.2.0.202109301733.jar    (Apache 2.0)
-org.osgi.util.xml_1.0.2.202109301733.jar        (Apache 2.0)
-
-Copyright (c) 2000, 2006
-
-OSGi Alliance Bishop Ranch 6
-2400 Camino Ramon, Suite 375
-San Ramon, CA 94583 USA
-
-All Rights Reserved.
---------------------------------------------------------------------
-Licensed under http://www.apache.org/licenses/LICENSE-2.0.html
-
-
---------------------------------------------------------------------
-org.sat4j.core_2.3.6.v20201214.jar	(EPL 1.0)
-org.sat4j.pb_2.3.6.v20201214.jar	 (EPL 1.0)
-
---------------------------------------------------------------------
-Licensed under http://www.eclipse.org/legal/epl-v10.html
--------------------------------------------------------------------------------------------------
-org.tukaani.xz_1.9.0.v20210624-1259.jar (Public license with no restriction)
-
-------------------------------------------------------------------------------------------------
-XZ for Java (org.tukaani:xz)
-
-Copyright Lasse Collin
---------------------------------------------
-URL for License – http://git.tukaani.org/?p=xz-java.git;a=blob;f=COPYING;h=c1d404dc7a6f06a0437bf1055fedaa4a4c89d728;hb=771cc594554d21f5279130b662105fd5dc8bfa88
-
-Licensing of XZ for Java
-    
-All the files in this package have been written by Lasse Collin and/or Igor Pavlov. All these files have been put into the public domain. You can do whatever you want with these files.
- 
-This software is provided "as is", without any warranty. 
-
---------------------------------------------------------------------------
-org.w3c.css.sac_1.3.1.v200903091627.jar (W3C)
-org.w3c.dom.smil_1.0.1.v200903091627.jar (W3C)
-org.w3c.dom.svg_1.1.0.v201011041433.jar (W3C)
-
---------------------------------------------------------------------------
-
------------
-NOTICE
------------
-This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
-
-This software contains code from the World Wide Web Consortium (W3C) for the
-Document Object Model API (DOM API) and SVG Document Type Definition (DTD).
-
-This software contains code from the International Organisation for Standardization
-for the definition of character entities used in the software's documentation.
-
-
-
-W3C® SOFTWARE NOTICE AND LICENSE
-
-http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
-This work (and included software, documentation such as READMEs, or other related items) is being provided by the copyright holders under the following license. By obtaining, using and/or copying this work, you (the licensee) agree that you have read, understood, and will comply with the following terms and conditions.
-
-Permission to copy, modify, and distribute this software and its documentation, with or without modification, for any purpose and without fee or royalty is hereby granted, provided that you include the following on ALL copies of the software and documentation or portions thereof, including modifications:
-
-The full text of this NOTICE in a location viewable to users of the redistributed or derivative work.
-Any pre-existing intellectual property disclaimers, notices, or terms and conditions. If none exist, the W3C Software Short Notice should be included (hypertext is preferred, text is permitted) within the body of any redistributed or derivative code.
-Notice of any changes or modifications to the files, including the date changes were made. (We recommend you provide URIs to the location from which the code is derived.)
-THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THE SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
-
-COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR DOCUMENTATION.
-
-The name and trademarks of copyright holders may NOT be used in advertising or publicity pertaining to the software without specific, written prior permission. Title to copyright in this software and any associated documentation will at all times remain with copyright holders.
-
-____________________________________
-
-This formulation of W3C's notice and license became active on December 31 2002. This version removes the copyright ownership notice such that this license can be used with materials other than those owned by the W3C, reflects that ERCIM is now a host of the W3C, includes references to this specific dated version of the license, and removes the ambiguous grant of "use". Otherwise, this version is the same as the previous version and is written so as to preserve the Free Software Foundation's assessment of GPL compatibility and OSI's certification under the Open Source Definition. Please see our Copyright FAQ for common questions about using materials from our site, including specific terms and conditions for packages like libwww, Amaya, and Jigsaw. Other questions about this notice can be directed to site-policy@w3.org.
- 
-
-Joseph Reagle 
---------------------------------------------------------------------------------------------
-org.w3c.dom.events_3.0.0.draft20060413_v201105210656.jar	(W3C)
----------------------------------------------------------------------------------------------
-----------
-NOTICE
-----------
-Apache Batik
-Copyright 1999-2007 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-This software contains code from the World Wide Web Consortium (W3C) for the
-Document Object Model API (DOM API) and SVG Document Type Definition (DTD).
-
-This software contains code from the International Organisation for
-Standardization for the definition of character entities used in the software's
-documentation.
-
-This product includes images from the Tango Desktop Project
-(http://tango.freedesktop.org/).
-
-This product includes images from the Pasodoble Icon Theme
-(http://www.jesusda.com/projects/pasodoble).
-
-xml-commons/java/external/LICENSE.dom-software.txt $Id: LICENSE.dom-software.txt,v 1.1.2.1 2009/02/20 17:40:43 cdamus Exp $
-
-
-This license came from: http://www.w3.org/Consortium/Legal/copyright-software-19980720
-
-
-W3C® SOFTWARE NOTICE AND LICENSE
-Copyright © 1994-2001 World
-Wide Web Consortium, World
-Wide Web Consortium, (Massachusetts Institute of
-Technology, Institut National de
-Recherche en Informatique et en Automatique, Keio University). All Rights Reserved.
-http://www.w3.org/Consortium/Legal/
-
-This W3C work (including software, documents, or other related
-items) is being provided by the copyright holders under the
-following license. By obtaining, using and/or copying this work,
-you (the licensee) agree that you have read, understood, and will
-comply with the following terms and conditions:
-Permission to use, copy, modify, and distribute this software
-and its documentation, with or without modification,  for any
-purpose and without fee or royalty is hereby granted, provided that
-you include the following on ALL copies of the software and
-documentation or portions thereof, including modifications, that
-you make:
-
-The full text of this NOTICE in a location viewable to users of
-the redistributed or derivative work.
-
-Any pre-existing intellectual property disclaimers, notices, or
-terms and conditions. If none exist, a short notice of the
-following form (hypertext is preferred, text is permitted) should
-be used within the body of any redistributed or derivative code:
-"Copyright © [$date-of-software] World Wide Web Consortium, (Massachusetts Institute of
-Technology, Institut National de
-Recherche en Informatique et en Automatique, Keio University). All Rights Reserved.
-http://www.w3.org/Consortium/Legal/"
-
-Notice of any changes or modifications to the W3C files,
-including the date changes were made. (We recommend you provide 
-URIs to the location from which the code is derived.)
-
-THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND
-COPYRIGHT HOLDERS MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF
-MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE
-USE OF THE SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE ANY THIRD
-PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
-COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT,
-SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE
-SOFTWARE OR DOCUMENTATION.
-
-The name and trademarks of copyright holders may NOT be used in
-advertising or publicity pertaining to the software without
-specific, written prior permission. Title to copyright in this
-software and any associated documentation will at all times remain
-with copyright holders.
-____________________________________
-This formulation of W3C's notice and license became active on
-August 14 1998 so as to improve compatibility with GPL. This
-version ensures that W3C software licensing terms are no more
-restrictive than GPL and consequently W3C software may be
-distributed in GPL packages. See the older formulation for the
-policy prior to this date. Please see our Copyright FAQ for common 
-questions about using materials from
-our site, including specific terms and conditions for packages like
-libwww, Amaya, and Jigsaw. 
-Other questions about this notice can be
-directed to site-policy@w3.org.
-
-webmaster
-(last updated $Date: 2009/02/20 17:40:43 $)
-
---------------------------------------------------------------------------------------------------
-
-org.apache.httpcomponents.client5.httpclient5_5.1.2.v20211217-1500.jar    (Apache 2.0)
-org.apache.httpcomponents.client5.httpclient5-win_5.1.2.v20211217-1500.jar    (Apache 2.0)
-org.apache.httpcomponents.core5.httpcore5_5.1.2.v20211217-1500.jar        (Apache 2.0)
-org.apache.httpcomponents.core5.httpcore5-h2_5.1.2.v20211217-1500.jar     (Apache 2.0)
-
----------------------------------------------------------------------------------------------------
-
-Licensed under Apache 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
----------------------------------------------------
-NOTICE for org.apache.httpcomponents.*
-----------------------------------------------------
-Apache HttpClient Fluent API
-Copyright 1999-2022 The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
------------------------------------------------------------------------------
-org.apiguardian_1.1.2.v20211018-1956.jar    (Apache 2.0)
-
------------------------------------------------------------------------------
-/*
- * Copyright 2002-2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
---------------------------------------------------------------------------------------
-org.hamcrest.core_1.3.0.v20180420-1519.jar  (2-Clause BSD License)
-
---------------------------------------------------------------------------------------
-
-The 2-Clause BSD License
-SPDX short identifier: BSD-2-Clause
-
-
-Note: This license has also been called the "Simplified BSD License" and the "FreeBSD License". See also the 3-clause BSD License.
-
-Copyright  
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISI
----------------------------------------------------------------------------------
-org.bouncycastle.bcpg_1.70.0.v20220507-1208.jar     (MIT License)
-org.bouncycastle.bcprov_1.70.0.v20220507-1208.jar   (MIT License)
---------------------------------------------------------------------------------
-
-Copyright (c) 2000-2021 The Legion of the Bouncy Castle Inc. (https://www.bouncycastle.org)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
------------------------------------------------------------------------------------------
-org.slf4j.api_1.7.30.v20200204-2150.jar – (MIT License)
------------------------------------------------------------------------------------------
-
-Copyright (c) 2004-2022 QOS.ch Sarl (Switzerland)
-All rights reserved.
-
-Permission is hereby granted, free  of charge, to any person obtaining
-a  copy  of this  software  and  associated  documentation files  (the
-"Software"), to  deal in  the Software without  restriction, including
-without limitation  the rights to  use, copy, modify,  merge, publish,
-distribute,  sublicense, and/or sell  copies of  the Software,  and to
-permit persons to whom the Software  is furnished to do so, subject to
-the following conditions:
-
-The  above  copyright  notice  and  this permission  notice  shall  be
-included in all copies or substantial portions of the Software.
-
-THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
-EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
-MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
---------------------------------------------------------------------------------
-
-ISC License 
-
-Copyright <YEAR> <COPYRIGHT HOLDER>
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
+EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+7. GENERAL
+
+If any provision of this Agreement is invalid or unenforceable under
+applicable law, it shall not affect the validity or enforceability of
+the remainder of the terms of this Agreement, and without further
+action by the parties hereto, such provision shall be reformed to the
+minimum extent necessary to make such provision valid and enforceable.
+
+If Recipient institutes patent litigation against any entity
+(including a cross-claim or counterclaim in a lawsuit) alleging that the
+Program itself (excluding combinations of the Program with other software
+or hardware) infringes such Recipient's patent(s), then such Recipient's
+rights granted under Section 2(b) shall terminate as of the date such
+litigation is filed.
+
+All Recipient's rights under this Agreement shall terminate if it
+fails to comply with any of the material terms or conditions of this
+Agreement and does not cure such failure in a reasonable period of
+time after becoming aware of such noncompliance. If all Recipient's
+rights under this Agreement terminate, Recipient agrees to cease use
+and distribution of the Program as soon as reasonably practicable.
+However, Recipient's obligations under this Agreement and any licenses
+granted by Recipient relating to the Program shall continue and survive.
+
+Everyone is permitted to copy and distribute copies of this Agreement,
+but in order to avoid inconsistency the Agreement is copyrighted and
+may only be modified in the following manner. The Agreement Steward
+reserves the right to publish new versions (including revisions) of
+this Agreement from time to time. No one other than the Agreement
+Steward has the right to modify this Agreement. The Eclipse Foundation
+is the initial Agreement Steward. The Eclipse Foundation may assign the
+responsibility to serve as the Agreement Steward to a suitable separate
+entity. Each new version of the Agreement will be given a distinguishing
+version number. The Program (including Contributions) may always be
+Distributed subject to the version of the Agreement under which it was
+received. In addition, after a new version of the Agreement is published,
+Contributor may elect to Distribute the Program (including its
+Contributions) under the new version.
+
+Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
+receives no rights or licenses to the intellectual property of any
+Contributor under this Agreement, whether expressly, by implication,
+estoppel or otherwise. All rights in the Program not expressly granted
+under this Agreement are reserved. Nothing in this Agreement is intended
+to be enforceable by any entity that is not a Contributor or Recipient.
+No third-party beneficiary rights are created under this Agreement.
+
+Exhibit A - Form of Secondary Licenses Notice
+
+"This Source Code may also be made available under the following 
+Secondary Licenses when the conditions for such availability set forth 
+in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
+version(s), and exceptions or additional permissions here}."
+
+  Simply including a copy of this Agreement, including this Exhibit A
+  is not sufficient to license the Source Code under Secondary Licenses.
+
+  If it is not possible or desirable to put the notice in a particular
+  file, then You may include the notice in a location (such as a LICENSE
+  file in a relevant directory) where a recipient would be likely to
+  look for such a notice.
+
+  You may add additional accurate notices of copyright ownership.
 
 %% The following notice is provided with respect to OWASP Java Encoder Project v1.2.3, 
 which may be included with this product.
@@ -2373,7 +318,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------
 
-%% The following notice is provided with respect to HdrHistogram v2.1.12,
+%% The following notice is provided with respect to HdrHistogram v2.2.2,
 which may be included with this product.
 
 The code in this repository code was Written by Gil Tene, Michael Barker,
@@ -2391,7 +336,7 @@ the Author.
 -----------------------------------------------------------------------------
 ** Beginning of "BSD 2-Clause License" text. **
 
- Copyright (c) 2012, 2013, 2014 Gil Tene
+ Copyright (c) 2012, 2013, 2014, 2015, 2016 Gil Tene
  Copyright (c) 2014 Michael Barker
  Copyright (c) 2014 Matt Warren
  All rights reserved.
@@ -2421,7 +366,7 @@ the Author.
 %% The following notice is provided with respect to lz4-java v1.8.0,
 which may be included with this product.
 
-URL for License – http://opensource.org/licenses/Apache-2.0
+URL for License ï¿½ http://opensource.org/licenses/Apache-2.0
 
 Apache License
 Version 2.0, January 2004
@@ -2490,9 +435,10 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-%% The following notice is provided with respect to hpcc-js-wasm v1.14.1,
+%% The following notice is provided with respect to hpcc-js-wasm v2.18.0,
 which may be included with this product.
 
+------------------------------------------------------------------------------------
 Apache License
 ------------------------------------------------------------------------------------
                            Version 2.0, January 2004
@@ -2700,7 +646,7 @@ Apache License
 
 LIBRARY NAME        LICENSE (see license text below)
 -----------------        --------------------------------
-yargs 17.4.0                MIT License
+yargs 17.7.2                MIT License
 
 MIT License
 
@@ -2723,233 +669,465 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+--------------------------------------------------------------------------------
  
-%% The following notice is provided with respect to D3 v7.7.0, 
+%% The following notice is provided with respect to D3 v7.9.0, 
 which may be included with this product.
 
-Copyright 2010-2022 Mike Bostock
+------------------------------ Top-Level License -------------------------------
+ISC-fcc83e5a
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+---------------------------------- Copyright -----------------------------------
+Copyright 2010-2023 Mike Bostock
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
----------------------------------------
-Depends on commander, version 7.2.0, license follows
-(The MIT License)
+-------------------------- Fourth Party Dependencies ---------------------------
 
+----------------------------------- Licenses -----------------------------------
+-  BSD-3-Clause
+-  ISC
+-  MIT
+-  Unlicense
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+commander
+
+== License Type
+SPDX:MIT
+
+== Copyright
 Copyright (c) 2011 TJ Holowaychuk <tj@vision-media.ca>
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+--------------------------------- (separator) ----------------------------------
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+== Dependency
+d3-array
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+== License Type
+SPDX:ISC
 
----------------------------------------
-Depends on d3-array, version 3.2.0, license follows
+== Copyright
+Copyright 2010-2023 Mike Bostock
+Copyright 2018 Vladimir Agafonkin.
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-axis
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-brush
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-chord
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-color
+
+== License Type
+SPDX:ISC
+
+== Copyright
 Copyright 2010-2022 Mike Bostock
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+--------------------------------- (separator) ----------------------------------
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+== Dependency
+d3-contour
 
----------------------------------------
-Depends on d3-axis, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
+== License Type
+SPDX:ISC
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+== Copyright
+Copyright 2012-2023 Mike Bostock
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+--------------------------------- (separator) ----------------------------------
 
----------------------------------------
-Depends on d3-brush, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
+== Dependency
+d3-delaunay
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+== License Type
+SPDX:ISC
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-chord, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-color, version 3.1.0, license follows
-Copyright 2010-2022 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-contour, version 4.0.0, license follows
-Copyright 2012-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-delaunay, version 6.0.2, license follows
+== Copyright
 Copyright 2018-2021 Observable, Inc.
+Copyright 2018-2021 Observable, Inc., 2021 Mapbox
 Copyright 2021 Mapbox
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+--------------------------------- (separator) ----------------------------------
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+== Dependency
+d3-dispatch
 
----------------------------------------
-Depends on d3-dispatch, version 3.0.1, license follows
+== License Type
+SPDX:ISC
+
+== Copyright
 Copyright 2010-2021 Mike Bostock
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+--------------------------------- (separator) ----------------------------------
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+== Dependency
+d3-drag
 
----------------------------------------
-Depends on d3-drag, version 3.0.0, license follows
+== License Type
+SPDX:ISC
+
+== Copyright
 Copyright 2010-2021 Mike Bostock
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+--------------------------------- (separator) ----------------------------------
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+== Dependency
+d3-dsv
 
----------------------------------------
-Depends on d3-dsv, version 3.0.1, license follows
+== License Type
+SPDX:ISC
+
+== Copyright
 Copyright 2013-2021 Mike Bostock
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+--------------------------------- (separator) ----------------------------------
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+== Dependency
+d3-ease
 
----------------------------------------
-Depends on d3-ease, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
+== License Type
+SPDX:BSD-3-Clause
+
+== Copyright
 Copyright 2001 Robert Penner
-All rights reserved.
+Copyright 2010-2021 Mike Bostock
+Copyright 2010-2021 Mike Bostock, 2001 Robert Penner
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-fetch
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2016-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-force
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-format
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-geo
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2008-2012 Charles Karney
+Copyright 2010-2024 Mike Bostock
+Copyright 2010-2024 Mike Bostock, 2008-2012 Charles Karney
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-hierarchy
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-interpolate
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-path
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2015-2022 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-polygon
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-quadtree
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-random
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-scale-chromatic
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2002 Cynthia Brewer, Mark Harrower, and The Pennsylvania State University
+Copyright 2010-2024 Mike Bostock
+Copyright 2010-2024 Mike Bostock; 2002 Cynthia Brewer, Mark Harrower, and The Pennsylvania State University
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-scale
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-selection
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-shape
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2022 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-time-format
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-time
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2022 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-timer
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-transition
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+d3-zoom
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2010-2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+delaunator
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright (c) 2021, Mapbox
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+iconv-lite
+
+== License Type
+SPDX:MIT
+
+== Copyright
+Copyright (c) 2011 Alexander Shtuchkin
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+internmap
+
+== License Type
+SPDX:ISC
+
+== Copyright
+Copyright 2021 Mike Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+robust-predicates
+
+== License Type
+SPDX:Unlicense
+
+== Copyright
+(no copyright notices found)
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+rw
+
+== License Type
+SPDX:BSD-3-Clause
+
+== Copyright
+Copyright (c) 2014-2016, Michael Bostock
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+safer-buffer
+
+== License Type
+SPDX:MIT
+
+== Copyright
+Copyright (c) 2018 Nikita Skovoroda <chalkerx@gmail.com>
+
+----------------------------------- Licenses -----------------------------------
+
+--------------------------------- (separator) ----------------------------------
+== SPDX:BSD-3-Clause
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
 
-* Neither the name of the author nor the names of contributors may be used to
-  endorse or promote products derived from this software without specific prior
-  written permission.
+3. Neither the name of the copyright holder nor the names of its contributors
+   may be used to endorse or promote products derived from this software without
+   specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
 ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
@@ -2957,464 +1135,26 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
----------------------------------------
-Depends on d3-fetch, version 3.0.1, license follows
-Copyright 2016-2021 Mike Bostock
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
+--------------------------------- (separator) ----------------------------------
+== SPDX:ISC
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
 
----------------------------------------
-Depends on d3-force, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
+THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH REGARD
+TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+OF THIS SOFTWARE.
 
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
 
----------------------------------------
-Depends on d3-format, version 3.1.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-geo, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
-This license applies to GeographicLib, versions 1.12 and later.
-
-Copyright 2008-2012 Charles Karney
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----------------------------------------
-Depends on d3-hierarchy, version 3.1.2, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-interpolate, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-path, version 3.0.1, license follows
-Copyright 2015-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-polygon, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-quadtree, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-random, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-scale, version 4.0.2, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-scale-chromatic, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
-Apache-Style Software License for ColorBrewer software and ColorBrewer Color Schemes
-
-Copyright 2002 Cynthia Brewer, Mark Harrower, and The Pennsylvania State University
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
-
----------------------------------------
-Depends on d3-selection, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-shape, version 3.1.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-time, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-time-format, version 4.1.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-timer, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-transition, version 3.0.1, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on d3-zoom, version 3.0.0, license follows
-Copyright 2010-2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on delaunator, version 5.0.0, license follows
-ISC License
-
-Copyright (c) 2017, Mapbox
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on iconv-lite, version 0.6.3, license follows
-Copyright (c) 2011 Alexander Shtuchkin
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----------------------------------------
-Depends on internmap, version 2.0.3, license follows
-Copyright 2021 Mike Bostock
-
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
----------------------------------------
-Depends on robust-predicates, version 3.0.1, license follows
-This is free and unencumbered software released into the public domain.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
-
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <http://unlicense.org>
-
----------------------------------------
-Depends on rw, version 1.3.3, license follows
-Copyright (c) 2014-2016, Michael Bostock
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* The name Michael Bostock may not be used to endorse or promote products
-  derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL MICHAEL BOSTOCK BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
----------------------------------------
-Depends on safer-buffer, version 2.1.2, license follows
-MIT License
-
-Copyright (c) 2018 Nikita Skovoroda <chalkerx@gmail.com>
+--------------------------------- (separator) ----------------------------------
+== SPDX:MIT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3433,10 +1173,43 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+
+--------------------------------- (separator) ----------------------------------
+== SPDX:Unlicense
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+this software, either in source code form or as a compiled binary, for any
+purpose, commercial or non-commercial, and by any means.
+
+In jurisdictions that recognize copyright laws, the author or authors of this
+software dedicate any and all copyright interest in the software to the public
+domain. We make this dedication for the benefit of the public at large and to
+the detriment of our heirs and
+
+successors. We intend this dedication to be an overt act of relinquishment in
+perpetuity of all present and future rights to this software under copyright
+law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
 --------------------------------------------------------------------------------
 
-%% The following notice is provided with respect to d3-graphviz v4.1.1,
+%% The following notice is provided with respect to d3-graphviz v5.6.0,
 which may be included with this product.
+
+--------------------------------------------------------------
+BSD 3-Clause
+--------------------------------------------------------------
 
 Copyright 2017, Magnus Jacobsson
 All rights reserved.
@@ -3672,76 +1445,67 @@ Apache License
    limitations under the License.
 
 
---------------------------------------------------------------------------------
-BSD-3-Clause
---------------------------------------------------------------------------------
-Copyright  
+--------------------------------------------------------------
+ISC License
+--------------------------------------------------------------
+Copyright <Year> Mike Bostock
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
 
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
 
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of the author nor the names of contributors may be used to
-  endorse or promote products derived from this software without specific prior
-  written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------
+----------------------------------------
 FOURTH PARTY DEPENDENCIES
--------------------------
+----------------------------------------
 
-LIBRARY NAME        LICENSE (see license text below)
-------------        --------------------------------
-hpcc-js-wasm 1.14.1 Apache 2.0
-d3-dispatch         BSD-3-Clause
-d3-format           BSD-3-Clause
-d3-interpolate      BSD-3-Clause
-d3-path             BSD-3-Clause
-d3-selection        BSD-3-Clause
-d3-timer            BSD-3-Clause
-d3-transition       BSD-3-Clause
-d3-zoom             BSD-3-Clause
+LIBRARY NAME          LICENSE (see license text above)
+------------------           --------------------------------
+hpcc-js-wasm       Apache 2.0
+d3-dispatch          ISC
+d3-format            ISC
+d3-interpolate      ISC
+d3-path               ISC
+d3-selection         ISC
+d3-timer              ISC
+d3-transition        ISC
+d3-zoom              ISC
 
 -----------------
 COPYRIGHT NOTICES
 -----------------
 
 d3-dispatch:
-Copyright 2010-2016 Mike Bostock
+Copyright 2010-2021 Mike Bostock
 
 d3-format:
-Copyright 2010-2015 Mike Bostock
+Copyright 2010-2021 Mike Bostock
 
 d3-interpolate:
-Copyright 2010-2016 Mike Bostock
+Copyright 2010-2021 Mike Bostock
 
 d3-path:
-Copyright 2015-2016 Mike Bostock
+Copyright 2015-2022 Mike Bostock
+
+d3-selection:
+Copyright 2010-2021 Mike Bostock
 
 d3-timer:
-Copyright 2010-2016 Mike Bostock
+Copyright 2010-2021 Mike Bostock
 
 d3-transition:
-Copyright 2010-2015 Mike Bostock
+Copyright 2010-2021 Mike Bostock
 
 d3-zoom:
-Copyright 2010-2016 Mike Rostock
+Copyright 2010-2021 Mike Bostock
+--------------------------------------------------------------------------------
 
 %% The following notice is provided with respect to d3-flame-graph v4.1.3,
 which may be included with this product.
@@ -4207,8 +1971,9 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
+------------------------------------------------------------------------------------------
 
-%% The following notice is provided with respect to FontAwesome v5.15.3,
+%% The following notice is provided with respect to FontAwesome v6.5.1,
 which may be included with this product in the form of icons.
 
 Font Awesome Free License
@@ -4246,106 +2011,122 @@ trademarks does not indicate endorsement of the trademark holder by Font
 Awesome, nor vice versa. **Please do not use brand logos for any purpose except
 to represent the company, product, or service to which they refer.**
 
-CC BY 4.0 License
-----------------------
+from: https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt
+
+=============================================================
+
+Text of sub-licenses:
+
+1. Icons: CC BY 4.0 License
+2. Fonts: SIL OFL 1.1 License 
+3. Code: MIT License
+
+-------------------------------------------------------------
 
 Creative Commons Attribution 4.0 International Public License
+
 By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution 4.0 International Public License ("Public License"). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
 
-Section 1 – Definitions.
+Section 1 â€“ Definitions.
 
-Adapted Material means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
-Adapter's License means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
-Copyright and Similar Rights means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
-Effective Technological Measures means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
-Exceptions and Limitations means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
-Licensed Material means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
-Licensed Rights means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
-Licensor means the individual(s) or entity(ies) granting rights under this Public License.
-Share means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
-Sui Generis Database Rights means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
-You means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
-Section 2 – Scope.
+    Adapted Material means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+    Adapter's License means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+    Copyright and Similar Rights means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+    Effective Technological Measures means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+    Exceptions and Limitations means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+    Licensed Material means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+    Licensed Rights means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+    Licensor means the individual(s) or entity(ies) granting rights under this Public License.
+    Share means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+    Sui Generis Database Rights means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+    You means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
 
-License grant.
-Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
-reproduce and Share the Licensed Material, in whole or in part; and
-produce, reproduce, and Share Adapted Material.
-Exceptions and Limitations. For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
-Term. The term of this Public License is specified in Section 6(a).
-Media and formats; technical modifications allowed. The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
-Downstream recipients.
-Offer from the Licensor – Licensed Material. Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
-No downstream restrictions. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
-No endorsement. Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
-Other rights.
+Section 2 â€“ Scope.
 
-Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
-Patent and trademark rights are not licensed under this Public License.
-To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties.
-Section 3 – License Conditions.
+    License grant.
+        Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+            reproduce and Share the Licensed Material, in whole or in part; and
+            produce, reproduce, and Share Adapted Material.
+        Exceptions and Limitations. For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+        Term. The term of this Public License is specified in Section 6(a).
+        Media and formats; technical modifications allowed. The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+        Downstream recipients.
+            Offer from the Licensor â€“ Licensed Material. Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+            No downstream restrictions. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+        No endorsement. Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+    Other rights.
+        Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+        Patent and trademark rights are not licensed under this Public License.
+        To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties.
+
+Section 3 â€“ License Conditions.
 
 Your exercise of the Licensed Rights is expressly made subject to the following conditions.
 
-Attribution.
+    Attribution.
 
-If You Share the Licensed Material (including in modified form), You must:
+        If You Share the Licensed Material (including in modified form), You must:
+            retain the following if it is supplied by the Licensor with the Licensed Material:
+                identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+                a copyright notice;
+                a notice that refers to this Public License;
+                a notice that refers to the disclaimer of warranties;
+                a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+            indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+            indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+        You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+        If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+        If You Share Adapted Material You produce, the Adapter's License You apply must not prevent recipients of the Adapted Material from complying with this Public License.
 
-retain the following if it is supplied by the Licensor with the Licensed Material:
-identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
-a copyright notice;
-a notice that refers to this Public License;
-a notice that refers to the disclaimer of warranties;
-a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
-indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
-indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
-You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
-If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
-If You Share Adapted Material You produce, the Adapter's License You apply must not prevent recipients of the Adapted Material from complying with this Public License.
-Section 4 – Sui Generis Database Rights.
+Section 4 â€“ Sui Generis Database Rights.
 
 Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
 
-for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database;
-if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material; and
-You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+    for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database;
+    if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material; and
+    You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
 For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
-Section 5 – Disclaimer of Warranties and Limitation of Liability.
 
-Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.
-To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.
-The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
-Section 6 – Term and Termination.
+Section 5 â€“ Disclaimer of Warranties and Limitation of Liability.
 
-This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
-Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+    Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.
+    To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.
 
-automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
-upon express reinstatement by the Licensor.
-For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
-For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
-Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
-Section 7 – Other Terms and Conditions.
+    The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
 
-The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
-Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
-Section 8 – Interpretation.
+Section 6 â€“ Term and Termination.
 
-For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
-To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
-No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
-Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
-Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” The text of the Creative Commons public licenses is dedicated to the public domain under the CC0 Public Domain Dedication. Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at creativecommons.org/policies, Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+    This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
 
-Creative Commons may be contacted at creativecommons.org.
+    Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+        automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+        upon express reinstatement by the Licensor.
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+    For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+    Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
 
-SIL OFL 1.1 License
-------------------------
+Section 7 â€“ Other Terms and Conditions.
+
+    The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+    Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+Section 8 â€“ Interpretation.
+
+    For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+    To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+    No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+    Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+-------------------------------------------------------------
 
 SIL OPEN FONT LICENSE
+
 Version 1.1 - 26 February 2007
 
 PREAMBLE
+
 The goals of the Open Font License (OFL) are to stimulate worldwide
 development of collaborative font projects, to support the font creation
 efforts of academic and linguistic communities, and to provide a free and
@@ -4362,6 +2143,7 @@ requirement for fonts to remain under this license does not apply
 to any document created using the fonts or their derivatives.
 
 DEFINITIONS
+
 "Font Software" refers to the set of files released by the Copyright
 Holder(s) under this license and clearly marked as such. This may
 include source files, build scripts and documentation.
@@ -4373,7 +2155,7 @@ copyright statement(s).
 distributed by the Copyright Holder(s).
 
 "Modified Version" refers to any derivative made by adding to, deleting,
-or substituting — in part or in whole — any of the components of the
+or substituting - in part or in whole - any of the components of the
 Original Version, by changing formats or by porting the Font Software to a
 new environment.
 
@@ -4381,6 +2163,7 @@ new environment.
 writer or other person who contributed to the Font Software.
 
 PERMISSION & CONDITIONS
+
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of the Font Software, to use, study, copy, merge, embed, modify,
 redistribute, and sell modified and unmodified copies of the Font
@@ -4414,10 +2197,12 @@ remain under this license does not apply to any document created
 using the Font Software.
 
 TERMINATION
+
 This license becomes null and void if any of the above conditions are
 not met.
 
 DISCLAIMER
+
 THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
@@ -4428,8 +2213,7 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
-MIT License
----------------
+-------------------------------------------------------------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -4437,12 +2221,14 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-%% The following notice is provided with respect to ASM v9.3, 
+-------------------------------------------------------------
+
+%% The following notice is provided with respect to ASM v9.7, 
 which may be included with this product.
 
 https://gitlab.ow2.org/asm/asm/blob/master/LICENSE.txt
 
-ASM: a very small and fast Java bytecode manipulation framework
+ ASM: a very small and fast Java bytecode manipulation framework
  Copyright (c) 2000-2011 INRIA, France Telecom
  All rights reserved.
 
@@ -4469,8 +2255,9 @@ ASM: a very small and fast Java bytecode manipulation framework
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  THE POSSIBILITY OF SUCH DAMAGE.
+---------------------------------------------------------------------------------
  
-%% The following notice is provided with respect to spifly v1.3.4, 
+%% The following notice is provided with respect to spifly v1.3.7, 
 which may be included with this product.
 
 Apache License
@@ -4678,8 +2465,8 @@ Apache License
 --------------------------------------
 NOTICE File
 -------------------------------------
-Apache Aries SPI Fly Dynamic Weaving Bundle
-Copyright 2020 The Apache Software Foundation
+Apache Aries
+Copyright 2009-2011 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -4690,15 +2477,15 @@ Dependencies
 Apache Aries SPI Fly Dynamic Weaving Bundle
 
 From: 'OW2' (http://www.ow2.org/)
-  - asm (http://asm.ow2.io/) org.ow2.asm:asm:jar:9.2
+  - asm (http://asm.ow2.io/) org.ow2.asm:asm:jar:9.6
     License: BSD-3-Clause  (https://asm.ow2.io/license.html)
-  - asm-analysis (http://asm.ow2.io/) org.ow2.asm:asm-analysis:jar:9.2
+  - asm-analysis (http://asm.ow2.io/) org.ow2.asm:asm-analysis:jar:9.6
     License: BSD-3-Clause  (https://asm.ow2.io/license.html)
-  - asm-commons (http://asm.ow2.io/) org.ow2.asm:asm-commons:jar:9.2
+  - asm-commons (http://asm.ow2.io/) org.ow2.asm:asm-commons:jar:9.6
     License: BSD-3-Clause  (https://asm.ow2.io/license.html)
-  - asm-tree (http://asm.ow2.io/) org.ow2.asm:asm-tree:jar:9.2
+  - asm-tree (http://asm.ow2.io/) org.ow2.asm:asm-tree:jar:9.6
     License: BSD-3-Clause  (https://asm.ow2.io/license.html)
-  - asm-util (http://asm.ow2.io/) org.ow2.asm:asm-util:jar:9.2
+  - asm-util (http://asm.ow2.io/) org.ow2.asm:asm-util:jar:9.6
     License: BSD-3-Clause  (https://asm.ow2.io/license.html)
 
 -----------------------------------------------------------------
@@ -4734,589 +2521,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------
 
-%% The following notice is provided with respect to Jetty project v10.0.11, 
+%% The following notice is provided with respect to Jetty project v12.0.9, 
 which may be included with this product.
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 1.0 which is available at
-https://www.eclipse.org/org/documents/epl-1.0/EPL-1.0.txt
-or the Apache Software License 2.0 which is available at
-https://www.apache.org/licenses/LICENSE-2.0
-
-Eclipse Public License - v 1.0
-
-THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC
-LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM
-CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-
-1. DEFINITIONS
-
-"Contribution" means:
-
-a) in the case of the initial Contributor, the initial code and documentation
-   distributed under this Agreement, and
-b) in the case of each subsequent Contributor:
-    i) changes to the Program, and
-   ii) additions to the Program;
-
-   where such changes and/or additions to the Program originate from and are
-   distributed by that particular Contributor. A Contribution 'originates'
-   from a Contributor if it was added to the Program by such Contributor
-   itself or anyone acting on such Contributor's behalf. Contributions do not
-   include additions to the Program which: (i) are separate modules of
-   software distributed in conjunction with the Program under their own
-   license agreement, and (ii) are not derivative works of the Program.
-
-"Contributor" means any person or entity that distributes the Program.
-
-"Licensed Patents" mean patent claims licensable by a Contributor which are
-necessarily infringed by the use or sale of its Contribution alone or when
-combined with the Program.
-
-"Program" means the Contributions distributed in accordance with this
-Agreement.
-
-"Recipient" means anyone who receives the Program under this Agreement,
-including all Contributors.
-
-2. GRANT OF RIGHTS
-  a) Subject to the terms of this Agreement, each Contributor hereby grants
-     Recipient a non-exclusive, worldwide, royalty-free copyright license to
-     reproduce, prepare derivative works of, publicly display, publicly
-     perform, distribute and sublicense the Contribution of such Contributor,
-     if any, and such derivative works, in source code and object code form.
-  b) Subject to the terms of this Agreement, each Contributor hereby grants
-     Recipient a non-exclusive, worldwide, royalty-free patent license under
-     Licensed Patents to make, use, sell, offer to sell, import and otherwise
-     transfer the Contribution of such Contributor, if any, in source code and
-     object code form. This patent license shall apply to the combination of
-     the Contribution and the Program if, at the time the Contribution is
-     added by the Contributor, such addition of the Contribution causes such
-     combination to be covered by the Licensed Patents. The patent license
-     shall not apply to any other combinations which include the Contribution.
-     No hardware per se is licensed hereunder.
-  c) Recipient understands that although each Contributor grants the licenses
-     to its Contributions set forth herein, no assurances are provided by any
-     Contributor that the Program does not infringe the patent or other
-     intellectual property rights of any other entity. Each Contributor
-     disclaims any liability to Recipient for claims brought by any other
-     entity based on infringement of intellectual property rights or
-     otherwise. As a condition to exercising the rights and licenses granted
-     hereunder, each Recipient hereby assumes sole responsibility to secure
-     any other intellectual property rights needed, if any. For example, if a
-     third party patent license is required to allow Recipient to distribute
-     the Program, it is Recipient's responsibility to acquire that license
-     before distributing the Program.
-  d) Each Contributor represents that to its knowledge it has sufficient
-     copyright rights in its Contribution, if any, to grant the copyright
-     license set forth in this Agreement.
-
-3. REQUIREMENTS
-
-A Contributor may choose to distribute the Program in object code form under
-its own license agreement, provided that:
-
-  a) it complies with the terms and conditions of this Agreement; and
-  b) its license agreement:
-      i) effectively disclaims on behalf of all Contributors all warranties
-         and conditions, express and implied, including warranties or
-         conditions of title and non-infringement, and implied warranties or
-         conditions of merchantability and fitness for a particular purpose;
-     ii) effectively excludes on behalf of all Contributors all liability for
-         damages, including direct, indirect, special, incidental and
-         consequential damages, such as lost profits;
-    iii) states that any provisions which differ from this Agreement are
-         offered by that Contributor alone and not by any other party; and
-     iv) states that source code for the Program is available from such
-         Contributor, and informs licensees how to obtain it in a reasonable
-         manner on or through a medium customarily used for software exchange.
-
-When the Program is made available in source code form:
-
-  a) it must be made available under this Agreement; and
-  b) a copy of this Agreement must be included with each copy of the Program.
-     Contributors may not remove or alter any copyright notices contained
-     within the Program.
-
-Each Contributor must identify itself as the originator of its Contribution,
-if
-any, in a manner that reasonably allows subsequent Recipients to identify the
-originator of the Contribution.
-
-4. COMMERCIAL DISTRIBUTION
-
-Commercial distributors of software may accept certain responsibilities with
-respect to end users, business partners and the like. While this license is
-intended to facilitate the commercial use of the Program, the Contributor who
-includes the Program in a commercial product offering should do so in a manner
-which does not create potential liability for other Contributors. Therefore,
-if a Contributor includes the Program in a commercial product offering, such
-Contributor ("Commercial Contributor") hereby agrees to defend and indemnify
-every other Contributor ("Indemnified Contributor") against any losses,
-damages and costs (collectively "Losses") arising from claims, lawsuits and
-other legal actions brought by a third party against the Indemnified
-Contributor to the extent caused by the acts or omissions of such Commercial
-Contributor in connection with its distribution of the Program in a commercial
-product offering. The obligations in this section do not apply to any claims
-or Losses relating to any actual or alleged intellectual property
-infringement. In order to qualify, an Indemnified Contributor must:
-a) promptly notify the Commercial Contributor in writing of such claim, and
-b) allow the Commercial Contributor to control, and cooperate with the
-Commercial Contributor in, the defense and any related settlement
-negotiations. The Indemnified Contributor may participate in any such claim at
-its own expense.
-
-For example, a Contributor might include the Program in a commercial product
-offering, Product X. That Contributor is then a Commercial Contributor. If
-that Commercial Contributor then makes performance claims, or offers
-warranties related to Product X, those performance claims and warranties are
-such Commercial Contributor's responsibility alone. Under this section, the
-Commercial Contributor would have to defend claims against the other
-Contributors related to those performance claims and warranties, and if a
-court requires any other Contributor to pay any damages as a result, the
-Commercial Contributor must pay those damages.
-
-5. NO WARRANTY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED ON AN
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
-IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE,
-NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each
-Recipient is solely responsible for determining the appropriateness of using
-and distributing the Program and assumes all risks associated with its
-exercise of rights under this Agreement , including but not limited to the
-risks and costs of program errors, compliance with applicable laws, damage to
-or loss of data, programs or equipment, and unavailability or interruption of
-operations.
-
-6. DISCLAIMER OF LIABILITY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR ANY
-CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION
-LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
-EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY
-OF SUCH DAMAGES.
-
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of the
-remainder of the terms of this Agreement, and without further action by the
-parties hereto, such provision shall be reformed to the minimum extent
-necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity (including a
-cross-claim or counterclaim in a lawsuit) alleging that the Program itself
-(excluding combinations of the Program with other software or hardware)
-infringes such Recipient's patent(s), then such Recipient's rights granted
-under Section 2(b) shall terminate as of the date such litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it fails to
-comply with any of the material terms or conditions of this Agreement and does
-not cure such failure in a reasonable period of time after becoming aware of
-such noncompliance. If all Recipient's rights under this Agreement terminate,
-Recipient agrees to cease use and distribution of the Program as soon as
-reasonably practicable. However, Recipient's obligations under this Agreement
-and any licenses granted by Recipient relating to the Program shall continue
-and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement, but in
-order to avoid inconsistency the Agreement is copyrighted and may only be
-modified in the following manner. The Agreement Steward reserves the right to
-publish new versions (including revisions) of this Agreement from time to
-time. No one other than the Agreement Steward has the right to modify this
-Agreement. The Eclipse Foundation is the initial Agreement Steward. The
-Eclipse Foundation may assign the responsibility to serve as the Agreement
-Steward to a suitable separate entity. Each new version of the Agreement will
-be given a distinguishing version number. The Program (including
-Contributions) may always be distributed subject to the version of the
-Agreement under which it was received. In addition, after a new version of the
-Agreement is published, Contributor may elect to distribute the Program
-(including its Contributions) under the new version. Except as expressly
-stated in Sections 2(a) and 2(b) above, Recipient receives no rights or
-licenses to the intellectual property of any Contributor under this Agreement,
-whether expressly, by implication, estoppel or otherwise. All rights in the
-Program not expressly granted under this Agreement are reserved.
-
-This Agreement is governed by the laws of the State of New York and the
-intellectual property laws of the United States of America. No party to this
-Agreement will bring a legal action under this Agreement more than one year
-after the cause of action arose. Each party waives its rights to a jury trial in
-any resulting litigation.
-
-#################License text for MAIN component################
-
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
-
-NOTICE.txt
-----------
-Notices for Eclipse Jetty
-=========================
-This content is produced and maintained by the Eclipse Jetty project.
-
-Project home: https://www.eclipse.org/jetty/
-
-Trademarks
-----------
-Eclipse Jetty, and Jetty are trademarks of the Eclipse Foundation.
-
-Copyright
----------
-All contributions are the property of the respective authors or of
-entities to which copyright has been assigned by the authors (eg. employer).
-
-Declared Project Licenses
--------------------------
-This artifacts of this project are made available under the terms of:
-
-  * the Eclipse Public License v. 1.0
-    http://www.eclipse.org/legal/epl-v10.html
-    SPDX-License-Identifier: EPL-1.0
-
-  or
-
-  * the Apache License, Version 2.0
-    https://www.apache.org/licenses/LICENSE-2.0.
-    SPDX-License-Identifier: Apache-2.0
-
-The following dependencies are EPL.
- * org.eclipse.jetty.orbit:org.eclipse.jdt.core
-
-The following dependencies are EPL and ASL2.
- * org.eclipse.jetty.orbit:javax.security.auth.message
-
-The following dependencies are EPL and CDDL 1.0.
- * org.eclipse.jetty.orbit:javax.mail.glassfish
-
-
-If ALPN is used to negotiate HTTP/2 connections, then the following
-distribution may be included in the distribution or downloaded when ALPN
-module is selected. These artifacts replace/modify OpenJDK classes.
-The modifications are hosted at github and both modified and original
-are under GPL v2 with classpath exceptions.
-http://openjdk.java.net/legal/gplv2+ce.html
-
- * java.sun.security.ssl
-
-The following dependencies are licensed by the OW2 Foundation according to the
-terms of http://asm.ow2.org/license.html
-
- * org.ow2.asm:asm-commons
- * org.ow2.asm:asm
-
-The following dependencies are ASL2 licensed.
-
- * org.apache.taglibs:taglibs-standard-spec
- * org.apache.taglibs:taglibs-standard-impl
-
-The following dependencies are ASL2 licensed.  Based on selected classes from
-following Apache Tomcat jars, all ASL2 licensed.
-
- * org.mortbay.jasper:apache-jsp
- * org.apache.tomcat:tomcat-jasper
- * org.apache.tomcat:tomcat-juli
- * org.apache.tomcat:tomcat-jsp-api
- * org.apache.tomcat:tomcat-el-api
- * org.apache.tomcat:tomcat-jasper-el
- * org.apache.tomcat:tomcat-api
- * org.apache.tomcat:tomcat-util-scan
- * org.apache.tomcat:tomcat-util
- * org.mortbay.jasper:apache-el
- * org.apache.tomcat:tomcat-jasper-el
- * org.apache.tomcat:tomcat-el-api
-
-Cryptography
-------------
-Content may contain encryption software. The country in which you are currently
-may have restrictions on the import, possession, and use, and/or re-export to
-another country, of encryption software. BEFORE using any encryption software,
-please check the country's laws, regulations and policies concerning the import,
-possession, or use, and re-export of encryption software, to see if this is
-permitted.
-
-The UnixCrypt.java code implements the one way cryptography used by
-Unix systems for simple password protection.  Copyright 1996 Aki Yoshida,
-modified April 2001  by Iris Van den Broeke, Daniel Deville.
-Permission to use, copy, modify and distribute UnixCrypt
-for non-commercial or commercial purposes and without fee is
-granted provided that the copyright notice appears in all copies.
-
-=================================================================
-
-https://asm.ow2.io/license.html
-
-License
-ASM is released under the following 3-Clause BSD License:
-
-ASM: a very small and fast Java bytecode manipulation framework
-Copyright (c) 2000-2011 INRIA, France Telecom
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-1. Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-3. Neither the name of the copyright holders nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-THE POSSIBILITY OF SUCH DAMAGE.
-
-========================================
-4th Party Dependencies
-========================================
-org.slf4j:slf4j-api (MIT License)
-org.eclipse.jetty.toolchain:jetty-servlet-api (Eclipse Public License 2.0 or Apache Software License 2.0 )
-jakarta.transaction:jakarta.transaction-api (EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)
-jakarta.annotation:jakarta.annotation-api (EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)
-
-------------------------------------------
-org.slf4j:slf4j-api
--------------------------------------------
-Copyright (c) 2004-2007 QOS.ch
-All rights reserved.
-
-Permission is hereby granted, free  of charge, to any person obtaining
-a  copy  of this  software  and  associated  documentation files  (the
-"Software"), to  deal in  the Software without  restriction, including
-without limitation  the rights to  use, copy, modify,  merge, publish,
-distribute,  sublicense, and/or sell  copies of  the Software,  and to
-permit persons to whom the Software  is furnished to do so, subject to
-the following conditions:
-
-The  above  copyright  notice  and  this permission  notice  shall  be
-included in all copies or substantial portions of the Software.
-
-THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
-EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
-MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----------------------------------------------------------------
-org.eclipse.jetty.toolchain:jetty-servlet-api
----------------------------------------------------------------
 Eclipse Public License - v 2.0
+
     THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
     PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
     OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
@@ -5593,1322 +2802,212 @@ version(s), and exceptions or additional permissions here}."
 
   You may add additional accurate notices of copyright ownership.
 
-Apache License - v 2.0
-                             Apache License
-                       Version 2.0, January 2004
-                    http://www.apache.org/licenses/
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-Notices for Eclipse Project for Servlet
---------------------------------------------
-This content is produced and maintained by the Eclipse Project for Servlet project.
-
-Project home: https://projects.eclipse.org/projects/ee4j.servlet
-Trademarks
-Eclipse Project for Servlet is a trademark of the Eclipse Foundation.
-
-Copyright
-All content is the property of the respective authors or their employers. For more information regarding authorship of content, please consult the listed source code repository logs.
-
-Declared Project Licenses
-This program and the accompanying materials are made available under the terms of the Eclipse Public License v. 2.0 which is available at http://www.eclipse.org/legal/epl-2.0. This Source Code may also be made available under the following Secondary Licenses when the conditions for such availability set forth in the Eclipse Public License v. 2.0 are satisfied: GNU General Public License, version 2 with the GNU Classpath Exception which is available at https://www.gnu.org/software/classpath/license.html.
-
-SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-
-Source Code
-The project maintains the following source code repositories:
-
-https://github.com/eclipse-ee4j/servlet-api
-https://github.com/eclipse/jetty.toolchain
-Third-party Content
-Jakarta
-The following artifacts are EPL 2.0 + GPLv2 with classpath exception. https://projects.eclipse.org/projects/ee4j.servlet
-
-jakarta.servlet:jakarta.servlet-api
-GlassFish
-The following artifacts are CDDL + GPLv2 with classpath exception. https://glassfish.dev.java.net/nonav/public/CDDL+GPL.html
-
-org.eclipse.jetty.toolchain:jetty-schemas
-
-----------------------------------------------------------------
-jakarta.transaction:jakarta.transaction-api
-------------------------------------------------------------------
-Eclipse Public License - v 2.0
-    THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
-    PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
-    OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-
-1. DEFINITIONS
-
-"Contribution" means:
-
-  a) in the case of the initial Contributor, the initial content
-     Distributed under this Agreement, and
-
-  b) in the case of each subsequent Contributor: 
-     i) changes to the Program, and 
-     ii) additions to the Program;
-  where such changes and/or additions to the Program originate from
-  and are Distributed by that particular Contributor. A Contribution
-  "originates" from a Contributor if it was added to the Program by
-  such Contributor itself or anyone acting on such Contributor's behalf.
-  Contributions do not include changes or additions to the Program that
-  are not Modified Works.
-
-"Contributor" means any person or entity that Distributes the Program.
-
-"Licensed Patents" mean patent claims licensable by a Contributor which
-are necessarily infringed by the use or sale of its Contribution alone
-or when combined with the Program.
-
-"Program" means the Contributions Distributed in accordance with this
-Agreement.
-
-"Recipient" means anyone who receives the Program under this Agreement
-or any Secondary License (as applicable), including Contributors.
-
-"Derivative Works" shall mean any work, whether in Source Code or other
-form, that is based on (or derived from) the Program and for which the
-editorial revisions, annotations, elaborations, or other modifications
-represent, as a whole, an original work of authorship.
-
-"Modified Works" shall mean any work in Source Code or other form that
-results from an addition to, deletion from, or modification of the
-contents of the Program, including, for purposes of clarity any new file
-in Source Code form that contains any contents of the Program. Modified
-Works shall not include works that contain only declarations,
-interfaces, types, classes, structures, or files of the Program solely
-in each case in order to link to, bind by name, or subclass the Program
-or Modified Works thereof.
-
-"Distribute" means the acts of a) distributing or b) making available
-in any manner that enables the transfer of a copy.
-
-"Source Code" means the form of a Program preferred for making
-modifications, including but not limited to software source code,
-documentation source, and configuration files.
-
-"Secondary License" means either the GNU General Public License,
-Version 2.0, or any later versions of that license, including any
-exceptions or additional permissions as identified by the initial
-Contributor.
-
-2. GRANT OF RIGHTS
-
-  a) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free copyright
-  license to reproduce, prepare Derivative Works of, publicly display,
-  publicly perform, Distribute and sublicense the Contribution of such
-  Contributor, if any, and such Derivative Works.
-
-  b) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free patent
-  license under Licensed Patents to make, use, sell, offer to sell,
-  import and otherwise transfer the Contribution of such Contributor,
-  if any, in Source Code or other form. This patent license shall
-  apply to the combination of the Contribution and the Program if, at
-  the time the Contribution is added by the Contributor, such addition
-  of the Contribution causes such combination to be covered by the
-  Licensed Patents. The patent license shall not apply to any other
-  combinations which include the Contribution. No hardware per se is
-  licensed hereunder.
-
-  c) Recipient understands that although each Contributor grants the
-  licenses to its Contributions set forth herein, no assurances are
-  provided by any Contributor that the Program does not infringe the
-  patent or other intellectual property rights of any other entity.
-  Each Contributor disclaims any liability to Recipient for claims
-  brought by any other entity based on infringement of intellectual
-  property rights or otherwise. As a condition to exercising the
-  rights and licenses granted hereunder, each Recipient hereby
-  assumes sole responsibility to secure any other intellectual
-  property rights needed, if any. For example, if a third party
-  patent license is required to allow Recipient to Distribute the
-  Program, it is Recipient's responsibility to acquire that license
-  before distributing the Program.
-
-  d) Each Contributor represents that to its knowledge it has
-  sufficient copyright rights in its Contribution, if any, to grant
-  the copyright license set forth in this Agreement.
-
-  e) Notwithstanding the terms of any Secondary License, no
-  Contributor makes additional grants to any Recipient (other than
-  those set forth in this Agreement) as a result of such Recipient's
-  receipt of the Program under the terms of a Secondary License
-  (if permitted under the terms of Section 3).
-
-3. REQUIREMENTS
-
-3.1 If a Contributor Distributes the Program in any form, then:
-
-  a) the Program must also be made available as Source Code, in
-  accordance with section 3.2, and the Contributor must accompany
-  the Program with a statement that the Source Code for the Program
-  is available under this Agreement, and informs Recipients how to
-  obtain it in a reasonable manner on or through a medium customarily
-  used for software exchange; and
-
-  b) the Contributor may Distribute the Program under a license
-  different than this Agreement, provided that such license:
-     i) effectively disclaims on behalf of all other Contributors all
-     warranties and conditions, express and implied, including
-     warranties or conditions of title and non-infringement, and
-     implied warranties or conditions of merchantability and fitness
-     for a particular purpose;
-
-     ii) effectively excludes on behalf of all other Contributors all
-     liability for damages, including direct, indirect, special,
-     incidental and consequential damages, such as lost profits;
-
-     iii) does not attempt to limit or alter the recipients' rights
-     in the Source Code under section 3.2; and
-
-     iv) requires any subsequent distribution of the Program by any
-     party to be under a license that satisfies the requirements
-     of this section 3.
-
-3.2 When the Program is Distributed as Source Code:
-
-  a) it must be made available under this Agreement, or if the
-  Program (i) is combined with other material in a separate file or
-  files made available under a Secondary License, and (ii) the initial
-  Contributor attached to the Source Code the notice described in
-  Exhibit A of this Agreement, then the Program may be made available
-  under the terms of such Secondary Licenses, and
-
-  b) a copy of this Agreement must be included with each copy of
-  the Program.
-
-3.3 Contributors may not remove or alter any copyright, patent,
-trademark, attribution notices, disclaimers of warranty, or limitations
-of liability ("notices") contained within the Program from any copy of
-the Program which they Distribute, provided that Contributors may add
-their own appropriate notices.
-
-4. COMMERCIAL DISTRIBUTION
-
-Commercial distributors of software may accept certain responsibilities
-with respect to end users, business partners and the like. While this
-license is intended to facilitate the commercial use of the Program,
-the Contributor who includes the Program in a commercial product
-offering should do so in a manner which does not create potential
-liability for other Contributors. Therefore, if a Contributor includes
-the Program in a commercial product offering, such Contributor
-("Commercial Contributor") hereby agrees to defend and indemnify every
-other Contributor ("Indemnified Contributor") against any losses,
-damages and costs (collectively "Losses") arising from claims, lawsuits
-and other legal actions brought by a third party against the Indemnified
-Contributor to the extent caused by the acts or omissions of such
-Commercial Contributor in connection with its distribution of the Program
-in a commercial product offering. The obligations in this section do not
-apply to any claims or Losses relating to any actual or alleged
-intellectual property infringement. In order to qualify, an Indemnified
-Contributor must: a) promptly notify the Commercial Contributor in
-writing of such claim, and b) allow the Commercial Contributor to control,
-and cooperate with the Commercial Contributor in, the defense and any
-related settlement negotiations. The Indemnified Contributor may
-participate in any such claim at its own expense.
-
-For example, a Contributor might include the Program in a commercial
-product offering, Product X. That Contributor is then a Commercial
-Contributor. If that Commercial Contributor then makes performance
-claims, or offers warranties related to Product X, those performance
-claims and warranties are such Commercial Contributor's responsibility
-alone. Under this section, the Commercial Contributor would have to
-defend claims against the other Contributors related to those performance
-claims and warranties, and if a court requires any other Contributor to
-pay any damages as a result, the Commercial Contributor must pay
-those damages.
-
-5. NO WARRANTY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN "AS IS"
-BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
-IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
-TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
-PURPOSE. Each Recipient is solely responsible for determining the
-appropriateness of using and distributing the Program and assumes all
-risks associated with its exercise of rights under this Agreement,
-including but not limited to the risks and costs of program errors,
-compliance with applicable laws, damage to or loss of data, programs
-or equipment, and unavailability or interruption of operations.
-
-6. DISCLAIMER OF LIABILITY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
-SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
-PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
-EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGES.
-
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of
-the remainder of the terms of this Agreement, and without further
-action by the parties hereto, such provision shall be reformed to the
-minimum extent necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity
-(including a cross-claim or counterclaim in a lawsuit) alleging that the
-Program itself (excluding combinations of the Program with other software
-or hardware) infringes such Recipient's patent(s), then such Recipient's
-rights granted under Section 2(b) shall terminate as of the date such
-litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it
-fails to comply with any of the material terms or conditions of this
-Agreement and does not cure such failure in a reasonable period of
-time after becoming aware of such noncompliance. If all Recipient's
-rights under this Agreement terminate, Recipient agrees to cease use
-and distribution of the Program as soon as reasonably practicable.
-However, Recipient's obligations under this Agreement and any licenses
-granted by Recipient relating to the Program shall continue and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement,
-but in order to avoid inconsistency the Agreement is copyrighted and
-may only be modified in the following manner. The Agreement Steward
-reserves the right to publish new versions (including revisions) of
-this Agreement from time to time. No one other than the Agreement
-Steward has the right to modify this Agreement. The Eclipse Foundation
-is the initial Agreement Steward. The Eclipse Foundation may assign the
-responsibility to serve as the Agreement Steward to a suitable separate
-entity. Each new version of the Agreement will be given a distinguishing
-version number. The Program (including Contributions) may always be
-Distributed subject to the version of the Agreement under which it was
-received. In addition, after a new version of the Agreement is published,
-Contributor may elect to Distribute the Program (including its
-Contributions) under the new version.
-
-Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
-receives no rights or licenses to the intellectual property of any
-Contributor under this Agreement, whether expressly, by implication,
-estoppel or otherwise. All rights in the Program not expressly granted
-under this Agreement are reserved. Nothing in this Agreement is intended
-to be enforceable by any entity that is not a Contributor or Recipient.
-No third-party beneficiary rights are created under this Agreement.
-
-Exhibit A - Form of Secondary Licenses Notice
-
-"This Source Code may also be made available under the following 
-Secondary Licenses when the conditions for such availability set forth 
-in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
-version(s), and exceptions or additional permissions here}."
-
-  Simply including a copy of this Agreement, including this Exhibit A
-  is not sufficient to license the Source Code under Secondary Licenses.
-
-  If it is not possible or desirable to put the notice in a particular
-  file, then You may include the notice in a location (such as a LICENSE
-  file in a relevant directory) where a recipient would be likely to
-  look for such a notice.
-
-  You may add additional accurate notices of copyright ownership.
-
-====================================
-The GNU General Public License (GPL) Version 2, June 1991
-====================================
-Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-51 Franklin Street, Fifth Floor
-Boston, MA 02110-1335
-USA
-
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-Preamble
-
-The licenses for most software are designed to take away your freedom to
-share and change it. By contrast, the GNU General Public License is
-intended to guarantee your freedom to share and change free software--to
-make sure the software is free for all its users. This General Public
-License applies to most of the Free Software Foundation's software and
-to any other program whose authors commit to using it. (Some other Free
-Software Foundation software is covered by the GNU Library General
-Public License instead.) You can apply it to your programs, too.
-
-When we speak of free software, we are referring to freedom, not price.
-Our General Public Licenses are designed to make sure that you have the
-freedom to distribute copies of free software (and charge for this
-service if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs; and that you know you can do these things.
-
-To protect your rights, we need to make restrictions that forbid anyone
-to deny you these rights or to ask you to surrender the rights. These
-restrictions translate to certain responsibilities for you if you
-distribute copies of the software, or if you modify it.
-
-For example, if you distribute copies of such a program, whether gratis
-or for a fee, you must give the recipients all the rights that you have.
-You must make sure that they, too, receive or can get the source code.
-And you must show them these terms so they know their rights.
-
-We protect your rights with two steps: (1) copyright the software, and
-(2) offer you this license which gives you legal permission to copy,
-distribute and/or modify the software.
-
-Also, for each author's protection and ours, we want to make certain
-that everyone understands that there is no warranty for this free
-software. If the software is modified by someone else and passed on, we
-want its recipients to know that what they have is not the original, so
-that any problems introduced by others will not reflect on the original
-authors' reputations.
-
-Finally, any free program is threatened constantly by software patents.
-We wish to avoid the danger that redistributors of a free program will
-individually obtain patent licenses, in effect making the program
-proprietary. To prevent this, we have made it clear that any patent must
-be licensed for everyone's free use or not licensed at all.
-
-The precise terms and conditions for copying, distribution and
-modification follow.
-
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-0. This License applies to any program or other work which contains a
-notice placed by the copyright holder saying it may be distributed under
-the terms of this General Public License. The "Program", below, refers
-to any such program or work, and a "work based on the Program" means
-either the Program or any derivative work under copyright law: that is
-to say, a work containing the Program or a portion of it, either
-verbatim or with modifications and/or translated into another language.
-(Hereinafter, translation is included without limitation in the term
-"modification".) Each licensee is addressed as "you".
-
-Activities other than copying, distribution and modification are not
-covered by this License; they are outside its scope. The act of running
-the Program is not restricted, and the output from the Program is
-covered only if its contents constitute a work based on the Program
-(independent of having been made by running the Program). Whether that
-is true depends on what the Program does.
-
-1. You may copy and distribute verbatim copies of the Program's source
-code as you receive it, in any medium, provided that you conspicuously
-and appropriately publish on each copy an appropriate copyright notice
-and disclaimer of warranty; keep intact all the notices that refer to
-this License and to the absence of any warranty; and give any other
-recipients of the Program a copy of this License along with the Program.
-
-You may charge a fee for the physical act of transferring a copy, and
-you may at your option offer warranty protection in exchange for a fee.
-
-2. You may modify your copy or copies of the Program or any portion of
-it, thus forming a work based on the Program, and copy and distribute
-such modifications or work under the terms of Section 1 above, provided
-that you also meet all of these conditions:
-
-    a) You must cause the modified files to carry prominent notices
-    stating that you changed the files and the date of any change.
-
-    b) You must cause any work that you distribute or publish, that in
-    whole or in part contains or is derived from the Program or any part
-    thereof, to be licensed as a whole at no charge to all third parties
-    under the terms of this License.
-
-    c) If the modified program normally reads commands interactively
-    when run, you must cause it, when started running for such
-    interactive use in the most ordinary way, to print or display an
-    announcement including an appropriate copyright notice and a notice
-    that there is no warranty (or else, saying that you provide a
-    warranty) and that users may redistribute the program under these
-    conditions, and telling the user how to view a copy of this License.
-    (Exception: if the Program itself is interactive but does not
-    normally print such an announcement, your work based on the Program
-    is not required to print an announcement.)
-
-These requirements apply to the modified work as a whole. If
-identifiable sections of that work are not derived from the Program, and
-can be reasonably considered independent and separate works in
-themselves, then this License, and its terms, do not apply to those
-sections when you distribute them as separate works. But when you
-distribute the same sections as part of a whole which is a work based on
-the Program, the distribution of the whole must be on the terms of this
-License, whose permissions for other licensees extend to the entire
-whole, and thus to each and every part regardless of who wrote it.
-
-Thus, it is not the intent of this section to claim rights or contest
-your rights to work written entirely by you; rather, the intent is to
-exercise the right to control the distribution of derivative or
-collective works based on the Program.
-
-In addition, mere aggregation of another work not based on the Program
-with the Program (or with a work based on the Program) on a volume of a
-storage or distribution medium does not bring the other work under the
-scope of this License.
-
-3. You may copy and distribute the Program (or a work based on it,
-under Section 2) in object code or executable form under the terms of
-Sections 1 and 2 above provided that you also do one of the following:
-
-    a) Accompany it with the complete corresponding machine-readable
-    source code, which must be distributed under the terms of Sections 1
-    and 2 above on a medium customarily used for software interchange; or,
-
-    b) Accompany it with a written offer, valid for at least three
-    years, to give any third party, for a charge no more than your cost
-    of physically performing source distribution, a complete
-    machine-readable copy of the corresponding source code, to be
-    distributed under the terms of Sections 1 and 2 above on a medium
-    customarily used for software interchange; or,
-
-    c) Accompany it with the information you received as to the offer to
-    distribute corresponding source code. (This alternative is allowed
-    only for noncommercial distribution and only if you received the
-    program in object code or executable form with such an offer, in
-    accord with Subsection b above.)
-
-The source code for a work means the preferred form of the work for
-making modifications to it. For an executable work, complete source code
-means all the source code for all modules it contains, plus any
-associated interface definition files, plus the scripts used to control
-compilation and installation of the executable. However, as a special
-exception, the source code distributed need not include anything that is
-normally distributed (in either source or binary form) with the major
-components (compiler, kernel, and so on) of the operating system on
-which the executable runs, unless that component itself accompanies the
-executable.
-
-If distribution of executable or object code is made by offering access
-to copy from a designated place, then offering equivalent access to copy
-the source code from the same place counts as distribution of the source
-code, even though third parties are not compelled to copy the source
-along with the object code.
-
-4. You may not copy, modify, sublicense, or distribute the Program
-except as expressly provided under this License. Any attempt otherwise
-to copy, modify, sublicense or distribute the Program is void, and will
-automatically terminate your rights under this License. However, parties
-who have received copies, or rights, from you under this License will
-not have their licenses terminated so long as such parties remain in
-full compliance.
-
-5. You are not required to accept this License, since you have not
-signed it. However, nothing else grants you permission to modify or
-distribute the Program or its derivative works. These actions are
-prohibited by law if you do not accept this License. Therefore, by
-modifying or distributing the Program (or any work based on the
-Program), you indicate your acceptance of this License to do so, and all
-its terms and conditions for copying, distributing or modifying the
-Program or works based on it.
-
-6. Each time you redistribute the Program (or any work based on the
-Program), the recipient automatically receives a license from the
-original licensor to copy, distribute or modify the Program subject to
-these terms and conditions. You may not impose any further restrictions
-on the recipients' exercise of the rights granted herein. You are not
-responsible for enforcing compliance by third parties to this License.
-
-7. If, as a consequence of a court judgment or allegation of patent
-infringement or for any other reason (not limited to patent issues),
-conditions are imposed on you (whether by court order, agreement or
-otherwise) that contradict the conditions of this License, they do not
-excuse you from the conditions of this License. If you cannot distribute
-so as to satisfy simultaneously your obligations under this License and
-any other pertinent obligations, then as a consequence you may not
-distribute the Program at all. For example, if a patent license would
-not permit royalty-free redistribution of the Program by all those who
-receive copies directly or indirectly through you, then the only way you
-could satisfy both it and this License would be to refrain entirely from
-distribution of the Program.
-
-If any portion of this section is held invalid or unenforceable under
-any particular circumstance, the balance of the section is intended to
-apply and the section as a whole is intended to apply in other
-circumstances.
-
-It is not the purpose of this section to induce you to infringe any
-patents or other property right claims or to contest validity of any
-such claims; this section has the sole purpose of protecting the
-integrity of the free software distribution system, which is implemented
-by public license practices. Many people have made generous
-contributions to the wide range of software distributed through that
-system in reliance on consistent application of that system; it is up to
-the author/donor to decide if he or she is willing to distribute
-software through any other system and a licensee cannot impose that choice.
-
-This section is intended to make thoroughly clear what is believed to be
-a consequence of the rest of this License.
-
-8. If the distribution and/or use of the Program is restricted in
-certain countries either by patents or by copyrighted interfaces, the
-original copyright holder who places the Program under this License may
-add an explicit geographical distribution limitation excluding those
-countries, so that distribution is permitted only in or among countries
-not thus excluded. In such case, this License incorporates the
-limitation as if written in the body of this License.
-
-9. The Free Software Foundation may publish revised and/or new
-versions of the General Public License from time to time. Such new
-versions will be similar in spirit to the present version, but may
-differ in detail to address new problems or concerns.
-
-Each version is given a distinguishing version number. If the Program
-specifies a version number of this License which applies to it and "any
-later version", you have the option of following the terms and
-conditions either of that version or of any later version published by
-the Free Software Foundation. If the Program does not specify a version
-number of this License, you may choose any version ever published by the
-Free Software Foundation.
-
-10. If you wish to incorporate parts of the Program into other free
-programs whose distribution conditions are different, write to the
-author to ask for permission. For software which is copyrighted by the
-Free Software Foundation, write to the Free Software Foundation; we
-sometimes make exceptions for this. Our decision will be guided by the
-two goals of preserving the free status of all derivatives of our free
-software and of promoting the sharing and reuse of software generally.
-
-NO WARRANTY
-
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
-WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
-EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
-OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
-YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
-WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
-AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
-DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
-DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
-(INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
-INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
-THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
-OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-END OF TERMS AND CONDITIONS
-
-How to Apply These Terms to Your New Programs
-
-If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.
-
-To do so, attach the following notices to the program. It is safest to
-attach them to the start of each source file to most effectively convey
-the exclusion of warranty; and each file should have at least the
-"copyright" line and a pointer to where the full notice is found.
-
-    One line to give the program's name and a brief idea of what it does.
-    Copyright (C) <year> <name of author>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335 USA
-
-Also add information on how to contact you by electronic and paper mail.
-
-If the program is interactive, make it output a short notice like this
-when it starts in an interactive mode:
-
-    Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
-    `show w'. This is free software, and you are welcome to redistribute
-    it under certain conditions; type `show c' for details.
-
-The hypothetical commands `show w' and `show c' should show the
-appropriate parts of the General Public License. Of course, the commands
-you use may be called something other than `show w' and `show c'; they
-could even be mouse-clicks or menu items--whatever suits your program.
-
-You should also get your employer (if you work as a programmer) or your
-school, if any, to sign a "copyright disclaimer" for the program, if
-necessary. Here is a sample; alter the names:
-
-    Yoyodyne, Inc., hereby disclaims all copyright interest in the
-    program `Gnomovision' (which makes passes at compilers) written by
-    James Hacker.
-
-    signature of Ty Coon, 1 April 1989
-    Ty Coon, President of Vice
-
-This General Public License does not permit incorporating your program
-into proprietary programs. If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications
-with the library. If this is what you want to do, use the GNU Library
-General Public License instead of this License.
-
-===============
-CLASSPATH EXCEPTION
-===============
-Linking this library statically or dynamically with other modules is
-making a combined work based on this library.  Thus, the terms and
-conditions of the GNU General Public License version 2 cover the whole
-combination.
-
-As a special exception, the copyright holders of this library give you
-permission to link this library with independent modules to produce an
-executable, regardless of the license terms of these independent
-modules, and to copy and distribute the resulting executable under
-terms of your choice, provided that you also meet, for each linked
-independent module, the terms and conditions of the license of that
-module.  An independent module is a module which is not derived from or
-based on this library.  If you modify this library, you may extend this
-exception to your version of the library, but you are not obligated to
-do so.  If you do not wish to do so, delete this exception statement
-from your version.
-
---------------------------------------------------------------
-jakarta.annotation:jakarta.annotation-api
---------------------------------------------------------------
-Eclipse Public License - v 2.0
-    THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
-    PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
-    OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-
-1. DEFINITIONS
-
-"Contribution" means:
-
-  a) in the case of the initial Contributor, the initial content
-     Distributed under this Agreement, and
-
-  b) in the case of each subsequent Contributor: 
-     i) changes to the Program, and 
-     ii) additions to the Program;
-  where such changes and/or additions to the Program originate from
-  and are Distributed by that particular Contributor. A Contribution
-  "originates" from a Contributor if it was added to the Program by
-  such Contributor itself or anyone acting on such Contributor's behalf.
-  Contributions do not include changes or additions to the Program that
-  are not Modified Works.
-
-"Contributor" means any person or entity that Distributes the Program.
-
-"Licensed Patents" mean patent claims licensable by a Contributor which
-are necessarily infringed by the use or sale of its Contribution alone
-or when combined with the Program.
-
-"Program" means the Contributions Distributed in accordance with this
-Agreement.
-
-"Recipient" means anyone who receives the Program under this Agreement
-or any Secondary License (as applicable), including Contributors.
-
-"Derivative Works" shall mean any work, whether in Source Code or other
-form, that is based on (or derived from) the Program and for which the
-editorial revisions, annotations, elaborations, or other modifications
-represent, as a whole, an original work of authorship.
-
-"Modified Works" shall mean any work in Source Code or other form that
-results from an addition to, deletion from, or modification of the
-contents of the Program, including, for purposes of clarity any new file
-in Source Code form that contains any contents of the Program. Modified
-Works shall not include works that contain only declarations,
-interfaces, types, classes, structures, or files of the Program solely
-in each case in order to link to, bind by name, or subclass the Program
-or Modified Works thereof.
-
-"Distribute" means the acts of a) distributing or b) making available
-in any manner that enables the transfer of a copy.
-
-"Source Code" means the form of a Program preferred for making
-modifications, including but not limited to software source code,
-documentation source, and configuration files.
-
-"Secondary License" means either the GNU General Public License,
-Version 2.0, or any later versions of that license, including any
-exceptions or additional permissions as identified by the initial
-Contributor.
-
-2. GRANT OF RIGHTS
-
-  a) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free copyright
-  license to reproduce, prepare Derivative Works of, publicly display,
-  publicly perform, Distribute and sublicense the Contribution of such
-  Contributor, if any, and such Derivative Works.
-
-  b) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free patent
-  license under Licensed Patents to make, use, sell, offer to sell,
-  import and otherwise transfer the Contribution of such Contributor,
-  if any, in Source Code or other form. This patent license shall
-  apply to the combination of the Contribution and the Program if, at
-  the time the Contribution is added by the Contributor, such addition
-  of the Contribution causes such combination to be covered by the
-  Licensed Patents. The patent license shall not apply to any other
-  combinations which include the Contribution. No hardware per se is
-  licensed hereunder.
-
-  c) Recipient understands that although each Contributor grants the
-  licenses to its Contributions set forth herein, no assurances are
-  provided by any Contributor that the Program does not infringe the
-  patent or other intellectual property rights of any other entity.
-  Each Contributor disclaims any liability to Recipient for claims
-  brought by any other entity based on infringement of intellectual
-  property rights or otherwise. As a condition to exercising the
-  rights and licenses granted hereunder, each Recipient hereby
-  assumes sole responsibility to secure any other intellectual
-  property rights needed, if any. For example, if a third party
-  patent license is required to allow Recipient to Distribute the
-  Program, it is Recipient's responsibility to acquire that license
-  before distributing the Program.
-
-  d) Each Contributor represents that to its knowledge it has
-  sufficient copyright rights in its Contribution, if any, to grant
-  the copyright license set forth in this Agreement.
-
-  e) Notwithstanding the terms of any Secondary License, no
-  Contributor makes additional grants to any Recipient (other than
-  those set forth in this Agreement) as a result of such Recipient's
-  receipt of the Program under the terms of a Secondary License
-  (if permitted under the terms of Section 3).
-
-3. REQUIREMENTS
-
-3.1 If a Contributor Distributes the Program in any form, then:
-
-  a) the Program must also be made available as Source Code, in
-  accordance with section 3.2, and the Contributor must accompany
-  the Program with a statement that the Source Code for the Program
-  is available under this Agreement, and informs Recipients how to
-  obtain it in a reasonable manner on or through a medium customarily
-  used for software exchange; and
-
-  b) the Contributor may Distribute the Program under a license
-  different than this Agreement, provided that such license:
-     i) effectively disclaims on behalf of all other Contributors all
-     warranties and conditions, express and implied, including
-     warranties or conditions of title and non-infringement, and
-     implied warranties or conditions of merchantability and fitness
-     for a particular purpose;
-
-     ii) effectively excludes on behalf of all other Contributors all
-     liability for damages, including direct, indirect, special,
-     incidental and consequential damages, such as lost profits;
-
-     iii) does not attempt to limit or alter the recipients' rights
-     in the Source Code under section 3.2; and
-
-     iv) requires any subsequent distribution of the Program by any
-     party to be under a license that satisfies the requirements
-     of this section 3.
-
-3.2 When the Program is Distributed as Source Code:
-
-  a) it must be made available under this Agreement, or if the
-  Program (i) is combined with other material in a separate file or
-  files made available under a Secondary License, and (ii) the initial
-  Contributor attached to the Source Code the notice described in
-  Exhibit A of this Agreement, then the Program may be made available
-  under the terms of such Secondary Licenses, and
-
-  b) a copy of this Agreement must be included with each copy of
-  the Program.
-
-3.3 Contributors may not remove or alter any copyright, patent,
-trademark, attribution notices, disclaimers of warranty, or limitations
-of liability ("notices") contained within the Program from any copy of
-the Program which they Distribute, provided that Contributors may add
-their own appropriate notices.
-
-4. COMMERCIAL DISTRIBUTION
-
-Commercial distributors of software may accept certain responsibilities
-with respect to end users, business partners and the like. While this
-license is intended to facilitate the commercial use of the Program,
-the Contributor who includes the Program in a commercial product
-offering should do so in a manner which does not create potential
-liability for other Contributors. Therefore, if a Contributor includes
-the Program in a commercial product offering, such Contributor
-("Commercial Contributor") hereby agrees to defend and indemnify every
-other Contributor ("Indemnified Contributor") against any losses,
-damages and costs (collectively "Losses") arising from claims, lawsuits
-and other legal actions brought by a third party against the Indemnified
-Contributor to the extent caused by the acts or omissions of such
-Commercial Contributor in connection with its distribution of the Program
-in a commercial product offering. The obligations in this section do not
-apply to any claims or Losses relating to any actual or alleged
-intellectual property infringement. In order to qualify, an Indemnified
-Contributor must: a) promptly notify the Commercial Contributor in
-writing of such claim, and b) allow the Commercial Contributor to control,
-and cooperate with the Commercial Contributor in, the defense and any
-related settlement negotiations. The Indemnified Contributor may
-participate in any such claim at its own expense.
-
-For example, a Contributor might include the Program in a commercial
-product offering, Product X. That Contributor is then a Commercial
-Contributor. If that Commercial Contributor then makes performance
-claims, or offers warranties related to Product X, those performance
-claims and warranties are such Commercial Contributor's responsibility
-alone. Under this section, the Commercial Contributor would have to
-defend claims against the other Contributors related to those performance
-claims and warranties, and if a court requires any other Contributor to
-pay any damages as a result, the Commercial Contributor must pay
-those damages.
-
-5. NO WARRANTY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN "AS IS"
-BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
-IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
-TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
-PURPOSE. Each Recipient is solely responsible for determining the
-appropriateness of using and distributing the Program and assumes all
-risks associated with its exercise of rights under this Agreement,
-including but not limited to the risks and costs of program errors,
-compliance with applicable laws, damage to or loss of data, programs
-or equipment, and unavailability or interruption of operations.
-
-6. DISCLAIMER OF LIABILITY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
-SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
-PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
-EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGES.
-
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of
-the remainder of the terms of this Agreement, and without further
-action by the parties hereto, such provision shall be reformed to the
-minimum extent necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity
-(including a cross-claim or counterclaim in a lawsuit) alleging that the
-Program itself (excluding combinations of the Program with other software
-or hardware) infringes such Recipient's patent(s), then such Recipient's
-rights granted under Section 2(b) shall terminate as of the date such
-litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it
-fails to comply with any of the material terms or conditions of this
-Agreement and does not cure such failure in a reasonable period of
-time after becoming aware of such noncompliance. If all Recipient's
-rights under this Agreement terminate, Recipient agrees to cease use
-and distribution of the Program as soon as reasonably practicable.
-However, Recipient's obligations under this Agreement and any licenses
-granted by Recipient relating to the Program shall continue and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement,
-but in order to avoid inconsistency the Agreement is copyrighted and
-may only be modified in the following manner. The Agreement Steward
-reserves the right to publish new versions (including revisions) of
-this Agreement from time to time. No one other than the Agreement
-Steward has the right to modify this Agreement. The Eclipse Foundation
-is the initial Agreement Steward. The Eclipse Foundation may assign the
-responsibility to serve as the Agreement Steward to a suitable separate
-entity. Each new version of the Agreement will be given a distinguishing
-version number. The Program (including Contributions) may always be
-Distributed subject to the version of the Agreement under which it was
-received. In addition, after a new version of the Agreement is published,
-Contributor may elect to Distribute the Program (including its
-Contributions) under the new version.
-
-Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
-receives no rights or licenses to the intellectual property of any
-Contributor under this Agreement, whether expressly, by implication,
-estoppel or otherwise. All rights in the Program not expressly granted
-under this Agreement are reserved. Nothing in this Agreement is intended
-to be enforceable by any entity that is not a Contributor or Recipient.
-No third-party beneficiary rights are created under this Agreement.
-
-Exhibit A - Form of Secondary Licenses Notice
-
-"This Source Code may also be made available under the following 
-Secondary Licenses when the conditions for such availability set forth 
-in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
-version(s), and exceptions or additional permissions here}."
-
-  Simply including a copy of this Agreement, including this Exhibit A
-  is not sufficient to license the Source Code under Secondary Licenses.
-
-  If it is not possible or desirable to put the notice in a particular
-  file, then You may include the notice in a location (such as a LICENSE
-  file in a relevant directory) where a recipient would be likely to
-  look for such a notice.
-
-  You may add additional accurate notices of copyright ownership.
-------------------------------------------------------------------------
-The GNU General Public License (GPL) Version 2, June 1991
-------------------------------------------------------------------------
-Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-51 Franklin Street, Fifth Floor
-Boston, MA 02110-1335
-USA
-
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-Preamble
-
-The licenses for most software are designed to take away your freedom to
-share and change it. By contrast, the GNU General Public License is
-intended to guarantee your freedom to share and change free software--to
-make sure the software is free for all its users. This General Public
-License applies to most of the Free Software Foundation's software and
-to any other program whose authors commit to using it. (Some other Free
-Software Foundation software is covered by the GNU Library General
-Public License instead.) You can apply it to your programs, too.
-
-When we speak of free software, we are referring to freedom, not price.
-Our General Public Licenses are designed to make sure that you have the
-freedom to distribute copies of free software (and charge for this
-service if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs; and that you know you can do these things.
-
-To protect your rights, we need to make restrictions that forbid anyone
-to deny you these rights or to ask you to surrender the rights. These
-restrictions translate to certain responsibilities for you if you
-distribute copies of the software, or if you modify it.
-
-For example, if you distribute copies of such a program, whether gratis
-or for a fee, you must give the recipients all the rights that you have.
-You must make sure that they, too, receive or can get the source code.
-And you must show them these terms so they know their rights.
-
-We protect your rights with two steps: (1) copyright the software, and
-(2) offer you this license which gives you legal permission to copy,
-distribute and/or modify the software.
-
-Also, for each author's protection and ours, we want to make certain
-that everyone understands that there is no warranty for this free
-software. If the software is modified by someone else and passed on, we
-want its recipients to know that what they have is not the original, so
-that any problems introduced by others will not reflect on the original
-authors' reputations.
-
-Finally, any free program is threatened constantly by software patents.
-We wish to avoid the danger that redistributors of a free program will
-individually obtain patent licenses, in effect making the program
-proprietary. To prevent this, we have made it clear that any patent must
-be licensed for everyone's free use or not licensed at all.
-
-The precise terms and conditions for copying, distribution and
-modification follow.
-
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-0. This License applies to any program or other work which contains a
-notice placed by the copyright holder saying it may be distributed under
-the terms of this General Public License. The "Program", below, refers
-to any such program or work, and a "work based on the Program" means
-either the Program or any derivative work under copyright law: that is
-to say, a work containing the Program or a portion of it, either
-verbatim or with modifications and/or translated into another language.
-(Hereinafter, translation is included without limitation in the term
-"modification".) Each licensee is addressed as "you".
-
-Activities other than copying, distribution and modification are not
-covered by this License; they are outside its scope. The act of running
-the Program is not restricted, and the output from the Program is
-covered only if its contents constitute a work based on the Program
-(independent of having been made by running the Program). Whether that
-is true depends on what the Program does.
-
-1. You may copy and distribute verbatim copies of the Program's source
-code as you receive it, in any medium, provided that you conspicuously
-and appropriately publish on each copy an appropriate copyright notice
-and disclaimer of warranty; keep intact all the notices that refer to
-this License and to the absence of any warranty; and give any other
-recipients of the Program a copy of this License along with the Program.
-
-You may charge a fee for the physical act of transferring a copy, and
-you may at your option offer warranty protection in exchange for a fee.
-
-2. You may modify your copy or copies of the Program or any portion of
-it, thus forming a work based on the Program, and copy and distribute
-such modifications or work under the terms of Section 1 above, provided
-that you also meet all of these conditions:
-
-    a) You must cause the modified files to carry prominent notices
-    stating that you changed the files and the date of any change.
-
-    b) You must cause any work that you distribute or publish, that in
-    whole or in part contains or is derived from the Program or any part
-    thereof, to be licensed as a whole at no charge to all third parties
-    under the terms of this License.
-
-    c) If the modified program normally reads commands interactively
-    when run, you must cause it, when started running for such
-    interactive use in the most ordinary way, to print or display an
-    announcement including an appropriate copyright notice and a notice
-    that there is no warranty (or else, saying that you provide a
-    warranty) and that users may redistribute the program under these
-    conditions, and telling the user how to view a copy of this License.
-    (Exception: if the Program itself is interactive but does not
-    normally print such an announcement, your work based on the Program
-    is not required to print an announcement.)
-
-These requirements apply to the modified work as a whole. If
-identifiable sections of that work are not derived from the Program, and
-can be reasonably considered independent and separate works in
-themselves, then this License, and its terms, do not apply to those
-sections when you distribute them as separate works. But when you
-distribute the same sections as part of a whole which is a work based on
-the Program, the distribution of the whole must be on the terms of this
-License, whose permissions for other licensees extend to the entire
-whole, and thus to each and every part regardless of who wrote it.
-
-Thus, it is not the intent of this section to claim rights or contest
-your rights to work written entirely by you; rather, the intent is to
-exercise the right to control the distribution of derivative or
-collective works based on the Program.
-
-In addition, mere aggregation of another work not based on the Program
-with the Program (or with a work based on the Program) on a volume of a
-storage or distribution medium does not bring the other work under the
-scope of this License.
-
-3. You may copy and distribute the Program (or a work based on it,
-under Section 2) in object code or executable form under the terms of
-Sections 1 and 2 above provided that you also do one of the following:
-
-    a) Accompany it with the complete corresponding machine-readable
-    source code, which must be distributed under the terms of Sections 1
-    and 2 above on a medium customarily used for software interchange; or,
-
-    b) Accompany it with a written offer, valid for at least three
-    years, to give any third party, for a charge no more than your cost
-    of physically performing source distribution, a complete
-    machine-readable copy of the corresponding source code, to be
-    distributed under the terms of Sections 1 and 2 above on a medium
-    customarily used for software interchange; or,
-
-    c) Accompany it with the information you received as to the offer to
-    distribute corresponding source code. (This alternative is allowed
-    only for noncommercial distribution and only if you received the
-    program in object code or executable form with such an offer, in
-    accord with Subsection b above.)
-
-The source code for a work means the preferred form of the work for
-making modifications to it. For an executable work, complete source code
-means all the source code for all modules it contains, plus any
-associated interface definition files, plus the scripts used to control
-compilation and installation of the executable. However, as a special
-exception, the source code distributed need not include anything that is
-normally distributed (in either source or binary form) with the major
-components (compiler, kernel, and so on) of the operating system on
-which the executable runs, unless that component itself accompanies the
-executable.
-
-If distribution of executable or object code is made by offering access
-to copy from a designated place, then offering equivalent access to copy
-the source code from the same place counts as distribution of the source
-code, even though third parties are not compelled to copy the source
-along with the object code.
-
-4. You may not copy, modify, sublicense, or distribute the Program
-except as expressly provided under this License. Any attempt otherwise
-to copy, modify, sublicense or distribute the Program is void, and will
-automatically terminate your rights under this License. However, parties
-who have received copies, or rights, from you under this License will
-not have their licenses terminated so long as such parties remain in
-full compliance.
-
-5. You are not required to accept this License, since you have not
-signed it. However, nothing else grants you permission to modify or
-distribute the Program or its derivative works. These actions are
-prohibited by law if you do not accept this License. Therefore, by
-modifying or distributing the Program (or any work based on the
-Program), you indicate your acceptance of this License to do so, and all
-its terms and conditions for copying, distributing or modifying the
-Program or works based on it.
-
-6. Each time you redistribute the Program (or any work based on the
-Program), the recipient automatically receives a license from the
-original licensor to copy, distribute or modify the Program subject to
-these terms and conditions. You may not impose any further restrictions
-on the recipients' exercise of the rights granted herein. You are not
-responsible for enforcing compliance by third parties to this License.
-
-7. If, as a consequence of a court judgment or allegation of patent
-infringement or for any other reason (not limited to patent issues),
-conditions are imposed on you (whether by court order, agreement or
-otherwise) that contradict the conditions of this License, they do not
-excuse you from the conditions of this License. If you cannot distribute
-so as to satisfy simultaneously your obligations under this License and
-any other pertinent obligations, then as a consequence you may not
-distribute the Program at all. For example, if a patent license would
-not permit royalty-free redistribution of the Program by all those who
-receive copies directly or indirectly through you, then the only way you
-could satisfy both it and this License would be to refrain entirely from
-distribution of the Program.
-
-If any portion of this section is held invalid or unenforceable under
-any particular circumstance, the balance of the section is intended to
-apply and the section as a whole is intended to apply in other
-circumstances.
-
-It is not the purpose of this section to induce you to infringe any
-patents or other property right claims or to contest validity of any
-such claims; this section has the sole purpose of protecting the
-integrity of the free software distribution system, which is implemented
-by public license practices. Many people have made generous
-contributions to the wide range of software distributed through that
-system in reliance on consistent application of that system; it is up to
-the author/donor to decide if he or she is willing to distribute
-software through any other system and a licensee cannot impose that choice.
-
-This section is intended to make thoroughly clear what is believed to be
-a consequence of the rest of this License.
-
-8. If the distribution and/or use of the Program is restricted in
-certain countries either by patents or by copyrighted interfaces, the
-original copyright holder who places the Program under this License may
-add an explicit geographical distribution limitation excluding those
-countries, so that distribution is permitted only in or among countries
-not thus excluded. In such case, this License incorporates the
-limitation as if written in the body of this License.
-
-9. The Free Software Foundation may publish revised and/or new
-versions of the General Public License from time to time. Such new
-versions will be similar in spirit to the present version, but may
-differ in detail to address new problems or concerns.
-
-Each version is given a distinguishing version number. If the Program
-specifies a version number of this License which applies to it and "any
-later version", you have the option of following the terms and
-conditions either of that version or of any later version published by
-the Free Software Foundation. If the Program does not specify a version
-number of this License, you may choose any version ever published by the
-Free Software Foundation.
-
-10. If you wish to incorporate parts of the Program into other free
-programs whose distribution conditions are different, write to the
-author to ask for permission. For software which is copyrighted by the
-Free Software Foundation, write to the Free Software Foundation; we
-sometimes make exceptions for this. Our decision will be guided by the
-two goals of preserving the free status of all derivatives of our free
-software and of promoting the sharing and reuse of software generally.
-
-NO WARRANTY
-
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
-WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
-EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
-OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
-YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
-WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
-AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
-DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
-DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
-(INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
-INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
-THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
-OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-END OF TERMS AND CONDITIONS
-
-How to Apply These Terms to Your New Programs
-
-If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.
-
-To do so, attach the following notices to the program. It is safest to
-attach them to the start of each source file to most effectively convey
-the exclusion of warranty; and each file should have at least the
-"copyright" line and a pointer to where the full notice is found.
-
-    One line to give the program's name and a brief idea of what it does.
-    Copyright (C) <year> <name of author>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335 USA
-
-Also add information on how to contact you by electronic and paper mail.
-
-If the program is interactive, make it output a short notice like this
-when it starts in an interactive mode:
-
-    Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
-    `show w'. This is free software, and you are welcome to redistribute
-    it under certain conditions; type `show c' for details.
-
-The hypothetical commands `show w' and `show c' should show the
-appropriate parts of the General Public License. Of course, the commands
-you use may be called something other than `show w' and `show c'; they
-could even be mouse-clicks or menu items--whatever suits your program.
-
-You should also get your employer (if you work as a programmer) or your
-school, if any, to sign a "copyright disclaimer" for the program, if
-necessary. Here is a sample; alter the names:
-
-    Yoyodyne, Inc., hereby disclaims all copyright interest in the
-    program `Gnomovision' (which makes passes at compilers) written by
-    James Hacker.
-
-    signature of Ty Coon, 1 April 1989
-    Ty Coon, President of Vice
-
-This General Public License does not permit incorporating your program
-into proprietary programs. If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications
-with the library. If this is what you want to do, use the GNU Library
-General Public License instead of this License.
------------------------------
-CLASSPATH EXCEPTION
-----------------------------
-Linking this library statically or dynamically with other modules is
-making a combined work based on this library.  Thus, the terms and
-conditions of the GNU General Public License version 2 cover the whole
-combination.
-
-As a special exception, the copyright holders of this library give you
-permission to link this library with independent modules to produce an
-executable, regardless of the license terms of these independent
-modules, and to copy and distribute the resulting executable under
-terms of your choice, provided that you also meet, for each linked
-independent module, the terms and conditions of the license of that
-module.  An independent module is a module which is not derived from or
-based on this library.  If you modify this library, you may extend this
-exception to your version of the library, but you are not obligated to
-do so.  If you do not wish to do so, delete this exception statement
-from your version.
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+
+SPDX-License-Identifier: EPL-2.0 OR Apache-2.0
+---------------------------------------------------------------------------------
 
 %% The following notice is provided with respect to PatternFly,
 whose color palette may be included with this product.
@@ -6937,1505 +3036,837 @@ SOFTWARE.
 
 -------------------------------------------------------------------------------------------
 
-%% The following notice is provided with respect to Angus Mail v2.0.1, 
+%% The following notice is provided with respect to Angus Mail v2.0.3, 
 which may be included with this product.
 
-Eclipse Public License - v 2.0
-============================================================
-THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
-    PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
-    OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-
-1. DEFINITIONS
-
-"Contribution" means:
-
-  a) in the case of the initial Contributor, the initial content
-     Distributed under this Agreement, and
-
-  b) in the case of each subsequent Contributor: 
-     i) changes to the Program, and 
-     ii) additions to the Program;
-  where such changes and/or additions to the Program originate from
-  and are Distributed by that particular Contributor. A Contribution
-  "originates" from a Contributor if it was added to the Program by
-  such Contributor itself or anyone acting on such Contributor's behalf.
-  Contributions do not include changes or additions to the Program that
-  are not Modified Works.
-
-"Contributor" means any person or entity that Distributes the Program.
-
-"Licensed Patents" mean patent claims licensable by a Contributor which
-are necessarily infringed by the use or sale of its Contribution alone
-or when combined with the Program.
-
-"Program" means the Contributions Distributed in accordance with this
-Agreement.
-
-"Recipient" means anyone who receives the Program under this Agreement
-or any Secondary License (as applicable), including Contributors.
-
-"Derivative Works" shall mean any work, whether in Source Code or other
-form, that is based on (or derived from) the Program and for which the
-editorial revisions, annotations, elaborations, or other modifications
-represent, as a whole, an original work of authorship.
-
-"Modified Works" shall mean any work in Source Code or other form that
-results from an addition to, deletion from, or modification of the
-contents of the Program, including, for purposes of clarity any new file
-in Source Code form that contains any contents of the Program. Modified
-Works shall not include works that contain only declarations,
-interfaces, types, classes, structures, or files of the Program solely
-in each case in order to link to, bind by name, or subclass the Program
-or Modified Works thereof.
-
-"Distribute" means the acts of a) distributing or b) making available
-in any manner that enables the transfer of a copy.
-
-"Source Code" means the form of a Program preferred for making
-modifications, including but not limited to software source code,
-documentation source, and configuration files.
-
-"Secondary License" means either the GNU General Public License,
-Version 2.0, or any later versions of that license, including any
-exceptions or additional permissions as identified by the initial
-Contributor.
-
-2. GRANT OF RIGHTS
-
-  a) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free copyright
-  license to reproduce, prepare Derivative Works of, publicly display,
-  publicly perform, Distribute and sublicense the Contribution of such
-  Contributor, if any, and such Derivative Works.
-
-  b) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free patent
-  license under Licensed Patents to make, use, sell, offer to sell,
-  import and otherwise transfer the Contribution of such Contributor,
-  if any, in Source Code or other form. This patent license shall
-  apply to the combination of the Contribution and the Program if, at
-  the time the Contribution is added by the Contributor, such addition
-  of the Contribution causes such combination to be covered by the
-  Licensed Patents. The patent license shall not apply to any other
-  combinations which include the Contribution. No hardware per se is
-  licensed hereunder.
-
-  c) Recipient understands that although each Contributor grants the
-  licenses to its Contributions set forth herein, no assurances are
-  provided by any Contributor that the Program does not infringe the
-  patent or other intellectual property rights of any other entity.
-  Each Contributor disclaims any liability to Recipient for claims
-  brought by any other entity based on infringement of intellectual
-  property rights or otherwise. As a condition to exercising the
-  rights and licenses granted hereunder, each Recipient hereby
-  assumes sole responsibility to secure any other intellectual
-  property rights needed, if any. For example, if a third party
-  patent license is required to allow Recipient to Distribute the
-  Program, it is Recipient's responsibility to acquire that license
-  before distributing the Program.
-
-  d) Each Contributor represents that to its knowledge it has
-  sufficient copyright rights in its Contribution, if any, to grant
-  the copyright license set forth in this Agreement.
-
-  e) Notwithstanding the terms of any Secondary License, no
-  Contributor makes additional grants to any Recipient (other than
-  those set forth in this Agreement) as a result of such Recipient's
-  receipt of the Program under the terms of a Secondary License
-  (if permitted under the terms of Section 3).
-
-3. REQUIREMENTS
-
-3.1 If a Contributor Distributes the Program in any form, then:
-
-  a) the Program must also be made available as Source Code, in
-  accordance with section 3.2, and the Contributor must accompany
-  the Program with a statement that the Source Code for the Program
-  is available under this Agreement, and informs Recipients how to
-  obtain it in a reasonable manner on or through a medium customarily
-  used for software exchange; and
-
-  b) the Contributor may Distribute the Program under a license
-  different than this Agreement, provided that such license:
-     i) effectively disclaims on behalf of all other Contributors all
-     warranties and conditions, express and implied, including
-     warranties or conditions of title and non-infringement, and
-     implied warranties or conditions of merchantability and fitness
-     for a particular purpose;
-
-     ii) effectively excludes on behalf of all other Contributors all
-     liability for damages, including direct, indirect, special,
-     incidental and consequential damages, such as lost profits;
-
-     iii) does not attempt to limit or alter the recipients' rights
-     in the Source Code under section 3.2; and
-
-     iv) requires any subsequent distribution of the Program by any
-     party to be under a license that satisfies the requirements
-     of this section 3.
-
-3.2 When the Program is Distributed as Source Code:
-
-  a) it must be made available under this Agreement, or if the
-  Program (i) is combined with other material in a separate file or
-  files made available under a Secondary License, and (ii) the initial
-  Contributor attached to the Source Code the notice described in
-  Exhibit A of this Agreement, then the Program may be made available
-  under the terms of such Secondary Licenses, and
-
-  b) a copy of this Agreement must be included with each copy of
-  the Program.
-
-3.3 Contributors may not remove or alter any copyright, patent,
-trademark, attribution notices, disclaimers of warranty, or limitations
-of liability ("notices") contained within the Program from any copy of
-the Program which they Distribute, provided that Contributors may add
-their own appropriate notices.
-
-4. COMMERCIAL DISTRIBUTION
-
-Commercial distributors of software may accept certain responsibilities
-with respect to end users, business partners and the like. While this
-license is intended to facilitate the commercial use of the Program,
-the Contributor who includes the Program in a commercial product
-offering should do so in a manner which does not create potential
-liability for other Contributors. Therefore, if a Contributor includes
-the Program in a commercial product offering, such Contributor
-("Commercial Contributor") hereby agrees to defend and indemnify every
-other Contributor ("Indemnified Contributor") against any losses,
-damages and costs (collectively "Losses") arising from claims, lawsuits
-and other legal actions brought by a third party against the Indemnified
-Contributor to the extent caused by the acts or omissions of such
-Commercial Contributor in connection with its distribution of the Program
-in a commercial product offering. The obligations in this section do not
-apply to any claims or Losses relating to any actual or alleged
-intellectual property infringement. In order to qualify, an Indemnified
-Contributor must: a) promptly notify the Commercial Contributor in
-writing of such claim, and b) allow the Commercial Contributor to control,
-and cooperate with the Commercial Contributor in, the defense and any
-related settlement negotiations. The Indemnified Contributor may
-participate in any such claim at its own expense.
-
-For example, a Contributor might include the Program in a commercial
-product offering, Product X. That Contributor is then a Commercial
-Contributor. If that Commercial Contributor then makes performance
-claims, or offers warranties related to Product X, those performance
-claims and warranties are such Commercial Contributor's responsibility
-alone. Under this section, the Commercial Contributor would have to
-defend claims against the other Contributors related to those performance
-claims and warranties, and if a court requires any other Contributor to
-pay any damages as a result, the Commercial Contributor must pay
-those damages.
-
-5. NO WARRANTY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN "AS IS"
-BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
-IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
-TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
-PURPOSE. Each Recipient is solely responsible for determining the
-appropriateness of using and distributing the Program and assumes all
-risks associated with its exercise of rights under this Agreement,
-including but not limited to the risks and costs of program errors,
-compliance with applicable laws, damage to or loss of data, programs
-or equipment, and unavailability or interruption of operations.
-
-6. DISCLAIMER OF LIABILITY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
-SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
-PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
-EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGES.
-
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of
-the remainder of the terms of this Agreement, and without further
-action by the parties hereto, such provision shall be reformed to the
-minimum extent necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity
-(including a cross-claim or counterclaim in a lawsuit) alleging that the
-Program itself (excluding combinations of the Program with other software
-or hardware) infringes such Recipient's patent(s), then such Recipient's
-rights granted under Section 2(b) shall terminate as of the date such
-litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it
-fails to comply with any of the material terms or conditions of this
-Agreement and does not cure such failure in a reasonable period of
-time after becoming aware of such noncompliance. If all Recipient's
-rights under this Agreement terminate, Recipient agrees to cease use
-and distribution of the Program as soon as reasonably practicable.
-However, Recipient's obligations under this Agreement and any licenses
-granted by Recipient relating to the Program shall continue and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement,
-but in order to avoid inconsistency the Agreement is copyrighted and
-may only be modified in the following manner. The Agreement Steward
-reserves the right to publish new versions (including revisions) of
-this Agreement from time to time. No one other than the Agreement
-Steward has the right to modify this Agreement. The Eclipse Foundation
-is the initial Agreement Steward. The Eclipse Foundation may assign the
-responsibility to serve as the Agreement Steward to a suitable separate
-entity. Each new version of the Agreement will be given a distinguishing
-version number. The Program (including Contributions) may always be
-Distributed subject to the version of the Agreement under which it was
-received. In addition, after a new version of the Agreement is published,
-Contributor may elect to Distribute the Program (including its
-Contributions) under the new version.
-
-Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
-receives no rights or licenses to the intellectual property of any
-Contributor under this Agreement, whether expressly, by implication,
-estoppel or otherwise. All rights in the Program not expressly granted
-under this Agreement are reserved. Nothing in this Agreement is intended
-to be enforceable by any entity that is not a Contributor or Recipient.
-No third-party beneficiary rights are created under this Agreement.
-
-Exhibit A - Form of Secondary Licenses Notice
-
-"This Source Code may also be made available under the following 
-Secondary Licenses when the conditions for such availability set forth 
-in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
-version(s), and exceptions or additional permissions here}."
-
-  Simply including a copy of this Agreement, including this Exhibit A
-  is not sufficient to license the Source Code under Secondary Licenses.
-
-  If it is not possible or desirable to put the notice in a particular
-  file, then You may include the notice in a location (such as a LICENSE
-  file in a relevant directory) where a recipient would be likely to
-  look for such a notice.
-
-  You may add additional accurate notices of copyright ownership.
-
-=================================================
-The GNU General Public License (GPL) Version 2, June 1991
-=================================================
-Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-51 Franklin Street, Fifth Floor
-Boston, MA 02110-1335
-USA
-
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-Preamble
-
-The licenses for most software are designed to take away your freedom to
-share and change it. By contrast, the GNU General Public License is
-intended to guarantee your freedom to share and change free software--to
-make sure the software is free for all its users. This General Public
-License applies to most of the Free Software Foundation's software and
-to any other program whose authors commit to using it. (Some other Free
-Software Foundation software is covered by the GNU Library General
-Public License instead.) You can apply it to your programs, too.
-
-When we speak of free software, we are referring to freedom, not price.
-Our General Public Licenses are designed to make sure that you have the
-freedom to distribute copies of free software (and charge for this
-service if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs; and that you know you can do these things.
-
-To protect your rights, we need to make restrictions that forbid anyone
-to deny you these rights or to ask you to surrender the rights. These
-restrictions translate to certain responsibilities for you if you
-distribute copies of the software, or if you modify it.
-
-For example, if you distribute copies of such a program, whether gratis
-or for a fee, you must give the recipients all the rights that you have.
-You must make sure that they, too, receive or can get the source code.
-And you must show them these terms so they know their rights.
-
-We protect your rights with two steps: (1) copyright the software, and
-(2) offer you this license which gives you legal permission to copy,
-distribute and/or modify the software.
-
-Also, for each author's protection and ours, we want to make certain
-that everyone understands that there is no warranty for this free
-software. If the software is modified by someone else and passed on, we
-want its recipients to know that what they have is not the original, so
-that any problems introduced by others will not reflect on the original
-authors' reputations.
-
-Finally, any free program is threatened constantly by software patents.
-We wish to avoid the danger that redistributors of a free program will
-individually obtain patent licenses, in effect making the program
-proprietary. To prevent this, we have made it clear that any patent must
-be licensed for everyone's free use or not licensed at all.
-
-The precise terms and conditions for copying, distribution and
-modification follow.
-
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-0. This License applies to any program or other work which contains a
-notice placed by the copyright holder saying it may be distributed under
-the terms of this General Public License. The "Program", below, refers
-to any such program or work, and a "work based on the Program" means
-either the Program or any derivative work under copyright law: that is
-to say, a work containing the Program or a portion of it, either
-verbatim or with modifications and/or translated into another language.
-(Hereinafter, translation is included without limitation in the term
-"modification".) Each licensee is addressed as "you".
-
-Activities other than copying, distribution and modification are not
-covered by this License; they are outside its scope. The act of running
-the Program is not restricted, and the output from the Program is
-covered only if its contents constitute a work based on the Program
-(independent of having been made by running the Program). Whether that
-is true depends on what the Program does.
-
-1. You may copy and distribute verbatim copies of the Program's source
-code as you receive it, in any medium, provided that you conspicuously
-and appropriately publish on each copy an appropriate copyright notice
-and disclaimer of warranty; keep intact all the notices that refer to
-this License and to the absence of any warranty; and give any other
-recipients of the Program a copy of this License along with the Program.
-
-You may charge a fee for the physical act of transferring a copy, and
-you may at your option offer warranty protection in exchange for a fee.
-
-2. You may modify your copy or copies of the Program or any portion of
-it, thus forming a work based on the Program, and copy and distribute
-such modifications or work under the terms of Section 1 above, provided
-that you also meet all of these conditions:
-
-    a) You must cause the modified files to carry prominent notices
-    stating that you changed the files and the date of any change.
-
-    b) You must cause any work that you distribute or publish, that in
-    whole or in part contains or is derived from the Program or any part
-    thereof, to be licensed as a whole at no charge to all third parties
-    under the terms of this License.
-
-    c) If the modified program normally reads commands interactively
-    when run, you must cause it, when started running for such
-    interactive use in the most ordinary way, to print or display an
-    announcement including an appropriate copyright notice and a notice
-    that there is no warranty (or else, saying that you provide a
-    warranty) and that users may redistribute the program under these
-    conditions, and telling the user how to view a copy of this License.
-    (Exception: if the Program itself is interactive but does not
-    normally print such an announcement, your work based on the Program
-    is not required to print an announcement.)
-
-These requirements apply to the modified work as a whole. If
-identifiable sections of that work are not derived from the Program, and
-can be reasonably considered independent and separate works in
-themselves, then this License, and its terms, do not apply to those
-sections when you distribute them as separate works. But when you
-distribute the same sections as part of a whole which is a work based on
-the Program, the distribution of the whole must be on the terms of this
-License, whose permissions for other licensees extend to the entire
-whole, and thus to each and every part regardless of who wrote it.
-
-Thus, it is not the intent of this section to claim rights or contest
-your rights to work written entirely by you; rather, the intent is to
-exercise the right to control the distribution of derivative or
-collective works based on the Program.
-
-In addition, mere aggregation of another work not based on the Program
-with the Program (or with a work based on the Program) on a volume of a
-storage or distribution medium does not bring the other work under the
-scope of this License.
-
-3. You may copy and distribute the Program (or a work based on it,
-under Section 2) in object code or executable form under the terms of
-Sections 1 and 2 above provided that you also do one of the following:
-
-    a) Accompany it with the complete corresponding machine-readable
-    source code, which must be distributed under the terms of Sections 1
-    and 2 above on a medium customarily used for software interchange; or,
-
-    b) Accompany it with a written offer, valid for at least three
-    years, to give any third party, for a charge no more than your cost
-    of physically performing source distribution, a complete
-    machine-readable copy of the corresponding source code, to be
-    distributed under the terms of Sections 1 and 2 above on a medium
-    customarily used for software interchange; or,
-
-    c) Accompany it with the information you received as to the offer to
-    distribute corresponding source code. (This alternative is allowed
-    only for noncommercial distribution and only if you received the
-    program in object code or executable form with such an offer, in
-    accord with Subsection b above.)
-
-The source code for a work means the preferred form of the work for
-making modifications to it. For an executable work, complete source code
-means all the source code for all modules it contains, plus any
-associated interface definition files, plus the scripts used to control
-compilation and installation of the executable. However, as a special
-exception, the source code distributed need not include anything that is
-normally distributed (in either source or binary form) with the major
-components (compiler, kernel, and so on) of the operating system on
-which the executable runs, unless that component itself accompanies the
-executable.
-
-If distribution of executable or object code is made by offering access
-to copy from a designated place, then offering equivalent access to copy
-the source code from the same place counts as distribution of the source
-code, even though third parties are not compelled to copy the source
-along with the object code.
-
-4. You may not copy, modify, sublicense, or distribute the Program
-except as expressly provided under this License. Any attempt otherwise
-to copy, modify, sublicense or distribute the Program is void, and will
-automatically terminate your rights under this License. However, parties
-who have received copies, or rights, from you under this License will
-not have their licenses terminated so long as such parties remain in
-full compliance.
-
-5. You are not required to accept this License, since you have not
-signed it. However, nothing else grants you permission to modify or
-distribute the Program or its derivative works. These actions are
-prohibited by law if you do not accept this License. Therefore, by
-modifying or distributing the Program (or any work based on the
-Program), you indicate your acceptance of this License to do so, and all
-its terms and conditions for copying, distributing or modifying the
-Program or works based on it.
-
-6. Each time you redistribute the Program (or any work based on the
-Program), the recipient automatically receives a license from the
-original licensor to copy, distribute or modify the Program subject to
-these terms and conditions. You may not impose any further restrictions
-on the recipients' exercise of the rights granted herein. You are not
-responsible for enforcing compliance by third parties to this License.
-
-7. If, as a consequence of a court judgment or allegation of patent
-infringement or for any other reason (not limited to patent issues),
-conditions are imposed on you (whether by court order, agreement or
-otherwise) that contradict the conditions of this License, they do not
-excuse you from the conditions of this License. If you cannot distribute
-so as to satisfy simultaneously your obligations under this License and
-any other pertinent obligations, then as a consequence you may not
-distribute the Program at all. For example, if a patent license would
-not permit royalty-free redistribution of the Program by all those who
-receive copies directly or indirectly through you, then the only way you
-could satisfy both it and this License would be to refrain entirely from
-distribution of the Program.
-
-If any portion of this section is held invalid or unenforceable under
-any particular circumstance, the balance of the section is intended to
-apply and the section as a whole is intended to apply in other
-circumstances.
-
-It is not the purpose of this section to induce you to infringe any
-patents or other property right claims or to contest validity of any
-such claims; this section has the sole purpose of protecting the
-integrity of the free software distribution system, which is implemented
-by public license practices. Many people have made generous
-contributions to the wide range of software distributed through that
-system in reliance on consistent application of that system; it is up to
-the author/donor to decide if he or she is willing to distribute
-software through any other system and a licensee cannot impose that choice.
-
-This section is intended to make thoroughly clear what is believed to be
-a consequence of the rest of this License.
-
-8. If the distribution and/or use of the Program is restricted in
-certain countries either by patents or by copyrighted interfaces, the
-original copyright holder who places the Program under this License may
-add an explicit geographical distribution limitation excluding those
-countries, so that distribution is permitted only in or among countries
-not thus excluded. In such case, this License incorporates the
-limitation as if written in the body of this License.
-
-9. The Free Software Foundation may publish revised and/or new
-versions of the General Public License from time to time. Such new
-versions will be similar in spirit to the present version, but may
-differ in detail to address new problems or concerns.
-
-Each version is given a distinguishing version number. If the Program
-specifies a version number of this License which applies to it and "any
-later version", you have the option of following the terms and
-conditions either of that version or of any later version published by
-the Free Software Foundation. If the Program does not specify a version
-number of this License, you may choose any version ever published by the
-Free Software Foundation.
-
-10. If you wish to incorporate parts of the Program into other free
-programs whose distribution conditions are different, write to the
-author to ask for permission. For software which is copyrighted by the
-Free Software Foundation, write to the Free Software Foundation; we
-sometimes make exceptions for this. Our decision will be guided by the
-two goals of preserving the free status of all derivatives of our free
-software and of promoting the sharing and reuse of software generally.
-
-NO WARRANTY
-
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
-WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
-EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
-OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
-YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
-WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
-AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
-DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
-DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
-(INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
-INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
-THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
-OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-END OF TERMS AND CONDITIONS
-
-How to Apply These Terms to Your New Programs
-
-If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.
-
-To do so, attach the following notices to the program. It is safest to
-attach them to the start of each source file to most effectively convey
-the exclusion of warranty; and each file should have at least the
-"copyright" line and a pointer to where the full notice is found.
-
-    One line to give the program's name and a brief idea of what it does.
-    Copyright (C) <year> <name of author>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335 USA
-
-Also add information on how to contact you by electronic and paper mail.
-
-If the program is interactive, make it output a short notice like this
-when it starts in an interactive mode:
-
-    Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
-    `show w'. This is free software, and you are welcome to redistribute
-    it under certain conditions; type `show c' for details.
-
-The hypothetical commands `show w' and `show c' should show the
-appropriate parts of the General Public License. Of course, the commands
-you use may be called something other than `show w' and `show c'; they
-could even be mouse-clicks or menu items--whatever suits your program.
-
-You should also get your employer (if you work as a programmer) or your
-school, if any, to sign a "copyright disclaimer" for the program, if
-necessary. Here is a sample; alter the names:
-
-    Yoyodyne, Inc., hereby disclaims all copyright interest in the
-    program `Gnomovision' (which makes passes at compilers) written by
-    James Hacker.
-
-    signature of Ty Coon, 1 April 1989
-    Ty Coon, President of Vice
-
-This General Public License does not permit incorporating your program
-into proprietary programs. If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications
-with the library. If this is what you want to do, use the GNU Library
-General Public License instead of this License.
-
-================================
-CLASSPATH EXCEPTION
-===============================
-Linking this library statically or dynamically with other modules is
-making a combined work based on this library.  Thus, the terms and
-conditions of the GNU General Public License version 2 cover the whole
-combination.
-
-As a special exception, the copyright holders of this library give you
-permission to link this library with independent modules to produce an
-executable, regardless of the license terms of these independent
-modules, and to copy and distribute the resulting executable under
-terms of your choice, provided that you also meet, for each linked
-independent module, the terms and conditions of the license of that
-module.  An independent module is a module which is not derived from or
-based on this library.  If you modify this library, you may extend this
-exception to your version of the library, but you are not obligated to
-do so.  If you do not wish to do so, delete this exception statement
-from your version.
-
-==========================
-Notice.md
-==========================
-Notices for Jakarta Mail
-
-This content is produced and maintained by the Jakarta Mail project.
-
-    Project home: https://projects.eclipse.org/projects/ee4j.mail
-
-Trademarks
-
-Jakarta Mail is a trademark of the Eclipse Foundation.
-Copyright
-
-All content is the property of the respective authors or their employers. For more information regarding authorship of content, please consult the listed source code repository logs.
-Declared Project Licenses
-
-This program and the accompanying materials are made available under the terms of the Eclipse Public License v. 2.0 which is available at http://www.eclipse.org/legal/epl-2.0. This Source Code may also be made available under the following Secondary Licenses when the conditions for such availability set forth in the Eclipse Public License v. 2.0 are satisfied: GNU General Public License, version 2 with the GNU Classpath Exception which is available at https://www.gnu.org/software/classpath/license.html.
-
-SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-Source Code
-
-The project maintains the following source code repositories:
-
-    https://github.com/eclipse-ee4j/mail
-
-Third-party Content
-
-This project leverages the following third party content.
-
-None
-Cryptography
-
-Content may contain encryption software. The country in which you are currently may have restrictions on the import, possession, and use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check the country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted.
-
-=================================
-Fourth Party Dependencies
-=================================
-jakarta.mail-api            
-jakarta.activation-api  
-angus-activation          
-
-
-================
-jakarta.mail-api
-================
-Eclipse Public License - v 2.0
-    THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
-    PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
-    OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
-
-1. DEFINITIONS
-
-"Contribution" means:
-
-  a) in the case of the initial Contributor, the initial content
-     Distributed under this Agreement, and
-
-  b) in the case of each subsequent Contributor: 
-     i) changes to the Program, and 
-     ii) additions to the Program;
-  where such changes and/or additions to the Program originate from
-  and are Distributed by that particular Contributor. A Contribution
-  "originates" from a Contributor if it was added to the Program by
-  such Contributor itself or anyone acting on such Contributor's behalf.
-  Contributions do not include changes or additions to the Program that
-  are not Modified Works.
-
-"Contributor" means any person or entity that Distributes the Program.
-
-"Licensed Patents" mean patent claims licensable by a Contributor which
-are necessarily infringed by the use or sale of its Contribution alone
-or when combined with the Program.
-
-"Program" means the Contributions Distributed in accordance with this
-Agreement.
-
-"Recipient" means anyone who receives the Program under this Agreement
-or any Secondary License (as applicable), including Contributors.
-
-"Derivative Works" shall mean any work, whether in Source Code or other
-form, that is based on (or derived from) the Program and for which the
-editorial revisions, annotations, elaborations, or other modifications
-represent, as a whole, an original work of authorship.
-
-"Modified Works" shall mean any work in Source Code or other form that
-results from an addition to, deletion from, or modification of the
-contents of the Program, including, for purposes of clarity any new file
-in Source Code form that contains any contents of the Program. Modified
-Works shall not include works that contain only declarations,
-interfaces, types, classes, structures, or files of the Program solely
-in each case in order to link to, bind by name, or subclass the Program
-or Modified Works thereof.
-
-"Distribute" means the acts of a) distributing or b) making available
-in any manner that enables the transfer of a copy.
-
-"Source Code" means the form of a Program preferred for making
-modifications, including but not limited to software source code,
-documentation source, and configuration files.
-
-"Secondary License" means either the GNU General Public License,
-Version 2.0, or any later versions of that license, including any
-exceptions or additional permissions as identified by the initial
-Contributor.
-
-2. GRANT OF RIGHTS
-
-  a) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free copyright
-  license to reproduce, prepare Derivative Works of, publicly display,
-  publicly perform, Distribute and sublicense the Contribution of such
-  Contributor, if any, and such Derivative Works.
-
-  b) Subject to the terms of this Agreement, each Contributor hereby
-  grants Recipient a non-exclusive, worldwide, royalty-free patent
-  license under Licensed Patents to make, use, sell, offer to sell,
-  import and otherwise transfer the Contribution of such Contributor,
-  if any, in Source Code or other form. This patent license shall
-  apply to the combination of the Contribution and the Program if, at
-  the time the Contribution is added by the Contributor, such addition
-  of the Contribution causes such combination to be covered by the
-  Licensed Patents. The patent license shall not apply to any other
-  combinations which include the Contribution. No hardware per se is
-  licensed hereunder.
-
-  c) Recipient understands that although each Contributor grants the
-  licenses to its Contributions set forth herein, no assurances are
-  provided by any Contributor that the Program does not infringe the
-  patent or other intellectual property rights of any other entity.
-  Each Contributor disclaims any liability to Recipient for claims
-  brought by any other entity based on infringement of intellectual
-  property rights or otherwise. As a condition to exercising the
-  rights and licenses granted hereunder, each Recipient hereby
-  assumes sole responsibility to secure any other intellectual
-  property rights needed, if any. For example, if a third party
-  patent license is required to allow Recipient to Distribute the
-  Program, it is Recipient's responsibility to acquire that license
-  before distributing the Program.
-
-  d) Each Contributor represents that to its knowledge it has
-  sufficient copyright rights in its Contribution, if any, to grant
-  the copyright license set forth in this Agreement.
-
-  e) Notwithstanding the terms of any Secondary License, no
-  Contributor makes additional grants to any Recipient (other than
-  those set forth in this Agreement) as a result of such Recipient's
-  receipt of the Program under the terms of a Secondary License
-  (if permitted under the terms of Section 3).
-
-3. REQUIREMENTS
-
-3.1 If a Contributor Distributes the Program in any form, then:
-
-  a) the Program must also be made available as Source Code, in
-  accordance with section 3.2, and the Contributor must accompany
-  the Program with a statement that the Source Code for the Program
-  is available under this Agreement, and informs Recipients how to
-  obtain it in a reasonable manner on or through a medium customarily
-  used for software exchange; and
-
-  b) the Contributor may Distribute the Program under a license
-  different than this Agreement, provided that such license:
-     i) effectively disclaims on behalf of all other Contributors all
-     warranties and conditions, express and implied, including
-     warranties or conditions of title and non-infringement, and
-     implied warranties or conditions of merchantability and fitness
-     for a particular purpose;
-
-     ii) effectively excludes on behalf of all other Contributors all
-     liability for damages, including direct, indirect, special,
-     incidental and consequential damages, such as lost profits;
-
-     iii) does not attempt to limit or alter the recipients' rights
-     in the Source Code under section 3.2; and
-
-     iv) requires any subsequent distribution of the Program by any
-     party to be under a license that satisfies the requirements
-     of this section 3.
-
-3.2 When the Program is Distributed as Source Code:
-
-  a) it must be made available under this Agreement, or if the
-  Program (i) is combined with other material in a separate file or
-  files made available under a Secondary License, and (ii) the initial
-  Contributor attached to the Source Code the notice described in
-  Exhibit A of this Agreement, then the Program may be made available
-  under the terms of such Secondary Licenses, and
-
-  b) a copy of this Agreement must be included with each copy of
-  the Program.
-
-3.3 Contributors may not remove or alter any copyright, patent,
-trademark, attribution notices, disclaimers of warranty, or limitations
-of liability ("notices") contained within the Program from any copy of
-the Program which they Distribute, provided that Contributors may add
-their own appropriate notices.
-
-4. COMMERCIAL DISTRIBUTION
-
-Commercial distributors of software may accept certain responsibilities
-with respect to end users, business partners and the like. While this
-license is intended to facilitate the commercial use of the Program,
-the Contributor who includes the Program in a commercial product
-offering should do so in a manner which does not create potential
-liability for other Contributors. Therefore, if a Contributor includes
-the Program in a commercial product offering, such Contributor
-("Commercial Contributor") hereby agrees to defend and indemnify every
-other Contributor ("Indemnified Contributor") against any losses,
-damages and costs (collectively "Losses") arising from claims, lawsuits
-and other legal actions brought by a third party against the Indemnified
-Contributor to the extent caused by the acts or omissions of such
-Commercial Contributor in connection with its distribution of the Program
-in a commercial product offering. The obligations in this section do not
-apply to any claims or Losses relating to any actual or alleged
-intellectual property infringement. In order to qualify, an Indemnified
-Contributor must: a) promptly notify the Commercial Contributor in
-writing of such claim, and b) allow the Commercial Contributor to control,
-and cooperate with the Commercial Contributor in, the defense and any
-related settlement negotiations. The Indemnified Contributor may
-participate in any such claim at its own expense.
-
-For example, a Contributor might include the Program in a commercial
-product offering, Product X. That Contributor is then a Commercial
-Contributor. If that Commercial Contributor then makes performance
-claims, or offers warranties related to Product X, those performance
-claims and warranties are such Commercial Contributor's responsibility
-alone. Under this section, the Commercial Contributor would have to
-defend claims against the other Contributors related to those performance
-claims and warranties, and if a court requires any other Contributor to
-pay any damages as a result, the Commercial Contributor must pay
-those damages.
-
-5. NO WARRANTY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN "AS IS"
-BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
-IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
-TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
-PURPOSE. Each Recipient is solely responsible for determining the
-appropriateness of using and distributing the Program and assumes all
-risks associated with its exercise of rights under this Agreement,
-including but not limited to the risks and costs of program errors,
-compliance with applicable laws, damage to or loss of data, programs
-or equipment, and unavailability or interruption of operations.
-
-6. DISCLAIMER OF LIABILITY
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
-PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
-SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
-PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
-EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGES.
-
-7. GENERAL
-
-If any provision of this Agreement is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of
-the remainder of the terms of this Agreement, and without further
-action by the parties hereto, such provision shall be reformed to the
-minimum extent necessary to make such provision valid and enforceable.
-
-If Recipient institutes patent litigation against any entity
-(including a cross-claim or counterclaim in a lawsuit) alleging that the
-Program itself (excluding combinations of the Program with other software
-or hardware) infringes such Recipient's patent(s), then such Recipient's
-rights granted under Section 2(b) shall terminate as of the date such
-litigation is filed.
-
-All Recipient's rights under this Agreement shall terminate if it
-fails to comply with any of the material terms or conditions of this
-Agreement and does not cure such failure in a reasonable period of
-time after becoming aware of such noncompliance. If all Recipient's
-rights under this Agreement terminate, Recipient agrees to cease use
-and distribution of the Program as soon as reasonably practicable.
-However, Recipient's obligations under this Agreement and any licenses
-granted by Recipient relating to the Program shall continue and survive.
-
-Everyone is permitted to copy and distribute copies of this Agreement,
-but in order to avoid inconsistency the Agreement is copyrighted and
-may only be modified in the following manner. The Agreement Steward
-reserves the right to publish new versions (including revisions) of
-this Agreement from time to time. No one other than the Agreement
-Steward has the right to modify this Agreement. The Eclipse Foundation
-is the initial Agreement Steward. The Eclipse Foundation may assign the
-responsibility to serve as the Agreement Steward to a suitable separate
-entity. Each new version of the Agreement will be given a distinguishing
-version number. The Program (including Contributions) may always be
-Distributed subject to the version of the Agreement under which it was
-received. In addition, after a new version of the Agreement is published,
-Contributor may elect to Distribute the Program (including its
-Contributions) under the new version.
-
-Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
-receives no rights or licenses to the intellectual property of any
-Contributor under this Agreement, whether expressly, by implication,
-estoppel or otherwise. All rights in the Program not expressly granted
-under this Agreement are reserved. Nothing in this Agreement is intended
-to be enforceable by any entity that is not a Contributor or Recipient.
-No third-party beneficiary rights are created under this Agreement.
-
-Exhibit A - Form of Secondary Licenses Notice
-
-"This Source Code may also be made available under the following 
-Secondary Licenses when the conditions for such availability set forth 
-in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
-version(s), and exceptions or additional permissions here}."
-
-  Simply including a copy of this Agreement, including this Exhibit A
-  is not sufficient to license the Source Code under Secondary Licenses.
-
-  If it is not possible or desirable to put the notice in a particular
-  file, then You may include the notice in a location (such as a LICENSE
-  file in a relevant directory) where a recipient would be likely to
-  look for such a notice.
-
-  You may add additional accurate notices of copyright ownership.
-_______________________________________________________ 
-The GNU General Public License (GPL) Version 2, June 1991
-______________________________________________________
-Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-51 Franklin Street, Fifth Floor
-Boston, MA 02110-1335
-USA
-
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-Preamble
-
-The licenses for most software are designed to take away your freedom to
-share and change it. By contrast, the GNU General Public License is
-intended to guarantee your freedom to share and change free software--to
-make sure the software is free for all its users. This General Public
-License applies to most of the Free Software Foundation's software and
-to any other program whose authors commit to using it. (Some other Free
-Software Foundation software is covered by the GNU Library General
-Public License instead.) You can apply it to your programs, too.
-
-When we speak of free software, we are referring to freedom, not price.
-Our General Public Licenses are designed to make sure that you have the
-freedom to distribute copies of free software (and charge for this
-service if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs; and that you know you can do these things.
-
-To protect your rights, we need to make restrictions that forbid anyone
-to deny you these rights or to ask you to surrender the rights. These
-restrictions translate to certain responsibilities for you if you
-distribute copies of the software, or if you modify it.
-
-For example, if you distribute copies of such a program, whether gratis
-or for a fee, you must give the recipients all the rights that you have.
-You must make sure that they, too, receive or can get the source code.
-And you must show them these terms so they know their rights.
-
-We protect your rights with two steps: (1) copyright the software, and
-(2) offer you this license which gives you legal permission to copy,
-distribute and/or modify the software.
-
-Also, for each author's protection and ours, we want to make certain
-that everyone understands that there is no warranty for this free
-software. If the software is modified by someone else and passed on, we
-want its recipients to know that what they have is not the original, so
-that any problems introduced by others will not reflect on the original
-authors' reputations.
-
-Finally, any free program is threatened constantly by software patents.
-We wish to avoid the danger that redistributors of a free program will
-individually obtain patent licenses, in effect making the program
-proprietary. To prevent this, we have made it clear that any patent must
-be licensed for everyone's free use or not licensed at all.
-
-The precise terms and conditions for copying, distribution and
-modification follow.
-
-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-0. This License applies to any program or other work which contains a
-notice placed by the copyright holder saying it may be distributed under
-the terms of this General Public License. The "Program", below, refers
-to any such program or work, and a "work based on the Program" means
-either the Program or any derivative work under copyright law: that is
-to say, a work containing the Program or a portion of it, either
-verbatim or with modifications and/or translated into another language.
-(Hereinafter, translation is included without limitation in the term
-"modification".) Each licensee is addressed as "you".
-
-Activities other than copying, distribution and modification are not
-covered by this License; they are outside its scope. The act of running
-the Program is not restricted, and the output from the Program is
-covered only if its contents constitute a work based on the Program
-(independent of having been made by running the Program). Whether that
-is true depends on what the Program does.
-
-1. You may copy and distribute verbatim copies of the Program's source
-code as you receive it, in any medium, provided that you conspicuously
-and appropriately publish on each copy an appropriate copyright notice
-and disclaimer of warranty; keep intact all the notices that refer to
-this License and to the absence of any warranty; and give any other
-recipients of the Program a copy of this License along with the Program.
-
-You may charge a fee for the physical act of transferring a copy, and
-you may at your option offer warranty protection in exchange for a fee.
-
-2. You may modify your copy or copies of the Program or any portion of
-it, thus forming a work based on the Program, and copy and distribute
-such modifications or work under the terms of Section 1 above, provided
-that you also meet all of these conditions:
-
-    a) You must cause the modified files to carry prominent notices
-    stating that you changed the files and the date of any change.
-
-    b) You must cause any work that you distribute or publish, that in
-    whole or in part contains or is derived from the Program or any part
-    thereof, to be licensed as a whole at no charge to all third parties
-    under the terms of this License.
-
-    c) If the modified program normally reads commands interactively
-    when run, you must cause it, when started running for such
-    interactive use in the most ordinary way, to print or display an
-    announcement including an appropriate copyright notice and a notice
-    that there is no warranty (or else, saying that you provide a
-    warranty) and that users may redistribute the program under these
-    conditions, and telling the user how to view a copy of this License.
-    (Exception: if the Program itself is interactive but does not
-    normally print such an announcement, your work based on the Program
-    is not required to print an announcement.)
-
-These requirements apply to the modified work as a whole. If
-identifiable sections of that work are not derived from the Program, and
-can be reasonably considered independent and separate works in
-themselves, then this License, and its terms, do not apply to those
-sections when you distribute them as separate works. But when you
-distribute the same sections as part of a whole which is a work based on
-the Program, the distribution of the whole must be on the terms of this
-License, whose permissions for other licensees extend to the entire
-whole, and thus to each and every part regardless of who wrote it.
-
-Thus, it is not the intent of this section to claim rights or contest
-your rights to work written entirely by you; rather, the intent is to
-exercise the right to control the distribution of derivative or
-collective works based on the Program.
-
-In addition, mere aggregation of another work not based on the Program
-with the Program (or with a work based on the Program) on a volume of a
-storage or distribution medium does not bring the other work under the
-scope of this License.
-
-3. You may copy and distribute the Program (or a work based on it,
-under Section 2) in object code or executable form under the terms of
-Sections 1 and 2 above provided that you also do one of the following:
-
-    a) Accompany it with the complete corresponding machine-readable
-    source code, which must be distributed under the terms of Sections 1
-    and 2 above on a medium customarily used for software interchange; or,
-
-    b) Accompany it with a written offer, valid for at least three
-    years, to give any third party, for a charge no more than your cost
-    of physically performing source distribution, a complete
-    machine-readable copy of the corresponding source code, to be
-    distributed under the terms of Sections 1 and 2 above on a medium
-    customarily used for software interchange; or,
-
-    c) Accompany it with the information you received as to the offer to
-    distribute corresponding source code. (This alternative is allowed
-    only for noncommercial distribution and only if you received the
-    program in object code or executable form with such an offer, in
-    accord with Subsection b above.)
-
-The source code for a work means the preferred form of the work for
-making modifications to it. For an executable work, complete source code
-means all the source code for all modules it contains, plus any
-associated interface definition files, plus the scripts used to control
-compilation and installation of the executable. However, as a special
-exception, the source code distributed need not include anything that is
-normally distributed (in either source or binary form) with the major
-components (compiler, kernel, and so on) of the operating system on
-which the executable runs, unless that component itself accompanies the
-executable.
-
-If distribution of executable or object code is made by offering access
-to copy from a designated place, then offering equivalent access to copy
-the source code from the same place counts as distribution of the source
-code, even though third parties are not compelled to copy the source
-along with the object code.
-
-4. You may not copy, modify, sublicense, or distribute the Program
-except as expressly provided under this License. Any attempt otherwise
-to copy, modify, sublicense or distribute the Program is void, and will
-automatically terminate your rights under this License. However, parties
-who have received copies, or rights, from you under this License will
-not have their licenses terminated so long as such parties remain in
-full compliance.
-
-5. You are not required to accept this License, since you have not
-signed it. However, nothing else grants you permission to modify or
-distribute the Program or its derivative works. These actions are
-prohibited by law if you do not accept this License. Therefore, by
-modifying or distributing the Program (or any work based on the
-Program), you indicate your acceptance of this License to do so, and all
-its terms and conditions for copying, distributing or modifying the
-Program or works based on it.
-
-6. Each time you redistribute the Program (or any work based on the
-Program), the recipient automatically receives a license from the
-original licensor to copy, distribute or modify the Program subject to
-these terms and conditions. You may not impose any further restrictions
-on the recipients' exercise of the rights granted herein. You are not
-responsible for enforcing compliance by third parties to this License.
-
-7. If, as a consequence of a court judgment or allegation of patent
-infringement or for any other reason (not limited to patent issues),
-conditions are imposed on you (whether by court order, agreement or
-otherwise) that contradict the conditions of this License, they do not
-excuse you from the conditions of this License. If you cannot distribute
-so as to satisfy simultaneously your obligations under this License and
-any other pertinent obligations, then as a consequence you may not
-distribute the Program at all. For example, if a patent license would
-not permit royalty-free redistribution of the Program by all those who
-receive copies directly or indirectly through you, then the only way you
-could satisfy both it and this License would be to refrain entirely from
-distribution of the Program.
-
-If any portion of this section is held invalid or unenforceable under
-any particular circumstance, the balance of the section is intended to
-apply and the section as a whole is intended to apply in other
-circumstances.
-
-It is not the purpose of this section to induce you to infringe any
-patents or other property right claims or to contest validity of any
-such claims; this section has the sole purpose of protecting the
-integrity of the free software distribution system, which is implemented
-by public license practices. Many people have made generous
-contributions to the wide range of software distributed through that
-system in reliance on consistent application of that system; it is up to
-the author/donor to decide if he or she is willing to distribute
-software through any other system and a licensee cannot impose that choice.
-
-This section is intended to make thoroughly clear what is believed to be
-a consequence of the rest of this License.
-
-8. If the distribution and/or use of the Program is restricted in
-certain countries either by patents or by copyrighted interfaces, the
-original copyright holder who places the Program under this License may
-add an explicit geographical distribution limitation excluding those
-countries, so that distribution is permitted only in or among countries
-not thus excluded. In such case, this License incorporates the
-limitation as if written in the body of this License.
-
-9. The Free Software Foundation may publish revised and/or new
-versions of the General Public License from time to time. Such new
-versions will be similar in spirit to the present version, but may
-differ in detail to address new problems or concerns.
-
-Each version is given a distinguishing version number. If the Program
-specifies a version number of this License which applies to it and "any
-later version", you have the option of following the terms and
-conditions either of that version or of any later version published by
-the Free Software Foundation. If the Program does not specify a version
-number of this License, you may choose any version ever published by the
-Free Software Foundation.
-
-10. If you wish to incorporate parts of the Program into other free
-programs whose distribution conditions are different, write to the
-author to ask for permission. For software which is copyrighted by the
-Free Software Foundation, write to the Free Software Foundation; we
-sometimes make exceptions for this. Our decision will be guided by the
-two goals of preserving the free status of all derivatives of our free
-software and of promoting the sharing and reuse of software generally.
-
-NO WARRANTY
-
-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
-WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
-EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
-OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
-YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
-WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
-AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
-DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
-DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
-(INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
-INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
-THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
-OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-END OF TERMS AND CONDITIONS
-
-How to Apply These Terms to Your New Programs
-
-If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.
-
-To do so, attach the following notices to the program. It is safest to
-attach them to the start of each source file to most effectively convey
-the exclusion of warranty; and each file should have at least the
-"copyright" line and a pointer to where the full notice is found.
-
-    One line to give the program's name and a brief idea of what it does.
-    Copyright (C) <year> <name of author>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335 USA
-
-Also add information on how to contact you by electronic and paper mail.
-
-If the program is interactive, make it output a short notice like this
-when it starts in an interactive mode:
-
-    Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
-    `show w'. This is free software, and you are welcome to redistribute
-    it under certain conditions; type `show c' for details.
-
-The hypothetical commands `show w' and `show c' should show the
-appropriate parts of the General Public License. Of course, the commands
-you use may be called something other than `show w' and `show c'; they
-could even be mouse-clicks or menu items--whatever suits your program.
-
-You should also get your employer (if you work as a programmer) or your
-school, if any, to sign a "copyright disclaimer" for the program, if
-necessary. Here is a sample; alter the names:
-
-    Yoyodyne, Inc., hereby disclaims all copyright interest in the
-    program `Gnomovision' (which makes passes at compilers) written by
-    James Hacker.
-
-    signature of Ty Coon, 1 April 1989
-    Ty Coon, President of Vice
-
-This General Public License does not permit incorporating your program
-into proprietary programs. If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications
-with the library. If this is what you want to do, use the GNU Library
-General Public License instead of this License.
-
-__________________________________________
-CLASSPATH EXCEPTION
-__________________________________________
-Linking this library statically or dynamically with other modules is
-making a combined work based on this library.  Thus, the terms and
-conditions of the GNU General Public License version 2 cover the whole
-combination.
-
-As a special exception, the copyright holders of this library give you
-permission to link this library with independent modules to produce an
-executable, regardless of the license terms of these independent
-modules, and to copy and distribute the resulting executable under
-terms of your choice, provided that you also meet, for each linked
-independent module, the terms and conditions of the license of that
-module.  An independent module is a module which is not derived from or
-based on this library.  If you modify this library, you may extend this
-exception to your version of the library, but you are not obligated to
-do so.  If you do not wish to do so, delete this exception statement
-from your version.
-
-__________________________
-Notice.md
-__________________________
-Notices for Jakarta Mail
-
-This content is produced and maintained by the Jakarta Mail project.
-
-    Project home: https://projects.eclipse.org/projects/ee4j.mail
-
-Trademarks
-
-Jakarta Mail is a trademark of the Eclipse Foundation.
-Copyright
-
-All content is the property of the respective authors or their employers. For more information regarding authorship of content, please consult the listed source code repository logs.
-Declared Project Licenses
-
-This program and the accompanying materials are made available under the terms of the Eclipse Public License v. 2.0 which is available at https://www.eclipse.org/legal/epl-2.0. This Source Code may also be made available under the following Secondary Licenses when the conditions for such availability set forth in the Eclipse Public License v. 2.0 are satisfied: (secondary) GPL-2.0 with Classpath-exception-2.0 which is available at https://openjdk.java.net/legal/gplv2+ce.html.
-
-SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0
-Source Code
-
-The project maintains the following source code repositories:
-
-    https://github.com/jakartaee/mail-api
-    https://github.com/jakartaee/mail-tck
-    https://github.com/jakartaee/mail-spec
-
-Third-party Content
-
-This project leverages the following third party content.
-
-Apache Ant (1.9.6)
-
-    License: Apache License, 2.0, W3C License, Public Domain
-
-commons-lang3 (3.5)
-
-    License: Apache-2.0
-
-font-awesome (4.7.0)
-
-    License: OFL-1.1 AND MIT
-
-jsoup (1.10.2)
-
-    License: MIT
-
-JTHarness (5.0)
-
-    License: GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-
-normalize.css (3.0.2)
-
-    License: MIT
-
-SigTest (4.0)
-
-    License: (GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)
-    Project: https://wiki.openjdk.java.net/display/CodeTools/sigtest
-    Source: http://hg.openjdk.java.net/code-tools/sigtest/file/c57f97e2ac2f
-
-Cryptography
-
-Content may contain encryption software. The country in which you are currently may have restrictions on the import, possession, and use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check the country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted.
-
-======================
-jakarta.activation-api 
-======================
-BSD 3-Clause "New" or "Revised" License
-Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-
-  - Neither the name of the Eclipse Foundation, Inc. nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-_______________________________
-Notice.md
-______________________________
-Notices for Jakarta Activation
+# Eclipse Public License - v 2.0
+
+        THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
+        PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION
+        OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
+
+    1. DEFINITIONS
+
+    "Contribution" means:
+
+      a) in the case of the initial Contributor, the initial content
+         Distributed under this Agreement, and
+
+      b) in the case of each subsequent Contributor: 
+         i) changes to the Program, and 
+         ii) additions to the Program;
+      where such changes and/or additions to the Program originate from
+      and are Distributed by that particular Contributor. A Contribution
+      "originates" from a Contributor if it was added to the Program by
+      such Contributor itself or anyone acting on such Contributor's behalf.
+      Contributions do not include changes or additions to the Program that
+      are not Modified Works.
+
+    "Contributor" means any person or entity that Distributes the Program.
+
+    "Licensed Patents" mean patent claims licensable by a Contributor which
+    are necessarily infringed by the use or sale of its Contribution alone
+    or when combined with the Program.
+
+    "Program" means the Contributions Distributed in accordance with this
+    Agreement.
+
+    "Recipient" means anyone who receives the Program under this Agreement
+    or any Secondary License (as applicable), including Contributors.
+
+    "Derivative Works" shall mean any work, whether in Source Code or other
+    form, that is based on (or derived from) the Program and for which the
+    editorial revisions, annotations, elaborations, or other modifications
+    represent, as a whole, an original work of authorship.
+
+    "Modified Works" shall mean any work in Source Code or other form that
+    results from an addition to, deletion from, or modification of the
+    contents of the Program, including, for purposes of clarity any new file
+    in Source Code form that contains any contents of the Program. Modified
+    Works shall not include works that contain only declarations,
+    interfaces, types, classes, structures, or files of the Program solely
+    in each case in order to link to, bind by name, or subclass the Program
+    or Modified Works thereof.
+
+    "Distribute" means the acts of a) distributing or b) making available
+    in any manner that enables the transfer of a copy.
+
+    "Source Code" means the form of a Program preferred for making
+    modifications, including but not limited to software source code,
+    documentation source, and configuration files.
+
+    "Secondary License" means either the GNU General Public License,
+    Version 2.0, or any later versions of that license, including any
+    exceptions or additional permissions as identified by the initial
+    Contributor.
+
+    2. GRANT OF RIGHTS
+
+      a) Subject to the terms of this Agreement, each Contributor hereby
+      grants Recipient a non-exclusive, worldwide, royalty-free copyright
+      license to reproduce, prepare Derivative Works of, publicly display,
+      publicly perform, Distribute and sublicense the Contribution of such
+      Contributor, if any, and such Derivative Works.
+
+      b) Subject to the terms of this Agreement, each Contributor hereby
+      grants Recipient a non-exclusive, worldwide, royalty-free patent
+      license under Licensed Patents to make, use, sell, offer to sell,
+      import and otherwise transfer the Contribution of such Contributor,
+      if any, in Source Code or other form. This patent license shall
+      apply to the combination of the Contribution and the Program if, at
+      the time the Contribution is added by the Contributor, such addition
+      of the Contribution causes such combination to be covered by the
+      Licensed Patents. The patent license shall not apply to any other
+      combinations which include the Contribution. No hardware per se is
+      licensed hereunder.
+
+      c) Recipient understands that although each Contributor grants the
+      licenses to its Contributions set forth herein, no assurances are
+      provided by any Contributor that the Program does not infringe the
+      patent or other intellectual property rights of any other entity.
+      Each Contributor disclaims any liability to Recipient for claims
+      brought by any other entity based on infringement of intellectual
+      property rights or otherwise. As a condition to exercising the
+      rights and licenses granted hereunder, each Recipient hereby
+      assumes sole responsibility to secure any other intellectual
+      property rights needed, if any. For example, if a third party
+      patent license is required to allow Recipient to Distribute the
+      Program, it is Recipient's responsibility to acquire that license
+      before distributing the Program.
+
+      d) Each Contributor represents that to its knowledge it has
+      sufficient copyright rights in its Contribution, if any, to grant
+      the copyright license set forth in this Agreement.
+
+      e) Notwithstanding the terms of any Secondary License, no
+      Contributor makes additional grants to any Recipient (other than
+      those set forth in this Agreement) as a result of such Recipient's
+      receipt of the Program under the terms of a Secondary License
+      (if permitted under the terms of Section 3).
+
+    3. REQUIREMENTS
+
+    3.1 If a Contributor Distributes the Program in any form, then:
+
+      a) the Program must also be made available as Source Code, in
+      accordance with section 3.2, and the Contributor must accompany
+      the Program with a statement that the Source Code for the Program
+      is available under this Agreement, and informs Recipients how to
+      obtain it in a reasonable manner on or through a medium customarily
+      used for software exchange; and
+
+      b) the Contributor may Distribute the Program under a license
+      different than this Agreement, provided that such license:
+         i) effectively disclaims on behalf of all other Contributors all
+         warranties and conditions, express and implied, including
+         warranties or conditions of title and non-infringement, and
+         implied warranties or conditions of merchantability and fitness
+         for a particular purpose;
+
+         ii) effectively excludes on behalf of all other Contributors all
+         liability for damages, including direct, indirect, special,
+         incidental and consequential damages, such as lost profits;
+
+         iii) does not attempt to limit or alter the recipients' rights
+         in the Source Code under section 3.2; and
+
+         iv) requires any subsequent distribution of the Program by any
+         party to be under a license that satisfies the requirements
+         of this section 3.
+
+    3.2 When the Program is Distributed as Source Code:
+
+      a) it must be made available under this Agreement, or if the
+      Program (i) is combined with other material in a separate file or
+      files made available under a Secondary License, and (ii) the initial
+      Contributor attached to the Source Code the notice described in
+      Exhibit A of this Agreement, then the Program may be made available
+      under the terms of such Secondary Licenses, and
+
+      b) a copy of this Agreement must be included with each copy of
+      the Program.
+
+    3.3 Contributors may not remove or alter any copyright, patent,
+    trademark, attribution notices, disclaimers of warranty, or limitations
+    of liability ("notices") contained within the Program from any copy of
+    the Program which they Distribute, provided that Contributors may add
+    their own appropriate notices.
+
+    4. COMMERCIAL DISTRIBUTION
+
+    Commercial distributors of software may accept certain responsibilities
+    with respect to end users, business partners and the like. While this
+    license is intended to facilitate the commercial use of the Program,
+    the Contributor who includes the Program in a commercial product
+    offering should do so in a manner which does not create potential
+    liability for other Contributors. Therefore, if a Contributor includes
+    the Program in a commercial product offering, such Contributor
+    ("Commercial Contributor") hereby agrees to defend and indemnify every
+    other Contributor ("Indemnified Contributor") against any losses,
+    damages and costs (collectively "Losses") arising from claims, lawsuits
+    and other legal actions brought by a third party against the Indemnified
+    Contributor to the extent caused by the acts or omissions of such
+    Commercial Contributor in connection with its distribution of the Program
+    in a commercial product offering. The obligations in this section do not
+    apply to any claims or Losses relating to any actual or alleged
+    intellectual property infringement. In order to qualify, an Indemnified
+    Contributor must: a) promptly notify the Commercial Contributor in
+    writing of such claim, and b) allow the Commercial Contributor to control,
+    and cooperate with the Commercial Contributor in, the defense and any
+    related settlement negotiations. The Indemnified Contributor may
+    participate in any such claim at its own expense.
+
+    For example, a Contributor might include the Program in a commercial
+    product offering, Product X. That Contributor is then a Commercial
+    Contributor. If that Commercial Contributor then makes performance
+    claims, or offers warranties related to Product X, those performance
+    claims and warranties are such Commercial Contributor's responsibility
+    alone. Under this section, the Commercial Contributor would have to
+    defend claims against the other Contributors related to those performance
+    claims and warranties, and if a court requires any other Contributor to
+    pay any damages as a result, the Commercial Contributor must pay
+    those damages.
+
+    5. NO WARRANTY
+
+    EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
+    PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+    IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF
+    TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
+    PURPOSE. Each Recipient is solely responsible for determining the
+    appropriateness of using and distributing the Program and assumes all
+    risks associated with its exercise of rights under this Agreement,
+    including but not limited to the risks and costs of program errors,
+    compliance with applicable laws, damage to or loss of data, programs
+    or equipment, and unavailability or interruption of operations.
+
+    6. DISCLAIMER OF LIABILITY
+
+    EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT
+    PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONTRIBUTORS
+    SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION LOST
+    PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE
+    EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGES.
+
+    7. GENERAL
+
+    If any provision of this Agreement is invalid or unenforceable under
+    applicable law, it shall not affect the validity or enforceability of
+    the remainder of the terms of this Agreement, and without further
+    action by the parties hereto, such provision shall be reformed to the
+    minimum extent necessary to make such provision valid and enforceable.
+
+    If Recipient institutes patent litigation against any entity
+    (including a cross-claim or counterclaim in a lawsuit) alleging that the
+    Program itself (excluding combinations of the Program with other software
+    or hardware) infringes such Recipient's patent(s), then such Recipient's
+    rights granted under Section 2(b) shall terminate as of the date such
+    litigation is filed.
+
+    All Recipient's rights under this Agreement shall terminate if it
+    fails to comply with any of the material terms or conditions of this
+    Agreement and does not cure such failure in a reasonable period of
+    time after becoming aware of such noncompliance. If all Recipient's
+    rights under this Agreement terminate, Recipient agrees to cease use
+    and distribution of the Program as soon as reasonably practicable.
+    However, Recipient's obligations under this Agreement and any licenses
+    granted by Recipient relating to the Program shall continue and survive.
+
+    Everyone is permitted to copy and distribute copies of this Agreement,
+    but in order to avoid inconsistency the Agreement is copyrighted and
+    may only be modified in the following manner. The Agreement Steward
+    reserves the right to publish new versions (including revisions) of
+    this Agreement from time to time. No one other than the Agreement
+    Steward has the right to modify this Agreement. The Eclipse Foundation
+    is the initial Agreement Steward. The Eclipse Foundation may assign the
+    responsibility to serve as the Agreement Steward to a suitable separate
+    entity. Each new version of the Agreement will be given a distinguishing
+    version number. The Program (including Contributions) may always be
+    Distributed subject to the version of the Agreement under which it was
+    received. In addition, after a new version of the Agreement is published,
+    Contributor may elect to Distribute the Program (including its
+    Contributions) under the new version.
+
+    Except as expressly stated in Sections 2(a) and 2(b) above, Recipient
+    receives no rights or licenses to the intellectual property of any
+    Contributor under this Agreement, whether expressly, by implication,
+    estoppel or otherwise. All rights in the Program not expressly granted
+    under this Agreement are reserved. Nothing in this Agreement is intended
+    to be enforceable by any entity that is not a Contributor or Recipient.
+    No third-party beneficiary rights are created under this Agreement.
+
+    Exhibit A - Form of Secondary Licenses Notice
+
+    "This Source Code may also be made available under the following 
+    Secondary Licenses when the conditions for such availability set forth 
+    in the Eclipse Public License, v. 2.0 are satisfied: {name license(s),
+    version(s), and exceptions or additional permissions here}."
+
+      Simply including a copy of this Agreement, including this Exhibit A
+      is not sufficient to license the Source Code under Secondary Licenses.
+
+      If it is not possible or desirable to put the notice in a particular
+      file, then You may include the notice in a location (such as a LICENSE
+      file in a relevant directory) where a recipient would be likely to
+      look for such a notice.
+
+      You may add additional accurate notices of copyright ownership.
+
+---
+
+## The GNU General Public License (GPL) Version 2, June 1991
+
+    Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+    51 Franklin Street, Fifth Floor
+    Boston, MA 02110-1335
+    USA
+
+    Everyone is permitted to copy and distribute verbatim copies
+    of this license document, but changing it is not allowed.
+
+    Preamble
+
+    The licenses for most software are designed to take away your freedom to
+    share and change it. By contrast, the GNU General Public License is
+    intended to guarantee your freedom to share and change free software--to
+    make sure the software is free for all its users. This General Public
+    License applies to most of the Free Software Foundation's software and
+    to any other program whose authors commit to using it. (Some other Free
+    Software Foundation software is covered by the GNU Library General
+    Public License instead.) You can apply it to your programs, too.
+
+    When we speak of free software, we are referring to freedom, not price.
+    Our General Public Licenses are designed to make sure that you have the
+    freedom to distribute copies of free software (and charge for this
+    service if you wish), that you receive source code or can get it if you
+    want it, that you can change the software or use pieces of it in new
+    free programs; and that you know you can do these things.
+
+    To protect your rights, we need to make restrictions that forbid anyone
+    to deny you these rights or to ask you to surrender the rights. These
+    restrictions translate to certain responsibilities for you if you
+    distribute copies of the software, or if you modify it.
+
+    For example, if you distribute copies of such a program, whether gratis
+    or for a fee, you must give the recipients all the rights that you have.
+    You must make sure that they, too, receive or can get the source code.
+    And you must show them these terms so they know their rights.
+
+    We protect your rights with two steps: (1) copyright the software, and
+    (2) offer you this license which gives you legal permission to copy,
+    distribute and/or modify the software.
+
+    Also, for each author's protection and ours, we want to make certain
+    that everyone understands that there is no warranty for this free
+    software. If the software is modified by someone else and passed on, we
+    want its recipients to know that what they have is not the original, so
+    that any problems introduced by others will not reflect on the original
+    authors' reputations.
+
+    Finally, any free program is threatened constantly by software patents.
+    We wish to avoid the danger that redistributors of a free program will
+    individually obtain patent licenses, in effect making the program
+    proprietary. To prevent this, we have made it clear that any patent must
+    be licensed for everyone's free use or not licensed at all.
+
+    The precise terms and conditions for copying, distribution and
+    modification follow.
+
+    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+    0. This License applies to any program or other work which contains a
+    notice placed by the copyright holder saying it may be distributed under
+    the terms of this General Public License. The "Program", below, refers
+    to any such program or work, and a "work based on the Program" means
+    either the Program or any derivative work under copyright law: that is
+    to say, a work containing the Program or a portion of it, either
+    verbatim or with modifications and/or translated into another language.
+    (Hereinafter, translation is included without limitation in the term
+    "modification".) Each licensee is addressed as "you".
+
+    Activities other than copying, distribution and modification are not
+    covered by this License; they are outside its scope. The act of running
+    the Program is not restricted, and the output from the Program is
+    covered only if its contents constitute a work based on the Program
+    (independent of having been made by running the Program). Whether that
+    is true depends on what the Program does.
+
+    1. You may copy and distribute verbatim copies of the Program's source
+    code as you receive it, in any medium, provided that you conspicuously
+    and appropriately publish on each copy an appropriate copyright notice
+    and disclaimer of warranty; keep intact all the notices that refer to
+    this License and to the absence of any warranty; and give any other
+    recipients of the Program a copy of this License along with the Program.
+
+    You may charge a fee for the physical act of transferring a copy, and
+    you may at your option offer warranty protection in exchange for a fee.
+
+    2. You may modify your copy or copies of the Program or any portion of
+    it, thus forming a work based on the Program, and copy and distribute
+    such modifications or work under the terms of Section 1 above, provided
+    that you also meet all of these conditions:
+
+        a) You must cause the modified files to carry prominent notices
+        stating that you changed the files and the date of any change.
+
+        b) You must cause any work that you distribute or publish, that in
+        whole or in part contains or is derived from the Program or any part
+        thereof, to be licensed as a whole at no charge to all third parties
+        under the terms of this License.
+
+        c) If the modified program normally reads commands interactively
+        when run, you must cause it, when started running for such
+        interactive use in the most ordinary way, to print or display an
+        announcement including an appropriate copyright notice and a notice
+        that there is no warranty (or else, saying that you provide a
+        warranty) and that users may redistribute the program under these
+        conditions, and telling the user how to view a copy of this License.
+        (Exception: if the Program itself is interactive but does not
+        normally print such an announcement, your work based on the Program
+        is not required to print an announcement.)
+
+    These requirements apply to the modified work as a whole. If
+    identifiable sections of that work are not derived from the Program, and
+    can be reasonably considered independent and separate works in
+    themselves, then this License, and its terms, do not apply to those
+    sections when you distribute them as separate works. But when you
+    distribute the same sections as part of a whole which is a work based on
+    the Program, the distribution of the whole must be on the terms of this
+    License, whose permissions for other licensees extend to the entire
+    whole, and thus to each and every part regardless of who wrote it.
+
+    Thus, it is not the intent of this section to claim rights or contest
+    your rights to work written entirely by you; rather, the intent is to
+    exercise the right to control the distribution of derivative or
+    collective works based on the Program.
+
+    In addition, mere aggregation of another work not based on the Program
+    with the Program (or with a work based on the Program) on a volume of a
+    storage or distribution medium does not bring the other work under the
+    scope of this License.
+
+    3. You may copy and distribute the Program (or a work based on it,
+    under Section 2) in object code or executable form under the terms of
+    Sections 1 and 2 above provided that you also do one of the following:
+
+        a) Accompany it with the complete corresponding machine-readable
+        source code, which must be distributed under the terms of Sections 1
+        and 2 above on a medium customarily used for software interchange; or,
+
+        b) Accompany it with a written offer, valid for at least three
+        years, to give any third party, for a charge no more than your cost
+        of physically performing source distribution, a complete
+        machine-readable copy of the corresponding source code, to be
+        distributed under the terms of Sections 1 and 2 above on a medium
+        customarily used for software interchange; or,
+
+        c) Accompany it with the information you received as to the offer to
+        distribute corresponding source code. (This alternative is allowed
+        only for noncommercial distribution and only if you received the
+        program in object code or executable form with such an offer, in
+        accord with Subsection b above.)
+
+    The source code for a work means the preferred form of the work for
+    making modifications to it. For an executable work, complete source code
+    means all the source code for all modules it contains, plus any
+    associated interface definition files, plus the scripts used to control
+    compilation and installation of the executable. However, as a special
+    exception, the source code distributed need not include anything that is
+    normally distributed (in either source or binary form) with the major
+    components (compiler, kernel, and so on) of the operating system on
+    which the executable runs, unless that component itself accompanies the
+    executable.
+
+    If distribution of executable or object code is made by offering access
+    to copy from a designated place, then offering equivalent access to copy
+    the source code from the same place counts as distribution of the source
+    code, even though third parties are not compelled to copy the source
+    along with the object code.
+
+    4. You may not copy, modify, sublicense, or distribute the Program
+    except as expressly provided under this License. Any attempt otherwise
+    to copy, modify, sublicense or distribute the Program is void, and will
+    automatically terminate your rights under this License. However, parties
+    who have received copies, or rights, from you under this License will
+    not have their licenses terminated so long as such parties remain in
+    full compliance.
+
+    5. You are not required to accept this License, since you have not
+    signed it. However, nothing else grants you permission to modify or
+    distribute the Program or its derivative works. These actions are
+    prohibited by law if you do not accept this License. Therefore, by
+    modifying or distributing the Program (or any work based on the
+    Program), you indicate your acceptance of this License to do so, and all
+    its terms and conditions for copying, distributing or modifying the
+    Program or works based on it.
+
+    6. Each time you redistribute the Program (or any work based on the
+    Program), the recipient automatically receives a license from the
+    original licensor to copy, distribute or modify the Program subject to
+    these terms and conditions. You may not impose any further restrictions
+    on the recipients' exercise of the rights granted herein. You are not
+    responsible for enforcing compliance by third parties to this License.
+
+    7. If, as a consequence of a court judgment or allegation of patent
+    infringement or for any other reason (not limited to patent issues),
+    conditions are imposed on you (whether by court order, agreement or
+    otherwise) that contradict the conditions of this License, they do not
+    excuse you from the conditions of this License. If you cannot distribute
+    so as to satisfy simultaneously your obligations under this License and
+    any other pertinent obligations, then as a consequence you may not
+    distribute the Program at all. For example, if a patent license would
+    not permit royalty-free redistribution of the Program by all those who
+    receive copies directly or indirectly through you, then the only way you
+    could satisfy both it and this License would be to refrain entirely from
+    distribution of the Program.
+
+    If any portion of this section is held invalid or unenforceable under
+    any particular circumstance, the balance of the section is intended to
+    apply and the section as a whole is intended to apply in other
+    circumstances.
+
+    It is not the purpose of this section to induce you to infringe any
+    patents or other property right claims or to contest validity of any
+    such claims; this section has the sole purpose of protecting the
+    integrity of the free software distribution system, which is implemented
+    by public license practices. Many people have made generous
+    contributions to the wide range of software distributed through that
+    system in reliance on consistent application of that system; it is up to
+    the author/donor to decide if he or she is willing to distribute
+    software through any other system and a licensee cannot impose that choice.
+
+    This section is intended to make thoroughly clear what is believed to be
+    a consequence of the rest of this License.
+
+    8. If the distribution and/or use of the Program is restricted in
+    certain countries either by patents or by copyrighted interfaces, the
+    original copyright holder who places the Program under this License may
+    add an explicit geographical distribution limitation excluding those
+    countries, so that distribution is permitted only in or among countries
+    not thus excluded. In such case, this License incorporates the
+    limitation as if written in the body of this License.
+
+    9. The Free Software Foundation may publish revised and/or new
+    versions of the General Public License from time to time. Such new
+    versions will be similar in spirit to the present version, but may
+    differ in detail to address new problems or concerns.
+
+    Each version is given a distinguishing version number. If the Program
+    specifies a version number of this License which applies to it and "any
+    later version", you have the option of following the terms and
+    conditions either of that version or of any later version published by
+    the Free Software Foundation. If the Program does not specify a version
+    number of this License, you may choose any version ever published by the
+    Free Software Foundation.
+
+    10. If you wish to incorporate parts of the Program into other free
+    programs whose distribution conditions are different, write to the
+    author to ask for permission. For software which is copyrighted by the
+    Free Software Foundation, write to the Free Software Foundation; we
+    sometimes make exceptions for this. Our decision will be guided by the
+    two goals of preserving the free status of all derivatives of our free
+    software and of promoting the sharing and reuse of software generally.
+
+    NO WARRANTY
+
+    11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
+    WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
+    EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
+    OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
+    EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+    ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
+    YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+    NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+    12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
+    WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
+    AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
+    DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
+    DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
+    (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
+    INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
+    THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
+    OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+    END OF TERMS AND CONDITIONS
+
+    How to Apply These Terms to Your New Programs
+
+    If you develop a new program, and you want it to be of the greatest
+    possible use to the public, the best way to achieve this is to make it
+    free software which everyone can redistribute and change under these terms.
+
+    To do so, attach the following notices to the program. It is safest to
+    attach them to the start of each source file to most effectively convey
+    the exclusion of warranty; and each file should have at least the
+    "copyright" line and a pointer to where the full notice is found.
+
+        One line to give the program's name and a brief idea of what it does.
+        Copyright (C) <year> <name of author>
+
+        This program is free software; you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation; either version 2 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful, but
+        WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+        General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program; if not, write to the Free Software
+        Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335 USA
+
+    Also add information on how to contact you by electronic and paper mail.
+
+    If the program is interactive, make it output a short notice like this
+    when it starts in an interactive mode:
+
+        Gnomovision version 69, Copyright (C) year name of author
+        Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
+        `show w'. This is free software, and you are welcome to redistribute
+        it under certain conditions; type `show c' for details.
+
+    The hypothetical commands `show w' and `show c' should show the
+    appropriate parts of the General Public License. Of course, the commands
+    you use may be called something other than `show w' and `show c'; they
+    could even be mouse-clicks or menu items--whatever suits your program.
+
+    You should also get your employer (if you work as a programmer) or your
+    school, if any, to sign a "copyright disclaimer" for the program, if
+    necessary. Here is a sample; alter the names:
+
+        Yoyodyne, Inc., hereby disclaims all copyright interest in the
+        program `Gnomovision' (which makes passes at compilers) written by
+        James Hacker.
+
+        signature of Ty Coon, 1 April 1989
+        Ty Coon, President of Vice
+
+    This General Public License does not permit incorporating your program
+    into proprietary programs. If your program is a subroutine library, you
+    may consider it more useful to permit linking proprietary applications
+    with the library. If this is what you want to do, use the GNU Library
+    General Public License instead of this License.
+
+---
+
+## CLASSPATH EXCEPTION
+
+    Linking this library statically or dynamically with other modules is
+    making a combined work based on this library.  Thus, the terms and
+    conditions of the GNU General Public License version 2 cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this library give you
+    permission to link this library with independent modules to produce an
+    executable, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting executable under
+    terms of your choice, provided that you also meet, for each linked
+    independent module, the terms and conditions of the license of that
+    module.  An independent module is a module which is not derived from or
+    based on this library.  If you modify this library, you may extend this
+    exception to your version of the library, but you are not obligated to
+    do so.  If you do not wish to do so, delete this exception statement
+    from your version.
+
+
+----------------------- Separator -----------------------
+== Fourth Party: jakarta.activation:jakarta.activation-api
+== License: BSD-3-Clause license
+== Notice:
+# Notices for Jakarta Activation
 
 This content is produced and maintained by the Jakarta Activation project.
 
-    Project home: https://projects.eclipse.org/projects/ee4j.jaf
+* Project home: https://projects.eclipse.org/projects/ee4j.jaf
 
-Trademarks
+## Trademarks
 
 Jakarta Activation is a trademark of the Eclipse Foundation.
-Copyright
 
-All content is the property of the respective authors or their employers. For more information regarding authorship of content, please consult the listed source code repository logs.
-Declared Project Licenses
+## Copyright
 
-This program and the accompanying materials are made available under the terms of the Eclipse Public License v. 2.0 which is available at https://www.eclipse.org/legal/epl-2.0, or the Eclipse Distribution License v1.0 which is available at https://www.eclipse.org/org/documents/edl-v10.php. This Source Code may also be made available under the following Secondary Licenses when the conditions for such availability set forth in the Eclipse Public License v. 2.0 are satisfied: (secondary) GPL-2.0 with Classpath-exception-2.0 which is available at https://openjdk.java.net/legal/gplv2+ce.html.
+All content is the property of the respective authors or their employers. For
+more information regarding authorship of content, please consult the listed
+source code repository logs.
 
-SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause OR GPL-2.0-only with Classpath-exception-2.0
-Source Code
+## Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Eclipse Public License v. 2.0 which is available at
+https://www.eclipse.org/legal/epl-2.0, or the Eclipse Distribution License v1.0
+which is available at https://www.eclipse.org/org/documents/edl-v10.php. This
+Source Code may also be made available under the following Secondary Licenses
+when the conditions for such availability set forth in the Eclipse Public
+License v. 2.0 are satisfied: (secondary) GPL-2.0 with Classpath-exception-2.0
+which is available at https://openjdk.java.net/legal/gplv2+ce.html.
+
+SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause OR GPL-2.0-only with
+Classpath-exception-2.0
+
+## Source Code
 
 The project maintains the following source code repositories:
 
-    https://github.com/jakartaee/jaf-api
-    https://github.com/jakartaee/jaf-tck
+* https://github.com/jakartaee/jaf-api
+* https://github.com/jakartaee/jaf-tck
 
-Third-party Content
+## Third-party Content
 
 This project leverages the following third party content.
 
 Apache Ant (1.9.6)
 
-    License: Apache License, 2.0, W3C License, Public Domain
+* License: Apache License, 2.0, W3C License, Public Domain
 
 Apache Ant (1.9.6)
 
-    License: Apache License, 2.0, W3C License, Public Domain
+* License: Apache License, 2.0, W3C License, Public Domain
 
 Apache commons-lang (3.5)
 
-    License: Apache-2.0
+* License: Apache-2.0
 
 font-awesome (4.7.0)
 
-    License: OFL-1.1 AND MIT
+* License: OFL-1.1 AND MIT
 
 jsoup (1.10.2)
 
-    License: MIT
+* License: MIT
 
 JTHarness (5.0)
 
-    License: (GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)
-    Project: https://wiki.openjdk.java.net/display/CodeTools/JT+Harness
-    Source: http://hg.openjdk.java.net/code-tools/jtharness/
+* License: (GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)
+* Project: https://wiki.openjdk.java.net/display/CodeTools/JT+Harness
+* Source: http://hg.openjdk.java.net/code-tools/jtharness/
 
 JUnit (4.12)
 
-    License: Eclipse Public License
+* License: Eclipse Public License
 
 normalize.css (3.0.2)
 
-    License: MIT
-    Project: http://necolas.github.io/normalize.css/
-    Source: http://necolas.github.io/normalize.css/
+* License: MIT
+* Project: http://necolas.github.io/normalize.css/
+* Source: http://necolas.github.io/normalize.css/
 
 SigTest (4.0)
 
-    License: GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
-    Project: https://wiki.openjdk.java.net/display/CodeTools/sigtest
-    Source: http://hg.openjdk.java.net/code-tools/sigtest/file/c57f97e2ac2f
+* License: GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+* Project: https://wiki.openjdk.java.net/display/CodeTools/sigtest
+* Source: http://hg.openjdk.java.net/code-tools/sigtest/file/c57f97e2ac2f
 
-Cryptography
+## Cryptography
 
-Content may contain encryption software. The country in which you are currently may have restrictions on the import, possession, and use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check the country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted.
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.
 
-==========================
-angus-activation 
-==========================
-BSD 3-Clause "New" or "Revised" License
+
+----------------------- Separator -----------------------
+== Fourth Party: jakarta.mail:jakarta.mail-api
+== License: Eclipse Public License - v 2.0
+== Notice:
+# Notices for Jakarta Mail
+
+This content is produced and maintained by the Jakarta Mail project.
+
+* Project home: https://projects.eclipse.org/projects/ee4j.mail
+
+## Trademarks
+
+Jakarta Mail is a trademark of the Eclipse Foundation.
+
+## Copyright
+
+All content is the property of the respective authors or their employers. For
+more information regarding authorship of content, please consult the listed
+source code repository logs.
+
+## Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Eclipse Public License v. 2.0 which is available at
+https://www.eclipse.org/legal/epl-2.0. This Source Code may also be made
+available under the following Secondary Licenses when the conditions for such
+availability set forth in the Eclipse Public License v. 2.0 are satisfied:
+(secondary) GPL-2.0 with Classpath-exception-2.0 which is available at
+https://openjdk.java.net/legal/gplv2+ce.html.
+
+SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0
+
+## Source Code
+
+The project maintains the following source code repositories:
+
+* https://github.com/jakartaee/mail-api
+* https://github.com/jakartaee/mail-tck
+* https://github.com/jakartaee/mail-spec
+
+## Third-party Content
+
+This project leverages the following third party content.
+
+Apache Ant (1.9.6)
+
+* License: Apache License, 2.0, W3C License, Public Domain
+
+commons-lang3 (3.5)
+
+* License: Apache-2.0
+
+font-awesome (4.7.0)
+
+* License: OFL-1.1 AND MIT
+
+jsoup (1.10.2)
+
+* License: MIT
+
+JTHarness (5.0)
+
+* License: GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+normalize.css (3.0.2)
+
+* License: MIT
+
+SigTest (4.0)
+
+* License: (GPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)
+* Project: https://wiki.openjdk.java.net/display/CodeTools/sigtest
+* Source: http://hg.openjdk.java.net/code-tools/sigtest/file/c57f97e2ac2f
+
+## Cryptography
+
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.
+
+
+----------------------- Separator -----------------------
+== Fourth Party: org.eclipse.angus:angus-activation
+== License: Eclipse Public License - v 2.0 (Same as Top Level)
+== Notice: (Same as Top Level)
+
+
+----------------------- Licenses -----------------------
+== BSD-3-Clause license
 Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -8464,39 +3895,3 @@ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-_____________________________
-Notice.md
-_____________________________
-Notices for Eclipse Angus
-
-This content is produced and maintained by the Eclipse Angus project.
-
-    Project home: https://projects.eclipse.org/projects/ee4j.angus
-
-Trademarks
-
-Eclipse Angus is a trademark of the Eclipse Foundation.
-Copyright
-
-All content is the property of the respective authors or their employers. For more information regarding authorship of content, please consult the listed source code repository logs.
-Declared Project Licenses
-
-This program and the accompanying materials are made available under the terms of the Eclipse Distribution License v1.0 which is available at https://www.eclipse.org/org/documents/edl-v10.php.
-
-SPDX-License-Identifier: BSD-3-Clause
-Source Code
-
-The project maintains the following source code repositories:
-
-    https://github.com/eclipse-ee4j/angus-activation
-    https://github.com/eclipse-ee4j/angus-mail
-
-Third-party Content
-
-This project leverages the following third party content.
-
-None
-Cryptography
-
-Content may contain encryption software. The country in which you are currently may have restrictions on the import, possession, and use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check the country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted.

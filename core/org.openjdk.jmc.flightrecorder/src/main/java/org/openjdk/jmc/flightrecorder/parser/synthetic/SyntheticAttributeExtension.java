@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -169,6 +169,23 @@ public class SyntheticAttributeExtension implements IParserExtension {
 						IEventSink moduleExportSink = new ModuleExportSink(subSink, packageIndex);
 						return moduleExportSink;
 					}
+				} else if (JdkTypeIDs.VM_INFO.equals(identifier)) {
+					// Adding a String pid, as that is what is used in the jdk.SystemProcess event.
+					int packageIndex = -1;
+					for (int i = 0; i < dataStructure.size(); i++) {
+						ValueField vf = dataStructure.get(i);
+						if (vf.matches(JdkAttributes.JVM_PID)) {
+							packageIndex = i;
+							break;
+						}
+					}
+					if (packageIndex != -1) {
+						List<ValueField> newDataStructure = new ArrayList<>(dataStructure);
+						newDataStructure.set(packageIndex, new ValueField(JdkAttributes.PID));
+						IEventSink subSink = sf.create(identifier, label, category, description, newDataStructure);
+						IEventSink moduleExportSink = new LongAsStringSink(subSink, packageIndex);
+						return moduleExportSink;
+					}
 				}
 				return sf.create(identifier, label, category, description, dataStructure);
 			}
@@ -208,6 +225,28 @@ public class SyntheticAttributeExtension implements IParserExtension {
 				Object[] newValues = new Object[values.length + 1];
 				System.arraycopy(values, 0, newValues, 0, values.length);
 				newValues[values.length] = exportingModule;
+				subSink.addEvent(newValues);
+			}
+		}
+	}
+
+	private static class LongAsStringSink implements IEventSink {
+		private final IEventSink subSink;
+		private final int pidIndex;
+
+		public LongAsStringSink(IEventSink subSink, int pidIndex) {
+			this.subSink = subSink;
+			this.pidIndex = pidIndex;
+		}
+
+		@Override
+		public void addEvent(Object[] values) {
+			Number longPid = (Number) values[pidIndex];
+			if (longPid != null && values != null && values.length > 0) {
+				String pid = String.valueOf(longPid.longValue());
+				Object[] newValues = new Object[values.length];
+				System.arraycopy(values, 0, newValues, 0, values.length - 1);
+				newValues[pidIndex] = pid;
 				subSink.addEvent(newValues);
 			}
 		}

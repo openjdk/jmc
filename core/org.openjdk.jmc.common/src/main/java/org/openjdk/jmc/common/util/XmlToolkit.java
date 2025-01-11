@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -170,8 +170,9 @@ public final class XmlToolkit {
 			InputSource xml = new InputSource(
 					new StringReader("<?xml version=\"1.0\" encoding=\"UTF-8\"?><" + rootElementName + "/>")); //$NON-NLS-1$ //$NON-NLS-2$
 			DocumentBuilderFactory dbf = createDocumentBuildFactoryInstance();
-
-			doc = dbf.newDocumentBuilder().parse(xml);
+			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+			documentBuilder.setErrorHandler(null);
+			doc = documentBuilder.parse(xml);
 		} catch (IOException e) {
 			// just rethrow
 			throw e;
@@ -198,6 +199,7 @@ public final class XmlToolkit {
 			throws SAXNotRecognizedException, SAXNotSupportedException, ParserConfigurationException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
+		factory.setValidating(true);
 		return factory;
 	}
 
@@ -213,6 +215,7 @@ public final class XmlToolkit {
 	public static DocumentBuilderFactory createDocumentBuildFactoryInstance() throws ParserConfigurationException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
+		dbf.setValidating(true);
 		return dbf;
 	}
 
@@ -378,6 +381,7 @@ public final class XmlToolkit {
 		try {
 			DocumentBuilderFactory factory = createDocumentBuildFactoryInstance();
 			docBuilder = factory.newDocumentBuilder();
+			docBuilder.setErrorHandler(null);
 		} catch (ParserConfigurationException e) {
 			// This shouldn't happen since all configuration is done within XmlToolkit
 			LOGGER.log(Level.WARNING, "Parser configuration error", e); //$NON-NLS-1$

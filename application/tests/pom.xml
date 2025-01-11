@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -52,12 +52,14 @@
 		<module>org.openjdk.jmc.rjmx.test</module>
 		<module>org.openjdk.jmc.ui.common.test</module>
 		<module>org.openjdk.jmc.ui.test</module>
+		<module>org.openjdk.jmc.jolokia.test</module>
 	</modules>
 	<properties>
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
 		<test.excludes.default>**/*$*</test.excludes.default>
 		<fail.if.no.tests>true</fail.if.no.tests>
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
+		<tycho.testArgLine.local></tycho.testArgLine.local>
 	</properties>
 	<profiles>
 		<profile>
@@ -106,6 +108,9 @@
 		</profile>
 		<profile>
 			<id>coverage</id>
+			<properties>
+				<tycho.testArgLine.local>${tycho.testArgLine}</tycho.testArgLine.local>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -118,9 +123,6 @@
 								<goals>
 									<goal>prepare-agent</goal>
 								</goals>
-								<configuration>
-									<propertyName>surefireArgLine</propertyName>
-								</configuration>
 							</execution>
 							<execution>
 								<id>post-unit-test</id>
@@ -149,7 +151,6 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<argLine>${surefireArgLine}</argLine>
 					<appArgLine>-nl en</appArgLine>
 					<includes>${test.includes}</includes>
 					<excludes>

@@ -76,7 +76,7 @@
 	</modules>
 	<properties>
 		<!-- Config -->
-		<revision>9.0.0</revision>
+		<revision>9.1.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -91,12 +91,12 @@
 		<patchId></patchId>
 		<jmc.config.path>${project.basedir}/configuration</jmc.config.path>
 		<!-- Tycho uses Bundle-RequiredExecutionEnvironment key in the MANIFEST file, but setting this here will catch any misconfigured MANIFEST file -->
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<!-- Plugin Versions -->
-		<tycho.version>3.0.5</tycho.version>
-		<maven.toolchains.version>3.1.0</maven.toolchains.version>
-		<maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+		<tycho.version>4.0.10</tycho.version>
+		<maven.toolchains.version>3.2.0</maven.toolchains.version>
+		<maven.checkstyle.version>3.4.0</maven.checkstyle.version>
 		<!-- Seems like the currently latest spotless version 2.36.0 has some issue with libicu, so going for 2.34.0 now -->
 		<spotless.version>2.34.0</spotless.version>
 		<maven.directory.version>1.0</maven.directory.version>
@@ -108,7 +108,7 @@
 		<download.maven.plugin.version>1.6.8</download.maven.plugin.version>
 		<maven.deploy.version>3.1.1</maven.deploy.version>
 		<spotbugs.version>4.7.3.5</spotbugs.version>
-		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
+		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
 	</properties>
 	<scm>
 		<connection>${scmConnection}</connection>
@@ -125,7 +125,7 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2023-12</id>
+			<id>2024-12</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -139,7 +139,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2023-12</artifactId>
+									<artifactId>platform-definition-2024-12</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -149,7 +149,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>2023-09</id>
+			<id>2024-09</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -160,7 +160,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2023-09</artifactId>
+									<artifactId>platform-definition-2024-09</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -170,7 +170,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>2023-03</id>
+			<id>2024-06</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -181,7 +181,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2023-03</artifactId>
+									<artifactId>platform-definition-2024-06</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -191,7 +191,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>2022-12</id>
+			<id>2024-03</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -202,28 +202,7 @@
 							<target>
 								<artifact>
 									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2022-12</artifactId>
-									<version>${revision}${changelist}</version>
-								</artifact>
-							</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>2022-09</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>target-platform-configuration</artifactId>
-						<version>${tycho.version}</version>
-						<configuration>
-							<target>
-								<artifact>
-									<groupId>org.openjdk.jmc</groupId>
-									<artifactId>platform-definition-2022-09</artifactId>
+									<artifactId>platform-definition-2024-03</artifactId>
 									<version>${revision}${changelist}</version>
 								</artifact>
 							</target>
@@ -293,6 +272,18 @@
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+				<products>
+					<product>
+						<archiveFileName>${project.groupId}-${project.version}</archiveFileName>
+					</product>
+				</products>
+				</configuration>
+			 </plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
@@ -307,9 +298,9 @@
 					<execution>
 						<id>build-qualifier</id>
 						<phase>validate</phase>
-						<goals>
+						<!--<goals>
 							<goal>build-qualifier</goal>
-						</goals>
+						</goals>-->
 					</execution>
 				</executions>
 				<configuration>

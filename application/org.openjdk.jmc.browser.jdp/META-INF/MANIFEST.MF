@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: JDP Browser Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.browser.jdp;singleton:=true
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Bundle-Localization: plugin
 Require-Bundle: org.openjdk.jmc.ui,

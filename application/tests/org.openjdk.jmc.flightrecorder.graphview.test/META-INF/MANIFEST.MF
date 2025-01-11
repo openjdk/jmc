@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GraphView Plug-in Test
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.graphview.test;singleton:=true
-Bundle-Version: 9.0.0.qualifier
+Bundle-Version: 9.1.0.qualifier
 Bundle-Vendor: Oracle Corporation
 Fragment-Host: org.openjdk.jmc.flightrecorder.graphview
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit
 Export-Package: org.openjdk.jmc.flightrecorder.ext.graphview.graph

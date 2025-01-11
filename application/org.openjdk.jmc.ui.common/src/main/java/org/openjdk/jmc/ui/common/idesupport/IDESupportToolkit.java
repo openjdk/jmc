@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -77,8 +77,9 @@ public final class IDESupportToolkit {
 	 *            {@code true} if the file should be appended, {@code false} if it should be
 	 *            overwritten
 	 */
-	public static Job writeAsJob(String jobName, MCFile file, InputStream stream, boolean append) {
-		Job writeJob = new JobFileWrite(jobName, file, stream, append);
+	public static Job writeAsJob(
+		String jobName, MCFile file, InputStream stream, boolean append, String triggerMessage) {
+		Job writeJob = new JobFileWrite(jobName, file, stream, append, triggerMessage);
 		writeJob.schedule();
 		return writeJob;
 	}

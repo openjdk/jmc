@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2023, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2023, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,9 @@ package org.openjdk.jmc.util.listversions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -45,8 +48,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
 
 public class ListVersions {
+	private static final String XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE = "http://apache.org/xml/features/disallow-doctype-decl"; //$NON-NLS-1$
 
 	public static void main(String[] args) throws IOException {
 		if (args.length != 1) {
@@ -55,6 +60,36 @@ public class ListVersions {
 		}
 		String eclipseVersion = args[0];
 
+		Map<String, String> versions = getNewVersions(eclipseVersion);
+		for (Entry<String, String> entry : versions.entrySet()) {
+			switch (entry.getKey()) {
+			case "org.eclipse.equinox.executable.feature.group":
+			case "org.eclipse.pde.feature.group":
+			case "org.eclipse.platform.sdk":
+			case "org.eclipse.equinox.p2.ui.sdk.scheduler":
+			case "org.eclipse.equinox.p2.updatechecker":
+			case "org.eclipse.update.configurator":
+			case "org.eclipse.equinox.p2.reconciler.dropins":
+			case "org.eclipse.help.webapp":
+			case "org.apache.commons.codec":
+			case "org.eclipse.rcp.feature.group":
+			case "org.eclipse.help.feature.group":
+			case "org.eclipse.equinox.p2.rcp.feature.feature.group":
+			case "org.eclipse.ui.net":
+			case "org.eclipse.equinox.p2.director.app":
+			case "org.eclipse.ui.themes":
+			case "org.eclipse.sdk":
+				System.out.println("Found unit: " + entry.getKey() + ", Version: " + entry.getValue());
+				break;
+			default:
+				// Ignoring other units
+			}
+		}
+
+	}
+
+	public static Map<String, String> getNewVersions(String eclipseVersion) {
+		Map<String, String> versions = new HashMap<>();
 		String updateSite = String.format("https://download.eclipse.org/releases/%s/", eclipseVersion);
 		String compositeArtifactsUrl = updateSite + "compositeArtifacts.jar";
 
@@ -63,7 +98,10 @@ public class ListVersions {
 			compositeZipStream.getNextEntry();
 
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			dbFactory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
+			dbFactory.setValidating(true);
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			dBuilder.setErrorHandler(null);
 			Document compositeDoc = dBuilder.parse(compositeZipStream);
 
 			NodeList childrenList = compositeDoc.getElementsByTagName("child");
@@ -82,7 +120,7 @@ public class ListVersions {
 
 			if (subDirectory == null) {
 				System.out.println("Failed to find subdirectory.");
-				return;
+				return versions;
 			}
 
 			String contentJarUrl = updateSite + subDirectory + "/content.jar";
@@ -100,20 +138,13 @@ public class ListVersions {
 						Element unitElement = (Element) unitNode;
 						String id = unitElement.getAttribute("id");
 						String version = unitElement.getAttribute("version");
-						switch (id) {
-						case "org.eclipse.equinox.executable.feature.group":
-						case "org.eclipse.pde.feature.group":
-						case "org.eclipse.platform.sdk":
-							System.out.println("Found unit: " + id + ", Version: " + version);
-							break;
-						default:
-							// Ignoring other units
-						}
+						versions.put(id, version);
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return versions;
 	}
 }

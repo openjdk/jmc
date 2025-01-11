@@ -35,12 +35,23 @@
   <toolchain>
     <type>jdk</type>
     <provides>
+      <version>21</version>
+      <vendor>temurin</vendor>
+      <id>JavaSE-21</id>
+    </provides>
+    <configuration>
+      <jdkHome>/opt/java/openjdk/</jdkHome>
+    </configuration>
+  </toolchain>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
       <version>17</version>
       <vendor>temurin</vendor>
       <id>JavaSE-17</id>
     </provides>
     <configuration>
-      <jdkHome>/opt/java/openjdk/</jdkHome>
+      <jdkHome>/opt/java/openjdk-17/</jdkHome>
     </configuration>
   </toolchain>
 </toolchains>

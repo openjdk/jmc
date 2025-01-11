@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -468,6 +468,7 @@ class TypeManager {
 		TypeEntry fieldType = getTypeEntry(f.classId);
 		String typeIdentifier = fieldType.element.typeIdentifier;
 		boolean isNumeric = PrimitiveReader.isNumeric(typeIdentifier);
+		boolean isLong = PrimitiveReader.isLong(typeIdentifier);
 		IValueReader reader = fieldType.getReader();
 		if (f.ticksUnitKind == UnitLookup.TIMESPAN) {
 			reader = new QuantityReader(typeIdentifier, header.getTicksTimespanUnit(), f.unsigned);
@@ -482,7 +483,8 @@ class TypeManager {
 				if (JfrInternalConstants.LINE_NUMBER_ID.equals(f.fieldIdentifier)
 						|| JfrInternalConstants.BCI_ID.equals(f.fieldIdentifier)
 						|| JfrInternalConstants.MODIFIERS_ID.equals(f.fieldIdentifier)
-						|| JfrInternalConstants.JAVA_THREAD_ID_ID.equals(f.fieldIdentifier)) {
+						|| JfrInternalConstants.JAVA_THREAD_ID_ID.equals(f.fieldIdentifier)
+						|| JfrInternalConstants.CERTIFICATE_ID_ID.equals(f.fieldIdentifier) || isLong) {
 					reader = new PrimitiveReader(typeIdentifier);
 				} else {
 					IUnit unit = UnitLookup.getUnitOrNull(valueType);

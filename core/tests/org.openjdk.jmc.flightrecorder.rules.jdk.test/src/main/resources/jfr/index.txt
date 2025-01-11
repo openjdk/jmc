@@ -1,6 +1,10 @@
 allocation_10s_before.jfr
 allocation_10s_fixed.jfr
+autobox_allocation.jfr
+autobox_allocation_sample.jfr
 crash_jdk9.jfr
+dominating_thread_allocation.jfr
+dominating_thread_allocation_sample.jfr
 flight_recording_hidden.jfr
 full_gc_cms.jfr
 full_gc_g1.jfr
@@ -12,6 +16,7 @@ openjdk8u292.jfr
 openjdk8u302ea.jfr
 parallel-gc_cpu.jfr
 parallel-on-singlecpu.jfr
+pid1.jfr
 stringdedup_enabled_jdk9.jfr
 wldf.jfr
 wls-medrec-jdk9.jfr

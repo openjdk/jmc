@@ -681,12 +681,25 @@ public class DataPageToolkit {
 		createChartTooltip(chart, ChartToolTipProvider::new);
 	}
 
+	public static void createChartTooltip(ChartTextCanvas chart) {
+		createChartTooltip(chart, ChartToolTipProvider::new);
+	}
+
 	public static void createChartTimestampTooltip(ChartCanvas chart) {
 		createChartTooltip(chart, JfrAttributes.START_TIME, JfrAttributes.END_TIME, JfrAttributes.DURATION,
 				JfrAttributes.EVENT_TYPE, JfrAttributes.EVENT_STACKTRACE);
 	}
 
+	public static void createChartTimestampTooltip(ChartTextCanvas chart) {
+		createChartTooltip(chart, JfrAttributes.START_TIME, JfrAttributes.END_TIME, JfrAttributes.DURATION,
+				JfrAttributes.EVENT_TYPE, JfrAttributes.EVENT_STACKTRACE);
+	}
+
 	public static void createChartTooltip(ChartCanvas chart, IAttribute<?> ... excludedAttributes) {
+		createChartTooltip(chart, new HashSet<>(Arrays.asList(excludedAttributes)));
+	}
+
+	public static void createChartTooltip(ChartTextCanvas chart, IAttribute<?> ... excludedAttributes) {
 		createChartTooltip(chart, new HashSet<>(Arrays.asList(excludedAttributes)));
 	}
 
@@ -700,7 +713,46 @@ public class DataPageToolkit {
 		});
 	}
 
+	public static void createChartTooltip(ChartTextCanvas chart, Set<IAttribute<?>> excludedAttributes) {
+		createChartTooltip(chart, () -> new ChartToolTipProvider() {
+			@SuppressWarnings("deprecation")
+			@Override
+			protected Stream<IAttribute<?>> getAttributeStream(IType<IItem> type) {
+				return type.getAttributes().stream().filter(a -> !excludedAttributes.contains(a));
+			}
+		});
+	}
+
 	public static void createChartTooltip(ChartCanvas chart, Supplier<ChartToolTipProvider> toolTipProviderSupplier) {
+		new ToolTip(chart) {
+			String html;
+			Map<String, Image> images;
+
+			@Override
+			protected boolean shouldCreateToolTip(Event event) {
+				ChartToolTipProvider provider = toolTipProviderSupplier.get();
+				chart.infoAt(provider, event.x, event.y);
+				html = provider.getHTML();
+				images = provider.getImages();
+				return html != null;
+			}
+
+			@Override
+			protected Composite createToolTipContentArea(Event event, Composite parent) {
+				FormText formText = CompositeToolkit.createInfoFormText(parent);
+				for (Map.Entry<String, Image> imgEntry : images.entrySet()) {
+					formText.setImage(imgEntry.getKey(), imgEntry.getValue());
+				}
+				formText.setText(html, true, false);
+				return formText;
+			}
+
+		};
+
+	}
+
+	public static void createChartTooltip(
+		ChartTextCanvas chart, Supplier<ChartToolTipProvider> toolTipProviderSupplier) {
 		new ToolTip(chart) {
 			String html;
 			Map<String, Image> images;

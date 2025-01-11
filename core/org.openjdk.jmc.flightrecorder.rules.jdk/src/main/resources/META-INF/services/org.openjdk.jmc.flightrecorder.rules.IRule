@@ -63,6 +63,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.general.OptionsCheckRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInArgumentsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInEnvironmentRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.PasswordsInSystemPropertiesRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.PID1Rule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ProcessStartedRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.RecordingSettingsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.StackDepthSettingRule

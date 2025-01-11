@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,7 +37,6 @@ import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 
 import java.util.List;
 
-@SuppressWarnings("restriction")
 abstract class TestType extends BaseType {
 	public TestType(long id, String name, String supertype, ConstantPools constantPools, TypesImpl types) {
 		super(id, name, supertype, constantPools, types);

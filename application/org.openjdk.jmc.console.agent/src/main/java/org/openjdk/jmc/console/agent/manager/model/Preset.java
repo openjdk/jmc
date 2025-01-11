@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2023, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2021, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -163,7 +163,9 @@ public class Preset implements IPreset {
 			factory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
 			factory.setXIncludeAware(false);
 			factory.setExpandEntityReferences(false);
+			factory.setValidating(true);
 			builder = factory.newDocumentBuilder();
+			builder.setErrorHandler(null);
 		} catch (ParserConfigurationException e) {
 			// This should not happen anyway
 			throw new RuntimeException(e);
@@ -260,6 +262,7 @@ public class Preset implements IPreset {
 		try {
 			tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+			tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
 			// This should not happen anyway
