@@ -48,7 +48,7 @@
 	<inceptionYear>${project.inceptionYear}</inceptionYear>
 	<properties>
 		<!-- Config -->
-		<revision>9.1.0</revision>
+		<revision>10.0.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.inceptionYear>2018</project.inceptionYear>
