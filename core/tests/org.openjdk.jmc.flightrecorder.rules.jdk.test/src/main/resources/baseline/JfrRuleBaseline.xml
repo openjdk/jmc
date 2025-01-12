@@ -5437,7 +5437,7 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>Options</id>
             <severity>OK</severity>
             <summary>Deprecated option flags were detected.</summary>
-            <explanation>The following option flags are or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UseParallelOldGC: Deprecated in Java 14.&lt;/li&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
+            <explanation>The following option flags are or will be deprecated. &lt;ul&gt;&lt;li&gt;-XX:+UseParallelOldGC: Deprecated in Java 14, ignored in Java 15, and removed in Java 16.&lt;/li&gt;&lt;li&gt;-XX:+UnlockCommercialFeatures: Deprecated in Java 11.&lt;/li&gt;&lt;/ul&gt; Deprecated option flags should be avoided. In some cases they enable legacy code and in other cases they are ignored completely. They will usually be removed in a later Java release.</explanation>
         </rule>
         <rule>
             <id>OverAggressiveRecordingSetting</id>
