@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2023, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -75,6 +75,8 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 		NOT_MATCHES(MATCHES),
 		CONTAINS,
 		NOT_CONTAINS(CONTAINS),
+		ENDS_WITH,
+		NOT_ENDS_WITH(ENDS_WITH),
 		LESS,
 		LESS_OR_EQUAL,
 		MORE(LESS_OR_EQUAL),
@@ -161,6 +163,10 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 			return ItemFilters.matches(readStringAttribute(memento), memento.getAttribute(KEY_VALUE));
 		case NOT_MATCHES:
 			return ItemFilters.notMatches(readStringAttribute(memento), memento.getAttribute(KEY_VALUE));
+		case ENDS_WITH:
+			return ItemFilters.endsWith(readStringAttribute(memento), memento.getAttribute(KEY_VALUE));
+		case NOT_ENDS_WITH:
+			return ItemFilters.notEndsWith(readStringAttribute(memento), memento.getAttribute(KEY_VALUE));
 		case CONTAINS:
 			return ItemFilters.contains(readStringAttribute(memento), memento.getAttribute(KEY_VALUE));
 		case NOT_CONTAINS:

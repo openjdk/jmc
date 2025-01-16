@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -637,6 +637,29 @@ public class PredicateToolkit {
 			public boolean test(T o) {
 				String value = valueAccessor.getMember(o);
 				return value == null ? false : value.contains(substring);
+			}
+		};
+	}
+	
+	/**
+	 * Create a predicate that checks if a string value ends with a specified substring.
+	 * <p>
+	 * The predicate takes an input object as argument but the value that is checked is extracted
+	 * from the input object using a member accessor.
+	 *
+	 * @param valueAccessor
+	 *            string accessor used to get the value to check from the input type
+	 * @param substring
+	 *            the substring to look for
+	 * @return a predicate that tests to {@code true} if the string value contains the substring
+	 */
+	public static <T> Predicate<T> endsWith(
+		final IMemberAccessor<? extends String, T> valueAccessor, final String substring) {
+		return new Predicate<T>() {
+			@Override
+			public boolean test(T o) {
+				String value = valueAccessor.getMember(o);
+				return value == null ? false : value.endsWith(substring);
 			}
 		};
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.io;
 
+import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +45,7 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -72,9 +75,12 @@ public class FileReadRule implements IRule {
 			Messages.getString(Messages.FileReadRule_CONFIG_WARNING_LIMIT),
 			Messages.getString(Messages.FileReadRule_CONFIG_WARNING_LIMIT_LONG), UnitLookup.TIMESPAN,
 			UnitLookup.MILLISECOND.quantity(4000));
-
+	public static final TypedPreference<String> EXCLUDED_FILES = new TypedPreference<>("io.file.read.exclude.files", //$NON-NLS-1$
+			Messages.getString(Messages.FileReadRule_CONFIG_EXCLUDED_FILES),
+			Messages.getString(Messages.FileReadRule_CONFIG_EXCLUDED_FILES_LONG), PLAIN_TEXT.getPersister(),
+			".jfr,/proc/self/smaps"); //$NON-NLS-1$
 	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
-			.<TypedPreference<?>> asList(READ_WARNING_LIMIT);
+			.<TypedPreference<?>> asList(READ_WARNING_LIMIT, EXCLUDED_FILES);
 	private static final String RESULT_ID = "FileRead"; //$NON-NLS-1$
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
@@ -103,8 +109,9 @@ public class FileReadRule implements IRule {
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider resultProvider) {
 		IQuantity warningLimit = vp.getPreferenceValue(READ_WARNING_LIMIT);
 		IQuantity infoLimit = warningLimit.multiply(0.5);
+		String excludedFiles = vp.getPreferenceValue(EXCLUDED_FILES);
 
-		IItemCollection fileReadEvents = items.apply(JdkFilters.FILE_READ);
+		IItemCollection fileReadEvents = items.apply(ItemFilters.and(JdkFilters.FILE_READ, createExcludeFilter(excludedFiles)));
 		IItem longestEvent = fileReadEvents.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
 		// Aggregate of all file read events - if null, then we had no events
@@ -141,6 +148,18 @@ public class FileReadRule implements IRule {
 				.setSummary(Messages.getString(Messages.FileReadRuleFactory_TEXT_OK))
 				.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 				.addResult(LONGEST_READ_TIME, longestDuration).build();
+	}
+
+	private IItemFilter createExcludeFilter(String excludedFiles) {
+		if (excludedFiles.isBlank()) {
+			return ItemFilters.all();			
+		}
+		String [] files = excludedFiles.split(",");
+		IItemFilter [] filters = new IItemFilter[files.length];
+		for (int i = 0; i < files.length; i++) {
+			filters[i] = ItemFilters.notEndsWith(JdkAttributes.IO_PATH, files[i].trim());
+		}
+		return ItemFilters.and(filters);
 	}
 
 	static String sanitizeFileName(String fileName) {

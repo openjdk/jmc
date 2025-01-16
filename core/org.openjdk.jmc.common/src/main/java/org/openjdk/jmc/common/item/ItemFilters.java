@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -451,6 +451,28 @@ public class ItemFilters {
 		}
 	}
 
+	public static class EndsWith extends AttributeValue<String> {
+		EndsWith(String substring, ICanonicalAccessorFactory<String> attribute) {
+			super(Kind.ENDS_WITH, attribute, substring);
+		}
+
+		@Override
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String substring) {
+			return PredicateToolkit.endsWith(accessor, substring);
+		}
+	}
+
+	public static class NotEndsWith extends AttributeValue<String> {
+		NotEndsWith(String substring, ICanonicalAccessorFactory<String> attribute) {
+			super(Kind.NOT_ENDS_WITH, attribute, substring);
+		}
+
+		@Override
+		protected Predicate<IItem> getPredicate(IMemberAccessor<? extends String, IItem> accessor, String substring) {
+			return PredicateToolkit.not(PredicateToolkit.endsWith(accessor, substring));
+		}
+	}
+	
 	public static class Contains extends AttributeValue<String> {
 		Contains(String substring, ICanonicalAccessorFactory<String> attribute) {
 			super(Kind.CONTAINS, attribute, substring);
@@ -591,6 +613,14 @@ public class ItemFilters {
 		return new Contains(substring, attribute);
 	}
 
+	public static IItemFilter endsWith(ICanonicalAccessorFactory<String> attribute, String substring) {
+		return new EndsWith(substring, attribute);
+	}
+
+	public static IItemFilter notEndsWith(ICanonicalAccessorFactory<String> attribute, String substring) {
+		return new NotEndsWith(substring, attribute);
+	}
+	
 	public static IItemFilter notMatches(ICanonicalAccessorFactory<String> attribute, String regexp) {
 		return new NotMatches(regexp, attribute);
 	}
