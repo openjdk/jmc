@@ -111,7 +111,8 @@ public class FileReadRule implements IRule {
 		IQuantity infoLimit = warningLimit.multiply(0.5);
 		String excludedFiles = vp.getPreferenceValue(EXCLUDED_FILES);
 
-		IItemCollection fileReadEvents = items.apply(ItemFilters.and(JdkFilters.FILE_READ, createExcludeFilter(excludedFiles)));
+		IItemCollection fileReadEvents = items
+				.apply(ItemFilters.and(JdkFilters.FILE_READ, createExcludeFilter(excludedFiles)));
 		IItem longestEvent = fileReadEvents.getAggregate(Aggregators.itemWithMax(JfrAttributes.DURATION));
 
 		// Aggregate of all file read events - if null, then we had no events
@@ -152,10 +153,10 @@ public class FileReadRule implements IRule {
 
 	private IItemFilter createExcludeFilter(String excludedFiles) {
 		if (excludedFiles.isBlank()) {
-			return ItemFilters.all();			
+			return ItemFilters.all();
 		}
-		String [] files = excludedFiles.split(",");
-		IItemFilter [] filters = new IItemFilter[files.length];
+		String[] files = excludedFiles.split(",");
+		IItemFilter[] filters = new IItemFilter[files.length];
 		for (int i = 0; i < files.length; i++) {
 			filters[i] = ItemFilters.notEndsWith(JdkAttributes.IO_PATH, files[i].trim());
 		}

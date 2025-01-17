@@ -640,7 +640,7 @@ public class PredicateToolkit {
 			}
 		};
 	}
-	
+
 	/**
 	 * Create a predicate that checks if a string value ends with a specified substring.
 	 * <p>

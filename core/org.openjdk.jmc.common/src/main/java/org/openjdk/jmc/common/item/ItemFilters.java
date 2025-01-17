@@ -472,7 +472,7 @@ public class ItemFilters {
 			return PredicateToolkit.not(PredicateToolkit.endsWith(accessor, substring));
 		}
 	}
-	
+
 	public static class Contains extends AttributeValue<String> {
 		Contains(String substring, ICanonicalAccessorFactory<String> attribute) {
 			super(Kind.CONTAINS, attribute, substring);
@@ -620,7 +620,7 @@ public class ItemFilters {
 	public static IItemFilter notEndsWith(ICanonicalAccessorFactory<String> attribute, String substring) {
 		return new NotEndsWith(substring, attribute);
 	}
-	
+
 	public static IItemFilter notMatches(ICanonicalAccessorFactory<String> attribute, String regexp) {
 		return new NotMatches(regexp, attribute);
 	}
