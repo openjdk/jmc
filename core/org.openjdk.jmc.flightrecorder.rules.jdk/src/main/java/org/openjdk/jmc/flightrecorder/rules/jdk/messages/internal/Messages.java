@@ -271,6 +271,8 @@ public class Messages {
 	public static final String FileReadRuleFactory_TEXT_WARN_LONG = "FileReadRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String FileReadRule_CONFIG_WARNING_LIMIT = "FileReadRule_CONFIG_WARNING_LIMIT"; //$NON-NLS-1$
 	public static final String FileReadRule_CONFIG_WARNING_LIMIT_LONG = "FileReadRule_CONFIG_WARNING_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String FileReadRule_CONFIG_EXCLUDED_FILES = "FileReadRule_CONFIG_EXCLUDED_FILES"; //$NON-NLS-1$
+	public static final String FileReadRule_CONFIG_EXCLUDED_FILES_LONG = "FileReadRule_CONFIG_EXCLUDED_FILES_LONG"; //$NON-NLS-1$
 	public static final String FileWriteRuleFactory_RULE_NAME = "FileWriteRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String FileWriteRuleFactory_TEXT_NO_EVENTS = "FileWriteRuleFactory_TEXT_NO_EVENTS"; //$NON-NLS-1$
 	public static final String FileWriteRuleFactory_TEXT_OK = "FileWriteRuleFactory_TEXT_OK"; //$NON-NLS-1$

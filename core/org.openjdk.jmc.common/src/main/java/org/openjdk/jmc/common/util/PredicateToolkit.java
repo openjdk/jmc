@@ -642,6 +642,29 @@ public class PredicateToolkit {
 	}
 
 	/**
+	 * Create a predicate that checks if a string value ends with a specified substring.
+	 * <p>
+	 * The predicate takes an input object as argument but the value that is checked is extracted
+	 * from the input object using a member accessor.
+	 *
+	 * @param valueAccessor
+	 *            string accessor used to get the value to check from the input type
+	 * @param substring
+	 *            the substring to look for
+	 * @return a predicate that tests to {@code true} if the string value contains the substring
+	 */
+	public static <T> Predicate<T> endsWith(
+		final IMemberAccessor<? extends String, T> valueAccessor, final String substring) {
+		return new Predicate<T>() {
+			@Override
+			public boolean test(T o) {
+				String value = valueAccessor.getMember(o);
+				return value == null ? false : value.endsWith(substring);
+			}
+		};
+	}
+
+	/**
 	 * Compile a regular expression into a pattern if possible. If the expression can't be compiled,
 	 * return a valid pattern that will give 0 matches (at least for single lines).
 	 *
