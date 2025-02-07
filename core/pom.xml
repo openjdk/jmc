@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2024, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
    The contents of this file are subject to the terms of either the Universal Permissive License
-   v 1.0 as shown at http://oss.oracle.com/licenses/upl
+   v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
    or the following license:
 
@@ -83,9 +83,9 @@
 	<licenses>
 		<license>
 			<name>Universal Permissive License Version 1.0</name>
-			<url>http://oss.oracle.com/licenses/upl</url>
+			<url>https://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2024, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2025, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -427,7 +427,7 @@
 					<failOnError>false</failOnError>
 					<bottom>
 						<![CDATA[ <p> <a href="http://www.oracle.com/missioncontrol">JDK Mission Control</a> v ${project.version}  <br>
-						<a href="https://docs.oracle.com/javacomponents/dcommon/html/cpyr.htm">Copyright </a> &copy ${project.inceptionYear}-{currentYear}, Oracle and/or its affiliates. All rights reserved. Licensed under the Universal Permissive License v 1.0 as shown at <a href="https://oss.oracle.com/licenses/upl/">http://oss.oracle.com/licenses/upl</a>
+						<a href="https://docs.oracle.com/javacomponents/dcommon/html/cpyr.htm">Copyright </a> &copy ${project.inceptionYear}-{currentYear}, Oracle and/or its affiliates. All rights reserved. Licensed under the Universal Permissive License v 1.0 as shown at <a href="https://oss.oracle.com/licenses/upl/">https://oss.oracle.com/licenses/upl</a>
 						</p>]]>
 					</bottom>
 				</configuration>
