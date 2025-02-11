@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+    <component>
+        <name>General</name>
+        <note version="9.1">
+            <title>JMC 9.1 - New Release!</title>
+            <description>
+                This is the latest (January 2025) release of JDK Mission Control. JMC 9.1 requires JDK 21+ to run and introduces 
+                several new features, enhancements, and bug fixes. This version continues to support connecting to, and parsing 
+                JFR recordings from, OpenJDK 8u272+ and Oracle JDK 7u40+, and can open and visualize flight recordings from JDK 7 
+                and 8. JDK Mission Control is available for Windows (x86_64), Mac OS X (ARM and x86_64), and Linux (ARM and x86_64).
+            </description>
+            <image>general/jmc.png</image>
+        </note>
+		<note version="9.1">
+			<title>Eclipse 4.34</title>
+			<description>
+				The Mission Control client is now built to run optimally
+				on Eclipse 2024-12 and later. To install JDK Mission Control into
+				Eclipse, go to the update site (Help | Install New Software...). The
+				URL to the update site will be vendor specific, and some vendors
+				will instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+		<note version="9.1">
+			<title>Support for Jolokia JMX Connection and Discovery</title>
+			<description>
+				JMC now supports connecting to JVMs using Jolokia, and also supports Jolokia's 
+				auto discovery mechanism.
+			</description>
+			<image>general/jolokia.png</image>
+		</note>
+		<note version="9.1">
+			<title>Minor bugfixes and improvements</title>
+			<description>
+				There are 64 fixes and improvements in this release.
+				Check out the JMC 9.1 Result Dashboard
+				(https://bugs.openjdk.org/secure/Dashboard.jspa?selectPageId=23411)
+				for more information.
+			</description>
+			<image>general/issues.png</image>
+		</note>
+    </component>
+    <component>
+        <name>Core</name>
+        <!-- Core library enhancements for JMC 9 -->
+        <note version="9.1">
+            <title>API to easily write annotated Java JFR events</title>
+            <description>
+            	The JFR Writer API has been extended with the ability to use the custom JFR event types (i.e. classes extending
+            	jdk.jfr.Event) and register new writer type for them and also directly accept the instances of those types to 
+            	write them in the recording.
+            </description>
+            <image>core/jfreventsupport.png</image>
+        </note>        
+        <note version="9.1">
+            <title>Allow primitive types in converters</title>
+            <description>
+            	Previously a converter could not be used to convert from a primitive type like long. This capability can for 
+            	example be useful to convert a timestamp (type long) into a human readable string.
+            </description>
+            <image>core/agentconverters.png</image>
+        </note>
+        <note version="9.1">
+            <title>Rule for detecting Java process with PID 1</title>
+            <description>
+            	PID 1 is treated specially in Linux, and is assumed to be used by the init process. The init process has some
+            	additional responsibilities, such as assuming the responsibility for orphaned processes. The init process
+            	is assumed to never quit, and e.g. any signal handler registered for SIGSEV will not be run. This can be 
+            	problematic, even when running in containerized environments. The rule will detect if this is the case, and 
+            	propose a path to fixing it (e.g. using tini).
+            </description>
+            <image>core/rule.png</image>
+        </note>
+        <note version="9.1">
+            <title>Rule for detecting Java process with PID 1</title>
+            <description>
+            	PID 1 is treated specially in Linux, and is assumed to be used by the init process. The init process has some
+            	additional responsibilities, such as assuming the responsibility for orphaned processes. The init process
+            	is assumed to never quit, and e.g. any signal handler registered for SIGSEV will not be run. This can be 
+            	problematic, even when running in containerized environments. The rule will detect if this is the case, and 
+            	propose a path to fixing it (e.g. using tini).
+            </description>
+            <image>core/rule.png</image>
+        </note>
+        <note version="9.1">
+            <title>The halt rule result has been improved</title>
+            <description>
+            	The halt rule will now show a table of the top 5 thread halting VM operations.
+            </description>
+            <image>core/rule.png</image>
+        </note>
+        <note version="9.1">
+            <title>Better descriptions for the code cache rule</title>
+            <description>
+            	The descriptions for the code cache rule have been improved, highlighting what the effects of a full code
+            	cache can be and what actions to take to increase the size of the code cache.
+            </description>
+            <image>core/rule.png</image>
+        </note>
+        <note version="9.1">
+            <title>Add support for the new allocation profiler in rules</title>
+            <description>
+            	The following rules have been updated to be able to use the new ObjectAllocationSample events:
+            	AllocationByClassRule, AllocationByThreadRule, AutoBoxingRule.
+            </description>
+            <image>core/rule.png</image>
+        </note>
+      </component>
+    <component>
+        <name>Java Flight Recorder (JFR)</name>
+        <!-- JFR improvements for JMC 9 -->
+        <note version="9.1">
+            <title>JMC displaying long value in scientific notation</title>
+            <description>
+            	The TLSHandshakeEvent.java records "Certificate Id" as a long value, and JMC was showing it in scientific notation.
+            	This was also true for process identifiers. This has now been fixed. 
+            </description>
+            <image>special/noimage.png</image>
+        </note>
+        <note version="9.1">
+            <title>Showing RSS</title>
+            <description>
+            	JMC will now show the the resident set size (RSS), both on the memory page as well as the java application page. 
+            	The RSS can for example be helpful when trying to determine if there is a native memory leak or heavy native 
+            	memory fragmentation occurring. The RSS graphs can be toggled on and off using the check box legends to the right 
+            	of the graphs.  
+            </description>
+            <image>jfr/rss.png</image>
+        </note>
+        <note version="9.1">
+            <title>Showing thread counts</title>
+            <description>
+            	JMC will now show thread counts on the java application page. This can for example be useful when trying to 
+            	determine if there is a thread leak. The thread count graphs can be toggled on and off using the check box legends 
+            	to the right of the graphs.  
+            </description>
+            <image>jfr/threadcounts.png</image>
+        </note>         
+        <note version="9.1">
+            <title>Thread id on hover</title>
+            <description>
+            	In the threads page, hovering over a thread name will show the threadid in the tooltip.
+            </description>
+            <image>jfr/threadid.png</image>
+        </note>
+    </component>
+    <!-- Add more components as needed -->
+    <bugfixes>
+        <!-- Bug fixes in JMC 9.1 -->
+        <bugfix>
+            <area>Platform</area>
+            <bugid>8306</bugid>
+            <synopsis>Missing plug-ins while installing JMC in an Eclipse IDE</synopsis>
+            <description>
+            	Mission Control would fail to install because some third party libraries were not included in the update site.
+            	This has now been fixed.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Core</area>
+            <bugid>8295</bugid>
+            <synopsis>Shutdown event type id was not properly translated for Oracle JDK 8</synopsis>
+            <description>
+            	The shutdown event type id for legacy Oracle JDK 8, leading to the shutdown time and shutdown reason
+            	not being properly displayed on the JVM Internals page.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Core</area>
+            <bugid>8287</bugid>
+            <synopsis>Fix the JMX protocol extenders</synopsis>
+            <description>
+            	The JMC protocol extension mechanism was broken in JMC 9.0.0 when some code was migrated from application to core. 
+            	This has now been fixed.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>Core</area>
+            <bugid>8303</bugid>
+            <synopsis>NPE when running jfr rules reports</synopsis>
+            <description>
+            	The rules report could throw NPEs when an accessor for an attribute could not be found. That has been fixed,
+            	and the faulty query responsible for the reported problem has been fixed as well.
+            </description>
+        </bugfix>
+        <bugfix>
+            <area>JFR</area>
+            <bugid>8248</bugid>
+            <synopsis>Low contrast for the stacktrace view when running in windows high contrast mode</synopsis>
+            <description>
+            	With high contrast mode enabled in Windows 7 and above the contrast on the Stacktrace View was quite low, 
+            	with the values being barely visible. This has now been fixed.
+            </description>
+        </bugfix>
+    </bugfixes>
+	<knownissues>
+		<issue>
+			<area>JFR</area>
+			<bugid>7071</bugid>
+			<synopsis>JMC can't attach to jlinked JVMs</synopsis>
+			<description>
+				This one is still under investigation, but it seems JMC
+				can't attach to certain jlinked images.
+			</description>
+		</issue>
+		<issue>
+			<area>JFR</area>
+			<bugid>7003</bugid>
+			<synopsis>The graph view, heatmap view and dependency view does not work on Windows
+			</synopsis>
+			<description>
+				This is due to a problem with the Windows based browser
+				component in SWT. We're hoping for a fix in the component for a
+				future version of the Eclipse platform.
+			</description>
+		</issue>
+	</knownissues>
+</notes>
