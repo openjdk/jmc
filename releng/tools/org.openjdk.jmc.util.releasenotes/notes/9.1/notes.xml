@@ -75,17 +75,6 @@
             <image>core/rule.png</image>
         </note>
         <note version="9.1">
-            <title>Rule for detecting Java process with PID 1</title>
-            <description>
-            	PID 1 is treated specially in Linux, and is assumed to be used by the init process. The init process has some
-            	additional responsibilities, such as assuming the responsibility for orphaned processes. The init process
-            	is assumed to never quit, and e.g. any signal handler registered for SIGSEV will not be run. This can be 
-            	problematic, even when running in containerized environments. The rule will detect if this is the case, and 
-            	propose a path to fixing it (e.g. using tini).
-            </description>
-            <image>core/rule.png</image>
-        </note>
-        <note version="9.1">
             <title>The halt rule result has been improved</title>
             <description>
             	The halt rule will now show a table of the top 5 thread halting VM operations.
