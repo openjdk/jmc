@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.openjdk.jmc.kubernetes;singleton:=true
-Bundle-Version: 9.1.0.qualifier
+Bundle-Version: 10.0.0.qualifier
 Automatic-Module-Name: org.openjdk.jmc.kubernetes
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.openjdk.jmc.jolokia,
