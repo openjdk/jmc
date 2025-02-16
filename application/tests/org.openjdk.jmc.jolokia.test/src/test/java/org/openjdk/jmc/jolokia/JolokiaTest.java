@@ -209,7 +209,7 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 		StaticConfiguration configuration = new StaticConfiguration(ConfigKey.AGENT_ID, "jolokiatest");
 		JolokiaServiceManager serviceManager = JolokiaServiceManagerFactory.createJolokiaServiceManager(configuration,
 				new StdoutLogHandler(true), new AllowAllRestrictor(),
-				() -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
+				log -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
 		return serviceManager.start();
 	}
 

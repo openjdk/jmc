@@ -10,7 +10,7 @@ Require-Bundle: org.openjdk.jmc.jolokia,
  org.eclipse.ui,
  org.openjdk.jmc.ui,
  org.eclipse.swt,
- org.jolokia.client-kubernetes.standalone;bundle-version="2.0.2",
+ org.jolokia.client-kubernetes.standalone;bundle-version="2.2.2",
  org.openjdk.jmc.rjmx
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences

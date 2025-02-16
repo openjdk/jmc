@@ -55,7 +55,7 @@ import javax.management.remote.JMXServiceURL;
 import org.apache.commons.codec.binary.Base64;
 import org.jolokia.client.J4pClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
-import org.jolokia.server.core.osgi.security.AuthorizationHeaderParser;
+import org.jolokia.server.core.http.security.AuthorizationHeaderParser;
 import org.jolokia.server.core.util.Base64Util;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
