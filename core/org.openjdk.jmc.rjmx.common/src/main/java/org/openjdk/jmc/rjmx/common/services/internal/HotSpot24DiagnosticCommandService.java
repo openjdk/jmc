@@ -120,7 +120,7 @@ public class HotSpot24DiagnosticCommandService implements IDiagnosticCommandServ
 			return Boolean.class.getName();
 		} else if (typeName.equals("STRING") || typeName.equals("NANOTIME") || typeName.equals("MEMORY SIZE")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return String.class.getName();
-		} else if (typeName.equals("JLONG")) { //$NON-NLS-1$
+		} else if (typeName.equals("JLONG") || typeName.equals("JULONG")) { //$NON-NLS-1$
 			return Long.class.getName();
 		} else {
 			return typeName.toLowerCase().replace(' ', '_');
