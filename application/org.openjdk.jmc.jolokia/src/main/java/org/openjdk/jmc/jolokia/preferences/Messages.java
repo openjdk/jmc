@@ -44,6 +44,8 @@ public class Messages extends NLS {
 	public static String JolokiaPreferencePage_MulticastGroupTooltip;
 	public static String JolokiaPreferencePage_MulticastPortLabel;
 	public static String JolokiaPreferencePage_MulticastPortTooltip;
+	public static String JolokiaPreferencePage_WarningText;
+	public static String JolokiaPreferencePage_WarningTitle;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
