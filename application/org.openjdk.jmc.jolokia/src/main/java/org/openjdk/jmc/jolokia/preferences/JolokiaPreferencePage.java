@@ -36,6 +36,7 @@ package org.openjdk.jmc.jolokia.preferences;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -51,7 +52,6 @@ public class JolokiaPreferencePage extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage, PreferenceConstants {
 
 	private Map<Control, Object> dependantControls = new WeakHashMap<>();
-
 	public JolokiaPreferencePage() {
 		super(GRID);
 		setPreferenceStore(JmcJolokiaPlugin.getDefault().getPreferenceStore());
@@ -65,6 +65,10 @@ public class JolokiaPreferencePage extends FieldEditorPreferencePage
 			protected void valueChanged(boolean oldValue, boolean newValue) {
 				super.valueChanged(oldValue, newValue);
 				enableDependantFields(newValue);
+				if (newValue) {
+					MessageDialog.openWarning(getShell(), Messages.JolokiaPreferencePage_WarningTitle,
+							Messages.JolokiaPreferencePage_WarningText);
+				}
 			}
 		};
 		addField(mainEnabler);
@@ -72,10 +76,10 @@ public class JolokiaPreferencePage extends FieldEditorPreferencePage
 				getFieldEditorParent()), Messages.JolokiaPreferencePage_MulticastGroupTooltip);
 		this.addTextField(new IntegerFieldEditor(P_MULTICAST_PORT, Messages.JolokiaPreferencePage_MulticastPortLabel,
 				getFieldEditorParent()), Messages.JolokiaPreferencePage_MulticastPortTooltip);
-		this.addDependantField(new IntegerFieldEditor(P_DISCOVER_TIMEOUT,
-				Messages.JolokiaPreferencePage_DiscoverTimeoutLabel, getFieldEditorParent()), getControl());
+		IntegerFieldEditor timeoutField = new IntegerFieldEditor(P_DISCOVER_TIMEOUT,
+				Messages.JolokiaPreferencePage_DiscoverTimeoutLabel, getFieldEditorParent());
+		this.addDependantField(timeoutField, timeoutField.getTextControl(getFieldEditorParent()));
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
