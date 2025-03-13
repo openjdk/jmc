@@ -52,6 +52,7 @@ public class JolokiaPreferencePage extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage, PreferenceConstants {
 
 	private Map<Control, Object> dependantControls = new WeakHashMap<>();
+
 	public JolokiaPreferencePage() {
 		super(GRID);
 		setPreferenceStore(JmcJolokiaPlugin.getDefault().getPreferenceStore());
@@ -80,6 +81,7 @@ public class JolokiaPreferencePage extends FieldEditorPreferencePage
 				Messages.JolokiaPreferencePage_DiscoverTimeoutLabel, getFieldEditorParent());
 		this.addDependantField(timeoutField, timeoutField.getTextControl(getFieldEditorParent()));
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
