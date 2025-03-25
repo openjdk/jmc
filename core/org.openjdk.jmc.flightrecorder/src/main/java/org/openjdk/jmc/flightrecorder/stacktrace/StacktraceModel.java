@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -184,8 +185,18 @@ public class StacktraceModel {
 				return UNKNOWN_FRAME;
 			}
 			List<? extends IMCFrame> frames = st.getFrames();
-			if (frames != null && frameIndex < frames.size()) {
-				return frames.get(threadRootAtTop ? frames.size() - 1 - frameIndex : frameIndex);
+			List<IMCFrame> nonHiddenFrames = new ArrayList<IMCFrame>();
+			for (Iterator<? extends IMCFrame> iterator = frames.iterator(); iterator.hasNext();) {
+				IMCFrame imcFrame = (IMCFrame) iterator.next();
+				if ((imcFrame.getMethod() != null)
+						&& ((imcFrame.getMethod().isHidden() == null) || (!imcFrame.getMethod().isHidden()))) {
+					nonHiddenFrames.add(imcFrame);
+				}
+
+			}
+
+			if (nonHiddenFrames != null && frameIndex < nonHiddenFrames.size()) {
+				return nonHiddenFrames.get(threadRootAtTop ? nonHiddenFrames.size() - 1 - frameIndex : frameIndex);
 			}
 		}
 		return null;
