@@ -76,7 +76,8 @@ public class AttributeSelection extends Action implements IMenuCreator {
 			if (eventIterable.getType().hasAttribute(JfrAttributes.EVENT_STACKTRACE)) {
 				for (IAttribute<?> attr : attributes) {
 					ContentType<?> contentType = attr.getContentType();
-					if (contentType == UnitLookup.NUMBER || contentType == UnitLookup.MEMORY) {
+					if (contentType == UnitLookup.NUMBER || contentType == UnitLookup.MEMORY
+							|| contentType == UnitLookup.TIMESPAN) {
 						compatibleAttr.add(new Pair<>(attr.getName(), (IAttribute<IQuantity>) attr));
 					}
 				}
