@@ -37,6 +37,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.reverseOrder;
 import static java.util.Map.Entry.comparingByValue;
 import static java.util.stream.Collectors.toMap;
+
 import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_FLAME_GRAPH;
 import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_ICICLE_GRAPH;
 import static org.openjdk.jmc.flightrecorder.flamegraph.Messages.FLAMEVIEW_JPEG_IMAGE;
@@ -51,9 +52,11 @@ import static org.openjdk.jmc.flightrecorder.flamegraph.MessagesUtils.getFlamegr
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.KeyboardFocusManager;
+import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedOutputStream;
@@ -142,6 +145,7 @@ import io.github.bric3.fireplace.flamegraph.ColorMapper;
 import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
 import io.github.bric3.fireplace.flamegraph.FlamegraphImage;
 import io.github.bric3.fireplace.flamegraph.FlamegraphView;
+import io.github.bric3.fireplace.flamegraph.FlamegraphView.HoverListener;
 import io.github.bric3.fireplace.flamegraph.FrameBox;
 import io.github.bric3.fireplace.flamegraph.FrameFontProvider;
 import io.github.bric3.fireplace.flamegraph.FrameModel;
@@ -493,8 +497,6 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 		{
 			tooltip.setPopupDelay(500);
 			tooltip.setShift(new Point(10, 5));
-
-			embeddingComposite.addListener(SWT.MouseExit, event -> Display.getDefault().timerExec(300, tooltip::hide));
 		}
 
 		embeddingComposite.init(() -> {
@@ -712,55 +714,62 @@ public class FlamegraphSwingView extends ViewPart implements ISelectionListener 
 				new DimmingFrameColorProvider<>(frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
 						.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
 				FrameFontProvider.defaultFontProvider());
-
-		fg.setHoverListener((frameBox, frameRect, mouseEvent) -> {
-			// This code knows too much about Flamegraph but given tooltips
-			// will probably evolve it may be too early to refactor it
-			var scrollPane = (JScrollPane) mouseEvent.getComponent();
-			var canvas = scrollPane.getViewport().getView();
-
-			var pointOnCanvas = SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
-			pointOnCanvas.y = frameRect.y + frameRect.height;
-			var componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas, flamegraphView.component);
-
-			if (frameBox.isRoot()) {
-				return;
+		fg.setHoverListener(new HoverListener<Node>() {
+			@Override
+			public void onStopHover(FrameBox<Node> frameBox, Rectangle frameRect, MouseEvent mouseEvent) {
+				Display.getDefault().asyncExec(tooltip::hide);
 			}
 
-			var method = frameBox.actualNode.getFrame().getMethod();
+			@Override
+			public void onFrameHover(FrameBox<Node> frameBox, Rectangle frameRect, MouseEvent mouseEvent) {
+				// This code knows too much about Flamegraph but given tooltips
+				// will probably evolve it may be too early to refactor it
+				var scrollPane = (JScrollPane) mouseEvent.getComponent();
+				var canvas = scrollPane.getViewport().getView();
 
-			var escapedMethod = frameBox.actualNode.getFrame().getHumanReadableShortString().replace("<", "&lt;")
-					.replace(">", "&gt;");
-			var sb = new StringBuilder().append("<form><p>").append("<b>").append(escapedMethod).append("</b><br/>");
+				var pointOnCanvas = SwingUtilities.convertPoint(scrollPane, mouseEvent.getPoint(), canvas);
+				pointOnCanvas.y = frameRect.y + frameRect.height;
+				var componentPoint = SwingUtilities.convertPoint(canvas, pointOnCanvas, flamegraphView.component);
 
-			var packageName = method.getType().getPackage();
-			if (packageName != null) {
-				sb.append(packageName).append("<br/>");
-			}
-			sb.append("<hr/>Weight: ").append(frameBox.actualNode.getCumulativeWeight()).append("<br/>")
-					.append("Type: ").append(frameBox.actualNode.getFrame().getType()).append("<br/>");
-
-			var bci = frameBox.actualNode.getFrame().getBCI();
-			if (bci != null) {
-				sb.append("BCI: ").append(bci).append("<br/>");
-			}
-			var frameLineNumber = frameBox.actualNode.getFrame().getFrameLineNumber();
-			if (frameLineNumber != null) {
-				sb.append("Line number: ").append(frameLineNumber).append("<br/>");
-			}
-			sb.append("</p></form>");
-			var text = sb.toString();
-
-			Display.getDefault().asyncExec(() -> {
-				var control = Display.getDefault().getCursorControl();
-
-				if (Objects.equals(owner, control)) {
-					tooltip.setText(text);
-
-					tooltip.hide();
-					tooltip.show(SWT_AWTBridge.toSWTPoint(componentPoint));
+				if (frameBox.isRoot()) {
+					return;
 				}
-			});
+
+				var method = frameBox.actualNode.getFrame().getMethod();
+
+				var escapedMethod = frameBox.actualNode.getFrame().getHumanReadableShortString().replace("<", "&lt;")
+						.replace(">", "&gt;");
+				var sb = new StringBuilder().append("<form><p>").append("<b>").append(escapedMethod)
+						.append("</b><br/>");
+
+				var packageName = method.getType().getPackage();
+				if (packageName != null) {
+					sb.append(packageName).append("<br/>");
+				}
+				sb.append("<hr/>Weight: ").append(frameBox.actualNode.getCumulativeWeight()).append("<br/>")
+						.append("Type: ").append(frameBox.actualNode.getFrame().getType()).append("<br/>");
+
+				var bci = frameBox.actualNode.getFrame().getBCI();
+				if (bci != null) {
+					sb.append("BCI: ").append(bci).append("<br/>");
+				}
+				var frameLineNumber = frameBox.actualNode.getFrame().getFrameLineNumber();
+				if (frameLineNumber != null) {
+					sb.append("Line number: ").append(frameLineNumber).append("<br/>");
+				}
+				sb.append("</p></form>");
+				var text = sb.toString();
+
+				Display.getDefault().asyncExec(() -> {
+					var control = Display.getDefault().getCursorControl();
+
+					if (Objects.equals(owner, control)) {
+						tooltip.setText(text);
+						tooltip.hide();
+						tooltip.show(SWT_AWTBridge.toSWTPoint(componentPoint));
+					}
+				});
+			}
 		});
 
 		return fg;
