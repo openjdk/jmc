@@ -50,14 +50,12 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
@@ -84,6 +82,8 @@ import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.charts.XYChart;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
+import org.openjdk.jmc.ui.column.TableSettings;
+import org.openjdk.jmc.ui.column.TableSettings.ColumnSettings;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.layout.SimpleLayout;
@@ -92,8 +92,6 @@ import org.openjdk.jmc.ui.misc.ChartCanvas;
 
 public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	private IItemCollection currentItems;
-	private final FormToolkit formToolkit = new FormToolkit(
-			FlightRecorderUI.getDefault().getFormColors(Display.getCurrent()));
 
 	// UI Components
 	private Composite parentComposite;
@@ -101,28 +99,24 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	private SashForm sash;
 	private Composite messageComposite;
 	private Composite contentComposite;
-
-	private static final Color GRAPH_COLOR = TypeLabelProvider.getColor(JdkTypeIDs.SOCKET_READ);
+	private ChartCanvas durationCanvas;
 
 	private int[] sashWeights;
 
 	private IRange<IQuantity> durationRange;
-	private ChartCanvas durationCanvas;
-	private Composite tableComposite;
 	private static final String SASH_ELEMENT = "sash"; //$NON-NLS-1$
 	private static final DurationPercentileTableBuilder PERCENTILES_BUILDER = new DurationPercentileTableBuilder();
 	private static final int[] DEFAULT_SASH_WEIGHTS = new int[] {60, 40};
+	private static final Color GRAPH_COLOR = TypeLabelProvider.getColor(JdkTypeIDs.SOCKET_READ);
 
 	private DurationPercentileTable percentileTable;
 	private ViewSelectionProvider selectionProvider;
 
 	static {
-		PERCENTILES_BUILDER.addSeries("duration", "Duration", "eventCount", "Event Count", null);
+		PERCENTILES_BUILDER.addSeries("duration", Messages.HDRHistogramView_DURATION_COLUMN_NAME, "eventCount",
+				Messages.HDRHistogramView_EVENT_COUNT_COLUMN_NAME, null);
 	}
 
-	/**
-	 * Simple SelectionProvider implementation for the view
-	 */
 	private class ViewSelectionProvider implements ISelectionProvider {
 		private ISelection selection;
 		private final List<ISelectionChangedListener> listeners = new ArrayList<>();
@@ -161,10 +155,9 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		if (memento != null) {
 			IMemento sashMemento = memento.getChild(SASH_ELEMENT);
 			if (sashMemento != null) {
-				// Store sash weights for later when the sash is created
-				sashWeights = new int[2]; // We know we have 2 sash areas
+				// For now, we have 2 sash areas
+				sashWeights = new int[2];
 
-				// Load saved weights if they exist, otherwise use default weights
 				Integer weight0 = sashMemento.getInteger("weight0");
 				Integer weight1 = sashMemento.getInteger("weight1");
 
@@ -174,15 +167,14 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 				} else {
 					sashWeights = DEFAULT_SASH_WEIGHTS;
 				}
-
-				durationRange = null; // Reset any saved range
+				// Reset any saved range
+				durationRange = null;
 			}
 		}
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		// Initialize the selection provider
 		selectionProvider = new ViewSelectionProvider();
 		getSite().setSelectionProvider(selectionProvider);
 
@@ -214,11 +206,9 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		durationCanvas = new ChartCanvas(sash);
 		durationCanvas.setLayout(new FillLayout());
 
-		// Create the percentile table
-		tableComposite = new Composite(sash, SWT.NONE);
+		Composite tableComposite = new Composite(sash, SWT.NONE);
 		tableComposite.setLayout(new FillLayout());
 
-		// Create and configure percentile table
 		createPercentileTable(tableComposite);
 		updateHistogramChart();
 
@@ -231,7 +221,7 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		messageComposite.setLayout(new FillLayout());
 
 		Label label = new Label(messageComposite, SWT.CENTER);
-		label.setText("No valid selection");
+		label.setText(Messages.HDRHistogramView_NO_VALID_SELECTION_TEXT);
 	}
 
 	@Override
@@ -264,7 +254,6 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 
 	private void updateHistogramChart() {
 		if (currentItems != null && durationCanvas != null && !durationCanvas.isDisposed()) {
-			// Filter items that have duration
 			IItemCollection itemsWithDuration = currentItems.apply(ItemFilters.hasAttribute(JfrAttributes.DURATION));
 			// This should never happen as we check in updateWithItems, but just in case
 			if (!itemsWithDuration.hasItems()) {
@@ -272,12 +261,10 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 				return;
 			}
 
-			// Setup chart renderer
 			List<IXDataRenderer> renderers = new ArrayList<>();
-
-			renderers.add(DataPageToolkit.buildDurationHistogram("Durations", "Distribution of durations",
-					itemsWithDuration, (IAggregator<IQuantity, ?>) Aggregators.count(), GRAPH_COLOR));
-
+			renderers.add(DataPageToolkit.buildDurationHistogram(Messages.HDRHistogramView_DURATIONS_CHART_TITLE,
+					Messages.HDRHistogramView_DURATIONS_CHART_DESCRIPTION, itemsWithDuration,
+					(IAggregator<IQuantity, ?>) Aggregators.count(), GRAPH_COLOR));
 			IXDataRenderer rendererRoot = RendererToolkit.uniformRows(renderers);
 
 			// Get the maximum duration to set chart bounds
@@ -289,8 +276,6 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 			}
 
 			XYChart durationChart = new XYChart(UnitLookup.MILLISECOND.quantity(0), maxDuration, rendererRoot, 180);
-
-			// Use the chart selection handler to update the selection provider
 			DataPageToolkit.setChart(durationCanvas, durationChart, JfrAttributes.DURATION, selection -> {
 				if (selection != null && selectionProvider != null) {
 					selectionProvider.setSelection(
@@ -318,7 +303,13 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	}
 
 	private void createPercentileTable(Composite parent) {
-		percentileTable = PERCENTILES_BUILDER.build(parent, null);
+		List<ColumnSettings> columnSettings = new ArrayList<>();
+		columnSettings
+				.add(new ColumnSettings(DurationPercentileTable.TABLE_NAME + ".percentile", false, 80, Boolean.TRUE));
+		columnSettings.add(new ColumnSettings("duration", false, 120, null));
+		columnSettings.add(new ColumnSettings("eventCount", false, 100, null));
+		TableSettings tableSettings = new TableSettings(null, columnSettings);
+		percentileTable = PERCENTILES_BUILDER.build(parent, tableSettings);
 
 		MCContextMenuManager percentileTableMm = MCContextMenuManager
 				.create(percentileTable.getManager().getViewer().getControl());
@@ -333,7 +324,6 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	private IItemCollection getSelectedItemsAsCollection() {
 		IItemCollection items = percentileTable.getSelectedItems();
 		if (items == null) {
-			// Return an empty collection if no selection or if we get null
 			return ItemCollectionToolkit.build(Stream.empty());
 		}
 		return items;
@@ -366,7 +356,6 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		if (sash != null && !sash.isDisposed()) {
 			IMemento sashMemento = memento.createChild(SASH_ELEMENT);
 			int[] weights = sash.getWeights();
-			// Use valid XML attribute names
 			if (weights.length > 0) {
 				sashMemento.putInteger("weight0", weights[0]);
 			}
@@ -381,15 +370,12 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		if (getSite() != null && getSite().getWorkbenchWindow() != null) {
 			getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
 		}
-		if (formToolkit != null) {
-			formToolkit.dispose();
-		}
 		super.dispose();
 	}
 
 	public void showMessage() {
 		if (stack != null && stack.topControl == contentComposite) {
-			sashWeights = sash.getWeights(); // persist weights
+			sashWeights = sash.getWeights();
 		}
 		stack.topControl = messageComposite;
 		parentComposite.layout();
@@ -398,7 +384,7 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	public void showContent() {
 		if (stack.topControl != contentComposite) {
 			if (sashWeights != null) {
-				sash.setWeights(sashWeights); // restore weights
+				sash.setWeights(sashWeights);
 			}
 			stack.topControl = contentComposite;
 			parentComposite.layout();

@@ -253,6 +253,13 @@ public class Messages extends NLS {
 	public static String GarbageCollectionsPage_USED_HEAP_BEFORE_GC;
 	public static String GarbageCollectionsPage_USED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_USED_METASPACE_DELTA;
+	public static String HDRHistogramView_NO_VALID_SELECTION_TEXT;
+	public static String HDRHistogramView_DURATION_COLUMN_NAME;
+	public static String HDRHistogramView_EVENT_COUNT_COLUMN_NAME;
+	public static String HDRHistogramView_PERCENTILE_SELECTION;
+	public static String HDRHistogramView_DURATION_SELECTION;
+	public static String HDRHistogramView_DURATIONS_CHART_TITLE;
+	public static String HDRHistogramView_DURATIONS_CHART_DESCRIPTION;
 	public static String HeapPage_LIVE_SIZE_OF_CLASS;
 	public static String HeapPage_OVERLAY_GC;
 	public static String HeapPage_OVERLAY_GC_DESC;
@@ -624,20 +631,6 @@ public class Messages extends NLS {
 	public static String VMOperationPage_ROW_VM_OPERATIONS;
 	public static String VMOperationPage_TIMELINE_SELECTION;
 	public static String ThreadsPage_LANE_THREAD_ID_TOOLTIP;
-
-	// HDR Histogram View messages
-	public static String HDRHistogramView_PAGE_NAME;
-	public static String HDRHistogramView_NO_EVENTS_MESSAGE;
-	public static String HDRHistogramView_NO_EVENTS_WITH_DURATION;
-	public static String HDRHistogramView_DURATION_COLUMN;
-	public static String HDRHistogramView_COUNT_COLUMN;
-	public static String HDRHistogramView_PERCENTILE_COLUMN;
-	public static String HDRHistogramView_VALUE_COLUMN;
-	public static String HDRHistogramView_PERCENTILE_SELECTION;
-	public static String HDRHistogramView_DURATION_SELECTION;
-	public static String HDRHistogramView_DURATION_HISTOGRAM;
-	public static String HDRHistogramView_DURATION_HISTOGRAM_DESC;
-	public static String HDR_HISTOGRAM;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
