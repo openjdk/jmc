@@ -305,7 +305,7 @@ public class DurationPercentileTable {
 
 		@Override
 		public boolean acceptType(IType<IItem> type) {
-			if (typeId == null) {
+			if (typeId == null || type == null) {
 				return true;
 			}
 			return typeId.equals(type.getIdentifier());
@@ -503,10 +503,12 @@ public class DurationPercentileTable {
 			// Select all events with matching Type ID and duration greater or equal to the value
 			// for the selected percentile in the histogram, subject to the histogram's precision.
 			IItemFilter filter = Arrays.stream(aggregators).parallel().filter(a -> hasValue(a.getDurationColId()))
-					.map(a -> ItemFilters.and(ItemFilters.type(a.getTypeId()),
-							ItemFilters.moreOrEqual(JfrAttributes.DURATION,
-									a.getLowestEquivalentDuration(getValue(a.getDurationColId())))))
-					.reduce(ItemFilters::or).orElse(ItemFilters.none());
+					.map(a -> {
+						String typeId = a.getTypeId();
+						IItemFilter typeFilter = typeId != null ? ItemFilters.type(typeId) : ItemFilters.all();
+						return ItemFilters.and(typeFilter, ItemFilters.moreOrEqual(JfrAttributes.DURATION,
+								a.getLowestEquivalentDuration(getValue(a.getDurationColId()))));
+					}).reduce(ItemFilters::or).orElse(ItemFilters.none());
 			return items.apply(filter);
 		}
 	}

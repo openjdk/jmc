@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.ui.views.histogram;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -69,12 +70,15 @@ import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.DurationPercentileTable;
 import org.openjdk.jmc.flightrecorder.ui.common.DurationPercentileTable.DurationPercentileTableBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.TypeLabelProvider;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.ItemBackedSelection;
+import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore;
+import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.charts.XYChart;
@@ -156,7 +160,20 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		if (memento != null) {
 			IMemento sashMemento = memento.getChild(SASH_ELEMENT);
 			if (sashMemento != null) {
-				// We'll use this memento later when the sash is created
+				// Store sash weights for later when the sash is created
+				sashWeights = new int[2]; // We know we have 2 sash areas
+
+				// Load saved weights if they exist, otherwise use default weights
+				Integer weight0 = sashMemento.getInteger("weight0");
+				Integer weight1 = sashMemento.getInteger("weight1");
+
+				if (weight0 != null && weight1 != null) {
+					sashWeights[0] = weight0;
+					sashWeights[1] = weight1;
+				} else {
+					sashWeights = DEFAULT_SASH_WEIGHTS;
+				}
+
 				durationRange = null; // Reset any saved range
 			}
 		}
@@ -204,7 +221,8 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		createPercentileTable(tableComposite);
 		updateHistogramChart();
 
-		sash.setWeights(DEFAULT_SASH_WEIGHTS);
+		// Set sash weights from saved state or default
+		sash.setWeights(sashWeights != null ? sashWeights : DEFAULT_SASH_WEIGHTS);
 	}
 
 	private void createMessageComposite(Composite parent) {
@@ -304,6 +322,34 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		MCContextMenuManager percentileTableMm = MCContextMenuManager
 				.create(percentileTable.getManager().getViewer().getControl());
 		ColumnMenusFactory.addDefaultMenus(percentileTable.getManager(), percentileTableMm);
+
+		// Add selection store actions directly like StacktraceView does
+		SelectionStoreActionToolkit.addSelectionStoreActions(percentileTable.getManager().getViewer(),
+				this::getSelectionStore, this::getSelectedItemsAsCollection,
+				Messages.HDRHistogramView_PERCENTILE_SELECTION, percentileTableMm);
+	}
+
+	private IItemCollection getSelectedItemsAsCollection() {
+		IItemCollection items = percentileTable.getSelectedItems();
+		if (items == null) {
+			// Return an empty collection if no selection or if we get null
+			return ItemCollectionToolkit.build(Stream.empty());
+		}
+		return items;
+	}
+
+	private SelectionStore getSelectionStore() {
+		try {
+			// Try to get active editor which should be an IPageContainer
+			IWorkbenchPart editorPart = getSite().getPage().getActiveEditor();
+			if (editorPart instanceof IPageContainer) {
+				return ((IPageContainer) editorPart).getSelectionStore();
+			}
+		} catch (Exception e) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
+					"Got exception while trying to get the active editor", e);
+		}
+		return null;
 	}
 
 	@Override
@@ -316,7 +362,17 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
-		// FIXME(1 Apr 2025): save sash state ?
+		if (sash != null && !sash.isDisposed()) {
+			IMemento sashMemento = memento.createChild(SASH_ELEMENT);
+			int[] weights = sash.getWeights();
+			// Use valid XML attribute names
+			if (weights.length > 0) {
+				sashMemento.putInteger("weight0", weights[0]);
+			}
+			if (weights.length > 1) {
+				sashMemento.putInteger("weight1", weights[1]);
+			}
+		}
 	}
 
 	@Override
