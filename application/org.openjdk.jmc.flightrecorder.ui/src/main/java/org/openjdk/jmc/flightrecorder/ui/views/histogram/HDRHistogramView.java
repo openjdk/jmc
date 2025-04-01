@@ -376,8 +376,8 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	public void showMessage() {
 		if (stack != null && stack.topControl == contentComposite) {
 			sashWeights = sash.getWeights();
+			stack.topControl = messageComposite;
 		}
-		stack.topControl = messageComposite;
 		parentComposite.layout();
 	}
 
