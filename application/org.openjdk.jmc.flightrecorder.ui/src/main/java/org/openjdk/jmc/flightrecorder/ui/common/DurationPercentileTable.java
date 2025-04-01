@@ -135,7 +135,8 @@ public class DurationPercentileTable {
 		 * @param countColName
 		 *            the user-visible name to appear for the event count column header
 		 * @param typeId
-		 *            the event type ID used to match events belonging to this series, or null to match all types
+		 *            the event type ID used to match events belonging to this series, or null to
+		 *            match all types
 		 */
 		public void addSeries(
 			String durationColId, String durationColName, String countColId, String countColName, String typeId) {

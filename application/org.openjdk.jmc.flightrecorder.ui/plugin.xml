@@ -160,7 +160,7 @@
                relative="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
                showTitle="true"
                standalone="false"
-               visible="false">
+               visible="true">
          </view>
          <viewShortcut
                id="org.openjdk.jmc.flightrecorder.ui.HDRHistogramView">

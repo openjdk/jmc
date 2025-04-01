@@ -38,7 +38,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -54,8 +57,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
+import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
@@ -81,11 +84,8 @@ import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.layout.SimpleLayout;
 import org.openjdk.jmc.ui.layout.SimpleLayoutData;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
-import org.openjdk.jmc.ui.misc.PersistableSashForm;
 
 public class HDRHistogramView extends ViewPart implements ISelectionListener {
-	private static final String PERCENTILE_TABLE_ELEMENT = "percentileTable"; //$NON-NLS-1$
-
 	private IItemCollection currentItems;
 	private final FormToolkit formToolkit = new FormToolkit(
 			FlightRecorderUI.getDefault().getFormColors(Display.getCurrent()));
@@ -105,25 +105,69 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	private ChartCanvas durationCanvas;
 	private Composite tableComposite;
 	private static final String SASH_ELEMENT = "sash"; //$NON-NLS-1$
-	private static final String PERCENTILE_TABLE_COMPONENT = "percentileTable"; //$NON-NLS-1$
 	private static final DurationPercentileTableBuilder PERCENTILES_BUILDER = new DurationPercentileTableBuilder();
-	private static final String EVENT_COUNT = "eventCount"; //$NON-NLS-1$
-	private static final String PERCENTILE_EVENT_COUNT = "percentileEventCount"; //$NON-NLS-1$
+	private static final int[] DEFAULT_SASH_WEIGHTS = new int[] {60, 40};
 
 	private DurationPercentileTable percentileTable;
+	private ViewSelectionProvider selectionProvider;
 
 	static {
 		PERCENTILES_BUILDER.addSeries("duration", "Duration", "eventCount", "Event Count", null);
+	}
+
+	/**
+	 * Simple SelectionProvider implementation for the view
+	 */
+	private class ViewSelectionProvider implements ISelectionProvider {
+		private ISelection selection;
+		private final List<ISelectionChangedListener> listeners = new ArrayList<>();
+
+		@Override
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {
+			listeners.add(listener);
+		}
+
+		@Override
+		public ISelection getSelection() {
+			return selection;
+		}
+
+		@Override
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+			listeners.remove(listener);
+		}
+
+		@Override
+		public void setSelection(ISelection selection) {
+			this.selection = selection;
+			SelectionChangedEvent event = new SelectionChangedEvent(this, selection);
+			for (ISelectionChangedListener listener : listeners) {
+				listener.selectionChanged(event);
+			}
+		}
 	}
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		getSite().getPage().addSelectionListener(this);
+
+		// Restore state if available
+		if (memento != null) {
+			IMemento sashMemento = memento.getChild(SASH_ELEMENT);
+			if (sashMemento != null) {
+				// We'll use this memento later when the sash is created
+				durationRange = null; // Reset any saved range
+			}
+		}
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
+		// Initialize the selection provider
+		selectionProvider = new ViewSelectionProvider();
+		getSite().setSelectionProvider(selectionProvider);
+
 		this.parentComposite = new Composite(parent, SWT.NONE);
 		this.stack = new StackLayout();
 		parentComposite.setLayout(stack);
@@ -137,7 +181,6 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		if (currentItems != null) {
 			updateWithItems(currentItems);
 		} else {
-
 			showMessage();
 		}
 	}
@@ -161,7 +204,7 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 		createPercentileTable(tableComposite);
 		updateHistogramChart();
 
-		sash.setWeights(new int[] {60, 40});
+		sash.setWeights(DEFAULT_SASH_WEIGHTS);
 	}
 
 	private void createMessageComposite(Composite parent) {
@@ -207,13 +250,14 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 			// This should never happen as we check in updateWithItems, but just in case
 			if (!itemsWithDuration.hasItems()) {
 				showMessage();
+				return;
 			}
 
 			// Setup chart renderer
 			List<IXDataRenderer> renderers = new ArrayList<>();
 
 			renderers.add(DataPageToolkit.buildDurationHistogram("Durations", "Distribution of durations",
-					itemsWithDuration, Aggregators.count(), GRAPH_COLOR));
+					itemsWithDuration, (IAggregator<IQuantity, ?>) Aggregators.count(), GRAPH_COLOR));
 
 			IXDataRenderer rendererRoot = RendererToolkit.uniformRows(renderers);
 
@@ -227,12 +271,14 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 
 			XYChart durationChart = new XYChart(UnitLookup.MILLISECOND.quantity(0), maxDuration, rendererRoot, 180);
 
-//			DataPageToolkit.setChart(durationCanvas, durationChart, JfrAttributes.DURATION, selection -> {
-//				getSite().getSelectionProvider()
-//						.setSelection(new ItemBackedSelection(selection, Messages.HDRHistogramView_DURATION_SELECTION));
-//			});
+			// Use the chart selection handler to update the selection provider
+			DataPageToolkit.setChart(durationCanvas, durationChart, JfrAttributes.DURATION, selection -> {
+				if (selection != null && selectionProvider != null) {
+					selectionProvider.setSelection(
+							new ItemBackedSelection(selection, Messages.HDRHistogramView_DURATION_SELECTION));
+				}
+			});
 
-			
 			if (durationRange != null) {
 				durationChart.setVisibleRange(durationRange.getStart(), durationRange.getEnd());
 				durationRange = null;
@@ -270,12 +316,7 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
-		IWritableState tableState = ((IWritableState) memento).createChild(PERCENTILE_TABLE_COMPONENT);
-		// Save table settings
-		IWritableState sashState = ((IWritableState) memento).createChild(SASH_ELEMENT);
-		if (sash != null && !sash.isDisposed()) {
-			PersistableSashForm.saveState(sash, sashState);
-		}
+		// FIXME(1 Apr 2025): save sash state ?
 	}
 
 	@Override
@@ -290,7 +331,7 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 	}
 
 	public void showMessage() {
-		if (stack.topControl == contentComposite) {
+		if (stack != null && stack.topControl == contentComposite) {
 			sashWeights = sash.getWeights(); // persist weights
 		}
 		stack.topControl = messageComposite;
