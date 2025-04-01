@@ -625,6 +625,20 @@ public class Messages extends NLS {
 	public static String VMOperationPage_TIMELINE_SELECTION;
 	public static String ThreadsPage_LANE_THREAD_ID_TOOLTIP;
 
+	// HDR Histogram View messages
+	public static String HDRHistogramView_PAGE_NAME;
+	public static String HDRHistogramView_NO_EVENTS_MESSAGE;
+	public static String HDRHistogramView_NO_EVENTS_WITH_DURATION;
+	public static String HDRHistogramView_DURATION_COLUMN;
+	public static String HDRHistogramView_COUNT_COLUMN;
+	public static String HDRHistogramView_PERCENTILE_COLUMN;
+	public static String HDRHistogramView_VALUE_COLUMN;
+	public static String HDRHistogramView_PERCENTILE_SELECTION;
+	public static String HDRHistogramView_DURATION_SELECTION;
+	public static String HDRHistogramView_DURATION_HISTOGRAM;
+	public static String HDRHistogramView_DURATION_HISTOGRAM_DESC;
+	public static String HDR_HISTOGRAM;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

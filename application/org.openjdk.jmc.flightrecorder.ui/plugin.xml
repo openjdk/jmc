@@ -54,6 +54,15 @@
         name="%RESULTS"
         restorable="true">
     </view>
+    <view
+        allowMultiple="false"
+        category="org.openjdk.jmc.ui.main"
+        class="org.openjdk.jmc.flightrecorder.ui.views.histogram.HDRHistogramView"
+        icon="icons/histogram.png"
+        id="org.openjdk.jmc.flightrecorder.ui.HDRHistogramView"
+        name="%HDR_HISTOGRAM"
+        restorable="true">
+    </view>
  </extension>
 
  <extension
@@ -136,6 +145,25 @@
          </view>
          <viewShortcut
                id="org.openjdk.jmc.flightrecorder.ui.ResultView">
+         </viewShortcut>
+      </perspectiveExtension>
+      
+      <perspectiveExtension
+            targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
+         <view
+               closeable="true"
+               id="org.openjdk.jmc.flightrecorder.ui.HDRHistogramView"
+               minimized="false"
+               moveable="true"
+               ratio="0.75"
+               relationship="stack"
+               relative="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
+               showTitle="true"
+               standalone="false"
+               visible="false">
+         </view>
+         <viewShortcut
+               id="org.openjdk.jmc.flightrecorder.ui.HDRHistogramView">
          </viewShortcut>
       </perspectiveExtension>
    </extension>
