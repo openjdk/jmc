@@ -88,6 +88,7 @@ public class DurationPercentileTable {
 	// @formatter:off
 	private static final IQuantity[] PERCENTILES = {
 			UnitLookup.NUMBER_UNITY.quantity(0.0),
+			UnitLookup.NUMBER_UNITY.quantity(50.0), 
 			UnitLookup.NUMBER_UNITY.quantity(90.0), 
 			UnitLookup.NUMBER_UNITY.quantity(99.0),
 			UnitLookup.NUMBER_UNITY.quantity(99.9), 
@@ -134,7 +135,8 @@ public class DurationPercentileTable {
 		 * @param countColName
 		 *            the user-visible name to appear for the event count column header
 		 * @param typeId
-		 *            the event type ID used to match events belonging to this series
+		 *            the event type ID used to match events belonging to this series, or null to
+		 *            match all types
 		 */
 		public void addSeries(
 			String durationColId, String durationColName, String countColId, String countColName, String typeId) {
@@ -303,6 +305,9 @@ public class DurationPercentileTable {
 
 		@Override
 		public boolean acceptType(IType<IItem> type) {
+			if (typeId == null || type == null) {
+				return true;
+			}
 			return typeId.equals(type.getIdentifier());
 		}
 
@@ -498,10 +503,12 @@ public class DurationPercentileTable {
 			// Select all events with matching Type ID and duration greater or equal to the value
 			// for the selected percentile in the histogram, subject to the histogram's precision.
 			IItemFilter filter = Arrays.stream(aggregators).parallel().filter(a -> hasValue(a.getDurationColId()))
-					.map(a -> ItemFilters.and(ItemFilters.type(a.getTypeId()),
-							ItemFilters.moreOrEqual(JfrAttributes.DURATION,
-									a.getLowestEquivalentDuration(getValue(a.getDurationColId())))))
-					.reduce(ItemFilters::or).orElse(ItemFilters.none());
+					.map(a -> {
+						String typeId = a.getTypeId();
+						IItemFilter typeFilter = typeId != null ? ItemFilters.type(typeId) : ItemFilters.all();
+						return ItemFilters.and(typeFilter, ItemFilters.moreOrEqual(JfrAttributes.DURATION,
+								a.getLowestEquivalentDuration(getValue(a.getDurationColId()))));
+					}).reduce(ItemFilters::or).orElse(ItemFilters.none());
 			return items.apply(filter);
 		}
 	}
