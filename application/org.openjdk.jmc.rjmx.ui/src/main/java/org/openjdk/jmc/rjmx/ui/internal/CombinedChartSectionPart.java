@@ -93,18 +93,21 @@ import org.openjdk.jmc.rjmx.common.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
 import org.openjdk.jmc.rjmx.ui.attributes.EditDisplayNameAction;
 import org.openjdk.jmc.ui.UIPlugin;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
 import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.MCArrayContentProvider;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
 import org.openjdk.jmc.ui.misc.MCSectionPart;
 import org.openjdk.jmc.ui.misc.MCToolBarManager;
+import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 import org.openjdk.jmc.ui.rate.RateCoordinator;
 import org.openjdk.jmc.ui.rate.RateLimitedObserver;
 import org.openjdk.jmc.ui.rate.RefreshController;
 
 import org.openjdk.jmc.greychart.DefaultMetadataProvider;
+import org.openjdk.jmc.greychart.YAxis;
 import org.openjdk.jmc.greychart.data.RenderingMode;
 import org.openjdk.jmc.greychart.data.SeriesProviderSet;
 
@@ -239,6 +242,14 @@ public class CombinedChartSectionPart extends MCSectionPart implements IAttribut
 				tableState);
 		m_statisticsTable.getViewer().setInput(statisticsProvider);
 		chart = new ChartComposite(chartContainer, SWT.NONE, createEnableUpdatesCallback());
+
+		boolean isDarkTheme = ThemeUtils.isDarkTheme();
+		chart.getChart().setBackground(isDarkTheme ? Palette.PF_BLACK_900.getAWTColor() : Color.WHITE);
+		Color axisForeground = isDarkTheme ? Color.WHITE : Color.BLACK;
+		chart.getChart().getXAxis().setForeground(axisForeground);
+		for (YAxis yAxis : chart.getChart().getYAxis()) {
+			yAxis.setForeground(axisForeground);
+		}
 		chart.setChartSampleTooltipProvider(new ChartSampleTooltipProvider() {
 			@Override
 			public String getTooltip(DataSeries<?> series, double value) {

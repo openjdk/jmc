@@ -440,8 +440,6 @@ public class DialViewer extends Composite implements IRefreshable {
 		int x = config.dialTextCenter.x - Math.round(textExtent.x / 2.0f);
 		int y = height - config.image.getBounds().height - TITLE_VERTICAL_PADDING - textExtent.y;
 		y = Math.max(0, y);
-		Color c = UIPlugin.getDefault().getFormColors(getDisplay()).getColor(IFormColors.TITLE);
-		gc.setForeground(c);
 		gc.setAlpha(192);
 		gc.drawString(text, x + xOffset, y, true);
 		gc.setAlpha(255);
@@ -458,8 +456,11 @@ public class DialViewer extends Composite implements IRefreshable {
 		Point textExtent = gc.textExtent(text);
 		int x = config.dialTextCenter.x - textExtent.x / 2 + xOffset;
 		int y = config.dialTextCenter.y - textExtent.y / 2 + YOffset;
+
+		// FIXME: Once we have dark background dials we should just use the default fg color...
 		Color foreground = new Color(gc.getDevice(), 0, 0, 0);
 		gc.setForeground(foreground);
+
 		gc.setAlpha(192);
 		gc.drawString(text, x, y, true);
 		gc.setAlpha(255);

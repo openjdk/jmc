@@ -75,6 +75,7 @@ import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.XYChart;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.PatternFly.Palette;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
 
 public class ChartCanvas extends Canvas {
 	private int laneHeight;
@@ -239,7 +240,7 @@ public class ChartCanvas extends Canvas {
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
 				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height);
 				Point adjusted = translateDisplayToImageCoordinates(rect.width, rect.height);
-				g2d.setColor(Palette.PF_BLACK_100.getAWTColor());
+				g2d.setColor(ThemeUtils.isDarkTheme() ? Palette.PF_BLACK_900.getAWTColor() : Palette.PF_BLACK_100.getAWTColor());
 				g2d.fillRect(0, 0, adjusted.x, adjusted.y);
 				render(g2d, adjusted.x, adjusted.y);
 				if (isScrollableChart()) {
