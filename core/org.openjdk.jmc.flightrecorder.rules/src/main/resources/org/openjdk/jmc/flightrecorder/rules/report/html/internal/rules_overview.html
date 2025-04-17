@@ -7,7 +7,41 @@
 <base target="_blank">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>Automated Analysis Result Overview</title>
+<!-- Sadly the IE based windows browser does not support reading CSS variables from JavaScript, so slightly cludgey -->
 <style>
+:root {
+	--background-color: white;
+	--text-color: #3a3a3a;
+	--heading-color: #403E3E;
+	--heading-bg-color: #EDE8E8;
+	--heading-hover-color: #dadada;
+	--hide-button-color: #7F7D7D;
+	--link-color: blue;
+	--rule-border-color: darkgrey;
+}
+
+.light-theme {
+	--background-color: white;
+	--text-color: #3a3a3a;
+	--heading-color: #403E3E;
+	--heading-bg-color: #EDE8E8;
+	--heading-hover-color: #dadada;
+	--hide-button-color: #7F7D7D;
+	--link-color: blue;
+	--rule-border-color: darkgrey;
+}
+
+.dark-theme {
+	--background-color: #2F3136;
+	--text-color: #E5E5E5;
+	--heading-color: #E5E5E5;
+	--heading-bg-color: #36393f;
+	--heading-hover-color: #40444B;
+	--hide-button-color: #9E9E9E;
+	--link-color: #58a6ff;
+	--rule-border-color: #555;
+}
+
 * {
 	margin: 0;
 }
@@ -15,10 +49,12 @@
 html, body {
 	height: 100%;
 	font-size: 1em;
+	background-color: var(--background-color);
 }
 
 body {
-	background-color: white
+	background-color: var(--background-color);
+	color: var(--text-color);
 }
 
 section {
@@ -27,6 +63,7 @@ section {
 	float: left;
 	width: 95%;
 	margin-right: 1em;
+	background-color: var(--background-color);
 }
 
 @media (min-width : 800px) {
@@ -51,14 +88,23 @@ section {
 	width: 100%;
 	padding-top: 0.1em;
 	padding-bottom: 0.1em;
+	color: var(--heading-color);
 }
 
 .column_title:hover {
-	background: #dadada;
+	background-color: #dadada !important;
+}
+
+.dark-theme .column_title:hover {
+	background-color: #40444B !important;
 }
 
 .page_heading:hover {
-	background: #dadada;
+	background-color: #dadada !important;
+}
+
+.dark-theme .page_heading:hover {
+	background-color: #40444B !important;
 }
 
 .column_title_icon {
@@ -75,6 +121,7 @@ section {
 	padding-top: 0.1em;
 	padding-bottom: 0.1em;
 	float: center-left;
+	color: var(--heading-color);
 }
 
 .page_heading_icon {
@@ -95,9 +142,9 @@ section {
 	padding: 0.3em;
 	width: 100%;
 	overflow: hidden;
-	color: #403E3E;
+	color: var(--heading-color);
 	font-weight: 600;
-	background-color: #EDE8E8;
+	background-color: var(--heading-bg-color);
 }
 
 .rule_name {
@@ -107,7 +154,7 @@ section {
 }
 
 .rule_score {
-	border: 0.1em solid darkgrey;
+	border: 0.1em solid var(--rule-border-color);
 	float: left;
 	color: #171616;
 	text-align: center;
@@ -182,10 +229,15 @@ section {
 }
 
 .rule_text {
-	color: #3a3a3a;
+	color: var(--text-color);
 	clear: left;
     word-wrap: break-word;
 }
+
+.longDescription {
+	color: var(--text-color);
+}
+
 .shortDescription {
    margin-bottom: 10px;
    display: none;
@@ -199,7 +251,7 @@ section {
 	-ms-user-select: none;
 	user-select: none;
 	float: right;
-	color: #7F7D7D;
+	color: var(--hide-button-color);
 	onclick: toggleVisibility()
 }
 
@@ -228,6 +280,7 @@ section {
 	height: auto !important;
 	height: 100%;
 	margin: 0 auto -1.25em;
+	background-color: var(--background-color);
 }
 
 .footer, .push {
@@ -239,26 +292,36 @@ section {
 	text-align: right;
 	clear: both;
 	height: 1.25em;
+	color: var(--text-color);
 }
 
 .allOk {
 	font-family: sans-serif;
 	font-size: 2em;
+	color: var(--text-color);
+}
+
+.allIgnored {
+	font-family: sans-serif;
+	font-size: 2em;
+	color: var(--text-color);
 }
 
 .showOkText {
 	font-family: sans-serif;
 	font-size: 85%;
+	color: var(--text-color);
 }
 
 .showIgnoreText {
 	font-family: sans-serif;
 	font-size: 85%;
+	color: var(--text-color);
 }
 
 .anchorTag {
 	cursor:pointer;
-	color:blue;
+	color: var(--link-color);
 	text-decoration:underline;
 }
 </style>
@@ -267,16 +330,170 @@ section {
 	// other elements. If you want to control a div of id "heap_live_set_trend_text"
 	// you should add "hide_" to the id of your controller.
 
-	// E.g. the button of id "hide_heap_live_set_trend_text" controls the element of id "heap_live_set_trend_text"
+	// E.g. the button of id "hide_heap_live_set_trend_text" controls the element of id "heap_live_set_trend_text"	
 
+	// Debug mode toggle, to make life easier for the next poor person having to deal with this...
+	var DEBUG_MODE = false;
+	
+	function setupDebugConsole() {	
+		var debugConsole = document.createElement('div');
+		debugConsole.id = 'debug-console';
+		debugConsole.style.cssText = 'position:fixed; bottom:0; left:0; right:0; height:150px; background:white; ' +
+			'border-top:1px solid black; overflow:auto; z-index:9999; color:black; font-family:monospace; padding:5px; font-size:12px;';
+		document.body.appendChild(debugConsole);
+		
+		var clearButton = document.createElement('button');
+		clearButton.innerText = 'Clear Log';
+		clearButton.style.cssText = 'position:absolute; top:5px; right:5px; z-index:10000;';
+		clearButton.onclick = function() { debugConsole.innerHTML = ''; };
+		debugConsole.appendChild(clearButton);
+		
+		var inspectButton = document.createElement('button');
+		inspectButton.innerText = 'Print Used Colors';
+		inspectButton.style.cssText = 'position:absolute; top:5px; right:80px; z-index:10000;';
+		inspectButton.onclick = function() { printUsedColors(); };
+		debugConsole.appendChild(inspectButton);
+		
+		// Override console.log
+		var oldLog = console.log;
+		console.log = function(message) {
+			if (oldLog) oldLog.apply(console, arguments);
+			
+			var entry = document.createElement('div');
+			entry.innerText = new Date().toLocaleTimeString() + ': ' + message;
+			debugConsole.appendChild(entry);
+			debugConsole.scrollTop = debugConsole.scrollHeight;
+		};
+		
+		return debugConsole;
+	}
+	
+	function printUsedColors() {
+		if (!DEBUG_MODE) return;
+		
+		console.log("--- THEME COLORS INSPECTION ---");
+		console.log("Current theme: " + (document.body.classList.contains('dark-theme') ? 'Dark Mode' : 'Light Mode'));
+		
+		var bodyStyle = getComputedStyle(document.body);		
+		console.log("Body background-color: " + bodyStyle.backgroundColor);
+		console.log("Body text color: " + bodyStyle.color);
+		
+		if (document.querySelector('.rule_heading')) {
+			var headingStyle = getComputedStyle(document.querySelector('.rule_heading'));
+			console.log("rule_heading background-color: " + headingStyle.backgroundColor);
+			console.log("rule_heading text color: " + headingStyle.color);
+		}
+		
+		if (document.querySelector('.column_title')) {
+			var titleStyle = getComputedStyle(document.querySelector('.column_title'));
+			console.log("column_title background-color: " + titleStyle.backgroundColor);
+			console.log("column_title text color: " + titleStyle.color);
+			
+			var tempElement = document.createElement('div');
+			tempElement.className = document.body.classList.contains('dark-theme') ? 
+				'column_title dark-theme' : 'column_title';
+			tempElement.style.cssText = 'position: absolute; left: -9999px; top: -9999px;';
+			document.body.appendChild(tempElement);
+			
+			var sheet = document.styleSheets[0];
+			var rules = sheet.cssRules || sheet.rules;
+			var hoverSelector = document.body.classList.contains('dark-theme') ? 
+				'.dark-theme .column_title:hover' : '.column_title:hover';
+				
+			for (var i = 0; i < rules.length; i++) {
+				if (rules[i].selectorText === hoverSelector) {
+					console.log("column_title hover background-color: " + 
+						rules[i].style.getPropertyValue('background-color'));
+					break;
+				}
+			}
+			
+			document.body.removeChild(tempElement);
+		}
+		
+		console.log("Severity colors:");
+		['warning', 'info', 'ok', 'na', 'ignore', 'error'].forEach(function(severity) {
+			if (document.querySelector('.rule_score.' + severity)) {
+				var scoreStyle = getComputedStyle(document.querySelector('.rule_score.' + severity));
+				console.log("  " + severity + " score background-color: " + scoreStyle.backgroundColor);
+			}
+		});
+		
+		console.log("--- END THEME COLORS INSPECTION ---");
+	}
+	
+	// Theme toggle button for debugging
+	function addThemeToggleButton() {
+		if (!DEBUG_MODE) return;
+		
+		if (document.getElementById('debug-console')) {
+			var debugConsole = document.getElementById('debug-console');
+			var themeToggle = document.createElement('button');
+			themeToggle.innerText = document.body.classList.contains('dark-theme') ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+			themeToggle.style.cssText = 'position:absolute; top:5px; right:180px; z-index:10000;';
+			themeToggle.onclick = function() {
+				var isDark = !document.body.classList.contains('dark-theme');
+				overview.setTheme(isDark);
+				this.innerText = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+			};
+			debugConsole.appendChild(themeToggle);
+			console.log("Added theme toggle button to debug console");
+		} else {
+			console.log("Debug console not found for theme toggle button");
+		}
+	}
+	
 	document.addEventListener("DOMContentLoaded", function(event) {
+		// Initialize rule overview logic
 		overview.initializeRuleOverview();
+		
+		// Set up debug features if enabled
+		if (DEBUG_MODE) {
+			// First set up the debug console
+			setupDebugConsole();
+			
+			// Then add the theme toggle button to it
+			window.setTimeout(function() {
+				addThemeToggleButton();
+			}, 100);
+			
+			// Log initial theme state
+			console.log("Initial theme: " + (document.body.classList.contains('dark-theme') ? 'dark' : 'light'));
+		}
 	});
 	
 	var showOk = false;
 	var showIgnore = false;
 	
 	var overview = {
+		setTheme : function(isDark) {
+			console.log("Setting theme: " + (isDark ? "dark" : "light"));
+			
+			if (isDark) {
+				document.body.classList.add("dark-theme");
+				document.body.classList.remove("light-theme");				
+				document.body.style.backgroundColor = '#2F3136';
+				document.body.style.color = '#E5E5E5';				
+				var ruleHeadings = document.getElementsByClassName('rule_heading');
+				for(var i=0; i<ruleHeadings.length; i++) {
+					ruleHeadings[i].style.backgroundColor = '#36393f';
+					ruleHeadings[i].style.color = '#E5E5E5';
+				}
+			} else {
+				document.body.classList.remove("dark-theme");
+				document.body.classList.add("light-theme");
+				document.body.style.backgroundColor = 'white';
+				document.body.style.color = '#3a3a3a';
+				var ruleHeadings = document.getElementsByClassName('rule_heading');
+				for(var i=0; i<ruleHeadings.length; i++) {
+					ruleHeadings[i].style.backgroundColor = '#EDE8E8';
+					ruleHeadings[i].style.color = '#403E3E';
+				}
+			}			
+			// Log the current theme state for debugging
+			console.log("Theme applied: " + (isDark ? "dark" : "light"));
+		},
+		
 		initializeRuleOverview : function() {
 			document.body.onclick = function(e) {
 				e = window.event ? event.srcElement : e.target;

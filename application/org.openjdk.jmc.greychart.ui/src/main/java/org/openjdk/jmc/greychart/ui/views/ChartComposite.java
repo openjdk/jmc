@@ -61,6 +61,7 @@ import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.common.xydata.DefaultXYData;
 import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.AxisContentType;
+import org.openjdk.jmc.greychart.FontAndColors;
 import org.openjdk.jmc.greychart.TickDensity;
 import org.openjdk.jmc.greychart.TickFormatter;
 import org.openjdk.jmc.greychart.YAxis;
@@ -80,6 +81,8 @@ import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.AccessibilityConstants;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.accessibility.MCAccessibleListener;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
+import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 /**
  * The GUI for an attribute chart
@@ -311,13 +314,20 @@ public class ChartComposite extends SelectionCanvas {
 		plotRenderer.setExtrapolateMissingData(false);
 
 		NanosXAxis d = new NanosXAxis(chart);
-		// DateXAxis d = new DateXAxis(m_chart);
+		boolean isDarkTheme = ThemeUtils.isDarkTheme();
+
+		d.setForeground(isDarkTheme ? java.awt.Color.WHITE : FontAndColors.getDefaultForeground());
+		d.setBackground(isDarkTheme ? Palette.PF_BLACK_900.getAWTColor() : java.awt.Color.WHITE);
 		d.setFormatter(TimestampFormatter.createNanoTimestampFormatter());
+
 		chart.setXAxis(d);
 		chart.getXAxis().setTitle(Messages.ChartComposite_X_AXIS_TITLE);
 
 		yAxis = new DefaultYAxis(chart);
 		yAxis.setPosition(Position.LEFT);
+		yAxis.setForeground(isDarkTheme ? java.awt.Color.WHITE : FontAndColors.getDefaultForeground());
+		yAxis.setBackground(isDarkTheme ? Palette.PF_BLACK_900.getAWTColor() : java.awt.Color.WHITE);
+
 		chart.addYAxis(yAxis);
 		return chart;
 	}
