@@ -44,9 +44,9 @@
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
 	<modules>
+		<module>platform-definition-2025-03</module>
 		<module>platform-definition-2024-12</module>
 		<module>platform-definition-2024-09</module>
 		<module>platform-definition-2024-06</module>
-		<module>platform-definition-2024-03</module>
 	</modules>
 </project>
