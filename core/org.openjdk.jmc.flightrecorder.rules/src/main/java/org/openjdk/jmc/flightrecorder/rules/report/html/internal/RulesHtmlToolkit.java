@@ -155,8 +155,9 @@ public class RulesHtmlToolkit {
 		return template;
 	}
 
-	private static String getHtmlTemplate() {
-		return TEMPLATE;
+	private static String getHtmlTemplate(boolean isDarkTheme) {
+		String themeClass = isDarkTheme ? " class=\"dark-theme\"" : " class=\"light-theme\"";
+		return TEMPLATE.replace("<body>", "<body" + themeClass + ">");
 	}
 
 	private static String getAllOkTemplate() {
@@ -280,10 +281,14 @@ public class RulesHtmlToolkit {
 	};
 
 	public static String generateSinglePageHtml(Collection<IResult> results) throws IOException {
+		return generateSinglePageHtml(results, false);
+	}
+
+	public static String generateSinglePageHtml(Collection<IResult> results, boolean isDarkMode) throws IOException {
 		if (results == null) {
 			return ""; //$NON-NLS-1$
 		}
-		StringBuilder html = new StringBuilder(getHtmlTemplate());
+		StringBuilder html = new StringBuilder(getHtmlTemplate(isDarkMode));
 		html.append(getAllIgnoredTemplate());
 		html.append(START_DIV);
 		html.append("<section id=\"sec\">"); //$NON-NLS-1$
@@ -308,7 +313,13 @@ public class RulesHtmlToolkit {
 	public static String generateStructuredHtml(
 		HtmlResultProvider editor, Iterable<HtmlResultGroup> descriptors, HashMap<String, Boolean> resultExpandedStates,
 		boolean addShowOkCheckBox) {
-		StringBuilder div = new StringBuilder(getHtmlTemplate());
+		return generateStructuredHtml(editor, descriptors, resultExpandedStates, addShowOkCheckBox, false);
+	}
+
+	public static String generateStructuredHtml(
+		HtmlResultProvider editor, Iterable<HtmlResultGroup> descriptors, HashMap<String, Boolean> resultExpandedStates,
+		boolean addShowOkCheckBox, boolean isDarkMode) {
+		StringBuilder div = new StringBuilder(getHtmlTemplate(isDarkMode));
 		if (addShowOkCheckBox) {
 			div.append(buildShowOkCheckBox());
 			div.append(buildShowIgnoreCheckBox());

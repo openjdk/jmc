@@ -64,6 +64,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.unit.IQuantity;
@@ -153,7 +155,6 @@ public class ResultReportUi {
 			resultExpandedStates.put(arguments[0].toString(), (Boolean) arguments[1]);
 			return null;
 		}
-
 	}
 
 	public class OpenWindowFunction extends BrowserFunction {
@@ -251,6 +252,18 @@ public class ResultReportUi {
 	private IPageContainer editor;
 	private Collection<HtmlResultGroup> descriptors;
 	private boolean isSinglePage = false;
+
+	private org.eclipse.jface.util.IPropertyChangeListener themeChangeListener = event -> {
+		if (browser != null && !browser.isDisposed() && isLoaded) {
+			DisplayToolkit.safeAsyncExec(() -> {
+				try {
+					browser.execute(String.format("overview.setTheme(%b);", ThemeUtils.isDarkTheme()));
+				} catch (SWTException e) {
+					FlightRecorderUI.getDefault().getLogger().log(Level.WARNING, "Could not update theme", e);
+				}
+			});
+		}
+	};
 
 	private void openBrowserByUrl(final String url, final String title) {
 		final Display display = Display.getDefault();
@@ -440,16 +453,24 @@ public class ResultReportUi {
 		} catch (NullPointerException npe) {
 			// ignore NPE when there is no state value is available 
 		}
+
+		PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(themeChangeListener);
+		browser.addDisposeListener(e -> {
+			PlatformUI.getWorkbench().getThemeManager().removePropertyChangeListener(themeChangeListener);
+		});
+
 		browser.addListener(SWT.MenuDetect, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				event.doit = false;
 			}
 		});
+
 		try {
-			String html = isSinglePage ? RulesHtmlToolkit.generateSinglePageHtml(results)
+			boolean isDarkTheme = ThemeUtils.isDarkTheme();
+			String html = isSinglePage ? RulesHtmlToolkit.generateSinglePageHtml(results, isDarkTheme)
 					: RulesHtmlToolkit.generateStructuredHtml(new PageContainerResultProvider(editor), descriptors,
-							resultExpandedStates, false);
+							resultExpandedStates, false, isDarkTheme);
 			String adjustedHtml = adjustAnchorFollowAction(html);
 			browser.setText(adjustedHtml, true);
 			browser.setJavascriptEnabled(true);
@@ -461,6 +482,8 @@ public class ResultReportUi {
 					new Expander(browser, "expander"); //$NON-NLS-1$
 					browser.execute(String.format("overview.showOk(%b);", showOk)); //$NON-NLS-1$
 					browser.execute(String.format("overview.showIgnore(%b);", showIgnore)); //$NON-NLS-1$
+					browser.execute(String.format("overview.setTheme(%b);", isDarkTheme));
+
 					if (isSinglePage) {
 						browser.execute(OVERVIEW_MAKE_SCALABLE);
 					}
