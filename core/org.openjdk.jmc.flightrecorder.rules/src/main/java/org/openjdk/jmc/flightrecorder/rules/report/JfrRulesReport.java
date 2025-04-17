@@ -87,23 +87,11 @@ import org.w3c.dom.Element;
 public class JfrRulesReport {
 
 	private static final Map<String, String> TRANSFORMS = new LinkedHashMap<>();
-	private static final JfrReportPermission OVERRIDE_PERMISSION = new JfrReportPermission("override"); //$NON-NLS-1$
 
 	static {
 		TRANSFORMS.put("html", "org/openjdk/jmc/flightrecorder/rules/report/html.xslt"); //$NON-NLS-1$ //$NON-NLS-2$
 		TRANSFORMS.put("text", "org/openjdk/jmc/flightrecorder/rules/report/text.xslt"); //$NON-NLS-1$ //$NON-NLS-2$
 		TRANSFORMS.put("json", "org/openjdk/jmc/flightrecorder/rules/report/json.xslt"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	private static void checkAccess(JfrReportPermission p) throws SecurityException {
-		SecurityManager sm = System.getSecurityManager();
-		if (sm != null) {
-			sm.checkPermission(p);
-		}
-	}
-
-	private static void checkOverrideAccess() throws SecurityException {
-		checkAccess(OVERRIDE_PERMISSION);
 	}
 
 	public static void main(String[] args) throws ParserConfigurationException, TransformerException {
@@ -201,8 +189,6 @@ public class JfrRulesReport {
 				String xsltResourceName = TRANSFORMS.get(formatName);
 				if (xsltResourceName != null) {
 					if (override) {
-						// Must prevent unauthorized injection of potentially dangerous XSLTs.
-						checkOverrideAccess();
 						xsltResourceStream = Thread.currentThread().getContextClassLoader()
 								.getResourceAsStream(xsltResourceName);
 					} else {
