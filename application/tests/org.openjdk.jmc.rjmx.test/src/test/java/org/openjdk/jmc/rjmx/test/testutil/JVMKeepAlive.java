@@ -63,13 +63,8 @@ public class JVMKeepAlive {
 	private static class JVMKeepAliveSlayer implements Runnable {
 		@Override
 		public void run() {
-			String portStr = AccessController.doPrivileged(new PrivilegedAction<String>() {
-				@Override
-				public String run() {
-					return System.getProperty(PROPERTY_KILL_PORT, String.valueOf(DEFAULT_KILL_PORT));
-				}
-			});
-
+			String portStr = System.getProperty(PROPERTY_KILL_PORT, String.valueOf(DEFAULT_KILL_PORT));
+			
 			int port = 0;
 			try {
 				port = Integer.parseInt(portStr);
