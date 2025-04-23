@@ -35,8 +35,6 @@ package org.openjdk.jmc.rjmx.test.testutil;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Simple, small test class to make a JVM stay awake. Takes one optional argument, which is the
