@@ -52,7 +52,7 @@ public final class SecurityManagerFactory {
 		try {
 			if (className != null) {
 				Class<? extends Object> c = Class.forName(className);
-				instance = (ISecurityManager) c.newInstance();
+				instance = (ISecurityManager) c.getDeclaredConstructor().newInstance();
 			}
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Could not create Security manager for className. Using default! Exception was:", //$NON-NLS-1$
