@@ -52,14 +52,24 @@ class DialDevice {
 			ImageDescription.createStandardConfiguration(
 					UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_PANEL_100_1000), 1000)};
 
+	private static final ImageDescription[] DARK_BACKGROUNDS = new ImageDescription[] {
+			ImageDescription.createStandardConfiguration(
+					UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_PANEL_1_10_DARK), 10),
+			ImageDescription.createStandardConfiguration(
+					UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_PANEL_10_100_DARK), 100),
+			ImageDescription.createStandardConfiguration(
+					UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_PANEL_100_1000_DARK), 1000)};
+
 	private final IUnit unit;
 	private final ImageDescription background;
 	private final Boolean positive;
+	private final boolean isDarkMode;
 
-	private DialDevice(IUnit unit, ImageDescription background, Boolean positive) {
+	private DialDevice(IUnit unit, ImageDescription background, Boolean positive, boolean isDarkMode) {
 		this.unit = unit;
 		this.background = background;
 		this.positive = positive;
+		this.isDarkMode = isDarkMode;
 	}
 
 	String getTitle() {
@@ -95,20 +105,21 @@ class DialDevice {
 		return BACKGROUNDS[0].image.getBounds();
 	}
 
-	static DialDevice buildSuitableDevice(double minValue, double maxValue, IUnit inUnit) {
+	static DialDevice buildSuitableDevice(double minValue, double maxValue, IUnit inUnit, boolean isDarkMode) {
 		if (minValue > maxValue || Double.isInfinite(minValue) || Double.isInfinite(maxValue)) {
 			// no value background
 			return new DialDevice(inUnit.getContentType().getPreferredUnit(inUnit.quantity(1), 1.0, 1000),
-					BACKGROUNDS[0], true);
+					isDarkMode ? DARK_BACKGROUNDS[0] : BACKGROUNDS[0], true, isDarkMode);
 		}
 		IQuantity quantity = inUnit.quantity(Math.max(Math.abs(minValue), Math.abs(maxValue)));
 		IUnit preferredUnit = inUnit.getContentType().getPreferredUnit(quantity, 1.0,
 				BACKGROUNDS[BACKGROUNDS.length - 1].dialEndValue);
 		double value = quantity.doubleValueIn(preferredUnit);
-		for (ImageDescription bg : BACKGROUNDS) {
+		ImageDescription[] backgrounds = isDarkMode ? DARK_BACKGROUNDS : BACKGROUNDS;
+		for (ImageDescription bg : backgrounds) {
 			if (value <= bg.dialEndValue) {
 				Boolean positive = maxValue < 0 ? Boolean.FALSE : (minValue < 0 ? null : Boolean.TRUE);
-				return new DialDevice(preferredUnit, bg, positive);
+				return new DialDevice(preferredUnit, bg, positive, isDarkMode);
 			}
 		}
 
@@ -118,7 +129,7 @@ class DialDevice {
 		 * Choosing a hopefully useful dial device, but too large values will be normalized to 1.
 		 * Consider throwing an exception instead.
 		 */
-		return new DialDevice(preferredUnit, BACKGROUNDS[BACKGROUNDS.length - 1], true);
+		return new DialDevice(preferredUnit, backgrounds[backgrounds.length - 1], true, isDarkMode);
 		// throw new IllegalArgumentException("Cannot find a suitable dial device");
 	}
 }

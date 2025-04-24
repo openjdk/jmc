@@ -42,6 +42,7 @@ import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.ColorToolkit;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
 
 public class DialConfiguration {
 
@@ -55,7 +56,7 @@ public class DialConfiguration {
 
 	private Color m_gradientBeginColor = new Color(107, 143, 183);
 	private Color m_gradientEndColor = new Color(107, 143, 183);
-	private Color m_waterMarkColor = new Color(150, 150, 150);
+	private Color m_waterMarkColor = ThemeUtils.isDarkTheme() ? new Color(80, 80, 80) : new Color(150, 150, 150);
 	private IQuantity m_gradientBeginValue;
 	private IQuantity m_gradientEndValue;
 	private boolean m_useWatermark = true;
