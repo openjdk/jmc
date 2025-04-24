@@ -62,7 +62,7 @@ public class JVMKeepAlive {
 		@Override
 		public void run() {
 			String portStr = System.getProperty(PROPERTY_KILL_PORT, String.valueOf(DEFAULT_KILL_PORT));
-			
+
 			int port = 0;
 			try {
 				port = Integer.parseInt(portStr);
