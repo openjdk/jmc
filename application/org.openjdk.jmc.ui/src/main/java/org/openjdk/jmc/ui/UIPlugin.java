@@ -163,11 +163,17 @@ public class UIPlugin extends MCAbstractUIPlugin {
 
 	public static final String ICON_DIAL_PANEL = "single-dial.png"; //$NON-NLS-1$
 	public static final String ICON_DIAL_BACKGROUND = "dial-bkgnd.png"; //$NON-NLS-1$
+	public static final String ICON_DIAL_BACKGROUND_DARK = "dial-bkgnd-dark.png"; //$NON-NLS-1$
 	public static final String ICON_DIAL_PANEL2 = "dial2.png"; //$NON-NLS-1$TDial
 
 	public static final String ICON_DIAL_PANEL_1_10 = "dial_1_to_10.png"; //$NON-NLS-1$
 	public static final String ICON_DIAL_PANEL_10_100 = "dial_10_to_100.png"; //$NON-NLS-1$
 	public static final String ICON_DIAL_PANEL_100_1000 = "dial_100_to_1000.png"; //$NON-NLS-1$
+
+	public static final String ICON_DIAL_PANEL_1_10_DARK = "dial_1_to_10-dark.png"; //$NON-NLS-1$
+	public static final String ICON_DIAL_PANEL_10_100_DARK = "dial_10_to_100-dark.png"; //$NON-NLS-1$
+	public static final String ICON_DIAL_PANEL_100_1000_DARK = "dial_100_to_1000-dark.png"; //$NON-NLS-1$
+
 	public final static String ICON_DELETE = "delete-16.png"; //$NON-NLS-1$
 
 	public final static String ICON_MISSION_CONTROL = "mission_control.gif"; //$NON-NLS-1$
@@ -322,8 +328,12 @@ public class UIPlugin extends MCAbstractUIPlugin {
 		registerImage(registry, ICON_DIAL_PANEL_1_10, ICON_DIAL_PANEL_1_10);
 		registerImage(registry, ICON_DIAL_PANEL_10_100, ICON_DIAL_PANEL_10_100);
 		registerImage(registry, ICON_DIAL_PANEL_100_1000, ICON_DIAL_PANEL_100_1000);
+		registerImage(registry, ICON_DIAL_PANEL_1_10_DARK, ICON_DIAL_PANEL_1_10_DARK);
+		registerImage(registry, ICON_DIAL_PANEL_10_100_DARK, ICON_DIAL_PANEL_10_100_DARK);
+		registerImage(registry, ICON_DIAL_PANEL_100_1000_DARK, ICON_DIAL_PANEL_100_1000_DARK);
 
 		registerImage(registry, ICON_DIAL_BACKGROUND, ICON_DIAL_BACKGROUND);
+		registerImage(registry, ICON_DIAL_BACKGROUND_DARK, ICON_DIAL_BACKGROUND_DARK);
 		registerImage(registry, ICON_FOLDER, ICON_FOLDER);
 		registerImage(registry, ICON_FOLDER_CLOSED, ICON_FOLDER_CLOSED);
 

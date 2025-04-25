@@ -83,6 +83,7 @@ public class DialViewer extends Composite implements IRefreshable {
 	// Model
 	private IDialProvider[] m_dials = new IDialProvider[] {};
 	final private Map<String, Object> m_inputs = new LinkedHashMap<>();
+	private final boolean m_isDarkMode;
 
 	// listeners
 	final private MCAccessibleListener m_accessibleListener;
@@ -109,7 +110,23 @@ public class DialViewer extends Composite implements IRefreshable {
 	 * @param configuration
 	 */
 	public DialViewer(Composite parent, int style) {
+		this(parent, style, false);
+	}
+
+	/**
+	 * Constructs a {@link DialViewer} with a given configuration on the parent composite,
+	 * respecting the theme settings.
+	 *
+	 * @param parent
+	 *            the parent composite
+	 * @param style
+	 *            the SWT style
+	 * @param isDarkMode
+	 *            whether to use dark mode dial images
+	 */
+	public DialViewer(Composite parent, int style, boolean isDarkMode) {
 		super(parent, SWT.DOUBLE_BUFFERED);
+		m_isDarkMode = isDarkMode;
 
 		m_accessibleListener = new MCAccessibleListener();
 		m_accessibleListener.setComponentType(AccessibilityConstants.COMPONENT_TYPE_DIAL);
@@ -352,7 +369,7 @@ public class DialViewer extends Composite implements IRefreshable {
 			maxValue = Math.max(maxValue, values[n]);
 			minValue = Math.min(minValue, values[n]);
 		}
-		DialDevice dd = DialDevice.buildSuitableDevice(minValue, maxValue, getUnit());
+		DialDevice dd = DialDevice.buildSuitableDevice(minValue, maxValue, getUnit(), m_isDarkMode);
 		ImageDescription bgConfig = dd.getBackground();
 		Rectangle size = bgConfig.image.getBounds();
 		int xOffset = (width - size.width) / 2;
@@ -413,7 +430,12 @@ public class DialViewer extends Composite implements IRefreshable {
 		Image panelImage = new Image(getDisplay(), bgBounds.width, bgBounds.height);
 
 		GC dialGC = new GC(panelImage);
-		Image g = UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_BACKGROUND);
+		Image g;
+		if (m_isDarkMode) {
+			g = UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_BACKGROUND_DARK);
+		} else {
+			g = UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_BACKGROUND);
+		}
 		for (int i = 0; i < panelImage.getBounds().width; i += g.getBounds().width) {
 			dialGC.drawImage(g, i, 0);
 		}
@@ -456,8 +478,12 @@ public class DialViewer extends Composite implements IRefreshable {
 		int x = config.dialTextCenter.x - textExtent.x / 2 + xOffset;
 		int y = config.dialTextCenter.y - textExtent.y / 2 + YOffset;
 
-		// FIXME: Once we have dark background dials we should just use the default fg color...
-		Color foreground = new Color(gc.getDevice(), 0, 0, 0);
+		Color foreground;
+		if (m_isDarkMode) {
+			foreground = new Color(gc.getDevice(), 255, 255, 255);
+		} else {
+			foreground = new Color(gc.getDevice(), 0, 0, 0);
+		}
 		gc.setForeground(foreground);
 
 		gc.setAlpha(192);
@@ -506,5 +532,4 @@ public class DialViewer extends Composite implements IRefreshable {
 			color.dispose();
 		}
 	}
-
 }
