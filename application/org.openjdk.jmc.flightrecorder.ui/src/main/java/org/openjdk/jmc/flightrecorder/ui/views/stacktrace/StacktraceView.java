@@ -245,6 +245,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private IAttribute<IQuantity> currentAttribute;
 	private IToolBarManager toolBar;
 	private ViewerColumn valueColumn;
+	private CompletableFuture<StacktraceModel> modelRebuildFuture;
 
 	private static class StacktraceViewToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -788,6 +789,11 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 			}
 		}
 		itemsToShow = items;
+
+		// Cancel any pending rebuilds to avoid race conditions
+		if (modelRebuildFuture != null && !modelRebuildFuture.isDone()) {
+			modelRebuildFuture.cancel(true);
+		}
 		rebuildModel();
 	}
 
@@ -803,9 +809,13 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private void rebuildModel() {
 		// Release old model before building the new
 		setViewerInput(null);
-		CompletableFuture<StacktraceModel> modelPreparer = getModelPreparer(createStacktraceModel(), !treeLayout);
-		modelPreparer.thenAcceptAsync(this::setModel, DisplayToolkit.inDisplayThread())
-				.exceptionally(StacktraceView::handleModelBuildException);
+		modelRebuildFuture = getModelPreparer(createStacktraceModel(), !treeLayout);
+		modelRebuildFuture.thenAcceptAsync(model -> {
+			if (modelRebuildFuture != null && !modelRebuildFuture.isCancelled() && model != null
+					&& model.getRootFork() != null) {
+				setModel(model);
+			}
+		}, DisplayToolkit.inDisplayThread()).exceptionally(StacktraceView::handleModelBuildException);
 	}
 
 	private static CompletableFuture<StacktraceModel> getModelPreparer(
@@ -823,7 +833,12 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	}
 
 	private static Void handleModelBuildException(Throwable ex) {
-		FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to build stacktrace view model", ex); //$NON-NLS-1$
+		// Don't log CancellationExceptions as severe since they're expected during model rebuilding
+		if (ex.getCause() instanceof java.util.concurrent.CancellationException) {
+			FlightRecorderUI.getDefault().getLogger().log(Level.FINE, "Stacktrace model build cancelled", ex); //$NON-NLS-1$
+		} else {
+			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to build stacktrace view model", ex); //$NON-NLS-1$
+		}
 		return null;
 	}
 

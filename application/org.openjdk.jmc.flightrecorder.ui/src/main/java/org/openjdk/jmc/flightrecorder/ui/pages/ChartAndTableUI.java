@@ -122,9 +122,10 @@ abstract class ChartAndTableUI implements IPageUI {
 		table = buildHistogram(sash, state.getChild(TABLE), classifier);
 		MCContextMenuManager mm = MCContextMenuManager.create(table.getManager().getViewer().getControl());
 		ColumnMenusFactory.addDefaultMenus(table.getManager(), mm);
-		table.getManager().getViewer().addSelectionChangedListener(e -> buildChart());
-		table.getManager().getViewer()
-				.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
+		table.getManager().getViewer().addSelectionChangedListener(e -> {
+			buildChart();
+			pageContainer.showSelection(table.getSelection().getItems());
+		});
 		SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
 				NLS.bind(Messages.ChartAndTableUI_HISTOGRAM_SELECTION, sectionTitle), mm);
 		tableFilterComponent = FilterComponent.createFilterComponent(table.getManager().getViewer().getControl(),
