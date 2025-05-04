@@ -56,7 +56,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.openjdk.jmc.common.io.ValidatingObjectInputStream;
 
 class DecryptedStorage {
-	private static final String HMAC_ALGORITHM = "SHA-256"; //$NON-NLS-1$
+	private static final String HMAC_ALGORITHM = "HmacSHA256"; //$NON-NLS-1$
 	private static final String RANDOM_GEN_ALGORITHM = "SHA1PRNG"; //$NON-NLS-1$
 	static final int SALT_LEN = 8;
 	private static final int ITERATION_COUNT_MIN = 100000;
