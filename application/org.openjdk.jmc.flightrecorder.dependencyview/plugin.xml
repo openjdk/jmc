@@ -8,7 +8,7 @@
           class="org.openjdk.jmc.flightrecorder.dependencyview.DependencyView"
           icon="icons/chord.png"
           id="org.openjdk.jmc.flightrecorder.dependencyview"
-          name="Dependency View"
+          name="Dependency Graph"
           restorable="true">
 		</view>
 	</extension>
