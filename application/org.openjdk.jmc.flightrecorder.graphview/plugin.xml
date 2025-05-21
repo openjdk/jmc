@@ -41,7 +41,7 @@
           class="org.openjdk.jmc.flightrecorder.graphview.views.GraphView"
           icon="icons/graph.png"
           id="org.openjdk.jmc.flightrecorder.graphview"
-          name="Graph View"
+          name="Call Graph"
           restorable="true">
 		</view>
 	</extension>

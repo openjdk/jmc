@@ -8,7 +8,7 @@
           class="org.openjdk.jmc.flightrecorder.heatmap.views.HeatmapView"
           icon="icons/heatmap.png"
           id="org.openjdk.jmc.flightrecorder.heatmap"
-          name="Heatmap View"
+          name="Heatmap"
           restorable="true">
 		</view>
 	</extension>
