@@ -244,7 +244,7 @@ public class OptionsCheckRule implements IRule {
 			"MaxTrivialSize", "OptimizeStringConcat", "PrintAssembly", "PrintCompilation", "PrintInlining",
 			"ReservedCodeCacheSize", "RTMAbortRatio", "RTMRetryCount", "TieredCompilation", "UseAES",
 			"UseAESIntrinsics", "UseCodeCacheFlushing", "UseCondCardMark", "UseRTMDeopt", "UseRTMLocking", "UseSHA",
-			"UseSHA1Intrinsics", "UseSHA256Intrinsics", "UseSHA512Intrinsics", "UseSuperWord", "HeapDumpOnOutOfMemory",
+			"UseSHA1Intrinsics", "UseSHA256Intrinsics", "UseSHA512Intrinsics", "UseSuperWord", "HeapDumpOnOutOfMemoryError",
 			"HeapDumpPath", "LogFile", "PrintClassHistogram", "PrintConcurrentLocks", "UnlockDiagnosticVMOptions",
 			"AggressiveHeap", "AlwaysPreTouch", "CMSClassUnloadingEnabled", "CMSExpAvgFactor",
 			"CMSInitiatingOccupancyFraction", "CMSScavengeBeforeRemark", "CMSTriggerRatio", "ConcGCThreads",
