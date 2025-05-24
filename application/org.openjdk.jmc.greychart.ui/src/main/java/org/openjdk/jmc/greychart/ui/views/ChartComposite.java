@@ -56,8 +56,6 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.common.util.Environment;
-import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.common.xydata.DefaultXYData;
 import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.AxisContentType;
@@ -102,21 +100,6 @@ public class ChartComposite extends SelectionCanvas {
 	private static final double ZOOM_FACTOR_WHEEL_IN = 1.0 / ZOOM_FACTOR_WHEEL_OUT;
 	private static final double ZOOM_MIDDLE = 0.5;
 
-	private static final String DRAW_PROPERTY = "org.openjdk.jmc.rjmx.ui.chart.immediatedraw"; //$NON-NLS-1$
-	private static final boolean IMMEDIATE_DRAWING;
-
-	static {
-		// Workaround for slow SWT redraw on Cocoa.
-		boolean drawImmediately;
-		if (System.getProperty(DRAW_PROPERTY) != null) {
-			drawImmediately = Boolean.getBoolean(DRAW_PROPERTY);
-		} else {
-			// Enable on OS X due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=410293
-			drawImmediately = (Environment.getOSType() == OSType.MAC);
-		}
-		IMMEDIATE_DRAWING = drawImmediately;
-	}
-
 	private static class QuantityFormatter implements TickFormatter {
 		private final IUnit outUnit;
 		private final IFormatter<IQuantity> formatter;
@@ -148,11 +131,14 @@ public class ChartComposite extends SelectionCanvas {
 	private long m_dataStart = Long.MAX_VALUE;
 	private long m_dataEnd = Long.MIN_VALUE;
 	private boolean m_enableUpdates;
+	private boolean m_showAllMode = false;
 	private final Consumer<Boolean> m_enableUpdatesCallback;
 	private ChartSampleTooltipProvider m_cstp = null;
 	private Rectangle m_plotBounds;
 
 	/**
+	 * Constructs a ChartComposite on the provided parent and with the provided widget style.
+	 *
 	 * @param parent
 	 *            Parent widget
 	 * @param style
@@ -185,8 +171,18 @@ public class ChartComposite extends SelectionCanvas {
 	public void refresh() {
 		if (!isDisposed()) {
 			zoomInAction.setEnabled(m_viewWidth > MINIMUM_WORLD_WIDTH && !m_enableUpdates);
-			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
-			m_chart.setXAxis(m_chart.getXAxis());
+
+			NanosXAxis xAxis = getXAxis();
+			if (m_showAllMode) {
+				xAxis.setAutoRangeEnabled(true);
+				m_viewWidth = xAxis.getMax().longValue() - xAxis.getMin().longValue();
+				m_viewEnd = xAxis.getMax().longValue();
+			} else {
+				xAxis.setAutoRangeEnabled(false);
+				xAxis.setRange(m_viewEnd - m_viewWidth, m_viewEnd);
+			}
+			m_chart.markProviderRebuildNeeded();
+			m_chart.rebuildOptimizingProvider();
 			redraw();
 		}
 	}
@@ -333,8 +329,7 @@ public class ChartComposite extends SelectionCanvas {
 	}
 
 	private void updateXAxis() {
-		NanosXAxis xAxis = (NanosXAxis) getChart().getXAxis();
-		xAxis.setTitle(getChartModel().getXAxis().getTitle());
+		getXAxis().setTitle(getChartModel().getXAxis().getTitle());
 		redraw();
 	}
 
@@ -473,6 +468,11 @@ public class ChartComposite extends SelectionCanvas {
 	 */
 	public void showLast(long viewWidth) {
 		m_viewWidth = viewWidth;
+		m_showAllMode = false;
+
+		// Disable auto-range on the X-axis for fixed view
+		getXAxis().setAutoRangeEnabled(false);
+
 		if (m_enableUpdatesCallback != null) {
 			m_enableUpdatesCallback.accept(true);
 		}
@@ -483,16 +483,101 @@ public class ChartComposite extends SelectionCanvas {
 	}
 
 	/**
-	 * Show all values in the data series. Depends on that the data range is set correctly.
+	 * Show all values in the data series. Uses provider data bounds for the complete range.
 	 */
 	public void showAll() {
-		m_viewWidth = m_dataEnd - m_dataStart;
-		m_viewEnd = m_dataEnd;
+		m_showAllMode = true;
+
+		// Enable auto-range on the X-axis to use provider data bounds
+		getXAxis().setAutoRangeEnabled(true);
+
+		// Use provider data bounds instead of cached bounds
+		long dataMin = getProviderMinTime();
+		long dataMax = getProviderMaxTime();
+
+		if (dataMax > dataMin) {
+			m_viewWidth = dataMax - dataMin;
+			m_viewEnd = dataMax;
+		}
+
+		if (m_enableUpdatesCallback != null) {
+			m_enableUpdatesCallback.accept(true);
+		}
+		refresh();
+	}
+
+	/**
+	 * Show a specific time range and disable live updates.
+	 *
+	 * @param fromTimeNanos
+	 *            Start time in nanoseconds
+	 * @param toTimeNanos
+	 *            End time in nanoseconds
+	 */
+	public void showTimeRange(long fromTimeNanos, long toTimeNanos) {
+		m_showAllMode = false;
+
+		// Disable auto-range on the X-axis for fixed range
+		getXAxis().setAutoRangeEnabled(false);
+
+		m_viewWidth = toTimeNanos - fromTimeNanos;
+		m_viewEnd = toTimeNanos;
+		if (m_enableUpdatesCallback != null) {
+			m_enableUpdatesCallback.accept(false);
+		}
 		refresh();
 	}
 
 	public void extendsDataRangeToInclude(long timestamp) {
 		setDataRange(Math.min(m_dataStart, timestamp), Math.max(m_dataEnd, timestamp));
+	}
+
+	/**
+	 * Get the start timestamp of the available data range.
+	 *
+	 * @return Start timestamp in nanoseconds
+	 */
+	public long getDataStartTime() {
+		return m_dataStart;
+	}
+
+	/**
+	 * Get the end timestamp of the available data range.
+	 *
+	 * @return End timestamp in nanoseconds
+	 */
+	public long getDataEndTime() {
+		return m_dataEnd;
+	}
+
+	/**
+	 * Get the full available data range minimum timestamp. This returns the true dataset bounds
+	 * regardless of current view restrictions.
+	 *
+	 * @return Minimum timestamp in nanoseconds from the full dataset
+	 */
+	public long getProviderMinTime() {
+		OptimizingProvider provider = m_chart.getOptimizingProvider();
+		if (provider != null) {
+			long dataMinX = provider.getDataMinX();
+			return (dataMinX != Long.MAX_VALUE) ? dataMinX : m_dataStart;
+		}
+		return m_dataStart;
+	}
+
+	/**
+	 * Get the full available data range maximum timestamp. This returns the true dataset bounds
+	 * regardless of current view restrictions.
+	 *
+	 * @return Maximum timestamp in nanoseconds from the full dataset
+	 */
+	public long getProviderMaxTime() {
+		OptimizingProvider provider = m_chart.getOptimizingProvider();
+		if (provider != null) {
+			long dataMaxX = provider.getDataMaxX();
+			return (dataMaxX != Long.MIN_VALUE) ? dataMaxX : m_dataEnd;
+		}
+		return m_dataEnd;
 	}
 
 	/**
@@ -509,6 +594,21 @@ public class ChartComposite extends SelectionCanvas {
 		}
 		m_dataStart = dataStart;
 		m_dataEnd = dataEnd;
+
+		if (m_showAllMode) {
+			// Force provider rebuild to get current data bounds
+			m_chart.markProviderRebuildNeeded();
+			m_chart.rebuildOptimizingProvider();
+
+			// Use provider data bounds - want to see all available data
+			long dataMin = getProviderMinTime();
+			long dataMax = getProviderMaxTime();
+
+			if (dataMax > dataMin) {
+				m_viewWidth = dataMax - dataMin;
+				m_viewEnd = dataMax;
+			}
+		}
 		refresh();
 	}
 
