@@ -56,8 +56,8 @@ import org.openjdk.jmc.greychart.impl.WorldToDeviceConverter;
  * The graph will closely resemble what the graph would have looked like if every single data point
  * would have been drawn directly.
  */
-public final class SubsamplingProvider implements OptimizingProvider {
-	private final DataSeries<IXYData> m_dataSeries;
+public final class SubsamplingProvider extends AbstractOptimizingProvider {
+	private final DataSeries<IXYData<Long, Number>> m_dataSeries;
 	private final double m_yMultiplier;
 	private final XAxis m_xAxis;
 	private AbstractSampler m_sampleBuffer;
@@ -71,8 +71,8 @@ public final class SubsamplingProvider implements OptimizingProvider {
 	private final boolean m_integrate;
 	private final CancelService m_cancelService;
 
-	public SubsamplingProvider(DataSeries<IXYData> s, double yMultiplier, XAxis xAxis, CancelService cancelService,
-			boolean integrate) {
+	public SubsamplingProvider(DataSeries<IXYData<Long, Number>> s, double yMultiplier, XAxis xAxis,
+			CancelService cancelService, boolean integrate) {
 		m_dataSeries = s;
 		m_yMultiplier = yMultiplier;
 		m_cancelService = cancelService;
@@ -101,6 +101,7 @@ public final class SubsamplingProvider implements OptimizingProvider {
 	@Override
 	public void setDataChanged(boolean changed) {
 		dataChangeOccured = changed;
+		super.setDataChanged(changed);
 	}
 
 	@Override
@@ -192,7 +193,7 @@ public final class SubsamplingProvider implements OptimizingProvider {
 	}
 
 	private AbstractSampler createSampleBuffer(int width) {
-		Iterator<IXYData> it = m_dataSeries.createIterator(m_requestedStartX, m_requestedEndX);
+		Iterator<IXYData<Long, Number>> it = m_dataSeries.createIterator(m_requestedStartX, m_requestedEndX);
 		if (!it.hasNext()) {
 			return isIntegrate() ? new IntegratingSubsamplingBuffer(0) : new SubsamplingBuffer(0);
 		}
@@ -203,17 +204,17 @@ public final class SubsamplingProvider implements OptimizingProvider {
 		long leftEdge = m_xAxis.getMin().longValue();
 		long rightEdge = leftEdge + worldWidth;
 
-		IXYData leftMost = null;
-		IXYData rightMost = null;
-		IXYData rightMostWithin = null;
-		IXYData leftMostWithin = null;
+		IXYData<Long, Number> leftMost = null;
+		IXYData<Long, Number> rightMost = null;
+		IXYData<Long, Number> rightMostWithin = null;
+		IXYData<Long, Number> leftMostWithin = null;
 
 		while (it.hasNext() && m_cancelService.isNotCancelled()) {
-			IXYData newData = it.next();
-			long x = getXAsLong(newData);
-			if (x < leftEdge && (leftMost == null || x >= getXAsLong(leftMost))) {
+			IXYData<Long, Number> newData = it.next();
+			long x = newData.getX();
+			if (x < leftEdge && (leftMost == null || x >= leftMost.getX())) {
 				leftMost = newData;
-			} else if (x > rightEdge && (rightMost == null || x < getXAsLong(rightMost))) {
+			} else if (x > rightEdge && (rightMost == null || x < rightMost.getX())) {
 				rightMost = newData;
 			}
 			if (x >= leftEdge && x <= rightEdge) {
@@ -222,9 +223,9 @@ public final class SubsamplingProvider implements OptimizingProvider {
 					leftMostWithin = newData;
 					rightMostWithin = newData;
 				} else {
-					if (getXAsLong(leftMostWithin) > x) {
+					if (leftMostWithin.getX() > x) {
 						leftMostWithin = newData;
-					} else if (getXAsLong(rightMostWithin) <= x) {
+					} else if (rightMostWithin.getX() <= x) {
 						rightMostWithin = newData;
 					}
 				}
@@ -238,13 +239,13 @@ public final class SubsamplingProvider implements OptimizingProvider {
 			// sample at the edge (unless the actual internal values were already on the borders).
 			leftMostWithin = leftMostWithin == null ? rightMost : leftMostWithin;
 			rightMostWithin = rightMostWithin == null ? leftMost : rightMostWithin;
-			if (leftMost != null && leftMostWithin != null && getXAsLong(leftMostWithin) != leftEdge
-					&& getXAsLong(leftMost) < leftEdge) {
+			if (leftMost != null && leftMostWithin != null && leftMostWithin.getX() != leftEdge
+					&& leftMost.getX() < leftEdge) {
 				addInterpolatedNormalizedPoint((SubsamplingBuffer) sampleBuffer, 0.0, leftMost, leftMostWithin,
 						worldWidth, leftEdge);
 			}
-			if (rightMost != null && rightMostWithin != null && getXAsLong(rightMostWithin) != rightEdge
-					&& getXAsLong(rightMost) > rightEdge) {
+			if (rightMost != null && rightMostWithin != null && rightMostWithin.getX() != rightEdge
+					&& rightMost.getX() > rightEdge) {
 				addInterpolatedNormalizedPoint((SubsamplingBuffer) sampleBuffer, 1.0, rightMostWithin, rightMost,
 						worldWidth, leftEdge);
 			}
@@ -252,32 +253,21 @@ public final class SubsamplingProvider implements OptimizingProvider {
 		return sampleBuffer;
 	}
 
-	private long getXAsLong(IXYData data) {
-		return ((Number) data.getX()).longValue();
-	}
-
-	private long getYAsLong(IXYData data) {
-		return ((Number) data.getY()).longValue();
-	}
-
 	private void addInterpolatedNormalizedPoint(
-		SubsamplingBuffer sampleBuffer, double boundary, IXYData beforeData, IXYData afterData, long worldWidth,
-		long leftEdge) {
+		SubsamplingBuffer sampleBuffer, double boundary, IXYData<Long, Number> beforeData,
+		IXYData<Long, Number> afterData, long worldWidth, long leftEdge) {
 		assert (!isIntegrate());
 		double n1 = getNormalizedX(beforeData, worldWidth, leftEdge);
 		double n2 = getNormalizedX(afterData, worldWidth, leftEdge);
-		double y1 = getY(beforeData);
-		double y2 = getY(afterData);
+		double y1 = beforeData.getY().doubleValue();
+		double y2 = afterData.getY().doubleValue();
 		double k = (y2 - y1) / (n2 - n1);
 		double yResult = (boundary - n1) * k + y1;
 		sampleBuffer.addDataPoint(boundary, yResult);
 	}
 
-	private double getY(IXYData data) {
-		return ((Number) data.getY()).doubleValue();
-	}
-
-	private void addXYDataPoint(AbstractSampler sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
+	private void addXYDataPoint(
+		AbstractSampler sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
 		if (isIntegrate()) {
 			addIntegratedXYDataPoint((IntegratingSubsamplingBuffer) sampleBuffer, worldWidth, leftEdge, data);
 		} else {
@@ -285,26 +275,28 @@ public final class SubsamplingProvider implements OptimizingProvider {
 		}
 	}
 
-	private void addNormalXYDataPoint(SubsamplingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
+	private void addNormalXYDataPoint(
+		SubsamplingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
 		double n = getNormalizedX(data, worldWidth, leftEdge);
-		double y = ((Number) data.getY()).doubleValue();
+		double y = data.getY().doubleValue();
 		sampleBuffer.addDataPoint(n, y);
 	}
 
 	private void addIntegratedValue(
-		IntegratingSubsamplingBuffer sampleBuffer, long worldWidth, long leftEdge, long x, long y, long duration) {
+		IntegratingSubsamplingBuffer sampleBuffer, long worldWidth, long leftEdge, long x, double y, long duration) {
 		double n = getNormalizedX(x, worldWidth, leftEdge);
 		double n2 = getNormalizedX(Math.min(leftEdge + worldWidth, x + duration), worldWidth, leftEdge);
 		sampleBuffer.addDataPoint(n, n2, y);
 	}
 
 	private void addIntegratedXYDataPoint(
-		IntegratingSubsamplingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
-		addIntegratedValue(sampleBuffer, worldWidth, leftEdge, getXAsLong(data), getYAsLong(data), getYAsLong(data));
+		IntegratingSubsamplingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
+		addIntegratedValue(sampleBuffer, worldWidth, leftEdge, data.getX(), data.getY().longValue(),
+				data.getY().longValue());
 	}
 
-	private double getNormalizedX(IXYData data, long worldWidth, long leftEdge) {
-		return ((double) (getXAsLong(data) - leftEdge)) / ((double) worldWidth);
+	private double getNormalizedX(IXYData<Long, Number> data, long worldWidth, long leftEdge) {
+		return ((double) (data.getX() - leftEdge)) / ((double) worldWidth);
 	}
 
 	private double getNormalizedX(long x, long worldWidth, long leftEdge) {
@@ -312,7 +304,7 @@ public final class SubsamplingProvider implements OptimizingProvider {
 	}
 
 	@Override
-	public DataSeries getDataSeries() {
+	public DataSeries<IXYData<Long, Number>> getDataSeries() {
 		return m_dataSeries;
 	}
 
@@ -361,6 +353,10 @@ public final class SubsamplingProvider implements OptimizingProvider {
 	@Override
 	public Iterator<SamplePoint> getSamples(int width) {
 		return new SamplePointIterator(m_sampleBuffer.getSamples());
+	}
+
+	protected double transformY(IXYData<Long, Number> data) {
+		return data.getY().doubleValue() * m_yMultiplier;
 	}
 
 	private boolean isIntegrate() {

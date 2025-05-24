@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.openjdk.jmc.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.IXYData;
 import org.openjdk.jmc.greychart.AbstractGreyChart;
 import org.openjdk.jmc.greychart.AxisListener;
 import org.openjdk.jmc.greychart.ChartChangeEvent;
@@ -61,9 +62,10 @@ import org.openjdk.jmc.greychart.providers.SubsamplingProvider;
 import org.openjdk.jmc.greychart.util.Messages;
 
 /**
- * The default little XY chart. This class currently implements rather much. Whenever there is a
- * need for other kinds of charts, abstract superclasses will be created and functionality will be
- * moved up the hierarchy. It currently lays out the chart in the following fashion.
+ * The default little XY chart for data that extends IXYData&lt;Long, Number&gt;. This class
+ * currently implements rather much. Whenever there is a need for other kinds of charts, abstract
+ * superclasses will be created and functionality will be moved up the hierarchy. It currently lays
+ * out the chart in the following fashion.
  *
  * <pre>
   *              -------------
@@ -79,7 +81,8 @@ import org.openjdk.jmc.greychart.util.Messages;
  *              + = index area (provides a series index explanation)
  * </pre>
  */
-public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implements XYGreyChart<XYData>, AxisListener {
+public class DefaultXYGreyChart<T extends IXYData<Long, Number>> extends AbstractGreyChart<T>
+		implements XYGreyChart<T>, AxisListener {
 	private final ChartChangeEvent AXIS_CHANGE_EVENT = new ChartChangeEvent(this,
 			ChartChangeEvent.ChangeType.OTHER_CHANGED);
 	private XAxis m_xAxis;
@@ -94,6 +97,7 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 	private boolean m_isAutoUpdateOnAxisChange = true;
 	private int m_oldResolution = 0;
 	private final CancelService m_cancelService = new CancelService();
+	private boolean m_needsProviderRebuild = true;
 
 	private static class YAxisData {
 		YAxis axis;
@@ -124,7 +128,12 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 	@Override
 	public void setXAxis(XAxis axis) {
 		m_xAxis = axis;
-		rebuildOptimizingProvider(getDataProvider());
+		// Only rebuild if we have a data provider, otherwise mark for later rebuild
+		if (getDataProvider() != null) {
+			rebuildOptimizingProvider(getDataProvider());
+		} else {
+			m_needsProviderRebuild = true;
+		}
 		updateAxisListeners();
 	}
 
@@ -182,7 +191,6 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 		int title_h, xaxis_h, plot_h, plot_w, index_w, total_left, total_right;
 
 		// Set the default font used in the rest of the chart... Cache this font later
-
 		ctx.setFont(FontAndColors.getDefaultFont());
 
 		Rectangle allMinusIndex = new Rectangle(where);
@@ -398,16 +406,16 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 	}
 
 	@Override
-	public void setDataProvider(DataSeriesProvider<XYData> dataProvider) {
+	public void setDataProvider(DataSeriesProvider<T> dataProvider) {
 		rebuildOptimizingProvider(dataProvider);
 		super.setDataProvider(dataProvider);
 	}
 
-	private void rebuildOptimizingProvider(DataSeriesProvider<XYData> sp) {
+	private void rebuildOptimizingProvider(DataSeriesProvider<T> sp) {
 		if (sp == null) {
 			return;
 		}
-		DataSeries[] series = sp.getDataSeries();
+		DataSeries<T>[] series = sp.getDataSeries();
 		OptimizingProvider[] optimizingProviders = new OptimizingProvider[series.length];
 		OptimizingProvider[][] stacks = new OptimizingProvider[series.length][0];
 		for (int n = 0; n < series.length; n++) {
@@ -429,23 +437,26 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 		}
 	}
 
-	private OptimizingProvider createOptimizingProvider(DataSeries series, double yMultiplier, RenderingMode mode) {
+	@SuppressWarnings("unchecked")
+	private OptimizingProvider createOptimizingProvider(DataSeries<T> series, double yMultiplier, RenderingMode mode) {
 		boolean integrating = mode == RenderingMode.DENSITY_INTEGRATING || mode == RenderingMode.INTEGRATING;
+		// Safe cast: T extends IXYData<Long, Number>, so DataSeries<T> can be cast to DataSeries<IXYData<Long, Number>>
+		DataSeries<IXYData<Long, Number>> typedSeries = (DataSeries<IXYData<Long, Number>>) series;
 		switch (mode) {
 		case DENSITY:
 		case DENSITY_INTEGRATING:
-			return new SampleCountingProvider(series, yMultiplier, getXAxis(), m_cancelService, integrating);
+			return new SampleCountingProvider(typedSeries, yMultiplier, getXAxis(), m_cancelService, integrating);
 		case AVERAGING:
-			return new AveragingProvider(series, yMultiplier, getXAxis(), m_cancelService);
+			return new AveragingProvider(typedSeries, yMultiplier, getXAxis(), m_cancelService);
 		case INTEGRATING:
 		case SUBSAMPLING:
 		default:
-			return new SubsamplingProvider(series, yMultiplier, getXAxis(), m_cancelService, integrating);
+			return new SubsamplingProvider(typedSeries, yMultiplier, getXAxis(), m_cancelService, integrating);
 		}
 	}
 
 	private void buildStacks(
-		DataSeries[] series, OptimizingProvider[] optimizingProviders, OptimizingProvider[][] stacks) {
+		DataSeries<T>[] series, OptimizingProvider[] optimizingProviders, OptimizingProvider[][] stacks) {
 		for (int n = 0; n < series.length; n++) {
 			if (stacks[n].length > 0) {
 				// create stacking provider
@@ -454,7 +465,7 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 		}
 	}
 
-	private void buildLeftAndRightProviders(DataSeries[] series, OptimizingProvider[] optimizingProviders) {
+	private void buildLeftAndRightProviders(DataSeries<T>[] series, OptimizingProvider[] optimizingProviders) {
 		List<OptimizingProvider> leftAxisProviders = new ArrayList<>();
 		List<OptimizingProvider> rightAxisProviders = new ArrayList<>();
 
@@ -520,6 +531,29 @@ public class DefaultXYGreyChart<XYData> extends AbstractGreyChart<XYData> implem
 		} else {
 			return m_leftYAxisProvider;
 		}
+	}
+
+	public OptimizingProvider getXAxisProvider() {
+		return m_optimizingProvider;
+	}
+
+	/**
+	 * Rebuilds the optimizing provider when data or axis configuration changes. 
+	 * Only rebuilds if changes have occurred that require it.
+	 */
+	public void rebuildOptimizingProvider() {
+		// Always rebuild if provider is null (defensive) or if changes occurred
+		if (m_optimizingProvider == null || m_needsProviderRebuild) {
+			rebuildOptimizingProvider(getDataProvider());
+			m_needsProviderRebuild = false;
+		}
+	}
+
+	/**
+	 * Marks that the optimizing provider needs rebuilding on the next refresh call.
+	 */
+	public void markProviderRebuildNeeded() {
+		m_needsProviderRebuild = true;
 	}
 
 	public void abort() {
