@@ -34,16 +34,18 @@ package org.openjdk.jmc.ui.common.security;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
-import java.security.Provider;
-import java.security.Provider.Service;
-import java.security.Security;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Assert;
 import org.osgi.service.prefs.Preferences;
@@ -58,6 +60,8 @@ import org.openjdk.jmc.ui.common.CorePlugin;
  */
 public class SecureStore {
 
+	private final static Logger LOGGER = Logger.getLogger("org.openjdk.jmc.ui.common"); //$NON-NLS-1$
+
 	public static final Set<String> ENCRYPTION_CIPHERS;
 	public static final String DEFAULT_CIPHER;
 	private static final String XML_ELEMENT_SECURE_STORE = "secureStore"; //$NON-NLS-1$
@@ -65,9 +69,6 @@ public class SecureStore {
 	private static final String XML_ELEMENT_CIPHER = "secureStoreCipher"; //$NON-NLS-1$
 	private static final String[] PREFERRED_CIPHERS = new String[] {"PBEWithHmacSHA512AndAES_256", //$NON-NLS-1$
 			"PBEWithHmacSHA512AndAES_128"}; //$NON-NLS-1$ //$NON-NLS-2$
-	private static final String[] WEAK_CIPHERS = new String[] {"PBEWithMD5AndDES", "PBEWithMD5AndTripleDES",
-			"PBEWithSHA1AndRC2_40", "PBEWithSHA1AndRC4_40"};
-	private static final Set<String> weakCiphers = new HashSet<>(); //$NON-NLS-1$
 	private static final String SEP = "_"; //$NON-NLS-1$
 	private DecryptedStorage storage;
 	private String pwd;
@@ -75,34 +76,20 @@ public class SecureStore {
 	private Preferences prefs;
 	private Set<String> keys;
 
+	private static final String CIPHER_PREFERENCES = "jmc.cipherPref"; //$NON-NLS-1$
+	private static final String DEFAULT_CIPHER_PREFERENCE = "PBEWithHmacSHA512AndAES_256"; //$NON-NLS-1$
+	private final static String CIPHER_PREFERENCES_LIST;
+
 	static {
-		weakCiphers.addAll(Arrays.asList(WEAK_CIPHERS));
+		Properties cipherPrefProperties = getCipherPreferenceList();
+		CIPHER_PREFERENCES_LIST = getCipherPrefProperty(cipherPrefProperties, CIPHER_PREFERENCES,
+				DEFAULT_CIPHER_PREFERENCE);
 		Set<String> ciphers = new HashSet<>();
-		String pwdForTest = "pwd"; //$NON-NLS-1$
-		byte[] saltForTest = new byte[DecryptedStorage.SALT_LEN];
-		int iterationCountForTest = 4711;
-		// This loop is only used to constrain the number of available ciphers to those that may be useful.
-		// I.e it doesn't guarantee that only useful ciphers are visible, but it omits the ciphers
-		// that are known to be useless.
-		for (Provider provider : Security.getProviders()) {
-			for (Service service : provider.getServices()) {
-				String algorithm = service.getAlgorithm();
-				if ("cipher".equalsIgnoreCase(service.getType()) && (weakCiphers.contains(algorithm) == false)) { //$NON-NLS-1$
-					try {
-						DecryptedStorage testStore = new DecryptedStorage();
-						String encrypted = testStore.getEncrypted(algorithm, pwdForTest, saltForTest,
-								iterationCountForTest);
-						new DecryptedStorage(encrypted, algorithm, pwdForTest);
-						ciphers.add(algorithm);
-					} catch (Exception e) {
-						// Encrypt or decrypt failed. Probably the cipher doesn't support PBE.
-						// Don't include this cipher as an alternative.
-						CorePlugin.getDefault().getLogger().log(Level.FINER,
-								"Cipher " + algorithm + " doesn't support PBE: " + e); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-				}
-			}
+
+		for (String cipher : populateCipherList()) {
+			ciphers.add(cipher);
 		}
+
 		ENCRYPTION_CIPHERS = Collections.unmodifiableSet(ciphers);
 		DEFAULT_CIPHER = findDefaultCipher();
 	}
@@ -297,6 +284,38 @@ public class SecureStore {
 			CorePlugin.getDefault().getLogger().log(Level.SEVERE, "Could not save secure store", e); //$NON-NLS-1$
 			throw new FailedToSaveException(e);
 		}
+	}
+
+	private static String[] populateCipherList() {
+		String[] ciphers = CIPHER_PREFERENCES_LIST.split(",");
+		return ciphers;
+	}
+
+	private static String getCipherPrefProperty(
+		Properties cipherPrefProperties, String propertyName, String defaultValue) {
+		if (cipherPrefProperties != null) {
+			String propertyValue = cipherPrefProperties.getProperty(propertyName);
+			if (propertyValue != null && !propertyValue.startsWith("@")) { //$NON-NLS-1$
+				return propertyValue;
+			}
+		}
+		return defaultValue;
+	}
+
+	private static Properties getCipherPreferenceList() {
+		Properties cipherPrefProperties = new Properties();
+		try (InputStream is = SecureStore.class.getResourceAsStream("/preferences.properties")) { //$NON-NLS-1$
+			if (is == null) {
+				LOGGER.log(Level.SEVERE, "Could not open preferences.properties file."); //$NON-NLS-1$
+				return null;
+			}
+			cipherPrefProperties.load(is);
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "Error loading preferences.properties file.", e); //$NON-NLS-1$
+			return null;
+		}
+		return cipherPrefProperties;
+
 	}
 
 }
