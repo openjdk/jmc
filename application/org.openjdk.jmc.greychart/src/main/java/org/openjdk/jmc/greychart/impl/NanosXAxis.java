@@ -32,15 +32,12 @@
  */
 package org.openjdk.jmc.greychart.impl;
 
-import org.openjdk.jmc.greychart.SeriesGreyChart;
-
 /**
  * An axis that renders dates that have been contributed as measured in nanoseconds, between the
  * current time and midnight, January 1, 1970 UTC.
  */
 public class NanosXAxis extends AbstractAliasingLongAxis {
-	// The aliasing array is used to find the right tick starting value and
-	// distance.
+	// The aliasing array is used to find the right tick starting value and distance.
 	private final static long[] ALIASING_ARRAY = {NanoFormatter.NANOSECOND, NanoFormatter.MICROSECOND,
 			NanoFormatter.MILLISECOND, toNano(DateFormatter.SECOND), 30 * toNano(DateFormatter.SECOND),
 			toNano(DateFormatter.MINUTE), toNano(DateFormatter.FIVE_MINUTES), toNano(DateFormatter.QUARTER_HOUR),
@@ -49,6 +46,8 @@ public class NanosXAxis extends AbstractAliasingLongAxis {
 			toNano(DateFormatter.WEEK), toNano(DateFormatter.MONTH), toNano(DateFormatter.YEAR), Long.MAX_VALUE};
 
 	private static final long DEFAULT_RANGE = 2 * NanoFormatter.MILLISECOND;
+
+	private boolean m_autoRangeEnabled = false;
 
 	private static long toNano(long ms) {
 		return ms * NanoFormatter.MILLISECOND;
@@ -60,10 +59,77 @@ public class NanosXAxis extends AbstractAliasingLongAxis {
 	 * @param owner
 	 *            the chart that owns the axis.
 	 */
-	public NanosXAxis(SeriesGreyChart owner) {
+	public NanosXAxis(DefaultXYGreyChart<?> owner) {
 		super(owner, ALIASING_ARRAY, DEFAULT_RANGE, 3 * NanoFormatter.MILLISECOND);
 		setTickMarksEnabled(true);
 		setNumberOfTicks(10);
 		setFormatter(TimestampFormatter.createNanoTimestampFormatter());
+	}
+
+	/**
+	 * Sets whether auto-range is enabled for this axis. When enabled, the axis will automatically
+	 * determine its range based on the actual data. If a fixed range is set
+	 * ({@link #setFixedRange(long)}), the axis will use [dataMax - fixedRange, dataMax].
+	 *
+	 * @param enable
+	 *            true to enable auto-range, false to use fixed range
+	 */
+	public void setAutoRangeEnabled(boolean enable) {
+		m_autoRangeEnabled = enable;
+		if (enable) {
+			// Update fields immediately to avoid null pointer issues
+			updateAutoRangeFields();
+		}
+	}
+
+	/**
+	 * @return true if auto-range is enabled
+	 */
+	public boolean isAutoRangeEnabled() {
+		return m_autoRangeEnabled;
+	}
+
+	@Override
+	protected DefaultXYGreyChart<?> getOwner() {
+		return (DefaultXYGreyChart<?>) super.getOwner();
+	}
+
+	@Override
+	public Number getMin() {
+		if (isAutoRangeEnabled()) {
+			updateAutoRangeFields();
+		}
+		return super.getMin();
+	}
+
+	@Override
+	public Number getMax() {
+		if (isAutoRangeEnabled()) {
+			updateAutoRangeFields();
+		}
+		return super.getMax();
+	}
+
+	private void updateAutoRangeFields() {
+		DefaultXYGreyChart<?> chart = getOwner();
+		if (chart != null) {
+			OptimizingProvider provider = chart.getXAxisProvider();
+			if (provider != null) {
+				long minValue = provider.getDataMinX();
+				long maxValue = provider.getDataMaxX();
+
+				if (minValue != Long.MAX_VALUE && maxValue != Long.MIN_VALUE && minValue != maxValue) {
+					if (getFixedRange() > 0) {
+						setRange(maxValue);
+					} else {
+						setRange(minValue, maxValue);
+					}
+				} else if (m_min == null || m_max == null) {
+					setRange(0L, DEFAULT_RANGE);
+				}
+			} else if (m_min == null || m_max == null) {
+				setRange(0L, DEFAULT_RANGE);
+			}
+		}
 	}
 }

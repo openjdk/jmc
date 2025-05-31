@@ -36,6 +36,7 @@ import java.awt.Polygon;
 import java.util.Iterator;
 
 import org.openjdk.jmc.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.IXYData;
 import org.openjdk.jmc.greychart.YAxis;
 
 public interface OptimizingProvider {
@@ -65,25 +66,51 @@ public interface OptimizingProvider {
 
 	Polygon getSamplesPolygon(LongWorldToDeviceConverter xWorldToDevice, WorldToDeviceConverter yWorldToDevice);
 
-	public DataSeries getDataSeries();
+	public DataSeries<IXYData<Long, Number>> getDataSeries();
 
 	public OptimizingProvider[] getChildren();
 
 	/**
-	 * @return the minimum Y value in world coordinates
+	 * @return the minimum Y value in the current range/view in world coordinates
 	 */
 	public double getMinY();
 
 	/**
-	 * @return the maximum Y value in world coordinates
+	 * @return the maximum Y value in the current range/view in world coordinates
 	 */
 	public double getMaxY();
 
 	public WorldToDeviceConverter getYSampleToDeviceConverterFor(YAxis yAxis);
 
+	/**
+	 * @return the minimum X value in the current range/view
+	 */
 	public long getMinX();
 
+	/**
+	 * @return the maximum X value in the current range/view
+	 */
 	public long getMaxX();
+
+	/**
+	 * @return the minimum X value in the entire dataset (regardless of current range)
+	 */
+	public long getDataMinX();
+
+	/**
+	 * @return the maximum X value in the entire dataset (regardless of current range)
+	 */
+	public long getDataMaxX();
+
+	/**
+	 * @return the minimum Y value in the entire dataset (regardless of current range)
+	 */
+	public double getDataMinY();
+
+	/**
+	 * @return the maximum Y value in the entire dataset (regardless of current range)
+	 */
+	public double getDataMaxY();
 
 	public void setDataChanged(boolean changed);
 
