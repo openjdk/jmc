@@ -474,7 +474,8 @@ public class ChartComposite extends SelectionCanvas {
 		// Enable auto-range with no fixed range - axis will show full data range
 		NanosXAxis xAxis = getXAxis();
 		xAxis.setAutoRangeEnabled(true);
-		xAxis.setFixedRange(0);  // Clear fixed range to show all data
+		// Clear fixed range to show all data
+		xAxis.setFixedRange(0);
 
 		setUpdatesEnabled(true);
 		refresh();
