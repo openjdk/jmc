@@ -126,10 +126,8 @@ public class ChartComposite extends SelectionCanvas {
 
 	final private ChartModel m_chartModel = new ChartModel();
 	private final DefaultXYGreyChart<ITimestampedData> m_chart;
-	private long m_viewWidth;
+	private long m_viewWidth = ONE_MINUTE;
 	private long m_viewEnd = System.currentTimeMillis() * 1000 * 1000;
-	private long m_dataStart = Long.MAX_VALUE;
-	private long m_dataEnd = Long.MIN_VALUE;
 	private boolean m_enableUpdates;
 	private boolean m_showAllMode = false;
 	private final Consumer<Boolean> m_enableUpdatesCallback;
@@ -171,18 +169,6 @@ public class ChartComposite extends SelectionCanvas {
 	public void refresh() {
 		if (!isDisposed()) {
 			zoomInAction.setEnabled(m_viewWidth > MINIMUM_WORLD_WIDTH && !m_enableUpdates);
-
-			NanosXAxis xAxis = getXAxis();
-			if (m_showAllMode) {
-				xAxis.setAutoRangeEnabled(true);
-				m_viewWidth = xAxis.getMax().longValue() - xAxis.getMin().longValue();
-				m_viewEnd = xAxis.getMax().longValue();
-			} else {
-				xAxis.setAutoRangeEnabled(false);
-				xAxis.setRange(m_viewEnd - m_viewWidth, m_viewEnd);
-			}
-			m_chart.markProviderRebuildNeeded();
-			m_chart.rebuildOptimizingProvider();
 			redraw();
 		}
 	}
@@ -470,15 +456,12 @@ public class ChartComposite extends SelectionCanvas {
 		m_viewWidth = viewWidth;
 		m_showAllMode = false;
 
-		// Disable auto-range on the X-axis for fixed view
-		getXAxis().setAutoRangeEnabled(false);
+		// Enable auto-range with fixed range
+		NanosXAxis xAxis = getXAxis();
+		xAxis.setAutoRangeEnabled(true);
+		xAxis.setFixedRange(viewWidth);
 
-		if (m_enableUpdatesCallback != null) {
-			m_enableUpdatesCallback.accept(true);
-		}
-		if (m_dataEnd > 0) {
-			m_viewEnd = m_dataEnd;
-		}
+		setUpdatesEnabled(true);
 		refresh();
 	}
 
@@ -488,21 +471,12 @@ public class ChartComposite extends SelectionCanvas {
 	public void showAll() {
 		m_showAllMode = true;
 
-		// Enable auto-range on the X-axis to use provider data bounds
-		getXAxis().setAutoRangeEnabled(true);
+		// Enable auto-range with no fixed range - axis will show full data range
+		NanosXAxis xAxis = getXAxis();
+		xAxis.setAutoRangeEnabled(true);
+		xAxis.setFixedRange(0);  // Clear fixed range to show all data
 
-		// Use provider data bounds instead of cached bounds
-		long dataMin = getProviderMinTime();
-		long dataMax = getProviderMaxTime();
-
-		if (dataMax > dataMin) {
-			m_viewWidth = dataMax - dataMin;
-			m_viewEnd = dataMax;
-		}
-
-		if (m_enableUpdatesCallback != null) {
-			m_enableUpdatesCallback.accept(true);
-		}
+		setUpdatesEnabled(true);
 		refresh();
 	}
 
@@ -517,19 +491,19 @@ public class ChartComposite extends SelectionCanvas {
 	public void showTimeRange(long fromTimeNanos, long toTimeNanos) {
 		m_showAllMode = false;
 
-		// Disable auto-range on the X-axis for fixed range
-		getXAxis().setAutoRangeEnabled(false);
+		// Use manual range for custom time ranges
+		NanosXAxis xAxis = getXAxis();
+		xAxis.setAutoRangeEnabled(false);
+		xAxis.setRange(fromTimeNanos, toTimeNanos);
 
 		m_viewWidth = toTimeNanos - fromTimeNanos;
-		m_viewEnd = toTimeNanos;
-		if (m_enableUpdatesCallback != null) {
-			m_enableUpdatesCallback.accept(false);
-		}
+		setUpdatesEnabled(false);
 		refresh();
 	}
 
 	public void extendsDataRangeToInclude(long timestamp) {
-		setDataRange(Math.min(m_dataStart, timestamp), Math.max(m_dataEnd, timestamp));
+		// Simply trigger a data update - no need to maintain separate bounds
+		onDataUpdated();
 	}
 
 	/**
@@ -538,7 +512,7 @@ public class ChartComposite extends SelectionCanvas {
 	 * @return Start timestamp in nanoseconds
 	 */
 	public long getDataStartTime() {
-		return m_dataStart;
+		return getProviderMinTime();
 	}
 
 	/**
@@ -547,7 +521,7 @@ public class ChartComposite extends SelectionCanvas {
 	 * @return End timestamp in nanoseconds
 	 */
 	public long getDataEndTime() {
-		return m_dataEnd;
+		return getProviderMaxTime();
 	}
 
 	/**
@@ -559,10 +533,9 @@ public class ChartComposite extends SelectionCanvas {
 	public long getProviderMinTime() {
 		OptimizingProvider provider = m_chart.getOptimizingProvider();
 		if (provider != null) {
-			long dataMinX = provider.getDataMinX();
-			return (dataMinX != Long.MAX_VALUE) ? dataMinX : m_dataStart;
+			return provider.getDataMinX();
 		}
-		return m_dataStart;
+		return System.currentTimeMillis() * 1000 * 1000 - (60 * 1000 * 1000 * 1000L);
 	}
 
 	/**
@@ -574,10 +547,9 @@ public class ChartComposite extends SelectionCanvas {
 	public long getProviderMaxTime() {
 		OptimizingProvider provider = m_chart.getOptimizingProvider();
 		if (provider != null) {
-			long dataMaxX = provider.getDataMaxX();
-			return (dataMaxX != Long.MIN_VALUE) ? dataMaxX : m_dataEnd;
+			return provider.getDataMaxX();
 		}
-		return m_dataEnd;
+		return System.currentTimeMillis() * 1000 * 1000;
 	}
 
 	/**
@@ -589,17 +561,24 @@ public class ChartComposite extends SelectionCanvas {
 	 *            Highest X value available in the data series
 	 */
 	public void setDataRange(long dataStart, long dataEnd) {
-		if (dataEnd > 0 && (m_enableUpdates || m_dataEnd < 0)) {
+		// Update view end for live updates (if enabled)
+		if (dataEnd > 0 && m_enableUpdates) {
 			m_viewEnd = dataEnd;
 		}
-		m_dataStart = dataStart;
-		m_dataEnd = dataEnd;
+
+		onDataUpdated();
+	}
+
+	/**
+	 * Called when data has been updated (either incrementally or wholesale). Handles both "All"
+	 * mode dynamic expansion and regular refreshes.
+	 */
+	private void onDataUpdated() {
+		// Force provider rebuild to incorporate new data
+		m_chart.markProviderRebuildNeeded();
+		m_chart.rebuildOptimizingProvider();
 
 		if (m_showAllMode) {
-			// Force provider rebuild to get current data bounds
-			m_chart.markProviderRebuildNeeded();
-			m_chart.rebuildOptimizingProvider();
-
 			// Use provider data bounds - want to see all available data
 			long dataMin = getProviderMinTime();
 			long dataMax = getProviderMaxTime();
@@ -609,21 +588,38 @@ public class ChartComposite extends SelectionCanvas {
 				m_viewEnd = dataMax;
 			}
 		}
+
 		refresh();
 	}
 
 	public void setUpdatesEnabled(boolean enabled) {
+		// Only proceed if state is actually changing to avoid infinite recursion
+		if (m_enableUpdates == enabled) {
+			return;
+		}
+
 		m_enableUpdates = enabled;
 		zoomInAction.setEnabled(!enabled);
 		zoomOutAction.setEnabled(!enabled);
-		if (m_enableUpdates && m_dataEnd > 0) {
-			m_viewEnd = m_dataEnd;
-			refresh();
+		if (m_enableUpdates) {
+			long currentDataEnd = getProviderMaxTime();
+			if (currentDataEnd > Long.MIN_VALUE) {
+				m_viewEnd = currentDataEnd;
+				refresh();
+			}
+		}
+
+		// Notify the callback about the state change
+		if (m_enableUpdatesCallback != null) {
+			m_enableUpdatesCallback.accept(enabled);
 		}
 	}
 
 	private void zoom(double factor, double location) {
-		if (m_dataEnd > m_dataStart) {
+		long dataStart = getProviderMinTime();
+		long dataEnd = getProviderMaxTime();
+
+		if (dataEnd > dataStart) {
 			double padding = m_viewWidth * WORLD_PADDING;
 			long worldStart = m_viewEnd - m_viewWidth;
 			double zoomPoint = worldStart + m_viewWidth * location;
@@ -631,8 +627,8 @@ public class ChartComposite extends SelectionCanvas {
 			double newWorldEnd = zoomPoint + ((m_viewEnd - zoomPoint) * factor);
 			double newWorldStart = zoomPoint - ((zoomPoint - worldStart) * factor);
 
-			m_viewEnd = (long) Math.min(Math.max(m_viewEnd, m_dataEnd + padding), newWorldEnd);
-			newWorldStart = Math.max(Math.min(worldStart, m_dataStart - padding), newWorldStart);
+			m_viewEnd = (long) Math.min(Math.max(m_viewEnd, dataEnd + padding), newWorldEnd);
+			newWorldStart = Math.max(Math.min(worldStart, dataStart - padding), newWorldStart);
 			m_viewWidth = (long) (m_viewEnd - newWorldStart);
 
 			refresh();
