@@ -68,7 +68,8 @@ public class NanosXAxis extends AbstractAliasingLongAxis {
 
 	/**
 	 * Sets whether auto-range is enabled for this axis. When enabled, the axis will automatically
-	 * determine its range based on the actual data.
+	 * determine its range based on the actual data. If a fixed range is set
+	 * ({@link #setFixedRange(long)}), the axis will use [dataMax - fixedRange, dataMax].
 	 *
 	 * @param enable
 	 *            true to enable auto-range, false to use fixed range
@@ -118,7 +119,11 @@ public class NanosXAxis extends AbstractAliasingLongAxis {
 				long maxValue = provider.getDataMaxX();
 
 				if (minValue != Long.MAX_VALUE && maxValue != Long.MIN_VALUE && minValue != maxValue) {
-					setRange(minValue, maxValue);
+					if (getFixedRange() > 0) {
+						setRange(maxValue);
+					} else {
+						setRange(minValue, maxValue);
+					}
 				} else if (m_min == null || m_max == null) {
 					setRange(0L, DEFAULT_RANGE);
 				}

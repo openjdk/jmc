@@ -538,8 +538,8 @@ public class DefaultXYGreyChart<T extends IXYData<Long, Number>> extends Abstrac
 	}
 
 	/**
-	 * Rebuilds the optimizing provider when data or axis configuration changes. 
-	 * Only rebuilds if changes have occurred that require it.
+	 * Rebuilds the optimizing provider when data or axis configuration changes. Only rebuilds if
+	 * changes have occurred that require it.
 	 */
 	public void rebuildOptimizingProvider() {
 		// Always rebuild if provider is null (defensive) or if changes occurred
