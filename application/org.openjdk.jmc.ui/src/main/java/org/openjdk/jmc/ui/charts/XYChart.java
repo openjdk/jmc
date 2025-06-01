@@ -51,6 +51,7 @@ import org.openjdk.jmc.common.unit.QuantitiesToolkit;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.ui.charts.IChartInfoVisitor.ITick;
+import org.openjdk.jmc.ui.common.util.ThemeUtils;
 import org.openjdk.jmc.ui.misc.ChartButtonGroup;
 import org.openjdk.jmc.ui.misc.ChartControlBar;
 import org.openjdk.jmc.ui.misc.TimelineCanvas;
@@ -58,7 +59,8 @@ import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 public class XYChart {
 	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
-	private static final Color SELECTION_COLOR = new Color(255, 255, 255, 220);
+	private static final Color LIGHT_SELECTION_COLOR = new Color(255, 255, 255, 220);
+	private static final Color DARK_SELECTION_COLOR = new Color(0, 0, 0, 175);
 	private static final Color RANGE_INDICATION_COLOR = new Color(255, 60, 20);
 	private static final int BASE_ZOOM_LEVEL = 100;
 	private static final int RANGE_INDICATOR_HEIGHT = 7;
@@ -235,15 +237,28 @@ public class XYChart {
 
 	private void doRenderChart(Graphics2D context, int axisHeight) {
 		rowColorCounter = 0;
-		context.setPaint(Color.LIGHT_GRAY);
+
+		boolean isDarkTheme = ThemeUtils.isDarkTheme();
+
+		if (isDarkTheme) {
+			context.setBackground(Color.BLACK);
+			context.clearRect(0, 0, axisWidth, axisHeight);
+			context.setPaint(new Color(70, 70, 70));
+		} else {
+			context.setPaint(Color.LIGHT_GRAY);
+		}
+
 		AWTChartToolkit.drawGrid(context, xTickRange, axisHeight, false);
+
 		// Attempt to make graphs so low they cover the axis show by drawing the full axis first ...
-		context.setPaint(Color.BLACK);
+		context.setPaint(isDarkTheme ? Color.WHITE : Color.BLACK);
+
 		if (timelineCanvas != null) {
 			timelineCanvas.setXTickRange(xTickRange);
 		} else {
 			AWTChartToolkit.drawAxis(context, xTickRange, axisHeight - 1, false, 1 - xOffset, false);
 		}
+
 		// ... then the graph ...
 		rendererResult = getRendererResult(context, axisHeight);
 		AffineTransform oldTransform = context.getTransform();
@@ -253,8 +268,9 @@ public class XYChart {
 			renderSelectionChart(context, rendererResult);
 			context.setTransform(oldTransform);
 		}
-		// .. and finally a semitransparent axis line again.
-		context.setPaint(new Color(0, 0, 0, 64));
+
+		// ... and finally a semitransparent axis line again.
+		context.setPaint(isDarkTheme ? new Color(255, 255, 255, 64) : new Color(0, 0, 0, 64));
 		context.drawLine(0, axisHeight - 1, axisWidth - 1, axisHeight - 1);
 		renderRangeIndication(context, axisHeight + 25);
 	}
@@ -292,7 +308,7 @@ public class XYChart {
 		} else {
 			List<IRenderedRow> subdivision = row.getNestedRows();
 			if (subdivision.isEmpty()) {
-				dimRect(context, 0, axisWidth, row.getHeight());
+				dimRect(context, 0, axisWidth, row.getHeight(), ThemeUtils.isDarkTheme());
 			} else {
 				for (IRenderedRow nestedRow : row.getNestedRows()) {
 					renderSelectionText(context, nestedRow);
@@ -309,7 +325,7 @@ public class XYChart {
 		} else {
 			List<IRenderedRow> subdivision = row.getNestedRows();
 			if (subdivision.isEmpty()) {
-				dimRect(context, 0, axisWidth, row.getHeight());
+				dimRect(context, 0, axisWidth, row.getHeight(), ThemeUtils.isDarkTheme());
 			} else {
 				for (IRenderedRow nestedRow : row.getNestedRows()) {
 					renderSelectionChart(context, nestedRow);
@@ -324,11 +340,22 @@ public class XYChart {
 	// to better differentiate the thread lanes from one another
 	private void paintRowBackground(Graphics2D context, int height) {
 		if (rowColorCounter >= 0) {
-			if (rowColorCounter % 2 == 0) {
-				context.setColor(Palette.PF_BLACK_100.getAWTColor());
+			boolean isDarkTheme = ThemeUtils.isDarkTheme();
+
+			if (isDarkTheme) {
+				if (rowColorCounter % 2 == 0) {
+					context.setColor(Palette.PF_BLACK_700.getAWTColor()); // Darker gray
+				} else {
+					context.setColor(Palette.PF_BLACK_600.getAWTColor()); // Lighter gray
+				}
 			} else {
-				context.setColor(Palette.PF_BLACK_200.getAWTColor());
+				if (rowColorCounter % 2 == 0) {
+					context.setColor(Palette.PF_BLACK_100.getAWTColor());
+				} else {
+					context.setColor(Palette.PF_BLACK_200.getAWTColor());
+				}
 			}
+
 			context.fillRect(0, 0, axisWidth, height);
 			rowColorCounter++;
 		}
@@ -340,7 +367,10 @@ public class XYChart {
 		if (height >= context.getFontMetrics().getHeight()) {
 			if (text != null) {
 				paintRowBackground(context, row.getHeight());
-				context.setColor(Color.BLACK);
+
+				boolean isDarkTheme = ThemeUtils.isDarkTheme();
+				context.setColor(isDarkTheme ? Color.WHITE : Color.BLACK);
+
 				context.drawLine(0, height - 1, axisWidth - 15, height - 1);
 				int y = ((height - context.getFontMetrics().getHeight()) / 2) + context.getFontMetrics().getAscent();
 				int charsWidth = context.getFontMetrics().charsWidth(text.toCharArray(), 0, text.length());
@@ -798,6 +828,8 @@ public class XYChart {
 	private void renderSelection(Graphics2D context, SubdividedQuantityRange xRange, int height) {
 		int selFrom = 0;
 		int selTo = axisWidth;
+		boolean isDarkTheme = ThemeUtils.isDarkTheme();
+
 		if (selectionStart != null && selectionEnd != null) {
 			selFrom = (int) xRange.getPixel(selectionStart);
 			// Removed "+ 1" for now to make the selection symmetrical with respect to chart highlights.
@@ -814,19 +846,19 @@ public class XYChart {
 //			context.setPaintMode();
 //		}
 		if (selFrom > 0) {
-			dimRect(context, 0, selFrom, height);
-			context.setColor(Color.BLACK);
+			dimRect(context, 0, selFrom, height, isDarkTheme);
+			context.setColor(isDarkTheme ? Color.LIGHT_GRAY : Color.BLACK);
 			context.drawLine(selFrom, 0, selFrom, height);
 		}
 		if (selTo < axisWidth) {
-			dimRect(context, selTo, axisWidth - selTo, height);
-			context.setColor(Color.BLACK);
+			dimRect(context, selTo, axisWidth - selTo, height, isDarkTheme);
+			context.setColor(isDarkTheme ? Color.LIGHT_GRAY : Color.BLACK);
 			context.drawLine(selTo, 0, selTo, height);
 		}
 	}
 
-	private static void dimRect(Graphics2D context, int from, int width, int height) {
-		context.setColor(SELECTION_COLOR);
+	private static void dimRect(Graphics2D context, int from, int width, int height, boolean isDarkTheme) {
+		context.setColor(isDarkTheme ? DARK_SELECTION_COLOR : LIGHT_SELECTION_COLOR);
 		context.fillRect(from, 0, width, height);
 	}
 

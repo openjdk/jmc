@@ -56,6 +56,7 @@ public class SocketIOPageTest extends IOPageTestBase {
 	// @formatter:off
 	private static final long[][] TABLE_VALUES = {
 			{3218, 209, 4624, 373},
+			{141567, 105, 53119, 187},
 			{998768639, 22, 611327, 38},
 			{999292927, 7, 1814527, 4},
 			{999817215, 1, 4288511, 1},

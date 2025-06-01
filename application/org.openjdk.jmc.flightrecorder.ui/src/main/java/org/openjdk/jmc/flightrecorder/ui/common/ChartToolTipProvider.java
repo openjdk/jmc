@@ -148,9 +148,9 @@ public class ChartToolTipProvider implements IChartInfoVisitor {
 
 	protected void appendThreadId(Long threadId) {
 		if (text.indexOf(threadId.toString()) == -1) {
-			text.append("<p><b>") //$NON-NLS-1$
+			text.append("<p><span nowrap='true'>") //$NON-NLS-1$
 					.append(htmlify(NLS.bind(Messages.ThreadsPage_LANE_THREAD_ID_TOOLTIP, threadId.toString())))
-					.append("</b></p>"); //$NON-NLS-1$
+					.append("</span></p>"); //$NON-NLS-1$
 		}
 	}
 

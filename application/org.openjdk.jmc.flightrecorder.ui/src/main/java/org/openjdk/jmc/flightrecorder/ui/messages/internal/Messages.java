@@ -253,6 +253,13 @@ public class Messages extends NLS {
 	public static String GarbageCollectionsPage_USED_HEAP_BEFORE_GC;
 	public static String GarbageCollectionsPage_USED_HEAP_DELTA;
 	public static String GarbageCollectionsPage_USED_METASPACE_DELTA;
+	public static String HDRHistogramView_NO_VALID_SELECTION_TEXT;
+	public static String HDRHistogramView_DURATION_COLUMN_NAME;
+	public static String HDRHistogramView_EVENT_COUNT_COLUMN_NAME;
+	public static String HDRHistogramView_PERCENTILE_SELECTION;
+	public static String HDRHistogramView_DURATION_SELECTION;
+	public static String HDRHistogramView_DURATIONS_CHART_TITLE;
+	public static String HDRHistogramView_DURATIONS_CHART_DESCRIPTION;
 	public static String HeapPage_LIVE_SIZE_OF_CLASS;
 	public static String HeapPage_OVERLAY_GC;
 	public static String HeapPage_OVERLAY_GC_DESC;

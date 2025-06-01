@@ -53,6 +53,15 @@ public class ItemBackedSelection extends FlavoredSelectionBase {
 		this.selectedItems = selectedItems;
 	}
 
+	/**
+	 * Returns the items that form the basis of this selection.
+	 * 
+	 * @return the collection of items this selection is based on
+	 */
+	public IItemCollection getItems() {
+		return selectedItems;
+	}
+
 	@Override
 	public Stream<IItemStreamFlavor> getFlavors(
 		IItemFilter filter, IItemCollection items, List<IAttribute<?>> dstAttributes) {

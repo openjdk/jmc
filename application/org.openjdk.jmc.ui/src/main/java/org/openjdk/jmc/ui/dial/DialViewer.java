@@ -50,7 +50,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.IFormColors;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.util.Environment;
@@ -84,6 +83,7 @@ public class DialViewer extends Composite implements IRefreshable {
 	// Model
 	private IDialProvider[] m_dials = new IDialProvider[] {};
 	final private Map<String, Object> m_inputs = new LinkedHashMap<>();
+	private final boolean m_isDarkMode;
 
 	// listeners
 	final private MCAccessibleListener m_accessibleListener;
@@ -110,7 +110,23 @@ public class DialViewer extends Composite implements IRefreshable {
 	 * @param configuration
 	 */
 	public DialViewer(Composite parent, int style) {
+		this(parent, style, false);
+	}
+
+	/**
+	 * Constructs a {@link DialViewer} with a given configuration on the parent composite,
+	 * respecting the theme settings.
+	 *
+	 * @param parent
+	 *            the parent composite
+	 * @param style
+	 *            the SWT style
+	 * @param isDarkMode
+	 *            whether to use dark mode dial images
+	 */
+	public DialViewer(Composite parent, int style, boolean isDarkMode) {
 		super(parent, SWT.DOUBLE_BUFFERED);
+		m_isDarkMode = isDarkMode;
 
 		m_accessibleListener = new MCAccessibleListener();
 		m_accessibleListener.setComponentType(AccessibilityConstants.COMPONENT_TYPE_DIAL);
@@ -353,7 +369,7 @@ public class DialViewer extends Composite implements IRefreshable {
 			maxValue = Math.max(maxValue, values[n]);
 			minValue = Math.min(minValue, values[n]);
 		}
-		DialDevice dd = DialDevice.buildSuitableDevice(minValue, maxValue, getUnit());
+		DialDevice dd = DialDevice.buildSuitableDevice(minValue, maxValue, getUnit(), m_isDarkMode);
 		ImageDescription bgConfig = dd.getBackground();
 		Rectangle size = bgConfig.image.getBounds();
 		int xOffset = (width - size.width) / 2;
@@ -414,7 +430,12 @@ public class DialViewer extends Composite implements IRefreshable {
 		Image panelImage = new Image(getDisplay(), bgBounds.width, bgBounds.height);
 
 		GC dialGC = new GC(panelImage);
-		Image g = UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_BACKGROUND);
+		Image g;
+		if (m_isDarkMode) {
+			g = UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_BACKGROUND_DARK);
+		} else {
+			g = UIPlugin.getDefault().getImage(UIPlugin.ICON_DIAL_BACKGROUND);
+		}
 		for (int i = 0; i < panelImage.getBounds().width; i += g.getBounds().width) {
 			dialGC.drawImage(g, i, 0);
 		}
@@ -440,8 +461,6 @@ public class DialViewer extends Composite implements IRefreshable {
 		int x = config.dialTextCenter.x - Math.round(textExtent.x / 2.0f);
 		int y = height - config.image.getBounds().height - TITLE_VERTICAL_PADDING - textExtent.y;
 		y = Math.max(0, y);
-		Color c = UIPlugin.getDefault().getFormColors(getDisplay()).getColor(IFormColors.TITLE);
-		gc.setForeground(c);
 		gc.setAlpha(192);
 		gc.drawString(text, x + xOffset, y, true);
 		gc.setAlpha(255);
@@ -458,8 +477,15 @@ public class DialViewer extends Composite implements IRefreshable {
 		Point textExtent = gc.textExtent(text);
 		int x = config.dialTextCenter.x - textExtent.x / 2 + xOffset;
 		int y = config.dialTextCenter.y - textExtent.y / 2 + YOffset;
-		Color foreground = new Color(gc.getDevice(), 0, 0, 0);
+
+		Color foreground;
+		if (m_isDarkMode) {
+			foreground = new Color(gc.getDevice(), 255, 255, 255);
+		} else {
+			foreground = new Color(gc.getDevice(), 0, 0, 0);
+		}
 		gc.setForeground(foreground);
+
 		gc.setAlpha(192);
 		gc.drawString(text, x, y, true);
 		gc.setAlpha(255);
@@ -506,5 +532,4 @@ public class DialViewer extends Composite implements IRefreshable {
 			color.dispose();
 		}
 	}
-
 }

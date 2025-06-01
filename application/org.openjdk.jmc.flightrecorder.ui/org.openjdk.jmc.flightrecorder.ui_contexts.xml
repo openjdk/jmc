@@ -49,10 +49,14 @@
    <context id="JfrPropertiesView" title="Event Properties View">
       <description>This view shows properties of events selected in the Flight Recorder editor view.</description>
    </context>
-   
+
    <context id="ResultView">
       <description>This view shows automated analysis results related to the currently active page in the Flight Recording editor view.</description>
       <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-0BFAAA05-CF48-4351-B5FF-AC8E11BAA9DC.htm" label="Viewing the Automated Analysis Results Page" />
+   </context>
+
+   <context id="HDRHistogramView" title="Histogram View">
+      <description>This view shows an HDR Histogram of events selected in the Flight Recorder editor view.</description>
    </context>
    
    <!-- Pages -->

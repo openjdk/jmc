@@ -87,6 +87,7 @@ public class ImageConstants {
 	public static final String ICON_STOP = "stop.png"; //$NON-NLS-1$
 
 	public static final String ICON_HEATMAP = "heatmap.png"; //$NON-NLS-1$
+	public static final String ICON_HISTOGRAM = "histogram.png"; //$NON-NLS-1$
 	public static final String ICON_OVERVIEW = "overview.png"; //$NON-NLS-1$
 	public static final String ICON_TABLE = "table.gif"; //$NON-NLS-1$
 	public static final String ICON_BROWSER = "browser-16.png";
