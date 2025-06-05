@@ -248,9 +248,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		}
 		J4pClient jvmClient = KubernetesJmxConnector.probeProxyPath(env, client, url, headers);
 		if (jvmClient != null) {
-			JmcKubernetesJmxConnection connection;
 			try {
-				connection = new JmcKubernetesJmxConnection(jvmClient);
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());
 				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jmxServiceURL, env);
 				found.put(descriptor.getGUID(), descriptor);
