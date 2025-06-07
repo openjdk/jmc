@@ -33,6 +33,7 @@
 package org.openjdk.jmc.rjmx.internal;
 
 import java.io.IOException;
+import java.lang.ref.Cleaner;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -44,6 +45,7 @@ import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.RJMXPlugin;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.IConnectionListener;
@@ -52,12 +54,20 @@ import org.openjdk.jmc.rjmx.common.internal.DefaultConnectionHandle;
 import org.openjdk.jmc.rjmx.common.internal.RJMXConnection;
 import org.openjdk.jmc.rjmx.common.internal.ServerDescriptor;
 
+/**
+ * Implementation of {@link IServerHandle} that manages JMX server connections.
+ * <p>
+ * This class implements automatic resource cleanup using the {@link Cleaner} API. While the cleaner
+ * provides a safety net for resource cleanup, it is strongly recommended to explicitly call
+ * {@link #dispose()} for predictable resource management.
+ */
 public final class ServerHandle implements IServerHandle {
 
 	private final List<DefaultConnectionHandle> connectionHandles = new ArrayList<>();
 	private final RJMXConnection connection;
 	private final Runnable observer;
 	private Boolean disposedGracefully; // null if not yet disposed
+	private final Cleaner.Cleanable cleanable;
 	private final Runnable connectionListener = new Runnable() {
 
 		@Override
@@ -84,6 +94,7 @@ public final class ServerHandle implements IServerHandle {
 		connection = new RJMXConnection(descriptor, server, connectionListener,
 				SyntheticRepositoryInitializer.initializeAttributeEntries(),
 				SyntheticRepositoryInitializer.initializeNotificationEntries());
+		this.cleanable = ConnectionToolkit.CLEANER.register(this, new CleanupAction(connection, connectionHandles));
 	}
 
 	public IConnectionDescriptor getConnectionDescriptor() {
@@ -150,12 +161,17 @@ public final class ServerHandle implements IServerHandle {
 	}
 
 	public void dispose(boolean gracefully) {
-		synchronized (this) {
-			if (!isDisposed()) {
+		try {
+			synchronized (this) {
+				if (isDisposed()) {
+					return;
+				}
 				disposedGracefully = gracefully;
 			}
+			disconnect();
+		} finally {
+			cleanable.clean();
 		}
-		disconnect();
 	}
 
 	@Override
@@ -207,9 +223,30 @@ public final class ServerHandle implements IServerHandle {
 		}
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		disconnect();
-		super.finalize();
+	private static class CleanupAction implements Runnable {
+		private final List<DefaultConnectionHandle> connectionHandles;
+
+		CleanupAction(RJMXConnection connection, List<DefaultConnectionHandle> connectionHandles) {
+			this.connectionHandles = new ArrayList<>(connectionHandles);
+		}
+
+		@Override
+		public void run() {
+			try {
+				disconnectQuietly();
+			} catch (Exception e) {
+				// Ignore all exceptions during cleanup
+			}
+		}
+
+		private void disconnectQuietly() {
+			for (DefaultConnectionHandle handle : connectionHandles) {
+				try {
+					IOToolkit.closeSilently(handle);
+				} catch (Exception e) {
+					// Ignore exceptions during cleanup
+				}
+			}
+		}
 	}
 }
