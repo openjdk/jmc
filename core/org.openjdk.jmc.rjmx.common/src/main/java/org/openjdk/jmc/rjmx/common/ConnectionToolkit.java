@@ -38,6 +38,7 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.lang.ref.Cleaner;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -64,7 +65,11 @@ import org.openjdk.jmc.rjmx.common.services.jfr.internal.HotspotManagementToolki
  */
 public final class ConnectionToolkit {
 	/**
-	 * The default port JMX
+	 * Shared cleaner instance for RJMX resource management.
+	 */
+	public static final Cleaner CLEANER = Cleaner.create();
+	/**
+	 * The default port.
 	 */
 	public static final int VALUE_DEFAULT_REMOTE_PORT_JMX = 7091;
 	/**

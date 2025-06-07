@@ -33,6 +33,7 @@
 package org.openjdk.jmc.rjmx.common.internal;
 
 import java.io.IOException;
+import java.lang.ref.Cleaner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -44,6 +45,7 @@ import javax.management.MBeanServerConnection;
 
 import org.openjdk.jmc.rjmx.common.RJMXCorePlugin;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
+import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.IConnectionListener;
 import org.openjdk.jmc.rjmx.common.IServerDescriptor;
@@ -55,6 +57,10 @@ import org.openjdk.jmc.rjmx.common.services.internal.ServiceFactoryManager;
 
 /**
  * This class represents a connection to a JVM.
+ * <p>
+ * This class implements automatic resource cleanup using the {@link Cleaner} API. While the cleaner
+ * provides a safety net for resource cleanup, it is strongly recommended to explicitly call
+ * {@link #close()} or use try-with-resources for predictable resource management.
  *
  * @see org.openjdk.jmc.rjmx.common.internal.RJMXConnection
  */
@@ -70,6 +76,7 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 	private static final ServiceFactoryManager FACTORY_MANAGER = new ServiceFactoryManager();
 
 	private volatile Long closeDownThreadId; // Set to -1 when handle is closed
+	private final Cleaner.Cleanable cleanable;
 
 	public DefaultConnectionHandle(RJMXConnection connection, String description, IConnectionListener[] listeners) {
 		this(connection, description, listeners, new ArrayList<>());
@@ -82,6 +89,7 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 		this.listeners = listeners == null ? new IConnectionListener[0] : listeners;
 		FACTORY_MANAGER.initializeFromExtensions(serviceEntries);
 		registerDefaultServices();
+		this.cleanable = ConnectionToolkit.CLEANER.register(this, new CleanupAction(services, connection));
 	}
 
 	@Override
@@ -101,22 +109,40 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 
 	@Override
 	public void close() throws IOException {
-		synchronized (services) {
-			if (closeDownThreadId != null) {
-				// Already closed
-				return;
+		IOException thrownException = null;
+		boolean closeSucceeded = false;
+		try {
+			synchronized (services) {
+				if (closeDownThreadId != null) {
+					// Already closed - still need to deregister cleaner
+					cleanable.clean();
+					return;
+				}
+				// Allow disposing services to get other services, but refuse all other
+				closeDownThreadId = Thread.currentThread().getId();
+				shutdownServices();
+				closeDownThreadId = -1L; // No more access, refuse all
 			}
-			// Allow disposing services to get other services, but refuse all other
-			closeDownThreadId = Thread.currentThread().getId();
-			shutdownServices();
-			closeDownThreadId = -1L; // No more access, refuse all
-		}
-		for (IConnectionListener l : listeners) {
-			try {
-				l.onConnectionChange(this);
-			} catch (Exception e) {
-				RJMXCorePlugin.getDefault().getLogger().log(Level.WARNING,
-						"DefaultConnectionHandle listener " + l + " failed", e); //$NON-NLS-1$ //$NON-NLS-2$
+			for (IConnectionListener l : listeners) {
+				try {
+					l.onConnectionChange(this);
+				} catch (Exception e) {
+					RJMXCorePlugin.getDefault().getLogger().log(Level.WARNING,
+							"DefaultConnectionHandle listener " + l + " failed", e); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+			closeSucceeded = true;
+		} catch (RuntimeException e) {
+			thrownException = new IOException("Failed to close connection", e);
+			throw thrownException;
+		} finally {
+			if (closeSucceeded) {
+				// Deregister cleaner
+				try {
+					cleanable.clean();
+				} catch (Exception e) {
+					// Ignore cleanup failures
+				}
 			}
 		}
 	}
@@ -137,18 +163,6 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 			}
 		}
 		services.clear();
-	}
-
-	/**
-	 * Free external resources.
-	 *
-	 * @see java.lang.Object#finalize()
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		// Make sure that external resources are freed upon GC.
-		close();
-		super.finalize();
 	}
 
 	@Override
@@ -236,5 +250,40 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 	@Override
 	public String getDescription() {
 		return description;
+	}
+
+	private static class CleanupAction implements Runnable {
+		private final Map<Class<?>, Object> services;
+		private final RJMXConnection connection;
+
+		CleanupAction(Map<Class<?>, Object> services, RJMXConnection connection) {
+			this.services = new LinkedHashMap<>(services);
+			this.connection = connection;
+		}
+
+		@Override
+		public void run() {
+			try {
+				shutdownServicesQuietly(services);
+				connection.close();
+			} catch (Exception e) {
+				// Ignore all exceptions during cleanup
+			}
+		}
+
+		private static void shutdownServicesQuietly(Map<Class<?>, Object> services) {
+			Object[] servicesArray = services.values().toArray();
+			for (int i = 0; i < servicesArray.length; i++) {
+				Object service = servicesArray[servicesArray.length - i - 1];
+				if (service instanceof IDisposableService) {
+					try {
+						((IDisposableService) service).dispose();
+					} catch (Exception e) {
+						// Ignore exceptions during cleanup
+					}
+				}
+			}
+			services.clear();
+		}
 	}
 }
