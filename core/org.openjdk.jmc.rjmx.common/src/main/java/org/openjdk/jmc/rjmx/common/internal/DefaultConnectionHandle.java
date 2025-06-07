@@ -109,13 +109,9 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 
 	@Override
 	public void close() throws IOException {
-		IOException thrownException = null;
-		boolean closeSucceeded = false;
 		try {
 			synchronized (services) {
 				if (closeDownThreadId != null) {
-					// Already closed - still need to deregister cleaner
-					cleanable.clean();
 					return;
 				}
 				// Allow disposing services to get other services, but refuse all other
@@ -131,19 +127,10 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 							"DefaultConnectionHandle listener " + l + " failed", e); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
-			closeSucceeded = true;
 		} catch (RuntimeException e) {
-			thrownException = new IOException("Failed to close connection", e);
-			throw thrownException;
+			throw new IOException("Failed to close connection", e);
 		} finally {
-			if (closeSucceeded) {
-				// Deregister cleaner
-				try {
-					cleanable.clean();
-				} catch (Exception e) {
-					// Ignore cleanup failures
-				}
-			}
+			cleanable.clean();
 		}
 	}
 
