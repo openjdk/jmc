@@ -476,6 +476,8 @@ public class Messages {
 	public static final String ManyRunningProcessesRule_TEXT_RECOMMENDATION = "ManyRunningProcessesRule_TEXT_RECOMMENDATION"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_RULE_NAME = "MetaspaceOomRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_TEXT_OK = "MetaspaceOomRuleFactory_TEXT_OK"; //$NON-NLS-1$
+	public static final String MetaspaceOomRuleFactory_TEXT_CAUSE = "MetaspaceOomRuleFactory_TEXT_CAUSE"; //$NON-NLS-1$
+	public static final String MetaspaceOomRuleFactory_TEXT_ACTION = "MetaspaceOomRuleFactory_TEXT_ACTION"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_TEXT_WARN = "MetaspaceOomRuleFactory_TEXT_WARN"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_TEXT_WARN_LONG = "MetaspaceOomRuleFactory_TEXT_WARN_LONG"; //$NON-NLS-1$
 	public static final String MethodProfilingDataProvider_AGGR_AGGR_TOP_FRAME_QUOTA = "MethodProfilingDataProvider_AGGR_AGGR_TOP_FRAME_QUOTA"; //$NON-NLS-1$

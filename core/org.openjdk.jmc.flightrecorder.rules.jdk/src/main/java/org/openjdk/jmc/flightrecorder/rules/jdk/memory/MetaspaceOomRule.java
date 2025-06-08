@@ -79,13 +79,17 @@ public class MetaspaceOomRule implements IRule {
 			// FIXME: Configuration attribute instead of hard coded 1 as warning limit
 			double score = RulesToolkit.mapExp100(oomCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY), 1);
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN))
-					.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG))
+					.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
+							.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN)))
+					.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_ACTION)
+							.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(OOM_EVENTS, oomCount).build();
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_OK)).build();
+				.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
+						.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_OK)))
+				.build();
 	}
 
 	@Override
