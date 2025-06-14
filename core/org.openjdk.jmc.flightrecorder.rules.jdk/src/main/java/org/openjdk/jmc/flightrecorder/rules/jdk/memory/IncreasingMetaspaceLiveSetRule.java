@@ -47,6 +47,7 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.BinaryPrefix;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
@@ -74,13 +75,19 @@ public class IncreasingMetaspaceLiveSetRule implements IRule {
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.METASPACE_SUMMARY, EventAvailability.ENABLED).build();
 
+	public static final TypedResult<IQuantity> METASPACE_LIVESET_INCREASE = new TypedResult<>(
+			"metaspaceLivesetIncrease", //$NON-NLS-1$
+			"Metaspace Liveset Increase", "The speed of the metaspace liveset increase per second.", UnitLookup.MEMORY,
+			IQuantity.class);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE);
+			.<TypedResult<?>> asList(TypedResult.SCORE, METASPACE_LIVESET_INCREASE);
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IItemFilter afterFilter = ItemFilters.and(JdkFilters.METASPACE_SUMMARY_AFTER_GC, JdkFilters.AFTER_GC);
 		Iterator<? extends IItemIterable> allAfterItems = items.apply(afterFilter).iterator();
+		IQuantity metaspaceLiveSetIncreasePerSecond = UnitLookup.MEMORY.getUnit(BinaryPrefix.MEBI).quantity(0);
 		if (allAfterItems.hasNext()) {
 			IItemIterable afterItems = allAfterItems.next();
 			// FIXME: Handle multiple IItemIterable
@@ -88,15 +95,16 @@ public class IncreasingMetaspaceLiveSetRule implements IRule {
 			IMemberAccessor<IQuantity, IItem> memAccessor = JdkAttributes.GC_METASPACE_USED
 					.getAccessor(afterItems.getType());
 			double leastSquare = RulesToolkit.leastSquareMemory(afterItems.iterator(), timeAccessor, memAccessor);
+			metaspaceLiveSetIncreasePerSecond = UnitLookup.MEMORY.getUnit(BinaryPrefix.MEBI).quantity(leastSquare);
 			// FIXME: Configuration attribute
 			double score = RulesToolkit.mapExp100(leastSquare, 0.75);
-			// FIXME: Should construct a message using leastSquare, not use a hard limit
 			if (score >= 25) {
 				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 						.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO))
 						.setExplanation(
 								Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_INFO_LONG))
-						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score)).build();
+						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+						.addResult(METASPACE_LIVESET_INCREASE, metaspaceLiveSetIncreasePerSecond).build();
 			}
 			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.IncreasingMetaspaceLiveSetRuleFactory_TEXT_OK))

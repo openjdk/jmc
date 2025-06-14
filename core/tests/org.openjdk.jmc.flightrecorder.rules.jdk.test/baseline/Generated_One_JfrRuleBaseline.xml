@@ -207,7 +207,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>IncreasingMetaSpaceLiveSet</id>
             <severity>OK</severity>
-            <summary>The class data does not seem to increase during the recording.</summary>
+            <summary>Metaspace is the area of memory allocated for the JVM to store class metadata. The class metadata does not seem to increase during the recording.</summary>
         </rule>
         <rule>
             <id>JavaBlocking</id>
@@ -240,7 +240,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>MetaspaceOom</id>
             <severity>OK</severity>
-            <summary>The metaspace was not exhausted during this recording.</summary>
+            <summary>Java class metadata is allocated in native memory (metaspace). When the amount of native memory needed for a class metadata exceeds MaxMetaSpaceSize, a java.lang.OutOfMemoryError exception with a detail MetaSpace is thrown. The amount of metaspace that can be used for class metadata is limited by the parameter MaxMetaSpaceSize, which is specified on the command line.The metaspace was not exhausted during this recording.</summary>
         </rule>
         <rule>
             <id>MethodProfiling</id>

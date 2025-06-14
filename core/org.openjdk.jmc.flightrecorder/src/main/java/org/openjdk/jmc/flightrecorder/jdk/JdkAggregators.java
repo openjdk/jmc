@@ -236,6 +236,9 @@ public final class JdkAggregators {
 	public static final IAggregator<IQuantity, ?> LARGEST_MAX_HEAP_SIZE_FROM_FLAG = filter(
 			Messages.getString(Messages.AGGR_LARGEST_MAX_HEAP_SIZE_FROM_FLAG), null, max(ULONG_FLAG, FLAG_VALUE_NUMBER),
 			ItemFilters.equals(FLAG_NAME, "MaxHeapSize")); //$NON-NLS-1$
+	public static final IAggregator<IQuantity, ?> LARGEST_MAX_METASPACE_SIZE_FROM_FLAG = filter(
+			Messages.getString(Messages.AGGR_LARGEST_MAX_METASPACE_SIZE_FROM_FLAG), null,
+			max(ULONG_FLAG, FLAG_VALUE_NUMBER), ItemFilters.equals(FLAG_NAME, "MaxMetaspaceSize")); //$NON-NLS-1$
 	public static final IAggregator<IQuantity, ?> OUTSIDE_TLAB_COUNT = Aggregators.count(
 			Messages.getString(Messages.AGGR_OUTSIDE_TLAB_COUNT),
 			Messages.getString(Messages.AGGR_OUTSIDE_TLAB_COUNT_DESC), ALLOC_OUTSIDE_TLAB);
