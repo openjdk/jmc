@@ -82,23 +82,23 @@ public class MetaspaceOomRule implements IRule {
 		if (oomCount != null && oomCount.doubleValue() > 0) {
 			// FIXME: Configuration attribute instead of hard coded 1 as warning limit
 			double score = RulesToolkit.mapExp100(oomCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY), 1);
+
+			ResultBuilder builder = ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
+							.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN)))
+					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
+					.addResult(OOM_EVENTS, oomCount);
+
 			if (maxMetaspaceSize != null) {
-				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-						.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
-								.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN)))
-						.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_INCREASE_ACTION)
-								.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)))
-						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-						.addResult(OOM_EVENTS, oomCount).addResult(MAX_METASPACE_SIZE, maxMetaspaceSize).build();
+				builder.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_INCREASE_ACTION)
+						.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)))
+						.addResult(MAX_METASPACE_SIZE, maxMetaspaceSize);
 			} else {
-				return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-						.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
-								.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN)))
-						.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_SET_ACTION)
-								.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)))
-						.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-						.addResult(OOM_EVENTS, oomCount).build();
+				builder.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_SET_ACTION)
+						.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)));
 			}
+
+			return builder.build();
 
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
