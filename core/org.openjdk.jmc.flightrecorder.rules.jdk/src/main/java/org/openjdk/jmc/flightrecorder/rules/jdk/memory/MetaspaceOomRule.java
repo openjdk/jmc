@@ -69,23 +69,42 @@ public class MetaspaceOomRule implements IRule {
 	public static final TypedResult<IQuantity> OOM_EVENTS = new TypedResult<>("oomCount", //$NON-NLS-1$
 			JdkAggregators.METASPACE_OOM_COUNT, UnitLookup.NUMBER, IQuantity.class);
 
+	public static final TypedResult<IQuantity> MAX_METASPACE_SIZE = new TypedResult<>("maxMetaspaceSize", //$NON-NLS-1$
+			"Maximum Metaspace Size", "The maximum size of the metaspace.", UnitLookup.NUMBER, IQuantity.class);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
 			.<TypedResult<?>> asList(TypedResult.SCORE, OOM_EVENTS);
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
 		IQuantity oomCount = items.getAggregate(JdkAggregators.METASPACE_OOM_COUNT);
+		IQuantity maxMetaspaceSize = items.getAggregate(JdkAggregators.LARGEST_MAX_METASPACE_SIZE_FROM_FLAG);
 		if (oomCount != null && oomCount.doubleValue() > 0) {
 			// FIXME: Configuration attribute instead of hard coded 1 as warning limit
 			double score = RulesToolkit.mapExp100(oomCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY), 1);
-			return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN))
-					.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG))
+
+			ResultBuilder builder = ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
+							.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN)))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
-					.addResult(OOM_EVENTS, oomCount).build();
+					.addResult(OOM_EVENTS, oomCount);
+
+			if (maxMetaspaceSize != null) {
+				builder.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_INCREASE_ACTION)
+						.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)))
+						.addResult(MAX_METASPACE_SIZE, maxMetaspaceSize);
+			} else {
+				builder.setExplanation(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_SET_ACTION)
+						.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_WARN_LONG)));
+			}
+
+			return builder.build();
+
 		}
 		return ResultBuilder.createFor(this, valueProvider).setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_OK)).build();
+				.setSummary(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_CAUSE)
+						.concat(Messages.getString(Messages.MetaspaceOomRuleFactory_TEXT_OK)))
+				.build();
 	}
 
 	@Override
