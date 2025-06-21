@@ -44,8 +44,11 @@ import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
 import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
+import org.openjdk.jmc.flightrecorder.internal.IChunkSupplier;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilterExtension;
 
 /**
  * A collection of methods used to load binary JFR data into {@link IItemCollection}
@@ -139,6 +142,110 @@ public class JfrLoaderToolkit {
 	public static IItemCollection loadEvents(List<File> files, List<? extends IParserExtension> extensions)
 			throws IOException, CouldNotLoadRecordingException {
 		return EventCollection.build(loadFile(files, extensions));
+	}
+
+	/**
+	 * Loads a potentially zipped or gzipped input stream with optional hidden frame filtering
+	 *
+	 * @param stream
+	 *            the input stream to read the recording from
+	 * @param showHiddenFrames
+	 *            if false, hidden frames will be filtered out during parsing
+	 * @return the events in the recording
+	 */
+	public static IItemCollection loadEvents(InputStream stream, boolean showHiddenFrames)
+			throws IOException, CouldNotLoadRecordingException {
+		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
+		if (!showHiddenFrames) {
+			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+		}
+		return loadEvents(stream, extensions);
+	}
+
+	/**
+	 * Loads a potentially zipped or gzipped file with optional hidden frame filtering
+	 *
+	 * @param file
+	 *            the file to read the recording from
+	 * @param showHiddenFrames
+	 *            if false, hidden frames will be filtered out during parsing
+	 * @return the events in the recording
+	 */
+	public static IItemCollection loadEvents(File file, boolean showHiddenFrames)
+			throws IOException, CouldNotLoadRecordingException {
+		List<File> files = new ArrayList<>();
+		files.add(file);
+		return loadEvents(files, showHiddenFrames);
+	}
+
+	/**
+	 * Loads a recording from a sequence of potentially zipped or gzipped files with optional hidden
+	 * frame filtering
+	 *
+	 * @param files
+	 *            the files to read the recording from
+	 * @param showHiddenFrames
+	 *            if false, hidden frames will be filtered out during parsing
+	 * @return the events in the recording
+	 */
+	public static IItemCollection loadEvents(List<File> files, boolean showHiddenFrames)
+			throws IOException, CouldNotLoadRecordingException {
+		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
+		if (!showHiddenFrames) {
+			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+		}
+		return loadEvents(files, extensions);
+	}
+
+	/**
+	 * Loads a stream with optional hidden frame filtering
+	 *
+	 * @param stream
+	 *            the input stream to read the recording from
+	 * @param hideExperimentals
+	 *            if {@code true}, then events of types marked as experimental will be ignored when
+	 *            reading the data
+	 * @param ignoreTruncatedChunk
+	 *            if {@code true}, then truncated chunks will be ignored when reading the data
+	 * @param showHiddenFrames
+	 *            if false, hidden frames will be filtered out during parsing
+	 * @return an array of EventArrays (one event type per EventArray)
+	 */
+	public static EventArrays loadStream(
+		InputStream stream, boolean hideExperimentals, boolean ignoreTruncatedChunk, boolean showHiddenFrames)
+			throws CouldNotLoadRecordingException, IOException {
+		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
+		if (!showHiddenFrames) {
+			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+		}
+		return FlightRecordingLoader.loadStream(stream, extensions, hideExperimentals, ignoreTruncatedChunk);
+	}
+
+	/**
+	 * Reads chunks with optional hidden frame filtering
+	 *
+	 * @param monitor
+	 *            the monitor to use for progress monitoring
+	 * @param chunkSupplier
+	 *            the supplier of chunks to read
+	 * @param hideExperimentals
+	 *            if {@code true}, then events of types marked as experimental will be ignored when
+	 *            reading the data
+	 * @param ignoreTruncatedChunk
+	 *            if {@code true}, then truncated chunks will be ignored when reading the data
+	 * @param showHiddenFrames
+	 *            if false, hidden frames will be filtered out during parsing
+	 * @return an array of EventArrays (one event type per EventArray)
+	 */
+	public static EventArrays readChunks(
+		Runnable monitor, IChunkSupplier chunkSupplier, boolean hideExperimentals, boolean ignoreTruncatedChunk,
+		boolean showHiddenFrames) throws CouldNotLoadRecordingException, IOException {
+		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
+		if (!showHiddenFrames) {
+			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+		}
+		return FlightRecordingLoader.readChunks(monitor, extensions, chunkSupplier, hideExperimentals,
+				ignoreTruncatedChunk);
 	}
 
 }

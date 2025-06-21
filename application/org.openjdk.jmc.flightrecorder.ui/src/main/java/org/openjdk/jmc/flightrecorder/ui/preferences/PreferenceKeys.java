@@ -74,6 +74,9 @@ public class PreferenceKeys {
 	public static final String PROPERTY_OVERVIEW_SHOWRESULTDETAILS = "flightrecorder.overview.showresultdetails"; //$NON-NLS-1$
 	public static final boolean PROPERTY_DEFAULT_OVERVIEW_SHOWRESULTDETAILS = true;
 
+	public static final String PROPERTY_STACKTRACE_SHOW_HIDDEN_FRAMES = "flightrecorder.stacktrace.showHiddenFrames"; //$NON-NLS-1$
+	public static final boolean PROPERTY_DEFAULT_STACKTRACE_SHOW_HIDDEN_FRAMES = false;
+
 	private static IQuantity getDefaultNumberOfEvaluationThreads() {
 		int threadsHint = Runtime.getRuntime().availableProcessors() / 2;
 		return UnitLookup.NUMBER_UNITY.quantity(Math.max(threadsHint, 1));
