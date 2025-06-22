@@ -52,7 +52,7 @@ import org.openjdk.jmc.flightrecorder.parser.ValueField;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilterExtension;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilterConstantPoolExtension;
 
 public class FrameFilterExtensionTest {
 
@@ -64,8 +64,8 @@ public class FrameFilterExtensionTest {
 		IItemCollection items = JfrLoaderToolkit.loadEvents(recordingFile, false); // showHiddenFrames = false
 		Assert.assertTrue(items.hasItems());
 
-		// If we get here without exceptions, the filtering worked correctly
-		// (The actual filtering verification happens at the loader level)
+		// If we get here without exceptions, the constant pool filtering worked correctly
+		// (The actual filtering verification happens at the constant pool level)
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class FrameFilterExtensionTest {
 		TestEventSinkExtension testExtension = new TestEventSinkExtension();
 		List<IParserExtension> extensions = new ArrayList<>();
 		extensions.add(testExtension);
-		extensions.add(new FrameFilterExtension(lambdaFormFilter));
+		extensions.add(new FrameFilterConstantPoolExtension(lambdaFormFilter));
 
 		File recordingFile = new File(
 				FrameFilterExtensionTest.class.getClassLoader().getResource("recordings/metadata_new.jfr").toURI());

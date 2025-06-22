@@ -35,27 +35,28 @@ package org.openjdk.jmc.flightrecorder.stacktrace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.util.MCStackTrace;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.parser.IEventSink;
-import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
+import org.openjdk.jmc.common.collection.FastAccessNumberMap;
+import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
-import org.openjdk.jmc.flightrecorder.parser.ValueField;
 
 /**
- * Parser extension that filters frames from stacktraces during parsing. This extension intercepts
- * stacktrace entries and removes frames based on the configured FrameFilter.
- * 
- * @deprecated Use {@link FrameFilterConstantPoolExtension} instead for better performance. This
- *             extension filters at the event sink level, while the constant pool extension filters
- *             earlier during constant pool resolution.
+ * Parser extension that filters frames from stacktraces during constant pool resolution. This
+ * extension intercepts stacktrace constants and removes frames based on the configured FrameFilter.
+ * <p>
+ * This approach is more efficient than event-level filtering as it filters during constant pool
+ * resolution, before stacktraces are used in events. Benefits include:
+ * </p>
+ * <p>
+ * The extension hooks into both {@code constantReferenced} and {@code constantResolved} to ensure
+ * filtering works across different JFR parser versions (v0 and v1/v2).
+ * </p>
  */
-@Deprecated
-public class FrameFilterExtension implements IParserExtension {
-
+public class FrameFilterConstantPoolExtension implements IParserExtension {
 	private final FrameFilter frameFilter;
 
 	/**
@@ -64,81 +65,62 @@ public class FrameFilterExtension implements IParserExtension {
 	 * @param frameFilter
 	 *            the filter to apply to frames, or null to disable filtering
 	 */
-	public FrameFilterExtension(FrameFilter frameFilter) {
+	public FrameFilterConstantPoolExtension(FrameFilter frameFilter) {
 		this.frameFilter = frameFilter != null ? frameFilter : FrameFilter.INCLUDE_ALL;
 	}
 
 	@Override
-	public IEventSinkFactory getEventSinkFactory(final IEventSinkFactory subFactory) {
+	public IConstantPoolExtension createConstantPoolExtension() {
 		if (frameFilter == FrameFilter.INCLUDE_ALL) {
-			// No filtering needed
-			return subFactory;
+			return null;
 		}
-
-		return new IEventSinkFactory() {
-			@Override
-			public IEventSink create(
-				String identifier, String label, String[] category, String description,
-				List<ValueField> dataStructure) {
-
-				IEventSink subSink = subFactory.create(identifier, label, category, description, dataStructure);
-
-				boolean hasStackTrace = dataStructure.stream()
-						.anyMatch(vf -> vf.getContentType() == JfrAttributes.EVENT_STACKTRACE.getContentType());
-
-				if (hasStackTrace) {
-					return new FilteringEventSink(subSink, frameFilter, dataStructure);
-				}
-				return subSink;
-			}
-
-			@Override
-			public void flush() {
-				subFactory.flush();
-			}
-		};
+		return new StackTraceFilteringConstantPoolExtension(frameFilter);
 	}
 
 	/**
-	 * Event sink that filters stacktraces in events before passing them to the underlying sink.
+	 * Constant pool extension that filters stacktraces during constant pool resolution.
 	 */
-	private static class FilteringEventSink implements IEventSink {
-		private final IEventSink subSink;
+	private static class StackTraceFilteringConstantPoolExtension implements IConstantPoolExtension {
+		private static final String STACK_TRACE_POOL_V0 = "StackTrace";
+		private static final String STACK_TRACE_POOL_V1 = "jdk.types.StackTrace";
+
 		private final FrameFilter frameFilter;
-		private final List<ValueField> dataStructure;
-		private final int stacktraceIndex;
 
-		public FilteringEventSink(IEventSink subSink, FrameFilter frameFilter, List<ValueField> dataStructure) {
-			this.subSink = subSink;
+		public StackTraceFilteringConstantPoolExtension(FrameFilter frameFilter) {
 			this.frameFilter = frameFilter;
-			this.dataStructure = dataStructure;
-
-			int index = -1;
-			for (int i = 0; i < dataStructure.size(); i++) {
-				ValueField vf = dataStructure.get(i);
-				if (vf.getContentType() == JfrAttributes.EVENT_STACKTRACE.getContentType()) {
-					index = i;
-					break;
-				}
-			}
-			this.stacktraceIndex = index;
 		}
 
 		@Override
-		public void addEvent(Object[] values) {
-			if (stacktraceIndex >= 0 && stacktraceIndex < values.length
-					&& values[stacktraceIndex] instanceof IMCStackTrace) {
-				IMCStackTrace stackTrace = (IMCStackTrace) values[stacktraceIndex];
-				IMCStackTrace filteredStackTrace = filterStackTrace(stackTrace);
-				if (filteredStackTrace != stackTrace) {
-					Object[] newValues = new Object[values.length];
-					System.arraycopy(values, 0, newValues, 0, values.length);
-					newValues[stacktraceIndex] = filteredStackTrace;
-					subSink.addEvent(newValues);
-					return;
-				}
+		public Object constantRead(long constantIndex, Object constant, String eventTypeId) {
+			return constant;
+		}
+
+		@Override
+		public Object constantReferenced(Object constant, String poolName, String eventTypeId) {
+			if (isStackTracePool(poolName) && constant instanceof IMCStackTrace) {
+				return filterStackTrace((IMCStackTrace) constant);
 			}
-			subSink.addEvent(values);
+			return constant;
+		}
+
+		@Override
+		public Object constantResolved(Object constant, String poolName, String eventTypeId) {
+			if (isStackTracePool(poolName) && constant instanceof IMCStackTrace) {
+				return filterStackTrace((IMCStackTrace) constant);
+			}
+			return constant;
+		}
+
+		@Override
+		public void allConstantPoolsResolved(Map<String, FastAccessNumberMap<Object>> constantPools) {
+		}
+
+		@Override
+		public void eventsLoaded() {
+		}
+
+		private boolean isStackTracePool(String poolName) {
+			return STACK_TRACE_POOL_V0.equals(poolName) || STACK_TRACE_POOL_V1.equals(poolName);
 		}
 
 		private IMCStackTrace filterStackTrace(IMCStackTrace stackTrace) {

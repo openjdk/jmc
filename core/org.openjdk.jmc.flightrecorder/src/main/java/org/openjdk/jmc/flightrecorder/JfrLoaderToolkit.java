@@ -48,7 +48,7 @@ import org.openjdk.jmc.flightrecorder.internal.IChunkSupplier;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilterExtension;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilterConstantPoolExtension;
 
 /**
  * A collection of methods used to load binary JFR data into {@link IItemCollection}
@@ -157,7 +157,7 @@ public class JfrLoaderToolkit {
 			throws IOException, CouldNotLoadRecordingException {
 		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
 		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
 		}
 		return loadEvents(stream, extensions);
 	}
@@ -192,7 +192,7 @@ public class JfrLoaderToolkit {
 			throws IOException, CouldNotLoadRecordingException {
 		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
 		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
 		}
 		return loadEvents(files, extensions);
 	}
@@ -216,7 +216,7 @@ public class JfrLoaderToolkit {
 			throws CouldNotLoadRecordingException, IOException {
 		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
 		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
 		}
 		return FlightRecordingLoader.loadStream(stream, extensions, hideExperimentals, ignoreTruncatedChunk);
 	}
@@ -242,7 +242,7 @@ public class JfrLoaderToolkit {
 		boolean showHiddenFrames) throws CouldNotLoadRecordingException, IOException {
 		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
 		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterExtension(FrameFilter.EXCLUDE_HIDDEN));
+			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
 		}
 		return FlightRecordingLoader.readChunks(monitor, extensions, chunkSupplier, hideExperimentals,
 				ignoreTruncatedChunk);
