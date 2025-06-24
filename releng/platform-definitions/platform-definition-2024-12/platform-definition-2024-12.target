@@ -82,10 +82,10 @@
             <unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="1.4.2600.v20241019-1812"/>
             <unit id="org.eclipse.ui.net" version="1.5.400.v20240413-1529"/>
             <unit id="org.eclipse.equinox.p2.director.app" version="1.3.500.v20240918-1902"/>
-	    <unit id="org.eclipse.ui.themes" version="1.2.2600.v20241028-0713"/>
+            <unit id="org.eclipse.ui.themes" version="1.2.2600.v20241028-0713"/>
             <unit id="org.eclipse.sdk" version="4.34.0.v20241120-1800"/>
             <unit id="org.eclipse.osgi.services" version="3.12.100.v20240327-0645"/>
-	    <repository location="https://download.eclipse.org/releases/2024-12/" />
+            <repository location="https://download.eclipse.org/releases/2024-12/" />
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.26.0.v20230220105658"/>
