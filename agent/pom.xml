@@ -91,7 +91,7 @@
 		<nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
 		<maven.gpg.version>3.1.0</maven.gpg.version>
 		<!-- Dependency Versions -->
-		<asm.version>9.7.1</asm.version>
+		<asm.version>9.8</asm.version>
 		<junit.version>4.13.2</junit.version>
 	</properties>
 	<scm>
