@@ -49,9 +49,8 @@ import org.openjdk.jmc.greychart.impl.WorldToDeviceConverter;
  * An {@link OptimizingProvider} that provides a view of the data by averaging the values at each
  * point.
  */
-
-public final class AveragingProvider implements OptimizingProvider {
-	private final DataSeries<IXYData> m_dataSeries;
+public final class AveragingProvider extends AbstractOptimizingProvider {
+	private final DataSeries<IXYData<Long, Number>> m_dataSeries;
 	private final double m_yMultiplier;
 	private final XAxis m_xAxis;
 	private final CancelService m_cancelService;
@@ -63,7 +62,8 @@ public final class AveragingProvider implements OptimizingProvider {
 	private long m_requestedEndX = Long.MAX_VALUE;
 	private volatile boolean dataChangeOccured;
 
-	public AveragingProvider(DataSeries<IXYData> s, double yMultiplier, XAxis xAxis, CancelService cancelService) {
+	public AveragingProvider(DataSeries<IXYData<Long, Number>> s, double yMultiplier, XAxis xAxis,
+			CancelService cancelService) {
 		m_dataSeries = s;
 		m_yMultiplier = yMultiplier;
 		m_cancelService = cancelService;
@@ -131,7 +131,7 @@ public final class AveragingProvider implements OptimizingProvider {
 	}
 
 	private AveragingSampleBuffer createSampleBuffer(int width) {
-		Iterator<IXYData> it = m_dataSeries.createIterator(m_requestedStartX, m_requestedEndX);
+		Iterator<IXYData<Long, Number>> it = m_dataSeries.createIterator(m_requestedStartX, m_requestedEndX);
 		if (!it.hasNext()) {
 			return new AveragingSampleBuffer(0);
 		}
@@ -139,17 +139,17 @@ public final class AveragingProvider implements OptimizingProvider {
 		long leftEdge = m_xAxis.getMin().longValue();
 		AveragingSampleBuffer sampleBuffer = new AveragingSampleBuffer(width);
 
-		IXYData data = addFirstBoundaryPoint(sampleBuffer, it, worldWidth, leftEdge);
+		IXYData<Long, Number> data = addFirstBoundaryPoint(sampleBuffer, it, worldWidth, leftEdge);
 
-		long x = getXAsLong(data);
-		long oldx = getXAsLong(data);
+		long x = data.getX();
+		long oldx = data.getX();
 		if (x >= leftEdge && x <= (leftEdge + worldWidth)) {
 			addXYDataPoint(sampleBuffer, worldWidth, leftEdge, data);
 		}
 
 		while (it.hasNext() && x < leftEdge + worldWidth && m_cancelService.isNotCancelled()) {
-			IXYData newData = it.next();
-			x = getXAsLong(newData);
+			IXYData<Long, Number> newData = it.next();
+			x = newData.getX();
 			if (x < oldx) {
 				throw new IllegalArgumentException("Data points out of order: " + x + " is lower than " + oldx); //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (x >= leftEdge + worldWidth) {
@@ -165,16 +165,12 @@ public final class AveragingProvider implements OptimizingProvider {
 		return sampleBuffer;
 	}
 
-	private long getXAsLong(IXYData data) {
-		return ((Number) data.getX()).longValue();
-	}
-
-	private IXYData addFirstBoundaryPoint(
-		AveragingSampleBuffer sampleBuffer, Iterator<IXYData> it, long worldWidth, long leftEdge) {
-		IXYData firstDataPoint = null;
+	private IXYData<Long, Number> addFirstBoundaryPoint(
+		AveragingSampleBuffer sampleBuffer, Iterator<IXYData<Long, Number>> it, long worldWidth, long leftEdge) {
+		IXYData<Long, Number> firstDataPoint = null;
 		if (it.hasNext()) {
 			firstDataPoint = it.next();
-			long x = getXAsLong(firstDataPoint);
+			long x = firstDataPoint.getX();
 			// No boundary point - just return it.
 			if (x >= leftEdge) {
 				return firstDataPoint;
@@ -182,8 +178,8 @@ public final class AveragingProvider implements OptimizingProvider {
 		}
 		// Look for boundary...
 		while (it.hasNext()) {
-			IXYData data = it.next();
-			long x = getXAsLong(data);
+			IXYData<Long, Number> data = it.next();
+			long x = data.getX();
 			if (x >= leftEdge) {
 				addInterpolatedNormalizedPoint(sampleBuffer, 0.0, firstDataPoint, data, worldWidth, leftEdge);
 				if (x >= leftEdge + worldWidth) {
@@ -200,33 +196,30 @@ public final class AveragingProvider implements OptimizingProvider {
 	}
 
 	private void addInterpolatedNormalizedPoint(
-		AveragingSampleBuffer sampleBuffer, double boundary, IXYData beforeData, IXYData afterData, long worldWidth,
-		long leftEdge) {
+		AveragingSampleBuffer sampleBuffer, double boundary, IXYData<Long, Number> beforeData,
+		IXYData<Long, Number> afterData, long worldWidth, long leftEdge) {
 		double n1 = getNormalizedX(beforeData, worldWidth, leftEdge);
 		double n2 = getNormalizedX(afterData, worldWidth, leftEdge);
-		double y1 = getY(beforeData);
-		double y2 = getY(afterData);
+		double y1 = beforeData.getY().doubleValue();
+		double y2 = afterData.getY().doubleValue();
 		double k = (y2 - y1) / (n2 - n1);
 		double yResult = (boundary - n1) * k + y1;
 		sampleBuffer.addDataPoint(boundary, yResult);
 	}
 
-	private double getY(IXYData data) {
-		return ((Number) data.getY()).doubleValue();
-	}
-
-	private void addXYDataPoint(AveragingSampleBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
+	private void addXYDataPoint(
+		AveragingSampleBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
 		double n = getNormalizedX(data, worldWidth, leftEdge);
 		double y = ((Number) data.getY()).doubleValue();
 		sampleBuffer.addDataPoint(n, y);
 	}
 
-	private double getNormalizedX(IXYData data, long worldWidth, long leftEdge) {
-		return ((double) (getXAsLong(data) - leftEdge)) / ((double) worldWidth);
+	private double getNormalizedX(IXYData<Long, Number> data, long worldWidth, long leftEdge) {
+		return ((double) (data.getX() - leftEdge)) / ((double) worldWidth);
 	}
 
 	@Override
-	public DataSeries getDataSeries() {
+	public DataSeries<IXYData<Long, Number>> getDataSeries() {
 		return m_dataSeries;
 	}
 
