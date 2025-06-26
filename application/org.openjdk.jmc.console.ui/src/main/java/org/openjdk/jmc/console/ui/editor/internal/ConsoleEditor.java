@@ -100,6 +100,7 @@ public class ConsoleEditor extends FormEditor {
 						ConsoleEditor.this::onConnectionChange);
 				String[] error = JVMSupportToolkit.checkConsoleSupport(connection);
 				if (error.length == 2 && !DialogToolkit.openConfirmOnUiThread(error[0], error[1])) {
+					IOToolkit.closeSilently(connection);
 					WorkbenchToolkit.asyncCloseEditor(ConsoleEditor.this);
 					return Status.CANCEL_STATUS;
 				}
@@ -118,6 +119,7 @@ public class ConsoleEditor extends FormEditor {
 				});
 				return Status.OK_STATUS;
 			} catch (ConnectionException e) {
+				IOToolkit.closeSilently(connection);
 				WorkbenchToolkit.asyncCloseEditor(ConsoleEditor.this);
 				// FIXME: Show stacktrace? (Need to show our own ExceptionDialog in that case, or maybe create our own DetailsAreaProvider, see WorkbenchStatusDialogManager.setDetailsAreaProvider)
 				return new Status(IStatus.ERROR, ConsolePlugin.PLUGIN_ID, IStatus.ERROR,
