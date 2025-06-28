@@ -62,6 +62,7 @@ import org.openjdk.jmc.test.io.IOResourceSet;
 public class PrintoutsToolkit {
 	private static final Pattern EVENT_PATTERN = Pattern.compile("<event [\\s\\S]*?</event>");
 	private static final String PRINTOUTS_DIRECTORY = "printouts";
+	private static final String FILTERED_PRINTOUTS_DIRECTORY = "filtered-printouts";
 	private static final String PRINTOUTS_INDEXFILE = "index.txt";
 	private static final String UNIX_LINE_SEPARATOR = "\n";
 	static final String LICENSE_HEADER;
@@ -88,11 +89,20 @@ public class PrintoutsToolkit {
 	 *             if the files could not be located.
 	 */
 	public static IOResourceSet[] getTestResources() throws IOException {
-		IOResourceSet recordings = RecordingToolkit.getRecordings();
+		TestToolkit.IndexedResources recordingsInfo = RecordingToolkit.getRecordingsWithExclusions();
+		IOResourceSet recordings = recordingsInfo.included;
 		IOResourceSet printouts = getPrintouts();
-		if (recordings.getResources().size() != printouts.getResources().size()) {
-			throw new RuntimeException("The number of printouts does not match the number of recording files.");
+
+		// Validate that we have printouts for all included recordings
+		int expectedPrintouts = recordings.getResources().size();
+		int actualPrintouts = printouts.getResources().size();
+
+		if (expectedPrintouts != actualPrintouts) {
+			throw new RuntimeException("The number of printout files (" + actualPrintouts
+					+ ") does not match the number of included recording files (" + expectedPrintouts + "). "
+					+ "Excluded recordings: " + recordingsInfo.excluded);
 		}
+
 		List<IOResourceSet> list = new ArrayList<>();
 		for (IOResource recordinfile : recordings) {
 			IOResource printoutFile = printouts.findWithPrefix(recordinfile.getName());
@@ -116,8 +126,66 @@ public class PrintoutsToolkit {
 		return TestToolkit.getProjectDirectory(PrintoutsToolkit.class, PRINTOUTS_DIRECTORY);
 	}
 
+	/**
+	 * Return the directory where the filtered printout files reside.
+	 *
+	 * @param contextClass
+	 *            the class to use for determining the module context
+	 * @return the filtered printout file directory
+	 * @throws IOException
+	 *             if the directory could not be found
+	 */
+	public static File getFilteredPrintoutDirectory(Class<?> contextClass) throws IOException {
+		return TestToolkit.getProjectDirectory(contextClass, FILTERED_PRINTOUTS_DIRECTORY);
+	}
+
 	private static IOResourceSet getPrintouts() throws IOException {
 		return TestToolkit.getResourcesInDirectory(PrintoutsToolkit.class, PRINTOUTS_DIRECTORY, PRINTOUTS_INDEXFILE);
+	}
+
+	/**
+	 * Return all filtered test resources (recording + printout pairs) for hidden frame filtering
+	 * tests. Uses classpath-based resource loading.
+	 *
+	 * @return all filtered test resources
+	 * @throws IOException
+	 *             if the resources could not be found
+	 */
+	public static IOResourceSet[] getFilteredTestResources() throws IOException {
+		TestToolkit.IndexedResources recordingsInfo = RecordingToolkit.getRecordingsWithExclusions();
+		IOResourceSet recordings = recordingsInfo.included;
+		IOResourceSet printouts = getFilteredPrintouts();
+
+		// Validate that we have filtered printouts for all included recordings
+		int expectedPrintouts = recordings.getResources().size();
+		int actualPrintouts = printouts.getResources().size();
+
+		if (expectedPrintouts != actualPrintouts) {
+			throw new RuntimeException("The number of filtered printout files (" + actualPrintouts
+					+ ") does not match the number of included recording files (" + expectedPrintouts + "). "
+					+ "Excluded recordings: " + recordingsInfo.excluded);
+		}
+
+		List<IOResourceSet> list = new ArrayList<>();
+		for (IOResource recordinfile : recordings) {
+			IOResource printoutFile = printouts.findWithPrefix(recordinfile.getName());
+			if (printoutFile == null) {
+				throw new RuntimeException("Could not find filtered printout file for " + recordinfile);
+			}
+			list.add(new IOResourceSet(recordinfile, printoutFile));
+		}
+
+		return list.toArray(new IOResourceSet[list.size()]);
+	}
+
+	private static IOResourceSet getFilteredPrintouts() throws IOException {
+		// Use classpath-based resource loading - works across modules at runtime
+		return TestToolkit.getResourcesInDirectory(PrintoutsToolkit.class, FILTERED_PRINTOUTS_DIRECTORY,
+				PRINTOUTS_INDEXFILE);
+	}
+
+	public static List<String> getEventsFromFilteredPrintout(IOResourceSet resourceSet) throws IOException, Exception {
+		return getEventsFromPrintout(resourceSet);
 	}
 
 	/**
@@ -134,6 +202,28 @@ public class PrintoutsToolkit {
 				Writer writer = new OutputStreamWriter(output, RecordingToolkit.RECORDING_TEXT_FILE_CHARSET)) {
 			writer.append(LICENSE_HEADER);
 			IItemCollection events = JfrLoaderToolkit.loadEvents(sourceFile);
+			for (String e : getEventsAsStrings(events)) {
+				writer.append(e).append('\n');
+			}
+		}
+	}
+
+	/**
+	 * Prints the contents of a recording to another file in text format with frame filtering.
+	 *
+	 * @param sourceFile
+	 *            the source recording file
+	 * @param destinationFile
+	 *            the destination file for the printing.
+	 * @param showHiddenFrames
+	 *            whether to include hidden frames in the output
+	 */
+	public static void printRecordingWithFrameFiltering(File sourceFile, File destinationFile, boolean showHiddenFrames)
+			throws IOException, CouldNotLoadRecordingException {
+		try (FileOutputStream output = new FileOutputStream(destinationFile);
+				Writer writer = new OutputStreamWriter(output, RecordingToolkit.RECORDING_TEXT_FILE_CHARSET)) {
+			writer.append(LICENSE_HEADER);
+			IItemCollection events = JfrLoaderToolkit.loadEvents(sourceFile, showHiddenFrames);
 			for (String e : getEventsAsStrings(events)) {
 				writer.append(e).append('\n');
 			}
