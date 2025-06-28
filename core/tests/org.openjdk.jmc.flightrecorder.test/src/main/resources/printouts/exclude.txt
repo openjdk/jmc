@@ -1,0 +1,7 @@
+# Printout baselines excluded from testing
+# These correspond to excluded recordings
+
+# No events in source recording - causes test failures
+hs_err_jdk-16.jfr.txt
+overlap.jfr.txt
+char_attribute.jfr.txt

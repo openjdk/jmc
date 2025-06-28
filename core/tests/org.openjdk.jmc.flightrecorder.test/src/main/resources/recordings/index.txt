@@ -1,3 +1,7 @@
+# JDK Flight Recorder test recordings
+# Lines starting with # are comments and will be ignored
+
+# Core JDK version recordings
 7u40.jfr
 7u60.jfr
 7u76.jfr
@@ -6,3 +10,14 @@
 8u40.jfr
 8u60.jfr
 9u0.jfr
+
+# Special parser test recordings
+flush_incremental_metadata.jfr
+flush_metadata.jfr
+metadata_control.jfr
+metadata_new.jfr
+
+# Edge case test recordings, not suitable for general parser tests
+char_attribute.jfr
+hs_err_jdk-16.jfr
+overlap.jfr

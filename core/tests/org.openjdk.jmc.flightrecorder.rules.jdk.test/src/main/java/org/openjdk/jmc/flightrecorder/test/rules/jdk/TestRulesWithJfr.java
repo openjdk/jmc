@@ -273,7 +273,7 @@ public class TestRulesWithJfr {
 		ResultProvider rp = new ResultProvider();
 		Map<Class<? extends IRule>, Severity> evaluatedRules = new HashMap<>();
 		try {
-			IItemCollection events = JfrLoaderToolkit.loadEvents(jfr.open());
+			IItemCollection events = JfrLoaderToolkit.loadEvents(jfr.open(), true);
 			for (IRule rule : RuleRegistry.getRules()) {
 				if (shouldEvaluate(evaluatedRules, rule)) {
 					try {

@@ -48,7 +48,6 @@ import org.openjdk.jmc.flightrecorder.internal.IChunkSupplier;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilterConstantPoolExtension;
 
 /**
  * A collection of methods used to load binary JFR data into {@link IItemCollection}
@@ -65,12 +64,27 @@ public class JfrLoaderToolkit {
 	 */
 	private static EventArrays loadFile(List<File> files, List<? extends IParserExtension> extensions)
 			throws IOException, CouldNotLoadRecordingException {
+		return loadFileWithFrameFilter(files, extensions, FrameFilter.EXCLUDE_HIDDEN);
+	}
+
+	/**
+	 * @param files
+	 *            the files to read the recording from
+	 * @param extensions
+	 *            the extensions to use when parsing the file
+	 * @param frameFilter
+	 *            the frame filter to apply during parsing, or null for no filtering
+	 * @return an object holding an array of EventArrays (one event type per EventArray)
+	 */
+	private static EventArrays loadFileWithFrameFilter(
+		List<File> files, List<? extends IParserExtension> extensions, FrameFilter frameFilter)
+			throws IOException, CouldNotLoadRecordingException {
 		List<InputStream> streams = new ArrayList<>(files.size());
 		for (File file : files) {
 			streams.add(IOToolkit.openUncompressedStream(file));
 		}
 		try (InputStream stream = new SequenceInputStream(Collections.enumeration(streams))) {
-			return FlightRecordingLoader.loadStream(stream, extensions, false, true);
+			return FlightRecordingLoader.loadStream(stream, extensions, false, true, frameFilter);
 		}
 	}
 
@@ -98,8 +112,26 @@ public class JfrLoaderToolkit {
 	 */
 	public static IItemCollection loadEvents(InputStream stream, List<? extends IParserExtension> extensions)
 			throws CouldNotLoadRecordingException, IOException {
+		return loadEvents(stream, extensions, false);
+	}
+
+	/**
+	 * Loads a potentially zipped or gzipped input stream using the parser extensions loaded from
+	 * the java service loader
+	 *
+	 * @param stream
+	 *            the stream of recordings to read from
+	 * @param extensions
+	 *            the extensions to use when parsing the file
+	 * @param showHiddenFrames
+	 * @return the events in the recording
+	 */
+	public static IItemCollection loadEvents(
+		InputStream stream, List<? extends IParserExtension> extensions, boolean showHiddenFrames)
+			throws IOException, CouldNotLoadRecordingException {
+		FrameFilter frameFilter = showHiddenFrames ? null : FrameFilter.EXCLUDE_HIDDEN;
 		try (InputStream in = IOToolkit.openUncompressedStream(stream)) {
-			return EventCollection.build(FlightRecordingLoader.loadStream(in, extensions, false, true));
+			return EventCollection.build(FlightRecordingLoader.loadStream(in, extensions, false, true, frameFilter));
 		}
 	}
 
@@ -155,11 +187,11 @@ public class JfrLoaderToolkit {
 	 */
 	public static IItemCollection loadEvents(InputStream stream, boolean showHiddenFrames)
 			throws IOException, CouldNotLoadRecordingException {
-		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
-		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
+		FrameFilter frameFilter = showHiddenFrames ? null : FrameFilter.EXCLUDE_HIDDEN;
+		try (InputStream in = IOToolkit.openUncompressedStream(stream)) {
+			return EventCollection.build(FlightRecordingLoader.loadStream(in,
+					ParserExtensionRegistry.getParserExtensions(), false, true, frameFilter));
 		}
-		return loadEvents(stream, extensions);
 	}
 
 	/**
@@ -190,11 +222,9 @@ public class JfrLoaderToolkit {
 	 */
 	public static IItemCollection loadEvents(List<File> files, boolean showHiddenFrames)
 			throws IOException, CouldNotLoadRecordingException {
-		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
-		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
-		}
-		return loadEvents(files, extensions);
+		FrameFilter frameFilter = showHiddenFrames ? null : FrameFilter.EXCLUDE_HIDDEN;
+		return EventCollection
+				.build(loadFileWithFrameFilter(files, ParserExtensionRegistry.getParserExtensions(), frameFilter));
 	}
 
 	/**
@@ -214,11 +244,9 @@ public class JfrLoaderToolkit {
 	public static EventArrays loadStream(
 		InputStream stream, boolean hideExperimentals, boolean ignoreTruncatedChunk, boolean showHiddenFrames)
 			throws CouldNotLoadRecordingException, IOException {
-		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
-		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
-		}
-		return FlightRecordingLoader.loadStream(stream, extensions, hideExperimentals, ignoreTruncatedChunk);
+		FrameFilter frameFilter = showHiddenFrames ? null : FrameFilter.EXCLUDE_HIDDEN;
+		return FlightRecordingLoader.loadStream(stream, ParserExtensionRegistry.getParserExtensions(),
+				hideExperimentals, ignoreTruncatedChunk, frameFilter);
 	}
 
 	/**
@@ -240,12 +268,8 @@ public class JfrLoaderToolkit {
 	public static EventArrays readChunks(
 		Runnable monitor, IChunkSupplier chunkSupplier, boolean hideExperimentals, boolean ignoreTruncatedChunk,
 		boolean showHiddenFrames) throws CouldNotLoadRecordingException, IOException {
-		List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
-		if (!showHiddenFrames) {
-			extensions.add(new FrameFilterConstantPoolExtension(FrameFilter.EXCLUDE_HIDDEN));
-		}
-		return FlightRecordingLoader.readChunks(monitor, extensions, chunkSupplier, hideExperimentals,
-				ignoreTruncatedChunk);
+		FrameFilter frameFilter = showHiddenFrames ? null : FrameFilter.EXCLUDE_HIDDEN;
+		return FlightRecordingLoader.readChunks(monitor, ParserExtensionRegistry.getParserExtensions(), chunkSupplier,
+				hideExperimentals, ignoreTruncatedChunk, frameFilter);
 	}
-
 }
