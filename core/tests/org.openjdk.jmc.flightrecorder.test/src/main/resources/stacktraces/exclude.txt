@@ -1,10 +1,5 @@
-# Recordings excluded from baseline generation and testing
-# These recordings are designed for specific edge case tests
-
-# Contains no events - tests parser handling of empty/malformed recordings
-hs_err_jdk-16.jfr
-
-# Special parser test files that don't contain standard JDK events
-# These should be loaded explicitly by specific tests, not in general test loops
-overlap.jfr
-char_attribute.jfr
+# Stacktrace baselines excluded from testing
+# These correspond to excluded recordings
+hs_err_jdk-16.jfr.txt
+overlap.jfr.txt
+char_attribute.jfr.txt

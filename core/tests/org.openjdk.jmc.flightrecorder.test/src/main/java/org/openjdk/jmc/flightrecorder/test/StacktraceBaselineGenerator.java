@@ -253,15 +253,6 @@ public class StacktraceBaselineGenerator {
 				}
 			}
 			writer.println();
-
-			// Write edge case recordings (including excluded ones). These are the recordings that should not be used for general parser validation and testing
-			writer.println("# Edge case test stacktraces");
-			for (File recordingFile : recordingFiles) {
-				if (recordingFile.isFile() && recordingFile.getName().endsWith(".jfr")
-						&& excludedRecordings.contains(recordingFile.getName())) {
-					writer.println(recordingFile.getName() + ".txt");
-				}
-			}
 		}
 		System.out.println("Created " + directoryName + " index file: " + stacktraceIndexFile);
 
