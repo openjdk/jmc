@@ -36,6 +36,7 @@ import java.awt.Polygon;
 import java.util.Iterator;
 
 import org.openjdk.jmc.common.xydata.DataSeries;
+import org.openjdk.jmc.common.xydata.IXYData;
 import org.openjdk.jmc.greychart.YAxis;
 import org.openjdk.jmc.greychart.impl.LongWorldToDeviceConverter;
 import org.openjdk.jmc.greychart.impl.OptimizingProvider;
@@ -95,7 +96,7 @@ public class CompositeOptimizingProvider implements OptimizingProvider {
 	}
 
 	@Override
-	public DataSeries getDataSeries() {
+	public DataSeries<IXYData<Long, Number>> getDataSeries() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -157,6 +158,54 @@ public class CompositeOptimizingProvider implements OptimizingProvider {
 		for (OptimizingProvider provider : providers) {
 			provider.setRange(start, end);
 		}
+	}
+
+	@Override
+	public long getDataMinX() {
+		long min = Long.MAX_VALUE;
+		for (OptimizingProvider provider : providers) {
+			long dataMinX = provider.getDataMinX();
+			if (dataMinX != Long.MAX_VALUE) {
+				min = Math.min(dataMinX, min);
+			}
+		}
+		return min;
+	}
+
+	@Override
+	public long getDataMaxX() {
+		long max = Long.MIN_VALUE;
+		for (OptimizingProvider provider : providers) {
+			long dataMaxX = provider.getDataMaxX();
+			if (dataMaxX != Long.MIN_VALUE) {
+				max = Math.max(dataMaxX, max);
+			}
+		}
+		return max;
+	}
+
+	@Override
+	public double getDataMinY() {
+		double min = Double.POSITIVE_INFINITY;
+		for (OptimizingProvider provider : providers) {
+			double dataMinY = provider.getDataMinY();
+			if (!Double.isNaN(dataMinY)) {
+				min = Math.min(dataMinY, min);
+			}
+		}
+		return min;
+	}
+
+	@Override
+	public double getDataMaxY() {
+		double max = Double.NEGATIVE_INFINITY;
+		for (OptimizingProvider provider : providers) {
+			double dataMaxY = provider.getDataMaxY();
+			if (!Double.isNaN(dataMaxY)) {
+				max = Math.max(dataMaxY, max);
+			}
+		}
+		return max;
 	}
 
 	public void setIntegrate(boolean integrate) {
