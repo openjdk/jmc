@@ -184,6 +184,11 @@ public class StacktraceModel {
 				return UNKNOWN_FRAME;
 			}
 			List<? extends IMCFrame> frames = st.getFrames();
+			frames = frames.stream()
+					.filter(imcFrame -> ((imcFrame.getMethod() != null)
+							&& ((imcFrame.getMethod().isHidden() == null) || (!imcFrame.getMethod().isHidden()))))
+					.toList();
+
 			if (frames != null && frameIndex < frames.size()) {
 				return frames.get(threadRootAtTop ? frames.size() - 1 - frameIndex : frameIndex);
 			}
