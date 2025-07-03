@@ -776,4 +776,5 @@ class StructTypes {
 			}
 		}
 	}
+
 }

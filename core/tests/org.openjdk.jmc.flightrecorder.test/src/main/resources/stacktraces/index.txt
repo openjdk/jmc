@@ -1,3 +1,7 @@
+# Stacktrace baselines for structure validation
+# Lines starting with # are comments and will be ignored
+
+# Core JDK version stacktraces
 7u40.jfr.txt
 7u60.jfr.txt
 7u76.jfr.txt
@@ -6,3 +10,14 @@
 8u40.jfr.txt
 8u60.jfr.txt
 9u0.jfr.txt
+
+# Special parser test stacktraces
+flush_incremental_metadata.jfr.txt
+flush_metadata.jfr.txt
+metadata_control.jfr.txt
+metadata_new.jfr.txt
+
+# Edge case test stacktraces
+char_attribute.jfr.txt
+hs_err_jdk-16.jfr.txt
+overlap.jfr.txt

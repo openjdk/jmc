@@ -112,6 +112,8 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		includeExperimental.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		Button allowIncompleteRecording = createAllowIncompleteRecordingFileCheckBox(container);
 		allowIncompleteRecording.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		Button showHiddenFrames = createShowHiddenFramesCheckBox(container);
+		showHiddenFrames.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 
 		Group dumpDefaultGroup = new Group(container, SWT.NONE);
 		dumpDefaultGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -411,6 +413,11 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 	private Button createAllowIncompleteRecordingFileCheckBox(Composite parent) {
 		return createCheckBox(parent, Messages.PREFERENCES_ALLOW_INCOMPLETE_RECORDING_FILE,
 				PreferenceKeys.PROPERTY_ALLOW_INCOMPLETE_RECORDING_FILE);
+	}
+
+	private Button createShowHiddenFramesCheckBox(Composite parent) {
+		return createCheckBox(parent, Messages.PREFERENCES_STACKTRACE_SHOW_HIDDEN_FRAMES,
+				PreferenceKeys.PROPERTY_STACKTRACE_SHOW_HIDDEN_FRAMES);
 	}
 
 	@Override

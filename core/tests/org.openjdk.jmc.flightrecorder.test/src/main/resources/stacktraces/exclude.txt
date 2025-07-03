@@ -1,0 +1,5 @@
+# Stacktrace baselines excluded from testing
+# These correspond to excluded recordings
+hs_err_jdk-16.jfr.txt
+overlap.jfr.txt
+char_attribute.jfr.txt
