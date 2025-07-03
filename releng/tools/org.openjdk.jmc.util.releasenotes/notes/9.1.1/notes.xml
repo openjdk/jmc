@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<notes>
+    <component>
+        <name>General</name>
+        <note version="9.1.1">
+            <title>JMC 9.1.1 - New Release!</title>
+            <description>
+                This is the latest (July 2025) release of JDK Mission Control. JMC 9.1.1 requires JDK 21+ to run and introduces 
+                only a platform update, that fixes a critical issue on Windows. This version continues to support connecting to, 
+                and parsing JFR recordings from, OpenJDK 8u272+ and Oracle JDK 7u40+, and can open and visualize flight recordings from JDK 7 
+                and 8. JDK Mission Control is available for Windows (x86_64), Mac OS X (ARM and x86_64), and Linux (ARM and x86_64).
+            </description>
+            <image>general/jmc.png</image>
+        </note>
+		<note version="9.1.1">
+			<title>Eclipse 4.36 support</title>
+			<description>
+				The Mission Control client is now built to run optimally
+				on Eclipse 2025-06 and later. To install JDK Mission Control into
+				Eclipse, go to the update site (Help | Install New Software...). The
+				URL to the update site will be vendor specific, and some vendors
+				will instead provide an archive with the update site.
+			</description>
+			<image>general/eclipse.png</image>
+		</note>
+    </component>
+    <!-- Add more components as needed -->
+    <bugfixes>
+        <!-- Bug fixes in JMC 9 -->
+        <bugfix>
+            <area>JFR</area>
+            <bugid>7003</bugid>
+            <synopsis>The graph view, heatmap view and dependency view now work on Windows</synopsis>
+            <description>
+            	The update to the latest Eclipse platform includes an updated browser component for windows,
+            	that enables the Graph View, Heatmap View, and Dependency View to now work properly.
+            </description>
+        </bugfix>
+    </bugfixes>
+</notes>
