@@ -76,7 +76,7 @@
 	</modules>
 	<properties>
 		<!-- Config -->
-		<revision>9.1.0</revision>
+		<revision>9.1.1</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<scmConnection>scm:git:git://github.com/openjdk/jmc.git</scmConnection>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
