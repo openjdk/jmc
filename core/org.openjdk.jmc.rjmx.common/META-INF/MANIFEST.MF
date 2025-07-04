@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: RJMX Common
 Bundle-SymbolicName: org.openjdk.jmc.rjmx.common;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Bundle-Version: 9.1.0.qualifier
+Bundle-Version: 9.1.1.qualifier
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.openjdk.jmc.common,
  org.openjdk.jmc.flightrecorder,

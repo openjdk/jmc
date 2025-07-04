@@ -37,7 +37,7 @@ package org.openjdk.jmc.common.version;
  * Handles Java 9 version {@code 9.1.3.0-ea}
  * (<i>{@code spec.feature.security.patch[-prebuildinfo]}</i>). Handles old Java versions
  * {@code 1.8.0_40-ea} (<i>{@code major.minor.micro_update[-prebuildinfo]}</i>). Does not do any
- * interpretation of the numbers. Does not handle comparison between {@code 9.1.0} and
+ * interpretation of the numbers. Does not handle comparison between {@code 9.1.1} and
  * {@code 1.9.2.0} (a version which should never exist).
  */
 public class JavaVersion {

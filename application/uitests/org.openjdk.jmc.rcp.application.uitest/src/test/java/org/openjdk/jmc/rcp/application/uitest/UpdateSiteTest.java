@@ -56,7 +56,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.MCTable;
  */
 public class UpdateSiteTest extends MCJemmyTestBase {
 	private static final String UPDATESITE_PROP_PREFIX = "updatesite.";
-	private static final String JMC_VERSION = System.getProperty("jmc.test.jmc.version", "9.1.0");
+	private static final String JMC_VERSION = System.getProperty("jmc.test.jmc.version", "9.1.1");
 	private static final String KEY_UPDATE_PROPERTIES_PATH = "org.openjdk.jmc.updatesites.properties";
 
 	/**

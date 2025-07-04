@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: flamegraph
 Bundle-SymbolicName: org.openjdk.jmc.flightrecorder.flamegraph; singleton:=true
-Bundle-Version: 9.1.0.qualifier
+Bundle-Version: 9.1.1.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.openjdk.jmc.flightrecorder,
