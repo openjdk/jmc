@@ -38,7 +38,7 @@
 	<groupId>org.openjdk.jmc</groupId>
 	<artifactId>external-dependencies</artifactId>
 	<packaging>war</packaging>
-	<version>${revision}${changelist}</version>
+	<version>10.0.0</version>
 
 	<properties>
 		<!-- Config -->
