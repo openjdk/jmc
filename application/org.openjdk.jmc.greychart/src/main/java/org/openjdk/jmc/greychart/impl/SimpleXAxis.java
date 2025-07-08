@@ -52,7 +52,7 @@ public class SimpleXAxis extends AbstractSimpleAxis implements XAxis, LongAxis {
 	 * @param owner
 	 *            the chart of the owner.
 	 */
-	public SimpleXAxis(SeriesGreyChart owner) {
+	public SimpleXAxis(SeriesGreyChart<?> owner) {
 		super(owner);
 		setTickMarksEnabled(false);
 	}

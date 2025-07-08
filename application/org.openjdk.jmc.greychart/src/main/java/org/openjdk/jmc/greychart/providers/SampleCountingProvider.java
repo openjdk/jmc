@@ -51,9 +51,8 @@ import org.openjdk.jmc.greychart.impl.WorldToDeviceConverter;
  * can either be counted at the start of each event or for the entire duration of the event
  * (integrated).
  */
-
-public class SampleCountingProvider implements OptimizingProvider {
-	private final DataSeries<IXYData> m_dataSeries;
+public class SampleCountingProvider extends AbstractOptimizingProvider {
+	private final DataSeries<IXYData<Long, Number>> m_dataSeries;
 	private final double m_yMultiplier;
 	private final XAxis m_xAxis;
 	private final CancelService m_cancelService;
@@ -69,8 +68,8 @@ public class SampleCountingProvider implements OptimizingProvider {
 	private volatile boolean dataChangeOccured;
 	private final boolean m_integrate;
 
-	public SampleCountingProvider(DataSeries<IXYData> s, double yMultiplier, XAxis xAxis, CancelService cancelService,
-			boolean integrate) {
+	public SampleCountingProvider(DataSeries<IXYData<Long, Number>> s, double yMultiplier, XAxis xAxis,
+			CancelService cancelService, boolean integrate) {
 		m_dataSeries = s;
 		m_yMultiplier = yMultiplier;
 		m_cancelService = cancelService;
@@ -160,7 +159,7 @@ public class SampleCountingProvider implements OptimizingProvider {
 	}
 
 	private AbstractSampler createSampleBuffer(int width) {
-		Iterator<IXYData> it = m_dataSeries.createIterator(m_requestedStartX, m_requestedEndX);
+		Iterator<IXYData<Long, Number>> it = m_dataSeries.createIterator(m_requestedStartX, m_requestedEndX);
 		if (!it.hasNext()) {
 			return isIntegrate() ? new IntegratingSampleCountingBuffer(0) : new SampleCountingBuffer(0);
 		}
@@ -168,16 +167,16 @@ public class SampleCountingProvider implements OptimizingProvider {
 				: new SampleCountingBuffer(width);
 		long worldWidth = m_xAxis.getMax().longValue() - m_xAxis.getMin().longValue();
 		long leftEdge = m_xAxis.getMin().longValue();
-		IXYData data = findFirstPoint(sampleBuffer, it, worldWidth, leftEdge);
+		IXYData<Long, Number> data = findFirstPoint(sampleBuffer, it, worldWidth, leftEdge);
 
-		long x = getXAsLong(data);
+		long x = data.getX();
 		if (x >= leftEdge && x <= (leftEdge + worldWidth)) {
 			addXYDataPoint(sampleBuffer, worldWidth, leftEdge, data);
 		}
 
 		while (it.hasNext() && m_cancelService.isNotCancelled()) {
 			data = it.next();
-			x = getXAsLong(data);
+			x = data.getX();
 			if (x < leftEdge && isIntegrate()) {
 				addLeftEdgeCrossingValue(sampleBuffer, worldWidth, leftEdge, data);
 			} else if (x < leftEdge + worldWidth) {
@@ -190,28 +189,22 @@ public class SampleCountingProvider implements OptimizingProvider {
 		return sampleBuffer;
 	}
 
-	private void addLeftEdgeCrossingValue(AbstractSampler sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
-		long x = getXAsLong(data);
-		long y = getYAsLong(data);
+	private void addLeftEdgeCrossingValue(
+		AbstractSampler sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
+		long x = data.getX();
+		long y = data.getY().longValue();
 		if (x + y >= leftEdge) {
 			addIntegratedValue((IntegratingSampleCountingBuffer) sampleBuffer, worldWidth, leftEdge, leftEdge, y,
 					x + y - leftEdge);
 		}
 	}
 
-	private long getXAsLong(IXYData data) {
-		return ((Number) data.getX()).longValue();
-	}
-
-	private long getYAsLong(IXYData data) {
-		return ((Number) data.getY()).longValue();
-	}
-
-	private IXYData findFirstPoint(AbstractSampler sampleBuffer, Iterator<IXYData> it, long worldWidth, long leftEdge) {
-		IXYData firstDataPoint = null;
+	private IXYData<Long, Number> findFirstPoint(
+		AbstractSampler sampleBuffer, Iterator<IXYData<Long, Number>> it, long worldWidth, long leftEdge) {
+		IXYData<Long, Number> firstDataPoint = null;
 		if (it.hasNext()) {
 			firstDataPoint = it.next();
-			long x = getXAsLong(firstDataPoint);
+			long x = firstDataPoint.getX();
 			// No boundary point - just return it.
 			if (x >= leftEdge) {
 				return firstDataPoint;
@@ -219,8 +212,8 @@ public class SampleCountingProvider implements OptimizingProvider {
 		}
 		// Look for boundary...
 		while (it.hasNext()) {
-			IXYData data = it.next();
-			long x = getXAsLong(data);
+			IXYData<Long, Number> data = it.next();
+			long x = data.getX();
 			if (isIntegrate()) {
 				addLeftEdgeCrossingValue(sampleBuffer, worldWidth, leftEdge, firstDataPoint);
 			}
@@ -234,7 +227,8 @@ public class SampleCountingProvider implements OptimizingProvider {
 		return firstDataPoint;
 	}
 
-	private void addXYDataPoint(AbstractSampler sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
+	private void addXYDataPoint(
+		AbstractSampler sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
 		if (isIntegrate()) {
 			addIntegratedXYDataPoint((IntegratingSampleCountingBuffer) sampleBuffer, worldWidth, leftEdge, data);
 		} else {
@@ -242,9 +236,10 @@ public class SampleCountingProvider implements OptimizingProvider {
 		}
 	}
 
-	private void addNormalXYDataPoint(SampleCountingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
-		double n = getNormalizedX(getXAsLong(data), worldWidth, leftEdge);
-		double y = ((Number) data.getY()).doubleValue();
+	private void addNormalXYDataPoint(
+		SampleCountingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
+		double n = getNormalizedX(data.getX(), worldWidth, leftEdge);
+		double y = data.getY().doubleValue();
 		sampleBuffer.addDataPoint(n, y);
 	}
 
@@ -256,8 +251,9 @@ public class SampleCountingProvider implements OptimizingProvider {
 	}
 
 	private void addIntegratedXYDataPoint(
-		IntegratingSampleCountingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData data) {
-		addIntegratedValue(sampleBuffer, worldWidth, leftEdge, getXAsLong(data), getYAsLong(data), getYAsLong(data));
+		IntegratingSampleCountingBuffer sampleBuffer, long worldWidth, long leftEdge, IXYData<Long, Number> data) {
+		addIntegratedValue(sampleBuffer, worldWidth, leftEdge, data.getX(), data.getY().longValue(),
+				data.getY().longValue());
 	}
 
 	private double getNormalizedX(long x, long worldWidth, long leftEdge) {
@@ -265,7 +261,7 @@ public class SampleCountingProvider implements OptimizingProvider {
 	}
 
 	@Override
-	public DataSeries getDataSeries() {
+	public DataSeries<IXYData<Long, Number>> getDataSeries() {
 		return m_dataSeries;
 	}
 
