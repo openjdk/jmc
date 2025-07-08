@@ -46,6 +46,7 @@ import org.openjdk.jmc.common.util.MCStackTrace;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.ValueDescriptor;
 import org.openjdk.jmc.flightrecorder.internal.util.CanonicalConstantMap;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 import org.openjdk.jmc.flightrecorder.internal.util.ParserToolkit;
 
 /**
@@ -62,10 +63,17 @@ final class StackTraceFactory implements IPoolFactory<IMCStackTrace> {
 	private final int m_fieldCount;
 
 	private final CanonicalConstantMap<IMCStackTrace> traceMap;
+	private final FrameFilter frameFilter;
 
 	public StackTraceFactory(ValueDescriptor[] traceDescriptors, CanonicalConstantMap<IMCStackTrace> traceMap)
 			throws InvalidJfrFileException {
+		this(traceDescriptors, traceMap, null);
+	}
+
+	public StackTraceFactory(ValueDescriptor[] traceDescriptors, CanonicalConstantMap<IMCStackTrace> traceMap,
+			FrameFilter frameFilter) throws InvalidJfrFileException {
 		this.traceMap = traceMap;
+		this.frameFilter = frameFilter != null ? frameFilter : FrameFilter.INCLUDE_ALL;
 		m_frameIndex = ValueDescriptor.getIndex(traceDescriptors, "frames"); //$NON-NLS-1$
 		m_truncateIndex = ValueDescriptor.getIndex(traceDescriptors, "truncated"); //$NON-NLS-1$
 		if (m_frameIndex != -1) {
@@ -110,13 +118,18 @@ final class StackTraceFactory implements IPoolFactory<IMCStackTrace> {
 		return new MCStackTrace(buildFilteredStackTrace(flrFrames), TruncationState.fromBoolean(truncated));
 	}
 
-	private static List<IMCFrame> buildFilteredStackTrace(IMCFrame[] frames) {
+	private List<IMCFrame> buildFilteredStackTrace(IMCFrame[] frames) {
 		ArrayList<IMCFrame> list = new ArrayList<>(frames.length);
 		for (IMCFrame f : frames) {
+			// Always apply the original oracle.jrockit.jfr filtering for V0 recordings
 			if (f.getMethod() == null || f.getMethod().getType().getPackage() == null
 					|| f.getMethod().getType().getPackage().getName() == null
 					|| !f.getMethod().getType().getPackage().getName().startsWith("oracle.jrockit.jfr.")) { //$NON-NLS-1$
-				list.add(f);
+
+				// Then apply additional FrameFilter if specified
+				if (frameFilter == FrameFilter.INCLUDE_ALL || frameFilter.shouldInclude(f)) {
+					list.add(f);
+				}
 			}
 		}
 		list.trimToSize();
