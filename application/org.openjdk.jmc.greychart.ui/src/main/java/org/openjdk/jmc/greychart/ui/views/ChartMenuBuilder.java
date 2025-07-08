@@ -466,7 +466,7 @@ public class ChartMenuBuilder {
 		protected Control createContents(Composite parent) {
 			getShell().setText(Messages.CustomTimeRangeDialog_TITLE);
 			Control contents = super.createContents(parent);
-			contents.getShell().setSize(450, 300);
+			contents.getShell().setSize(550, 300);
 			DisplayToolkit.placeDialogInCenter(getParentShell(), getShell());
 			setMessage(Messages.CustomTimeRangeDialog_MESSAGE);
 			setTitle(Messages.CustomTimeRangeDialog_TITLE);
@@ -485,6 +485,7 @@ public class ChartMenuBuilder {
 		private Control createCustomArea(Composite parent) {
 			Composite timeFields = new Composite(parent, SWT.NONE);
 			timeFields.setLayout(new GridLayout(2, false));
+			timeFields.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 			// Start time
 			Label startLabel = new Label(timeFields, SWT.NONE);
@@ -522,6 +523,11 @@ public class ChartMenuBuilder {
 
 		public long getToTimeNanos() {
 			return toTimeNanos;
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return true;
 		}
 
 		@Override
