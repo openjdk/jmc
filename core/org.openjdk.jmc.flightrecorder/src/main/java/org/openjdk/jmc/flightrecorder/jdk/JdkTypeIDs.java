@@ -108,6 +108,8 @@ public final class JdkTypeIDs {
 	public static final String GARBAGE_COLLECTION = PREFIX + "GarbageCollection";
 	public static final String CONCURRENT_MODE_FAILURE = PREFIX + "ConcurrentModeFailure";
 
+	public static final String ZGC_ALLOCATION_STALL = PREFIX + "ZAllocationStall";
+
 	public static final String THROWABLES_STATISTICS = PREFIX + "ExceptionStatistics";
 	public static final String ERRORS_THROWN = PREFIX + "JavaErrorThrow";
 	/*

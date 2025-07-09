@@ -319,6 +319,11 @@ public class Messages {
 	public static final String GcFreedRatioRule_RESULT_OK = "GcFreedRatioRule_RESULT_OK"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_RESULT_SHORT_DESCRIPTION = "GcFreedRatioRule_RESULT_SHORT_DESCRIPTION"; //$NON-NLS-1$
 	public static final String GarbageCollectionInfo_RULE_NAME = "GarbageCollectionInfo_RULE_NAME"; //$NON-NLS-1$
+	public static final String ZGCAllocationStall_RULE_NAME = "ZGCAllocationStall_RULE_NAME"; //$NON-NLS-1$
+	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
+	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String ZGCAllocationStallRule_CONFIG_WARN_LIMIT = "ZGCAllocationStallRule_CONFIG_WARN_LIMIT"; //$NON-NLS-1$
+	public static final String ZGCAllocationStallRule_CONFIG_WARN_LIMIT_LONG = "ZGCAllocationStallRule_CONFIG_WARN_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_RULE_NAME = "GcFreedRatioRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE = "GcFreedRatioRule_WINDOW_SIZE"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_WINDOW_SIZE_DESC = "GcFreedRatioRule_WINDOW_SIZE_DESC"; //$NON-NLS-1$
@@ -476,7 +481,7 @@ public class Messages {
 	public static final String ManyRunningProcessesRule_TEXT_RECOMMENDATION = "ManyRunningProcessesRule_TEXT_RECOMMENDATION"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_RULE_NAME = "MetaspaceOomRuleFactory_RULE_NAME"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_TEXT_OK = "MetaspaceOomRuleFactory_TEXT_OK"; //$NON-NLS-1$
-	public static final String MetaspaceOomRuleFactory_TEXT_CAUSE = "MetaspaceOomRuleFactory_TEXT_CAUSE"; //$NON-NLS-1$
+	public static final String MetaspaceOomRuleFactory_TEXT_CAUSE = "MetaspaceOomRuleFactory_TEXT_CAUSE"; //$NON-NLS-1$	
 	public static final String MetaspaceOomRuleFactory_TEXT_SET_ACTION = "MetaspaceOomRuleFactory_TEXT_SET_ACTION"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_TEXT_INCREASE_ACTION = "MetaspaceOomRuleFactory_TEXT_INCREASE_ACTION"; //$NON-NLS-1$
 	public static final String MetaspaceOomRuleFactory_TEXT_WARN = "MetaspaceOomRuleFactory_TEXT_WARN"; //$NON-NLS-1$
@@ -503,6 +508,9 @@ public class Messages {
 	public static final String MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG = "MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO = "NumberOfGcThreadsRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG = "NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
+	public static final String ZgcAllocationStall_TEXT_INFO = "ZgcAllocationStall_TEXT_INFO"; //$NON-NLS-1$
+	public static final String ZgcAllocationStall_TEXT_WARN = "ZgcAllocationStall_TEXT_WARN"; //$NON-NLS-1$
+	public static final String ZgcAllocationStall_TEXT_OK = "ZgcAllocationStall_TEXT_OK"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE_DESC = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE_DESC"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE"; //$NON-NLS-1$
