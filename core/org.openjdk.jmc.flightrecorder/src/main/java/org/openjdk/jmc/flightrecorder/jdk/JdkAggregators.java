@@ -96,6 +96,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.SOCKET_READ;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.SOCKET_WRITE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.ULONG_FLAG;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.VM_INFO;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.ZGC_ALLOCATION_STALL;
 
 import java.text.MessageFormat;
 
@@ -159,6 +160,14 @@ public final class JdkAggregators {
 			JdkAttributes.HEAP_USE_COMPRESSED_OOPS);
 	public static final IAggregator<String, ?> COMPRESSED_OOPS_MODE = distinctAsString(HEAP_CONF,
 			JdkAttributes.HEAP_COMPRESSED_OOPS_MODE);
+	//ZGC
+	public static final IAggregator<IQuantity, ?> ZGC_ALLOCATION_STALL_COUNT = Aggregators.count(
+			Messages.getString(Messages.AGGR_ZGC_ALLOCATION_STALL_COUNT),
+			Messages.getString(Messages.AGGR_ZGC_ALLOCATION_STALL_COUNT_DESC), JdkFilters.ZGC_ALLOCATION_STALL);
+	public static final IAggregator<IQuantity, ?> LONGEST_ZGC_ALLOCATION_STALL = Aggregators.max(ZGC_ALLOCATION_STALL,
+			DURATION);
+	public static final IAggregator<IQuantity, ?> TOTAL_ZGC_ALLOCATION_STALL = Aggregators.sum(ZGC_ALLOCATION_STALL,
+			DURATION);
 	// GC config
 	public static final IAggregator<String, ?> OLD_COLLECTOR = distinctAsString(GC_CONF, JdkAttributes.OLD_COLLECTOR);
 	public static final IAggregator<String, ?> YOUNG_COLLECTOR = distinctAsString(GC_CONF,
