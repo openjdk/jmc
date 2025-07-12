@@ -63,8 +63,30 @@ import org.openjdk.jmc.test.io.IOResourceSet;
 @SuppressWarnings("nls")
 public class StacktraceTestToolkit {
 	private static final String STACKTRACE_DIRECTORY = "stacktraces";
+	private static final String FILTERED_STACKTRACE_DIRECTORY = "filtered-stacktraces";
 	private static final String STACKTRACE_INDEXFILE = "index.txt";
 	private static final FrameSeparator methodFrameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
+
+	/**
+	 * Return a specific test resource by recording name.
+	 *
+	 * @param recordingName
+	 *            the name of the recording file (e.g., "7u40.jfr")
+	 * @return the resource set for the specified recording
+	 * @throws IOException
+	 *             if the files could not be located.
+	 */
+	public static IOResourceSet getTestResourceByRecordingName(String recordingName) throws IOException {
+		IOResourceSet[] testResources = getTestResources();
+
+		for (IOResourceSet resourceSet : testResources) {
+			if (resourceSet.getResource(0).getName().equals(recordingName)) {
+				return resourceSet;
+			}
+		}
+
+		throw new RuntimeException("Could not find test resource for recording: " + recordingName);
+	}
 
 	/**
 	 * Return the files that can be used for comparing old printouts.
@@ -74,12 +96,12 @@ public class StacktraceTestToolkit {
 	 *             if the files could not be located.
 	 */
 	public static IOResourceSet[] getTestResources() throws IOException {
-		IOResourceSet recordings = RecordingToolkit.getRecordings();
+		TestToolkit.IndexedResources recordingsInfo = RecordingToolkit.getRecordingsWithExclusions();
+		IOResourceSet recordings = recordingsInfo.included;
 		IOResourceSet stacktraces = getStackTraceBaselines();
-		if (recordings.getResources().size() != stacktraces.getResources().size()) {
-			throw new RuntimeException("The number of stacktraces baselines ( " + stacktraces.getResources().size()
-					+ ") does not match the number of recording files (" + recordings.getResources().size());
-		}
+
+		validateBaselinesMatchRecordings(recordings, stacktraces, recordingsInfo.excluded, "stacktrace baseline");
+
 		List<IOResourceSet> list = new ArrayList<>();
 		for (IOResource recordingfile : recordings) {
 			IOResource stacktraceFile = stacktraces.findWithPrefix(recordingfile.getName());
@@ -90,6 +112,62 @@ public class StacktraceTestToolkit {
 		}
 
 		return list.toArray(new IOResourceSet[list.size()]);
+	}
+
+	/**
+	 * Return the files that can be used for comparing filtered printouts.
+	 *
+	 * @return the test file need for comparing filtered files.
+	 * @throws IOException
+	 *             if the files could not be located.
+	 */
+	public static IOResourceSet[] getFilteredTestResources() throws IOException {
+		TestToolkit.IndexedResources recordingsInfo = RecordingToolkit.getRecordingsWithExclusions();
+		IOResourceSet recordings = recordingsInfo.included;
+		IOResourceSet stacktraces = getFilteredStackTraceBaselines();
+
+		validateBaselinesMatchRecordings(recordings, stacktraces, recordingsInfo.excluded,
+				"filtered stacktrace baseline");
+
+		List<IOResourceSet> list = new ArrayList<>();
+		for (IOResource recordingfile : recordings) {
+			IOResource stacktraceFile = stacktraces.findWithPrefix(recordingfile.getName());
+			if (stacktraceFile == null) {
+				throw new RuntimeException("Could not find filtered stacktrace baseline file for " + recordingfile);
+			}
+			list.add(new IOResourceSet(recordingfile, stacktraceFile));
+		}
+
+		return list.toArray(new IOResourceSet[list.size()]);
+	}
+
+	/**
+	 * Validates that baselines match recordings, considering exclusions properly.
+	 * 
+	 * @param recordings
+	 *            included recordings that should have baselines
+	 * @param baselines
+	 *            available baseline files
+	 * @param excludedRecordings
+	 *            recordings that are excluded and should not have baselines
+	 * @param baselineType
+	 *            description of baseline type for error messages
+	 */
+	private static void validateBaselinesMatchRecordings(
+		IOResourceSet recordings, IOResourceSet baselines, java.util.Set<String> excludedRecordings,
+		String baselineType) {
+		// For validation, we expect:
+		// 1. Every included recording has a corresponding baseline
+		// 2. No excluded recording should have a baseline (optional check)
+
+		int expectedBaselines = recordings.getResources().size();
+		int actualBaselines = baselines.getResources().size();
+
+		if (expectedBaselines != actualBaselines) {
+			throw new RuntimeException("The number of " + baselineType + " files (" + actualBaselines
+					+ ") does not match the number of included recording files (" + expectedBaselines + "). "
+					+ "Excluded recordings: " + excludedRecordings);
+		}
 	}
 
 	/**
@@ -108,6 +186,11 @@ public class StacktraceTestToolkit {
 				STACKTRACE_INDEXFILE);
 	}
 
+	private static IOResourceSet getFilteredStackTraceBaselines() throws IOException {
+		return TestToolkit.getResourcesInDirectory(StacktraceTestToolkit.class, FILTERED_STACKTRACE_DIRECTORY,
+				STACKTRACE_INDEXFILE);
+	}
+
 	/**
 	 * Prints the aggregated stacktraces from of a recording to another file in text format.
 	 *
@@ -118,9 +201,27 @@ public class StacktraceTestToolkit {
 	 */
 	public static void printStacktraces(File sourceFile, File destinationFile)
 			throws IOException, CouldNotLoadRecordingException {
+		printStacktracesWithFrameFiltering(sourceFile, destinationFile, true);
+	}
+
+	/**
+	 * Prints the aggregated stacktraces from of a recording to another file in text format with
+	 * frame filtering control.
+	 *
+	 * @param sourceFile
+	 *            the source recording file
+	 * @param destinationFile
+	 *            the destination file for the printing.
+	 * @param showHiddenFrames
+	 *            whether to include hidden frames in the output
+	 */
+	public static void printStacktracesWithFrameFiltering(
+		File sourceFile, File destinationFile, boolean showHiddenFrames)
+			throws IOException, CouldNotLoadRecordingException {
 		try (FileOutputStream output = new FileOutputStream(destinationFile);
 				Writer writer = new OutputStreamWriter(output, RecordingToolkit.RECORDING_TEXT_FILE_CHARSET)) {
-			IItemCollection events = JfrLoaderToolkit.loadEvents(sourceFile);
+			writer.append(PrintoutsToolkit.LICENSE_HEADER);
+			IItemCollection events = JfrLoaderToolkit.loadEvents(sourceFile, showHiddenFrames);
 			for (String e : getAggregatedStacktraceLines(events, methodFrameSeparator)) {
 				writer.append(e).append('\n');
 			}
@@ -128,6 +229,10 @@ public class StacktraceTestToolkit {
 	}
 
 	public static List<String> getStacktracesBaseline(IOResourceSet resourceSet) throws IOException, Exception {
+		return getLines(PrintoutsToolkit.stripHeader(StringToolkit.readString(resourceSet.getResource(1).open())));
+	}
+
+	public static List<String> getFilteredStacktracesBaseline(IOResourceSet resourceSet) throws IOException, Exception {
 		return getLines(PrintoutsToolkit.stripHeader(StringToolkit.readString(resourceSet.getResource(1).open())));
 	}
 

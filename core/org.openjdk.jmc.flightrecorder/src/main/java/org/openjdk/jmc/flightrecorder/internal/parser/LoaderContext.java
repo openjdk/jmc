@@ -56,6 +56,7 @@ import org.openjdk.jmc.flightrecorder.internal.util.CanonicalConstantMap;
 import org.openjdk.jmc.flightrecorder.parser.IConstantPoolExtension;
 import org.openjdk.jmc.flightrecorder.parser.IEventSinkFactory;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 
 /**
  * The heart of the loading process. Manages a pool of reusable byte buffers to load chunks in.
@@ -70,10 +71,17 @@ public class LoaderContext {
 	private final List<IConstantPoolExtension> constPoolExtensions = new CopyOnWriteArrayList<>();
 	private final Set<IRange<IQuantity>> chunkRanges;
 	private final ParserStats parserStats = new ParserStats();
+	private final FrameFilter frameFilter;
 
 	public LoaderContext(List<? extends IParserExtension> extensions, boolean hideExperimentals) {
+		this(extensions, hideExperimentals, null);
+	}
+
+	public LoaderContext(List<? extends IParserExtension> extensions, boolean hideExperimentals,
+			FrameFilter frameFilter) {
 		this.extensions = extensions;
 		this.hideExperimentals = hideExperimentals;
+		this.frameFilter = frameFilter;
 		IEventSinkFactory sinkFactory = repositoryBuilder;
 		// Traverse the list in reverse order so that the first element will create outermost sink factory
 		for (int i = extensions.size() - 1; i >= 0; i--) {
@@ -107,6 +115,15 @@ public class LoaderContext {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the frame filter for this loader context.
+	 *
+	 * @return the frame filter, or null if none set
+	 */
+	public FrameFilter getFrameFilter() {
+		return frameFilter;
 	}
 
 	public Object constantRead(long constantIndex, Object constant, String eventTypeId) {
@@ -213,4 +230,5 @@ public class LoaderContext {
 			parserStats.addConstantPoolExtension(ext);
 		}
 	}
+
 }
