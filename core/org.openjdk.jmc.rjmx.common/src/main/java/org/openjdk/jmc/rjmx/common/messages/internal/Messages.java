@@ -49,6 +49,7 @@ public class Messages {
 	public static final String ConnectionException_UNABLE_TO_CREATE_INITIAL_CONTEXT = "ConnectionException_UNABLE_TO_CREATE_INITIAL_CONTEXT"; //$NON-NLS-1$
 	public static final String ConnectionException_UNABLE_TO_RESOLVE_CREDENTIALS = "ConnectionException_UNABLE_TO_RESOLVE_CREDENTIALS"; //$NON-NLS-1$
 	public static final String ConnectionException_UNRESOLVED = "ConnectionException_UNRESOLVED"; //$NON-NLS-1$
+	public static final String ConnectionException_COULD_NOT_MAKE_SECURE_CONNECTION = "ConnectionException_COULD_NOT_MAKE_SECURE_CONNECTION"; //$NON-NLS-1$
 	public static final String LABEL_NOT_AVAILABLE = "LABEL_NOT_AVAILABLE"; //$NON-NLS-1$
 	public static final String MBeanOperationsWrapper_DESCRIPTOR = "MBeanOperationsWrapper_DESCRIPTOR"; //$NON-NLS-1$
 

@@ -74,6 +74,7 @@ public class Messages extends NLS {
 	public static String ConnectionWizardPage_PASSWORD_TOOLTIP;
 	public static String ConnectionWizardPage_PORT_CAPTION;
 	public static String ConnectionWizardPage_PORT_TOOLTIP;
+	public static String ConnectionWizardPage_REQUIRE_SECURE_CONNECTION_LABEL;
 	public static String ConnectionWizardPage_SERVICE_URL_CAPTION;
 	public static String ConnectionWizardPage_SERVICE_URL_TOOLTIP;
 	public static String ConnectionWizardPage_STATUS_CAPTION;

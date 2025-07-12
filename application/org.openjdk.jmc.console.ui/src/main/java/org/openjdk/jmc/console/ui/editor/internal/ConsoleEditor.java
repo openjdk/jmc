@@ -123,7 +123,7 @@ public class ConsoleEditor extends FormEditor {
 				WorkbenchToolkit.asyncCloseEditor(ConsoleEditor.this);
 				// FIXME: Show stacktrace? (Need to show our own ExceptionDialog in that case, or maybe create our own DetailsAreaProvider, see WorkbenchStatusDialogManager.setDetailsAreaProvider)
 				return new Status(IStatus.ERROR, ConsolePlugin.PLUGIN_ID, IStatus.ERROR,
-						NLS.bind(Messages.ConsoleEditor_COULD_NOT_CONNECT, getEditorInput().getName(), e.getMessage()),
+						NLS.bind(e.getLocalizedMessage(), getEditorInput().getName(), e.getMessage()),
 						e);
 			}
 		}
