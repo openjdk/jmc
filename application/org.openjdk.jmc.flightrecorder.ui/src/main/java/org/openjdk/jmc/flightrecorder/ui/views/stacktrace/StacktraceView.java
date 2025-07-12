@@ -845,10 +845,10 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private void setModel(StacktraceModel model) {
 		if (!viewer.getControl().isDisposed()) {
 			setViewerInput(model.getRootFork());
+			List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(itemsToShow);
+			String attrName = currentAttribute != null ? currentAttribute.getName() : null;
+			createAttributeSelection(attrName, attrList);
 		}
-		List<Pair<String, IAttribute<IQuantity>>> attrList = AttributeSelection.extractAttributes(itemsToShow);
-		String attrName = currentAttribute != null ? currentAttribute.getName() : null;
-		createAttributeSelection(attrName, attrList);
 	}
 
 	private void setViewerInput(Fork rootFork) {

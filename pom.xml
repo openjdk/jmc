@@ -125,10 +125,31 @@
 	</distributionManagement>
 	<profiles>
 		<profile>
-			<id>2025-03</id>
+			<id>2025-06</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.openjdk.jmc</groupId>
+									<artifactId>platform-definition-2025-06</artifactId>
+									<version>${revision}${changelist}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>2025-03</id>
 			<build>
 				<plugins>
 					<plugin>
