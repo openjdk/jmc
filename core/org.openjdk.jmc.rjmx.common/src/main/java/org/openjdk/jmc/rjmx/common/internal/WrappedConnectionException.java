@@ -51,13 +51,19 @@ public class WrappedConnectionException extends ConnectionException {
 
 	private final JMXServiceURL url;
 	private final String serverName;
+	private boolean requireSecureConnection;
 
 	public WrappedConnectionException(String serverName, JMXServiceURL url, Exception cause) {
 		super(cause.getMessage());
 		initCause(cause); // yes, still 1.4 compatible
 		this.url = url;
 		this.serverName = serverName;
+	}
 
+	public WrappedConnectionException(String serverName, JMXServiceURL url, boolean requireSecureConnection,
+			Exception cause) {
+		this(serverName, url, cause);
+		this.requireSecureConnection = requireSecureConnection;
 	}
 
 	@Override
@@ -88,6 +94,10 @@ public class WrappedConnectionException extends ConnectionException {
 		if (protocol.equals("msarmi")) { //$NON-NLS-1$
 			return String.format(Messages.getString(Messages.ConnectionException_MSARMI_CHECK_PASSWORD), serverName,
 					url);
+		}
+		if (rootCause instanceof SecurityException && requireSecureConnection) {
+			return String.format(Messages.getString(Messages.ConnectionException_COULD_NOT_MAKE_SECURE_CONNECTION),
+					serverName, rootCause.getLocalizedMessage()); //$NON-NLS-1$
 		}
 		if (rootCause instanceof SecurityException || rootCause instanceof GeneralSecurityException) {
 			return String.format(Messages.getString(Messages.ConnectionException_UNABLE_TO_RESOLVE_CREDENTIALS),
