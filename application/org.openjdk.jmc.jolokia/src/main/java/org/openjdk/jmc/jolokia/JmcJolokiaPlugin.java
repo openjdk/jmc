@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2024, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2024, 2025, Kantega AS. All rights reserved.
+ * Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, Kantega AS. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
- * v 1.0 as shown at https://oss.oracle.com/licenses/upl
+ * v 1.0 as shown at http://oss.oracle.com/licenses/upl
  *
  * or the following license:
  *
@@ -75,7 +75,7 @@ public class JmcJolokiaPlugin extends MCAbstractUIPlugin implements JolokiaDisco
 		StaticConfiguration configuration = new StaticConfiguration(ConfigKey.AGENT_ID, "jmc");//$NON-NLS-1$
 		JolokiaServiceManager serviceManager = JolokiaServiceManagerFactory.createJolokiaServiceManager(configuration,
 				new JulLogHandler(PLUGIN_ID), new AllowAllRestrictor(),
-				logHandler -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
+				() -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
 		return serviceManager.start();
 	}
 
