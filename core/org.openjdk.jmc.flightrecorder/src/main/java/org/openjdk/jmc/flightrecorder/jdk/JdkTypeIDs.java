@@ -58,6 +58,7 @@ public final class JdkTypeIDs {
 	public static final String OS_MEMORY_SUMMARY = PREFIX + "PhysicalMemory";
 	public static final String OS_INFORMATION = PREFIX + "OSInformation";
 	public static final String CPU_INFORMATION = PREFIX + "CPUInformation";
+	public static final String VIRTUALIZATION_INFORMATION = PREFIX + "VirtualizationInformation";
 	public static final String THREAD_ALLOCATION_STATISTICS = PREFIX + "ThreadAllocationStatistics";
 	public static final String HEAP_CONF = PREFIX + "GCHeapConfiguration";
 	public static final String GC_CONF = PREFIX + "GCConfiguration";
