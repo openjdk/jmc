@@ -587,6 +587,7 @@ public class Messages extends NLS {
 	public static String SystemPage_SECTION_CPU;
 	public static String SystemPage_SECTION_MEMORY;
 	public static String SystemPage_SECTION_OS;
+	public static String SystemPage_SECTION_VIRTUALIZATION;
 	public static String SystemPropertiesPage_PAGE_NAME;
 	public static String TABLECOMPONENT_COMBINE_GROUP_BY;
 	public static String TABLECOMPONENT_GROUP_BY;
