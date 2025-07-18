@@ -81,14 +81,18 @@ public class ZGCAllocationStallRule implements IRule {
 			"zgcAllocationStallTotalDuration", //$NON-NLS-1$
 			JdkAggregators.ZGC_ALLOCATION_STALL_COUNT, UnitLookup.NUMBER, IQuantity.class);
 
+	public static final TypedResult<IQuantity> ZGC_ALLOCATION_STALL_PER_MINUTE = new TypedResult<>(
+			"zgcAllocationStallPerMinute", //$NON-NLS-1$
+			Messages.getString(Messages.ZGCAllocationStallRule_RATE),
+			Messages.getString(Messages.ZGCAllocationStallRule_RATE_LONG), UnitLookup.NUMBER, IQuantity.class);
 	public static final TypedPreference<IQuantity> ALLOCATION_STALL_INFO_LIMIT = new TypedPreference<>(
-			"allocation.stall.info.limit", //$NON-NLS-1$
+			"allocation.stall.rate.info.limit", //$NON-NLS-1$
 			Messages.getString(Messages.ZGCAllocationStallRule_CONFIG_INFO_LIMIT),
 			Messages.getString(Messages.ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG), NUMBER,
 			NUMBER_UNITY.quantity(10));
 
 	public static final TypedPreference<IQuantity> ALLOCATION_STALL_WARNING_LIMIT = new TypedPreference<>(
-			"allocation.stall.warning.limit", //$NON-NLS-1$
+			"allocation.stall.rate.warning.limit", //$NON-NLS-1$
 			Messages.getString(Messages.ZGCAllocationStallRule_CONFIG_WARN_LIMIT),
 			Messages.getString(Messages.ZGCAllocationStallRule_CONFIG_WARN_LIMIT_LONG), NUMBER,
 			NUMBER_UNITY.quantity(100));
@@ -98,7 +102,7 @@ public class ZGCAllocationStallRule implements IRule {
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, ZGC_ALLOCATION_STALL_EVENTS, ZGC_ALLOCATION_STALL_LONGEST_DURATION,
-			ZGC_ALLOCATION_STALL_TOTAL_DURATION);
+			ZGC_ALLOCATION_STALL_TOTAL_DURATION, ZGC_ALLOCATION_STALL_PER_MINUTE);
 
 	@Override
 	public String getId() {
@@ -130,8 +134,18 @@ public class ZGCAllocationStallRule implements IRule {
 		IQuantity zgcAllocationStallTotalDuration = items.getAggregate(JdkAggregators.TOTAL_ZGC_ALLOCATION_STALL);
 		IQuantity zgcAllocationStallLongestDuration = items.getAggregate(JdkAggregators.LONGEST_ZGC_ALLOCATION_STALL);
 		if (zgcAllocationStallCount != null && zgcAllocationStallCount.doubleValue() > 0) {
-			double score = RulesToolkit.mapExp100(zgcAllocationStallCount.clampedLongValueIn(UnitLookup.NUMBER_UNITY),
-					infoLimit, warningLimit);
+
+			//Calculate time after JVM Start
+			IQuantity timeAfterJVMStart = RulesToolkit.getEarliestStartTime(items)
+					.subtract(items.getAggregate(JdkAggregators.JVM_START_TIME));
+
+			//Calculate Stall Per minute
+			IQuantity stallPerMinute = UnitLookup.NUMBER_UNITY
+					.quantity(zgcAllocationStallTotalDuration.doubleValueIn(UnitLookup.MINUTE)
+							/ timeAfterJVMStart.doubleValueIn(UnitLookup.MINUTE));
+
+			double score = RulesToolkit.mapExp100(stallPerMinute.clampedLongValueIn(UnitLookup.NUMBER_UNITY), infoLimit,
+					warningLimit);
 
 			return ResultBuilder.createFor(ZGCAllocationStallRule.this, valueProvider).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ZgcAllocationStall_TEXT_INFO)
@@ -139,7 +153,8 @@ public class ZGCAllocationStallRule implements IRule {
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(ZGC_ALLOCATION_STALL_EVENTS, zgcAllocationStallCount)
 					.addResult(ZGC_ALLOCATION_STALL_TOTAL_DURATION, zgcAllocationStallTotalDuration)
-					.addResult(ZGC_ALLOCATION_STALL_LONGEST_DURATION, zgcAllocationStallLongestDuration).build();
+					.addResult(ZGC_ALLOCATION_STALL_LONGEST_DURATION, zgcAllocationStallLongestDuration)
+					.addResult(ZGC_ALLOCATION_STALL_PER_MINUTE, stallPerMinute).build();
 
 		}
 		return ResultBuilder.createFor(ZGCAllocationStallRule.this, valueProvider).setSeverity(Severity.OK)

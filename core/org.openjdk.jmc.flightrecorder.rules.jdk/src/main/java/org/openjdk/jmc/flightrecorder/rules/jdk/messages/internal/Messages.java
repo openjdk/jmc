@@ -322,6 +322,8 @@ public class Messages {
 	public static final String ZGCAllocationStall_RULE_NAME = "ZGCAllocationStall_RULE_NAME"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
+	public static final String ZGCAllocationStallRule_RATE = "ZGCAllocationStallRule_RATE"; //$NON-NLS-1$
+	public static final String ZGCAllocationStallRule_RATE_LONG = "ZGCAllocationStallRule_RATE_LONG"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_WARN_LIMIT = "ZGCAllocationStallRule_CONFIG_WARN_LIMIT"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_WARN_LIMIT_LONG = "ZGCAllocationStallRule_CONFIG_WARN_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String GcFreedRatioRule_RULE_NAME = "GcFreedRatioRule_RULE_NAME"; //$NON-NLS-1$
