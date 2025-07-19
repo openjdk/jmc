@@ -58,6 +58,7 @@ import org.openjdk.jmc.flightrecorder.internal.parser.v0.ChunkLoaderV0;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkLoaderV1;
 import org.openjdk.jmc.flightrecorder.parser.IParserExtension;
 import org.openjdk.jmc.flightrecorder.parser.ParserExtensionRegistry;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 
 /**
  * Helper class for loading flight recordings from disk.
@@ -75,7 +76,7 @@ public final class FlightRecordingLoader {
 	public static EventArrays loadStream(InputStream stream, boolean hideExperimentals, boolean ignoreTruncatedChunk)
 			throws CouldNotLoadRecordingException, IOException {
 		return loadStream(stream, ParserExtensionRegistry.getParserExtensions(), hideExperimentals,
-				ignoreTruncatedChunk);
+				ignoreTruncatedChunk, FrameFilter.EXCLUDE_HIDDEN);
 	}
 
 	/**
@@ -93,7 +94,29 @@ public final class FlightRecordingLoader {
 	public static EventArrays loadStream(
 		InputStream stream, List<? extends IParserExtension> extensions, boolean hideExperimentals,
 		boolean ignoreTruncatedChunk) throws CouldNotLoadRecordingException, IOException {
-		return readChunks(null, extensions, createChunkSupplier(stream), hideExperimentals, ignoreTruncatedChunk);
+		return readChunks(null, extensions, createChunkSupplier(stream), hideExperimentals, ignoreTruncatedChunk,
+				FrameFilter.EXCLUDE_HIDDEN);
+	}
+
+	/**
+	 * Read events from an input stream of JFR data with frame filtering.
+	 *
+	 * @param stream
+	 *            input stream
+	 * @param extensions
+	 *            the extensions to use when parsing the data
+	 * @param hideExperimentals
+	 *            if {@code true}, then events of types marked as experimental will be ignored when
+	 *            reading the data
+	 * @param frameFilter
+	 *            the frame filter to apply during parsing, or null for no filtering
+	 * @return an array of EventArrays (one event type per EventArray)
+	 */
+	public static EventArrays loadStream(
+		InputStream stream, List<? extends IParserExtension> extensions, boolean hideExperimentals,
+		boolean ignoreTruncatedChunk, FrameFilter frameFilter) throws CouldNotLoadRecordingException, IOException {
+		return readChunks(null, extensions, createChunkSupplier(stream), hideExperimentals, ignoreTruncatedChunk,
+				frameFilter);
 	}
 
 	public static IChunkSupplier createChunkSupplier(final InputStream input)
@@ -189,13 +212,21 @@ public final class FlightRecordingLoader {
 		Runnable monitor, IChunkSupplier chunkSupplier, boolean hideExperimentals, boolean ignoreTruncatedChunk)
 			throws CouldNotLoadRecordingException, IOException {
 		return readChunks(monitor, ParserExtensionRegistry.getParserExtensions(), chunkSupplier, hideExperimentals,
-				ignoreTruncatedChunk);
+				ignoreTruncatedChunk, FrameFilter.EXCLUDE_HIDDEN);
 	}
 
 	public static EventArrays readChunks(
 		Runnable monitor, List<? extends IParserExtension> extensions, IChunkSupplier chunkSupplier,
 		boolean hideExperimentals, boolean ignoreTruncatedChunk) throws CouldNotLoadRecordingException, IOException {
-		LoaderContext context = new LoaderContext(extensions, hideExperimentals);
+		return readChunks(monitor, extensions, chunkSupplier, hideExperimentals, ignoreTruncatedChunk,
+				FrameFilter.EXCLUDE_HIDDEN);
+	}
+
+	public static EventArrays readChunks(
+		Runnable monitor, List<? extends IParserExtension> extensions, IChunkSupplier chunkSupplier,
+		boolean hideExperimentals, boolean ignoreTruncatedChunk, FrameFilter frameFilter)
+			throws CouldNotLoadRecordingException, IOException {
+		LoaderContext context = new LoaderContext(extensions, hideExperimentals, frameFilter);
 		Runtime rt = Runtime.getRuntime();
 		long availableMemory = rt.maxMemory() - rt.totalMemory() + rt.freeMemory();
 		long maxBuffersCount = Math.min(Math.max(availableMemory / MIN_MEMORY_PER_THREAD, 1),

@@ -271,6 +271,7 @@ public class Messages {
 	public static final String ATTR_CPU_DESCRIPTION = "ATTR_CPU_DESCRIPTION"; //$NON-NLS-1$
 	public static final String ATTR_CPU_DESCRIPTION_DESC = "ATTR_CPU_DESCRIPTION_DESC"; //$NON-NLS-1$
 	public static final String ATTR_CPU_TYPE = "ATTR_CPU_TYPE"; //$NON-NLS-1$
+	public static final String ATTR_VIRTUALIZATION_NAME = "ATTR_VIRTUALIZATION_NAME"; //$NON-NLS-1$
 	public static final String ATTR_DISABLE_BIASING = "ATTR_DISABLE_BIASING"; //$NON-NLS-1$
 	public static final String ATTR_DUMP_REASON = "ATTR_DUMP_REASON"; //$NON-NLS-1$
 	public static final String ATTR_DUMP_REASON_DESC = "ATTR_DUMP_REASON_DESC"; //$NON-NLS-1$

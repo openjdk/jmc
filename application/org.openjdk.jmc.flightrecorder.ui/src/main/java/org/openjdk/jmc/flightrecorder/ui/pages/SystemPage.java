@@ -97,6 +97,8 @@ public class SystemPage extends AbstractDataPage {
 		infoViewer.addAggregate(JdkAggregators.MIN_TOTAL_MEMORY);
 		infoViewer.addCaption(Messages.SystemPage_SECTION_OS);
 		infoViewer.addAggregate(JdkAggregators.OS_VERSION);
+		infoViewer.addCaption(Messages.SystemPage_SECTION_VIRTUALIZATION);
+		infoViewer.addAggregate(JdkAggregators.VIRTUALIZATION_NAME);
 
 		infoViewer.setValues(getDataSource().getItems());
 
