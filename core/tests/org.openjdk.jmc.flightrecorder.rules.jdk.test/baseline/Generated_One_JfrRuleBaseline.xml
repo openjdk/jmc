@@ -240,7 +240,7 @@ This recording is only 9.903 s long, consider creating a recording longer than 
         <rule>
             <id>MetaspaceOom</id>
             <severity>OK</severity>
-            <summary>Java class metadata is allocated in native memory (metaspace). When the amount of native memory needed for a class metadata exceeds MaxMetaSpaceSize, a java.lang.OutOfMemoryError exception with a detail MetaSpace is thrown. The amount of metaspace that can be used for class metadata is limited by the parameter MaxMetaSpaceSize, which is specified on the command line.The metaspace was not exhausted during this recording.</summary>
+            <summary>Java class metadata is allocated in native memory (metaspace). When the amount of native memory needed for a class metadata exceeds MaxMetaspaceSize, a java.lang.OutOfMemoryError exception with a detail Metaspace is thrown. The amount of metaspace that can be used for class metadata is limited by the parameter MaxMetaspaceSize, which is specified on the command line.The metaspace was not exhausted during this recording.</summary>
         </rule>
         <rule>
             <id>MethodProfiling</id>
@@ -318,6 +318,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>VMOperations</id>
             <severity>OK</severity>
             <summary>No excessively long VM operations were found in this recording (the longest was 30.318 ms).</summary>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
         </rule>
         <rule>
             <id>biasedLockingRevocation</id>
