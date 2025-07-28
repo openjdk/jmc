@@ -534,6 +534,9 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		}
 
 		connectionNameField.setText(name);
+		if (server.getServerHandle().getConnectionDescriptor().requireSecureConnection()) {
+			this.requireSecureConnectionButton.setSelection(true);
+		}
 		if (isDiscovered()) {
 			String commandLine = ServerToolkit.getJavaCommand(server);
 			String jvmArgs = ServerToolkit.getJVMArguments(server);
