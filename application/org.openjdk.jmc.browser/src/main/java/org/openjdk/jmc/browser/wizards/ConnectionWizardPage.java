@@ -493,6 +493,9 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		if (server != null) {
 			currentUrl = server.getConnectionUrl();
 			name = server.getServerHandle().getServerDescriptor().getDisplayName();
+			if (server.getServerHandle().getConnectionDescriptor().requireSecureConnection()) {
+				this.requireSecureConnectionButton.setSelection(true);
+			}
 			ICredentials credential = server.getCredentials();
 			if (credential != null) {
 				try {
@@ -534,10 +537,6 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		}
 
 		connectionNameField.setText(name);
-		if (server.getServerHandle().getConnectionDescriptor().requireSecureConnection()
-				&& this.requireSecureConnectionButton != null) {
-			this.requireSecureConnectionButton.setSelection(true);
-		}
 		if (isDiscovered()) {
 			String commandLine = ServerToolkit.getJavaCommand(server);
 			String jvmArgs = ServerToolkit.getJVMArguments(server);
