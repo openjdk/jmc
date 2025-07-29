@@ -534,7 +534,8 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		}
 
 		connectionNameField.setText(name);
-		if (server.getServerHandle().getConnectionDescriptor().requireSecureConnection() && this.requireSecureConnectionButton != null) {
+		if (server.getServerHandle().getConnectionDescriptor().requireSecureConnection()
+				&& this.requireSecureConnectionButton != null) {
 			this.requireSecureConnectionButton.setSelection(true);
 		}
 		if (isDiscovered()) {
