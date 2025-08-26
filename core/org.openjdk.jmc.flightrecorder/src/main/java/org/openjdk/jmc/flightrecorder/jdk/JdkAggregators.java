@@ -96,6 +96,7 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.SOCKET_READ;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.SOCKET_WRITE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.ULONG_FLAG;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.VM_INFO;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs.VIRTUALIZATION_INFORMATION;
 
 import java.text.MessageFormat;
 
@@ -138,6 +139,8 @@ public final class JdkAggregators {
 	public static final IAggregator<String, ?> CPU_DESCRIPTION = distinctAsString(CPU_INFORMATION,
 			JdkAttributes.CPU_DESCRIPTION);
 	public static final IAggregator<String, ?> CPU_TYPE = distinctAsString(CPU_INFORMATION, JdkAttributes.CPU_TYPE);
+	public static final IAggregator<String, ?> VIRTUALIZATION_NAME = distinctAsString(VIRTUALIZATION_INFORMATION,
+			JdkAttributes.VIRTUALIZATION_NAME);
 	// OS info
 	public static final IAggregator<String, ?> OS_VERSION = distinctAsString(OS_INFORMATION, JdkAttributes.OS_VERSION);
 	public static final IAggregator<IQuantity, ?> MAX_USED_MEMORY = max(

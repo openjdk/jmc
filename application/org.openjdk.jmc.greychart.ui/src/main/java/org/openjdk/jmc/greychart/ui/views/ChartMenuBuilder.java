@@ -51,12 +51,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_MS;
+import static org.openjdk.jmc.common.unit.UnitLookup.EPOCH_NS;
+import static org.openjdk.jmc.common.unit.UnitLookup.NANOSECOND;
+import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
+
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.QuantityConversionException;
 import org.openjdk.jmc.greychart.ui.messages.internal.Messages;
 import org.openjdk.jmc.greychart.ui.views.ChartModel.AxisRange;
 import org.openjdk.jmc.greychart.ui.views.ChartModel.RangedAxis;
+import org.openjdk.jmc.ui.misc.DateTimeChooser;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 import org.openjdk.jmc.ui.misc.QuantityKindProposal;
 
@@ -74,6 +80,9 @@ public class ChartMenuBuilder {
 		m.add(createShow(Messages.ChartComposite_SHOW_LAST_HOUR, ChartComposite.ONE_HOUR, chart));
 		m.add(createShow(Messages.ChartComposite_SHOW_LAST_DAY, ChartComposite.ONE_DAY, chart));
 		m.add(createShow(Messages.ChartComposite_SHOW_LAST_WEEK, ChartComposite.ONE_WEEK, chart));
+		m.add(createShowAll(chart));
+		m.add(createShowCustomLast(chart));
+		m.add(createShowCustomRange(chart));
 		return m;
 	}
 
@@ -82,6 +91,39 @@ public class ChartMenuBuilder {
 			@Override
 			public void run() {
 				chart.showLast(nanoSeconds);
+			}
+		};
+	}
+
+	private static Action createShowAll(final ChartComposite chart) {
+		return new Action(Messages.ChartComposite_SHOW_ALL) {
+			@Override
+			public void run() {
+				chart.showAll();
+			}
+		};
+	}
+
+	private static Action createShowCustomLast(final ChartComposite chart) {
+		return new Action(Messages.ChartComposite_SHOW_CUSTOM_LAST) {
+			@Override
+			public void run() {
+				CustomTimeInputDialog dialog = new CustomTimeInputDialog(Display.getCurrent().getActiveShell());
+				if (dialog.open() == Window.OK) {
+					chart.showLast(dialog.getTimeInNanoSeconds());
+				}
+			}
+		};
+	}
+
+	private static Action createShowCustomRange(final ChartComposite chart) {
+		return new Action(Messages.ChartComposite_SHOW_CUSTOM_RANGE) {
+			@Override
+			public void run() {
+				CustomTimeRangeDialog dialog = new CustomTimeRangeDialog(Display.getCurrent().getActiveShell(), chart);
+				if (dialog.open() == Window.OK) {
+					chart.showTimeRange(dialog.getFromTimeNanos(), dialog.getToTimeNanos());
+				}
 			}
 		};
 	}
@@ -296,6 +338,203 @@ public class ChartMenuBuilder {
 				super.okPressed();
 			} catch (QuantityConversionException e) {
 				// This should not happen due to earlier validation.
+			}
+		}
+	}
+
+	public static class CustomTimeInputDialog extends TitleAreaDialog {
+		private Text timeText;
+		private long timeInNanoSeconds;
+
+		public CustomTimeInputDialog(Shell parentShell) {
+			super(parentShell);
+		}
+
+		private void validateInput() {
+			String errorMessage = validateTimespan(timeText.getText());
+			getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
+			setErrorMessage(errorMessage);
+		}
+
+		private String validateTimespan(String text) {
+			try {
+				IQuantity timespan = TIMESPAN.parseInteractive(text);
+				if (timespan.doubleValue() <= 0.0) {
+					return Messages.CustomTimeInputDialog_ERROR_INVALID_VALUE;
+				}
+				timeInNanoSeconds = timespan.longValueIn(NANOSECOND);
+			} catch (QuantityConversionException e) {
+				return e.getLocalizedMessage();
+			}
+			return null;
+		}
+
+		@Override
+		protected Control createContents(Composite parent) {
+			getShell().setText(Messages.CustomTimeInputDialog_TITLE);
+			Control contents = super.createContents(parent);
+			contents.getShell().setSize(400, 200);
+			DisplayToolkit.placeDialogInCenter(getParentShell(), getShell());
+			setMessage(Messages.CustomTimeInputDialog_MESSAGE);
+			setTitle(Messages.CustomTimeInputDialog_TITLE);
+			validateInput();
+			return contents;
+		}
+
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			Composite composite = (Composite) super.createDialogArea(parent);
+			createCustomArea(composite);
+			applyDialogFont(composite);
+			return composite;
+		}
+
+		private Control createCustomArea(Composite parent) {
+			Composite timeFields = new Composite(parent, SWT.NONE);
+			timeFields.setLayout(new GridLayout(2, false));
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.widthHint = 120;
+			Label timeLabel = new Label(timeFields, SWT.NONE);
+			timeLabel.setText(Messages.CustomTimeInputDialog_TIME_FIELD_LABEL);
+			timeLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+			timeText = new Text(timeFields, SWT.SINGLE | SWT.BORDER);
+			timeText.setLayoutData(gd);
+			timeText.setFocus();
+			timeText.setText("1 h");
+			timeText.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					validateInput();
+				}
+			});
+			QuantityKindProposal.install(timeText, TIMESPAN);
+			return timeFields;
+		}
+
+		public long getTimeInNanoSeconds() {
+			return timeInNanoSeconds;
+		}
+
+		@Override
+		protected void okPressed() {
+			String errorMessage = validateTimespan(timeText.getText());
+			if (errorMessage == null) {
+				super.okPressed();
+			}
+		}
+	}
+
+	public static class CustomTimeRangeDialog extends TitleAreaDialog {
+		private DateTimeChooser startTimeChooser;
+		private DateTimeChooser endTimeChooser;
+		private final ChartComposite chart;
+		private long fromTimeNanos;
+		private long toTimeNanos;
+
+		public CustomTimeRangeDialog(Shell parentShell, ChartComposite chart) {
+			super(parentShell);
+			this.chart = chart;
+		}
+
+		private void validateInput() {
+			String errorMessage = validateTimeRange();
+			getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
+			setErrorMessage(errorMessage);
+		}
+
+		private String validateTimeRange() {
+			long startTimeMs = startTimeChooser.getTimestamp();
+			long endTimeMs = endTimeChooser.getTimestamp();
+
+			try {
+				// Convert milliseconds to nanoseconds
+				fromTimeNanos = EPOCH_MS.quantity(startTimeMs).longValueIn(EPOCH_NS);
+				toTimeNanos = EPOCH_MS.quantity(endTimeMs).longValueIn(EPOCH_NS);
+			} catch (QuantityConversionException e) {
+				// This should rarely happen since we're converting between well-defined epoch units
+				return e.getLocalizedMessage();
+			}
+
+			if (fromTimeNanos >= toTimeNanos) {
+				return Messages.CustomTimeRangeDialog_ERROR_FROM_AFTER_TO;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected Control createContents(Composite parent) {
+			getShell().setText(Messages.CustomTimeRangeDialog_TITLE);
+			Control contents = super.createContents(parent);
+			contents.getShell().setSize(550, 300);
+			DisplayToolkit.placeDialogInCenter(getParentShell(), getShell());
+			setMessage(Messages.CustomTimeRangeDialog_MESSAGE);
+			setTitle(Messages.CustomTimeRangeDialog_TITLE);
+			validateInput();
+			return contents;
+		}
+
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			Composite composite = (Composite) super.createDialogArea(parent);
+			createCustomArea(composite);
+			applyDialogFont(composite);
+			return composite;
+		}
+
+		private Control createCustomArea(Composite parent) {
+			Composite timeFields = new Composite(parent, SWT.NONE);
+			timeFields.setLayout(new GridLayout(2, false));
+			timeFields.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+			// Start time
+			Label startLabel = new Label(timeFields, SWT.NONE);
+			startLabel.setText(Messages.CustomTimeRangeDialog_FROM_FIELD_LABEL);
+			startLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+
+			startTimeChooser = new DateTimeChooser(timeFields, SWT.NONE);
+			startTimeChooser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+			// End time
+			Label endLabel = new Label(timeFields, SWT.NONE);
+			endLabel.setText(Messages.CustomTimeRangeDialog_TO_FIELD_LABEL);
+			endLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+
+			endTimeChooser = new DateTimeChooser(timeFields, SWT.NONE);
+			endTimeChooser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+			// Prefill with actual provider data range
+			long dataStart = chart.getProviderMinTime();
+			long dataEnd = chart.getProviderMaxTime();
+			if (dataStart != Long.MAX_VALUE && dataEnd != Long.MIN_VALUE) {
+				// Convert nanoseconds to milliseconds for DateTimeChooser
+				long startMs = EPOCH_NS.quantity(dataStart).clampedLongValueIn(EPOCH_MS);
+				long endMs = EPOCH_NS.quantity(dataEnd).clampedLongValueIn(EPOCH_MS);
+				startTimeChooser.setTimestamp(startMs);
+				endTimeChooser.setTimestamp(endMs);
+			}
+
+			return timeFields;
+		}
+
+		public long getFromTimeNanos() {
+			return fromTimeNanos;
+		}
+
+		public long getToTimeNanos() {
+			return toTimeNanos;
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return true;
+		}
+
+		@Override
+		protected void okPressed() {
+			String errorMessage = validateTimeRange();
+			if (errorMessage == null) {
+				super.okPressed();
 			}
 		}
 	}

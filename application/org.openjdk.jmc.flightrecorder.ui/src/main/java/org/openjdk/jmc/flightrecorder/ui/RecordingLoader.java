@@ -62,6 +62,7 @@ import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.internal.ChunkInfo;
 import org.openjdk.jmc.flightrecorder.internal.EventArray;
 import org.openjdk.jmc.flightrecorder.internal.EventArrays;
@@ -69,6 +70,7 @@ import org.openjdk.jmc.flightrecorder.internal.FlightRecordingLoader;
 import org.openjdk.jmc.flightrecorder.internal.NotEnoughMemoryException;
 import org.openjdk.jmc.flightrecorder.internal.VersionNotSupportedException;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.flightrecorder.ui.preferences.PreferenceKeys;
 import org.openjdk.jmc.ui.MCPathEditorInput;
 import org.openjdk.jmc.ui.WorkbenchToolkit;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
@@ -166,11 +168,14 @@ public class RecordingLoader extends Job {
 		System.gc();
 		Runtime runtime = Runtime.getRuntime();
 		long availableMemory = runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
+
+		boolean showHiddenFrames = shouldShowHiddenFrames();
+
 		if (availableMemory > (zippedFileMemoryFactor * file.length())) { // Try load from stream
 			try (InputStream stream = IOToolkit.openUncompressedStream(file)) {
 				boolean hideExperimentals = !FlightRecorderUI.getDefault().includeExperimentalEventsAndFields();
 				boolean ignoreTruncatedChunk = FlightRecorderUI.getDefault().allowIncompleteRecordingFile();
-				return FlightRecordingLoader.loadStream(stream, hideExperimentals, ignoreTruncatedChunk);
+				return JfrLoaderToolkit.loadStream(stream, hideExperimentals, ignoreTruncatedChunk, showHiddenFrames);
 			} catch (NotEnoughMemoryException | OutOfMemoryError e) {
 				// Try to load part of the file
 			}
@@ -202,6 +207,8 @@ public class RecordingLoader extends Job {
 			throws IOException, CouldNotLoadRecordingException {
 		boolean hideExperimentals = !FlightRecorderUI.getDefault().includeExperimentalEventsAndFields();
 		boolean ignoreTruncatedChunk = FlightRecorderUI.getDefault().allowIncompleteRecordingFile();
+		boolean showHiddenFrames = shouldShowHiddenFrames();
+
 		try (RandomAccessFile raf = new RandomAccessFile(unzippedFile, "r")) { //$NON-NLS-1$
 			List<ChunkInfo> allChunks = FlightRecordingLoader
 					.readChunkInfo(FlightRecordingLoader.createChunkSupplier(raf));
@@ -220,13 +227,12 @@ public class RecordingLoader extends Job {
 							toLoad = getChunksInRange(allChunks, confirmedRange);
 						}
 						lm.setWorkSize(toLoad.size());
-						return FlightRecordingLoader.readChunks(lm,
-								FlightRecordingLoader.createChunkSupplier(raf, toLoad), hideExperimentals,
-								ignoreTruncatedChunk);
+						return JfrLoaderToolkit.readChunks(lm, FlightRecordingLoader.createChunkSupplier(raf, toLoad),
+								hideExperimentals, ignoreTruncatedChunk, showHiddenFrames);
 					} else {
 						lm.setWorkSize(allChunks.size());
-						return FlightRecordingLoader.readChunks(lm, FlightRecordingLoader.createChunkSupplier(raf),
-								hideExperimentals, ignoreTruncatedChunk);
+						return JfrLoaderToolkit.readChunks(lm, FlightRecordingLoader.createChunkSupplier(raf),
+								hideExperimentals, ignoreTruncatedChunk, showHiddenFrames);
 					}
 				} catch (NotEnoughMemoryException nem) {
 					// Try again with lower loadQuota
@@ -238,6 +244,11 @@ public class RecordingLoader extends Job {
 			}
 		}
 		throw new NotEnoughMemoryException();
+	}
+
+	private boolean shouldShowHiddenFrames() {
+		return FlightRecorderUI.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceKeys.PROPERTY_STACKTRACE_SHOW_HIDDEN_FRAMES);
 	}
 
 	private File unzipFile(File file) throws IOException {

@@ -33,6 +33,7 @@
 package org.openjdk.jmc.flightrecorder.internal.parser.v1;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IUnit;
@@ -49,6 +51,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.LoaderContext;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkMetadata.AnnotatedElement;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkMetadata.AnnotationElement;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkMetadata.ClassElement;
@@ -216,7 +219,7 @@ class TypeManager {
 			case STRUCT_TYPE_STACK_FRAME_2:
 				return new SpecificReaders.StackFrame2Reader(JfrFrame.class, fieldCount, UnitLookup.STACKTRACE_FRAME);
 			case STRUCT_TYPE_STACK_TRACE_2:
-				return new ReflectiveReader(JfrStackTrace.class, fieldCount, UnitLookup.STACKTRACE);
+				return createFilteringStackTraceReader(fieldCount);
 			case STRUCT_TYPE_MODULE_2:
 				return new ReflectiveReader(JfrJavaModule.class, fieldCount, UnitLookup.MODULE);
 			case STRUCT_TYPE_PACKAGE_2:
@@ -264,13 +267,22 @@ class TypeManager {
 			case STRUCT_TYPE_STACK_FRAME:
 				return new ReflectiveReader(JfrFrame.class, fieldCount, UnitLookup.STACKTRACE_FRAME);
 			case STRUCT_TYPE_STACK_TRACE:
-				return new ReflectiveReader(JfrStackTrace.class, fieldCount, UnitLookup.STACKTRACE);
+				return createFilteringStackTraceReader(fieldCount);
 			case STRUCT_TYPE_MODULE:
 				return new ReflectiveReader(JfrJavaModule.class, fieldCount, UnitLookup.MODULE);
 			case STRUCT_TYPE_PACKAGE:
 				return new ReflectiveReader(JfrJavaPackage.class, fieldCount, UnitLookup.PACKAGE);
 			default:
 				return createDefaultStructReader(fieldCount);
+			}
+		}
+
+		private AbstractStructReader createFilteringStackTraceReader(int fieldCount) {
+			FrameFilter frameFilter = context.getFrameFilter();
+			if (frameFilter == null || frameFilter == FrameFilter.INCLUDE_ALL) {
+				return new ReflectiveReader(JfrStackTrace.class, fieldCount, UnitLookup.STACKTRACE);
+			} else {
+				return new FilteringStackTraceReader(fieldCount, frameFilter);
 			}
 		}
 
@@ -538,6 +550,109 @@ class TypeManager {
 		@Override
 		public ContentType<?> getContentType() {
 			return UnitLookup.LABELED_IDENTIFIER;
+		}
+	}
+
+	/**
+	 * Custom StackTrace reader that filters frames during parsing to avoid creating unnecessary
+	 * frame objects.
+	 */
+	private static class FilteringStackTraceReader extends ReflectiveReader {
+		private final FrameFilter frameFilter;
+		private final List<Field> fields;
+		private int framesFieldIndex = -1;
+
+		public FilteringStackTraceReader(int fieldCount, FrameFilter frameFilter) {
+			super(JfrStackTrace.class, fieldCount, UnitLookup.STACKTRACE);
+			this.frameFilter = frameFilter;
+			this.fields = new ArrayList<>(fieldCount);
+		}
+
+		@Override
+		public Object read(IDataInput in, boolean allowUnresolvedReference)
+				throws IOException, InvalidJfrFileException {
+			try {
+				Object instance = new JfrStackTrace();
+				for (int i = 0; i < valueReaders.size(); i++) {
+					Object val = valueReaders.get(i).read(in, allowUnresolvedReference);
+
+					// Apply filtering to frames field only if references are resolved and we have actual frames
+					if (i == framesFieldIndex && val instanceof Object[] && frameFilter != FrameFilter.INCLUDE_ALL
+							&& !allowUnresolvedReference) {
+						val = filterFrames((Object[]) val);
+					}
+
+					Field f = fields.get(i);
+					if (f != null) {
+						f.set(instance, val);
+					}
+				}
+				return instance;
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		@Override
+		public Object resolve(Object value) throws InvalidJfrFileException {
+			Object resolved = super.resolve(value);
+
+			// Apply filtering after resolution if this is a JfrStackTrace
+			if (resolved instanceof JfrStackTrace && frameFilter != FrameFilter.INCLUDE_ALL) {
+				JfrStackTrace stackTrace = (JfrStackTrace) resolved;
+				try {
+					Field framesField = JfrStackTrace.class.getField("frames");
+					Object frames = framesField.get(stackTrace);
+					if (frames instanceof Object[]) {
+						Object[] filteredFrames = filterFrames((Object[]) frames);
+						framesField.set(stackTrace, filteredFrames);
+					}
+				} catch (NoSuchFieldException | IllegalAccessException e) {
+					// If we can't access the frames field, just return the unfiltered stacktrace
+				}
+			}
+
+			return resolved;
+		}
+
+		private Object[] filterFrames(Object[] frames) {
+			List<Object> filteredFrames = new ArrayList<>(frames.length);
+			for (Object frameObj : frames) {
+				if (frameObj instanceof IMCFrame) {
+					IMCFrame frame = (IMCFrame) frameObj;
+					if (frameFilter.shouldInclude(frame)) {
+						filteredFrames.add(frame);
+					}
+				} else {
+					// If it's not an IMCFrame, include it anyway
+					filteredFrames.add(frameObj);
+				}
+			}
+			return filteredFrames.toArray(new Object[0]);
+		}
+
+		@Override
+		void addField(String identifier, String name, String description, IValueReader reader)
+				throws InvalidJfrFileException {
+			super.addField(identifier, name, description, reader);
+
+			// Track which field is the frames field
+			if ("frames".equals(identifier)) {
+				framesFieldIndex = fields.size();
+			}
+
+			// Get the field using reflection on JfrStackTrace
+			Field field = null;
+			try {
+				field = JfrStackTrace.class.getField(identifier);
+			} catch (NoSuchFieldException e) {
+				try {
+					field = JfrStackTrace.class.getField("_" + identifier);
+				} catch (NoSuchFieldException e2) {
+					// Field not found - this matches the parent's behavior
+				}
+			}
+			fields.add(field);
 		}
 	}
 }

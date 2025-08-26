@@ -1346,6 +1346,8 @@ public final class JdkAttributes {
 			PLAIN_TEXT);
 	public static final IAttribute<String> CPU_TYPE = attr("cpu", Messages.getString(Messages.ATTR_CPU_TYPE), //$NON-NLS-1$
 			PLAIN_TEXT);
+	public static final IAttribute<String> VIRTUALIZATION_NAME = attr("name", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_VIRTUALIZATION_NAME), PLAIN_TEXT);
 	public static final IAttribute<IQuantity> NUMBER_OF_CORES = attr("cores", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_NUMBER_OF_CORES), Messages.getString(Messages.ATTR_NUMBER_OF_CORES_DESC),
 			NUMBER);

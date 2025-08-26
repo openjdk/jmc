@@ -59,22 +59,52 @@ public class RecordingTest {
 
 	@Test
 	public void testRecordings() throws IOException, CouldNotLoadRecordingException {
-		for (IOResourceSet resourceSet : PrintoutsToolkit.getTestResources()) {
-			IItemCollection items = RecordingToolkit.getFlightRecording(resourceSet);
-			List<String> parsedEvents = PrintoutsToolkit.getEventsAsStrings(items);
-			try {
-				List<String> expectedEvents = PrintoutsToolkit.getEventsFromPrintout(resourceSet);
+		testRecordingsWithFrameFilter(true, PrintoutsToolkit::getTestResources,
+				PrintoutsToolkit::getEventsFromPrintout);
+	}
 
-				Assert.assertEquals(expectedEvents.size(), parsedEvents.size());
+	@Test
+	public void testRecordingsHiddenFramesFiltered() throws IOException, CouldNotLoadRecordingException {
+		testRecordingsWithFrameFilter(false, PrintoutsToolkit::getFilteredTestResources,
+				PrintoutsToolkit::getEventsFromFilteredPrintout);
+	}
 
-				for (int i = 0; i < expectedEvents.size(); i++) {
-					Assert.assertEquals(resourceSet.getResource(0).getName() + ": events did not match expected",
-							expectedEvents.get(i), parsedEvents.get(i));
+	private void testRecordingsWithFrameFilter(
+		boolean showHiddenFrames, ResourceProvider resourceProvider, BaselineProvider baselineProvider)
+			throws IOException, CouldNotLoadRecordingException {
+		try {
+			for (IOResourceSet resourceSet : resourceProvider.getResources()) {
+				IItemCollection items = RecordingToolkit.getFlightRecording(resourceSet, showHiddenFrames);
+				List<String> parsedEvents = PrintoutsToolkit.getEventsAsStrings(items);
+				try {
+					List<String> expectedEvents = baselineProvider.getEvents(resourceSet);
+
+					Assert.assertEquals(expectedEvents.size(), parsedEvents.size());
+
+					for (int i = 0; i < expectedEvents.size(); i++) {
+						Assert.assertEquals(resourceSet.getResource(0).getName() + ": events did not match expected",
+								expectedEvents.get(i), parsedEvents.get(i));
+					}
+				} catch (Exception e) {
+					Assert.fail(
+							resourceSet.getResource(0).getName() + ": Could not read baseline file: " + e.getMessage());
 				}
-			} catch (Exception e) {
-				Assert.fail(resourceSet.getResource(0).getName() + ": Could not read baseline file: " + e.getMessage());
 			}
+		} catch (IOException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException("Error accessing test resources", e);
 		}
+	}
+
+	@FunctionalInterface
+	private interface ResourceProvider {
+		IOResourceSet[] getResources() throws IOException;
+	}
+
+	@FunctionalInterface
+	private interface BaselineProvider {
+		List<String> getEvents(IOResourceSet resourceSet) throws IOException, Exception;
 	}
 
 	@Test

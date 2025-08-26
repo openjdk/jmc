@@ -61,9 +61,9 @@ public class StacktraceTreeModelTest {
 
 	@BeforeClass
 	public static void beforeAll() throws IOException, CouldNotLoadRecordingException {
-		IOResourceSet[] testResources = StacktraceTestToolkit.getTestResources();
-		IOResourceSet resourceSet = testResources[0];
-		testRecording = RecordingToolkit.getFlightRecording(resourceSet);
+		// These tests were designed with the 7u40.jfr recording as a reference
+		IOResourceSet resourceSet = StacktraceTestToolkit.getTestResourceByRecordingName("7u40.jfr");
+		testRecording = RecordingToolkit.getFlightRecording(resourceSet, true);
 	}
 
 	private static final FrameSeparator separator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD,
