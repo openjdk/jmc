@@ -80,6 +80,7 @@ public final class JdkFilters {
 	public static final IItemFilter ALLOC_ALL = ItemFilters.type(JdkTypeIDs.ALLOC_INSIDE_TLAB,
 			JdkTypeIDs.ALLOC_OUTSIDE_TLAB);
 	public static final IItemFilter OBJ_ALLOC = ItemFilters.type(JdkTypeIDs.OBJ_ALLOC_SAMPLE);
+	public static final IItemFilter ZGC_ALLOCATION_STALL = ItemFilters.type(JdkTypeIDs.ZGC_ALLOCATION_STALL);
 	public static final IItemFilter REFERENCE_STATISTICS = ItemFilters.type(JdkTypeIDs.GC_REFERENCE_STATISTICS);
 	public static final IItemFilter GARBAGE_COLLECTION = ItemFilters.type(JdkTypeIDs.GARBAGE_COLLECTION);
 	public static final IItemFilter OLD_GARBAGE_COLLECTION = ItemFilters
