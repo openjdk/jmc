@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2024, 2025, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2024, 2025, Kantega AS. All rights reserved.
+   Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2025, Kantega AS. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
    The contents of this file are subject to the terms of either the Universal Permissive License 
-   v 1.0 as shown at https://oss.oracle.com/licenses/upl
+   v 1.0 as shown at http://oss.oracle.com/licenses/upl
    
    or the following license:
    
@@ -38,15 +38,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.application.tests</artifactId>
+		<artifactId>missioncontrol.application.uitests</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
-	<artifactId>org.openjdk.jmc.jolokia.test</artifactId>
+	<artifactId>org.openjdk.jmc.kubernetes.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<properties>
 		<jmc.config.path>${project.basedir}/../../../configuration</jmc.config.path>
-		<jolokia.agent.version>2.2.2</jolokia.agent.version>
 	</properties>
 
 	<dependencies>
@@ -55,29 +54,5 @@
 			<artifactId>awaitility</artifactId>
 			<version>4.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-agent-jvm</artifactId>
-			<version>${jolokia.agent.version}</version>
-			<scope>test</scope>
-			<classifier>javaagent</classifier>
-		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<includes>${test.includes}</includes>
-					<!-- Start jolokia on a random free port to avoid requiring specific ports to run test -->
-					<!-- Agent version may differ from client version, in fact it may be a good test -->
-					<argLine>${tycho.testArgLine.local} -javaagent:${settings.localRepository}/org/jolokia/jolokia-agent-jvm/${jolokia.agent.version}/jolokia-agent-jvm-${jolokia.agent.version}-javaagent.jar=port=0,discoveryEnabled=true</argLine>
-				</configuration>
-			</plugin>
-
-		</plugins>
-	</build>
 </project>
