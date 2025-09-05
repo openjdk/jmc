@@ -510,9 +510,9 @@ public class Messages {
 	public static final String MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG = "MultipleAgentsRule_NATIVE_WARNING_LIMIT_LONG"; //$NON-NLS-1$;
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO = "NumberOfGcThreadsRuleFactory_TEXT_INFO"; //$NON-NLS-1$
 	public static final String NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG = "NumberOfGcThreadsRuleFactory_TEXT_INFO_LONG"; //$NON-NLS-1$
-	public static final String ZgcAllocationStall_TEXT_INFO = "ZgcAllocationStall_TEXT_INFO"; //$NON-NLS-1$
-	public static final String ZgcAllocationStall_TEXT_WARN = "ZgcAllocationStall_TEXT_WARN"; //$NON-NLS-1$
-	public static final String ZgcAllocationStall_TEXT_OK = "ZgcAllocationStall_TEXT_OK"; //$NON-NLS-1$
+	public static final String ZGCAllocationStall_TEXT_INFO = "ZGCAllocationStall_TEXT_INFO"; //$NON-NLS-1$
+	public static final String ZGCAllocationStall_TEXT_WARN = "ZGCAllocationStall_TEXT_WARN"; //$NON-NLS-1$
+	public static final String ZGCAllocationStall_TEXT_OK = "ZGCAllocationStall_TEXT_OK"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE_DESC = "ObjectStatisticsDataProvider_AGGR_LIVE_SIZE_INCREASE_DESC"; //$NON-NLS-1$
 	public static final String ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE = "ObjectStatisticsDataProvider_AGGR_LIVE_INSTANCES_INCREASE"; //$NON-NLS-1$

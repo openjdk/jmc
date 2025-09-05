@@ -75,11 +75,11 @@ public class ZGCAllocationStallRule implements IRule {
 
 	public static final TypedResult<IQuantity> ZGC_ALLOCATION_STALL_LONGEST_DURATION = new TypedResult<>(
 			"zgcAllocationStallLongestDuration", //$NON-NLS-1$
-			JdkAggregators.ZGC_ALLOCATION_STALL_COUNT, UnitLookup.NUMBER, IQuantity.class);
+			JdkAggregators.ZGC_ALLOCATION_STALL_COUNT, UnitLookup.TIMESPAN, IQuantity.class);
 
 	public static final TypedResult<IQuantity> ZGC_ALLOCATION_STALL_TOTAL_DURATION = new TypedResult<>(
 			"zgcAllocationStallTotalDuration", //$NON-NLS-1$
-			JdkAggregators.ZGC_ALLOCATION_STALL_COUNT, UnitLookup.NUMBER, IQuantity.class);
+			JdkAggregators.ZGC_ALLOCATION_STALL_COUNT, UnitLookup.TIMESPAN, IQuantity.class);
 
 	public static final TypedResult<IQuantity> ZGC_ALLOCATION_STALL_PER_MINUTE = new TypedResult<>(
 			"zgcAllocationStallPerMinute", //$NON-NLS-1$
@@ -148,8 +148,8 @@ public class ZGCAllocationStallRule implements IRule {
 					warningLimit);
 
 			return ResultBuilder.createFor(ZGCAllocationStallRule.this, valueProvider).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.ZgcAllocationStall_TEXT_INFO)
-							.concat(Messages.getString(Messages.ZgcAllocationStall_TEXT_WARN)))
+					.setSummary(Messages.getString(Messages.ZGCAllocationStall_TEXT_INFO)
+							.concat(Messages.getString(Messages.ZGCAllocationStall_TEXT_WARN)))
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(ZGC_ALLOCATION_STALL_EVENTS, zgcAllocationStallCount)
 					.addResult(ZGC_ALLOCATION_STALL_TOTAL_DURATION, zgcAllocationStallTotalDuration)
@@ -158,8 +158,8 @@ public class ZGCAllocationStallRule implements IRule {
 
 		}
 		return ResultBuilder.createFor(ZGCAllocationStallRule.this, valueProvider).setSeverity(Severity.OK)
-				.setSummary(Messages.getString(Messages.ZgcAllocationStall_TEXT_INFO)
-						.concat(Messages.getString(Messages.ZgcAllocationStall_TEXT_OK)))
+				.setSummary(Messages.getString(Messages.ZGCAllocationStall_TEXT_INFO)
+						.concat(Messages.getString(Messages.ZGCAllocationStall_TEXT_OK)))
 				.build();
 	}
 
