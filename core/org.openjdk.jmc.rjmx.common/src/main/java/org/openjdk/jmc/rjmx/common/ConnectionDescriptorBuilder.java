@@ -53,6 +53,7 @@ public class ConnectionDescriptorBuilder {
 	private String password;
 	private int port = DEFAULT_PORT;
 	private ICredentials credentials;
+	private boolean requireSecureConnection;
 
 	/**
 	 * Port number designator meaning that the default port for the selected protocol should be
@@ -143,6 +144,16 @@ public class ConnectionDescriptorBuilder {
 	}
 
 	/**
+	 * @param requireSecureConnection
+	 *            force connection to use TLS. Fail if not possible.
+	 * @return the Builder currently being configured.
+	 */
+	public ConnectionDescriptorBuilder requireSecureConnection(boolean requireSecureConnection) {
+		this.requireSecureConnection = requireSecureConnection;
+		return this;
+	}
+
+	/**
 	 * Builds the {@link IConnectionDescriptor}.
 	 *
 	 * @return a freshly created {@link IConnectionDescriptor} initialized as per the builder
@@ -169,6 +180,6 @@ public class ConnectionDescriptorBuilder {
 			}
 		}
 
-		return new JMXConnectionDescriptor(url, credentials);
+		return new JMXConnectionDescriptor(url, credentials, requireSecureConnection);
 	}
 }

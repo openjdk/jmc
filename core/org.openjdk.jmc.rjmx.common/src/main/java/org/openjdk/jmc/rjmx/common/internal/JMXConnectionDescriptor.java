@@ -67,6 +67,10 @@ import org.openjdk.jmc.rjmx.common.IConnectionDescriptor;
  */
 public final class JMXConnectionDescriptor implements IConnectionDescriptor {
 
+	// JMX convention. See e.g.
+	// https://github.com/openjdk/jdk/blob/master/src/java.management.rmi/share/classes/javax/management/remote/rmi/RMIConnector.java
+	private static final String JMX_REMOTE_X_CHECK_STUB = "jmx.remote.x.check.stub"; //$NON-NLS-1$
+
 	/**
 	 * The JMX service URL.
 	 */
@@ -74,12 +78,15 @@ public final class JMXConnectionDescriptor implements IConnectionDescriptor {
 
 	private final ICredentials credentials;
 
+	private boolean requireSecureConnection;
+
 	/**
 	 * Full constructor.
 	 */
-	public JMXConnectionDescriptor(JMXServiceURL url, ICredentials credentials) {
+	public JMXConnectionDescriptor(JMXServiceURL url, ICredentials credentials, boolean requireSecureConnection) {
 		this.url = url;
 		this.credentials = credentials;
+		this.requireSecureConnection = requireSecureConnection;
 	}
 
 	@Override
@@ -111,6 +118,9 @@ public final class JMXConnectionDescriptor implements IConnectionDescriptor {
 			env.put(Context.SECURITY_CREDENTIALS, pwd);
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
+		}
+		if (requireSecureConnection) {
+			env.put(JMX_REMOTE_X_CHECK_STUB, "true"); //$NON-NLS-1$
 		}
 		return env;
 	}
