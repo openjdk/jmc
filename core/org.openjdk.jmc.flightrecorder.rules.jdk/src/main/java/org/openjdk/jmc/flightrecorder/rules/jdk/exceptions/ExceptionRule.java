@@ -43,7 +43,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
+import org.openjdk.jmc.common.IMCType;
+import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.QuantityRange;
@@ -92,9 +96,15 @@ public class ExceptionRule implements IRule {
 	public static final TypedResult<IRange<IQuantity>> EXCEPTION_WINDOW = new TypedResult<>("exceptionsWindow", //$NON-NLS-1$
 			"Exception Window", "The window during which the highest exception rate was detected.",
 			UnitLookup.TIMERANGE);
+	public static final TypedResult<IMCType> MOST_COMMON_EXCEPTION = new TypedResult<>("mostCommonException", //$NON-NLS-1$
+			"Most Common Exception", "The most common exception thrown.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedResult<String> MOST_COMMON_EXCEPTION_STACKTRACE = new TypedResult<>(
+			"mostCommonExceptionStacktrace", "Most Common Exception Stacktrace", //$NON-NLS-1$
+			"The most common exception stacktrace frames.", UnitLookup.PLAIN_TEXT, String.class);
 
-	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
-			.<TypedResult<?>> asList(TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW);
+	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
+			TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW, MOST_COMMON_EXCEPTION,
+			MOST_COMMON_EXCEPTION_STACKTRACE);
 
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
 		long infoLimit = vp.getPreferenceValue(EXCEPTIONS_INFO_LIMIT).clampedLongValueIn(NUMBER_UNITY);
@@ -110,9 +120,31 @@ public class ExceptionRule implements IRule {
 			IRange<IQuantity> window = QuantityRange.createWithEnd(
 					UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.start),
 					UnitLookup.EPOCH_NS.quantity(maxExceptionPeriod.end));
-			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
-					.setSummary(Messages.getString(Messages.ExceptionRule_TEXT_MESSAGE))
-					.setExplanation(Messages.getString(Messages.ExceptionRule_TEXT_INFO_LONG))
+			ResultBuilder resultBuilder = ResultBuilder.createFor(this, vp);
+			String explanation = Messages.getString(Messages.ExceptionRule_TEXT_INFO_LONG);
+			EventAvailability exceptionsThrownEventAvailability = RulesToolkit.getEventAvailability(items,
+					JdkTypeIDs.EXCEPTIONS_THROWN);
+			if (exceptionsThrownEventAvailability == EventAvailability.AVAILABLE) {
+				IItemCollection exceptionItems = items.apply(JdkFilters.EXCEPTIONS);
+				List<IntEntry<IMCType>> exceptionGrouping = RulesToolkit.calculateGroupingScore(exceptionItems,
+						JdkAttributes.EXCEPTION_THROWNCLASS);
+				IMCType mostCommonException = exceptionGrouping.get(exceptionGrouping.size() - 1).getKey();
+				explanation = Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION) + explanation;
+				resultBuilder.addResult(MOST_COMMON_EXCEPTION, mostCommonException);
+				String stackTraceFrames = ""; //$NON-NLS-1$
+				if (mostCommonException != null) {
+					IItemFilter exceptionTypeFilter = ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS,
+							mostCommonException);
+					IItemCollection mostCommonExceptionItems = exceptionItems.apply(exceptionTypeFilter);
+					stackTraceFrames = RulesToolkit.getTopNFramesInMostCommonTrace(mostCommonExceptionItems, 10);
+				}
+				explanation = Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION) + explanation + "\n" //$NON-NLS-1$
+						+ Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_STACKTRACE);
+				resultBuilder.addResult(MOST_COMMON_EXCEPTION, mostCommonException)
+						.addResult(MOST_COMMON_EXCEPTION_STACKTRACE, stackTraceFrames);
+			}
+			return resultBuilder.setSeverity(Severity.get(score))
+					.setSummary(Messages.getString(Messages.ExceptionRule_TEXT_MESSAGE)).setExplanation(explanation)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(EXCEPTION_RATE, UnitLookup.NUMBER_UNITY.quantity(exPerSec))
 					.addResult(TypedResult.ITEM_QUERY, JdkQueries.THROWABLES_STATISTICS)

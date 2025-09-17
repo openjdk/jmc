@@ -231,12 +231,15 @@ public class Messages {
 	public static final String ErrorRule_TEXT_WARN = "ErrorRule_TEXT_WARN"; //$NON-NLS-1$
 	public static final String ErrorRule_TEXT_WARN_EXCLUDED_INFO = "ErrorRule_TEXT_WARN_EXCLUDED_INFO"; //$NON-NLS-1$
 	public static final String ErrorRule_TEXT_WARN_LONG = "ErrorRule_TEXT_WARN_LONG"; //$NON-NLS-1$
+	public static final String ErrorRule_TEXT_WARN_MOST_COMMON_STACKTRACE = "ErrorRule_TEXT_WARN_MOST_COMMON_STACKTRACE"; //$NON-NLS-1$
 	public static final String ExceptionRule_CONFIG_INFO_LIMIT = "ExceptionRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
 	public static final String ExceptionRule_CONFIG_INFO_LIMIT_LONG = "ExceptionRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String ExceptionRule_CONFIG_WARN_LIMIT = "ExceptionRule_CONFIG_WARN_LIMIT"; //$NON-NLS-1$
 	public static final String ExceptionRule_CONFIG_WARN_LIMIT_LONG = "ExceptionRule_CONFIG_WARN_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String ExceptionRule_RULE_NAME = "ExceptionRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String ExceptionRule_TEXT_INFO_LONG = "ExceptionRule_TEXT_INFO_LONG"; //$NON-NLS-1$
+	public static final String ExceptionRule_TEXT_MOST_COMMON_EXCEPTION = "ExceptionRule_TEXT_MOST_COMMON_EXCEPTION"; //$NON-NLS-1$
+	public static final String ExceptionRule_TEXT_MOST_COMMON_STACKTRACE = "ExceptionRule_TEXT_MOST_COMMON_STACKTRACE"; //$NON-NLS-1$
 	public static final String ExceptionRule_TEXT_MESSAGE = "ExceptionRule_TEXT_MESSAGE"; //$NON-NLS-1$
 	public static final String FatalErrorRule_RULE_NAME = "FatalErrorRule_RULE_NAME"; //$NON-NLS-1$
 	public static final String FatalErrorRule_TEXT_OK = "FatalErrorRule_TEXT_OK"; //$NON-NLS-1$

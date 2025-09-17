@@ -1440,33 +1440,46 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Gets the second frame in the most common stack trace. Useful when showing what called a
+	 * Gets the top n frame in the most common stack trace. Useful when showing what called a
 	 * interesting method, like for example java.lang.Integer.valueOf (aka autoboxing)
 	 *
 	 * @param items
 	 *            the item collection to build the aggregated stack trace on
-	 * @return a stack trace frame
+	 * @return stack trace frames
 	 */
-	// FIXME: Generalize this a bit, get the top N frames
-	public static String getSecondFrameInMostCommonTrace(IItemCollection items) {
+	public static String getTopNFramesInMostCommonTrace(IItemCollection items, int n) {
 		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
 		StacktraceModel stacktraceModel = new StacktraceModel(false, sep, items);
-		Branch firstBranch = stacktraceModel.getRootFork().getBranch(0);
-		StacktraceFrame secondFrame = null;
-		if (firstBranch.getTailFrames().length > 0) {
-			secondFrame = firstBranch.getTailFrames()[0];
-		} else if (firstBranch.getEndFork().getBranchCount() > 0) {
-			secondFrame = firstBranch.getEndFork().getBranch(0).getFirstFrame();
-		} else {
-			return null;
+		Branch currentBranch = stacktraceModel.getRootFork().getBranch(0);
+		List<StacktraceFrame> frames = new ArrayList<>();
+		while (currentBranch != null && frames.size() < n) {
+			frames.add(currentBranch.getFirstFrame());
+			for (StacktraceFrame tf : currentBranch.getTailFrames()) {
+				if (frames.size() == n)
+					break;
+				frames.add(tf);
+			}
+			if (frames.size() == n)
+				break;
+			if (currentBranch.getEndFork().getBranchCount() > 0) {
+				currentBranch = currentBranch.getEndFork().getBranch(0);
+			} else {
+				break;
+			}
 		}
-		/*
-		 * FIXME: Consider defining the method formatting based on preferences.
-		 *
-		 * Currently it's a compromise between keeping the length short, but still being able to
-		 * identify the actual method, even if the line number is a bit incorrect.
-		 */
-		return StacktraceFormatToolkit.formatFrame(secondFrame.getFrame(), sep, false, false, true, true, true, false);
+		int countToPrint = Math.min(n, frames.size());
+		List<String> formattedFrames = new ArrayList<>(countToPrint);
+		for (int i = 0; i < countToPrint; i++) {
+			/*
+			 * FIXME: Consider defining the method formatting based on preferences.
+			 *
+			 * Currently it's a compromise between keeping the length short, but still being able to
+			 * identify the actual method, even if the line number is a bit incorrect.
+			 */
+			formattedFrames.add(StacktraceFormatToolkit.formatFrame(frames.get(i).getFrame(), sep, false, false, true,
+					true, true, false));
+		}
+		return String.join("\n", formattedFrames);
 	}
 
 	/**

@@ -110,10 +110,14 @@ public class ErrorRule extends AbstractRule {
 			IQuantity.class);
 	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", //$NON-NLS-1$
 			"The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<String> MOST_COMMON_ERROR_STACKTRACE = new TypedResult<>(
+			"mostCommonErrorStacktrace", //$NON-NLS-1$
+			"Most Common Error Stacktrace", "The most common error stacktrace frames.", UnitLookup.PLAIN_TEXT,
+			String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, ERROR_COUNT, EXCLUDED_ERRORS, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR,
-			MOST_COMMON_ERROR_COUNT);
+			MOST_COMMON_ERROR_COUNT, MOST_COMMON_ERROR_STACKTRACE);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE).build();
@@ -173,9 +177,15 @@ public class ErrorRule extends AbstractRule {
 			int errorsThrown = errorGrouping.get(errorGrouping.size() - 1).getValue();
 			double score = RulesToolkit.mapExp100(maxErrorsPerMinute.left.doubleValue(), infoLimit, warnLimit);
 			String longMessage = Messages.getString(Messages.ErrorRule_TEXT_WARN_LONG);
-			// FIXME: List some frames of the most common stack trace
 			if (excludedErrors != null && excludedErrors.longValue() > 0) {
 				longMessage += " " + Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO); //$NON-NLS-1$
+			}
+			String stackTraceFrames = ""; //$NON-NLS-1$
+			if (mostCommonError != null) {
+				IItemFilter errorTypeFilter = ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS, mostCommonError);
+				IItemCollection mostCommonErrorItems = errorItems.apply(errorTypeFilter);
+				stackTraceFrames = RulesToolkit.getTopNFramesInMostCommonTrace(mostCommonErrorItems, 10);
+				longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_STACKTRACE); //$NON-NLS-1$
 			}
 			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN)).setExplanation(longMessage)
@@ -183,7 +193,8 @@ public class ErrorRule extends AbstractRule {
 					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
 					.addResult(ERROR_RATE, maxErrorsPerMinute.left).addResult(MOST_COMMON_ERROR, mostCommonError)
 					.addResult(EXCLUDED_ERRORS, excludedErrors).addResult(TypedResult.ITEM_QUERY, JdkQueries.ERRORS)
-					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown)).build();
+					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown))
+					.addResult(MOST_COMMON_ERROR_STACKTRACE, stackTraceFrames).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.ErrorRule_TEXT_OK)).build();
