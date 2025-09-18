@@ -46,7 +46,6 @@ import java.util.concurrent.RunnableFuture;
 import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.collection.MapToolkit.IntEntry;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
@@ -98,12 +97,15 @@ public class ExceptionRule implements IRule {
 			UnitLookup.TIMERANGE);
 	public static final TypedResult<IMCType> MOST_COMMON_EXCEPTION = new TypedResult<>("mostCommonException", //$NON-NLS-1$
 			"Most Common Exception", "The most common exception thrown.", UnitLookup.CLASS, IMCType.class);
+	public static final TypedResult<String> MOST_COMMON_EXCEPTION_MESSAGE = new TypedResult<>(
+			"mostCommonExceptionMessage", //$NON-NLS-1$
+			"Most Common Exception Message", "The most common exception message.", UnitLookup.PLAIN_TEXT, String.class);
 	public static final TypedResult<String> MOST_COMMON_EXCEPTION_STACKTRACE = new TypedResult<>(
 			"mostCommonExceptionStacktrace", "Most Common Exception Stacktrace", //$NON-NLS-1$
 			"The most common exception stacktrace frames.", UnitLookup.PLAIN_TEXT, String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
-			TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW, MOST_COMMON_EXCEPTION,
+			TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW, MOST_COMMON_EXCEPTION, MOST_COMMON_EXCEPTION_MESSAGE,
 			MOST_COMMON_EXCEPTION_STACKTRACE);
 
 	private IResult getResult(IItemCollection items, IPreferenceValueProvider vp, IResultValueProvider rp) {
@@ -131,17 +133,30 @@ public class ExceptionRule implements IRule {
 				IMCType mostCommonException = exceptionGrouping.get(exceptionGrouping.size() - 1).getKey();
 				explanation = Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION) + explanation;
 				resultBuilder.addResult(MOST_COMMON_EXCEPTION, mostCommonException);
-				String stackTraceFrames = ""; //$NON-NLS-1$
 				if (mostCommonException != null) {
-					IItemFilter exceptionTypeFilter = ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS,
-							mostCommonException);
-					IItemCollection mostCommonExceptionItems = exceptionItems.apply(exceptionTypeFilter);
-					stackTraceFrames = RulesToolkit.getTopNFramesInMostCommonTrace(mostCommonExceptionItems, 10);
+					IItemCollection mostCommonExceptionItems = exceptionItems
+							.apply(ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS, mostCommonException));
+					IItemCollection itemsWithMessage = mostCommonExceptionItems
+							.apply(ItemFilters.notEquals(JdkAttributes.EXCEPTION_MESSAGE, null));
+					if (itemsWithMessage.hasItems()) {
+						List<IntEntry<String>> mostCommonExceptionMessageGrouping = RulesToolkit
+								.calculateGroupingScore(itemsWithMessage, JdkAttributes.EXCEPTION_MESSAGE);
+						String mostCommonExceptionMessage = mostCommonExceptionMessageGrouping
+								.get(mostCommonExceptionMessageGrouping.size() - 1).getKey();
+						explanation += "\n"
+								+ Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION_MESSAGE);
+						resultBuilder.addResult(MOST_COMMON_EXCEPTION_MESSAGE, mostCommonExceptionMessage);
+					}
+					IItemCollection itemsWithStackTrace = mostCommonExceptionItems
+							.apply(ItemFilters.notEquals(JfrAttributes.EVENT_STACKTRACE, null));
+					if (itemsWithStackTrace.hasItems()) {
+						String mostCommonExceptionstackTraceFrames = RulesToolkit
+								.getTopNFramesInMostCommonTrace(itemsWithStackTrace, 10);
+						explanation += "\n"
+								+ Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION_STACKTRACE);
+						resultBuilder.addResult(MOST_COMMON_EXCEPTION_STACKTRACE, mostCommonExceptionstackTraceFrames);
+					}
 				}
-				explanation = Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION) + explanation + "\n" //$NON-NLS-1$
-						+ Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_STACKTRACE);
-				resultBuilder.addResult(MOST_COMMON_EXCEPTION, mostCommonException)
-						.addResult(MOST_COMMON_EXCEPTION_STACKTRACE, stackTraceFrames);
 			}
 			return resultBuilder.setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ExceptionRule_TEXT_MESSAGE)).setExplanation(explanation)

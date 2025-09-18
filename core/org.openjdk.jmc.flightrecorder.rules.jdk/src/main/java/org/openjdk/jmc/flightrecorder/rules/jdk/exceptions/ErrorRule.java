@@ -58,6 +58,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
@@ -108,6 +109,8 @@ public class ErrorRule extends AbstractRule {
 	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", //$NON-NLS-1$
 			"Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER,
 			IQuantity.class);
+	public static final TypedResult<String> MOST_COMMON_ERROR_MESSAGE = new TypedResult<>("mostCommonErrorMessage", //$NON-NLS-1$
+			"Most Common Error Message", "The most common error message.", UnitLookup.PLAIN_TEXT, String.class);
 	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", //$NON-NLS-1$
 			"The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class);
 	public static final TypedResult<String> MOST_COMMON_ERROR_STACKTRACE = new TypedResult<>(
@@ -117,7 +120,7 @@ public class ErrorRule extends AbstractRule {
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, ERROR_COUNT, EXCLUDED_ERRORS, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR,
-			MOST_COMMON_ERROR_COUNT, MOST_COMMON_ERROR_STACKTRACE);
+			MOST_COMMON_ERROR_COUNT, MOST_COMMON_ERROR_MESSAGE, MOST_COMMON_ERROR_STACKTRACE);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE).build();
@@ -171,6 +174,7 @@ public class ErrorRule extends AbstractRule {
 							return o1.left.compareTo(o2.left);
 						}
 					});
+			ResultBuilder resultBuilder = ResultBuilder.createFor(this, vp);
 			List<IntEntry<IMCType>> errorGrouping = RulesToolkit.calculateGroupingScore(errorItems,
 					JdkAttributes.EXCEPTION_THROWNCLASS);
 			IMCType mostCommonError = errorGrouping.get(errorGrouping.size() - 1).getKey();
@@ -180,21 +184,35 @@ public class ErrorRule extends AbstractRule {
 			if (excludedErrors != null && excludedErrors.longValue() > 0) {
 				longMessage += " " + Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO); //$NON-NLS-1$
 			}
-			String stackTraceFrames = ""; //$NON-NLS-1$
 			if (mostCommonError != null) {
-				IItemFilter errorTypeFilter = ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS, mostCommonError);
-				IItemCollection mostCommonErrorItems = errorItems.apply(errorTypeFilter);
-				stackTraceFrames = RulesToolkit.getTopNFramesInMostCommonTrace(mostCommonErrorItems, 10);
-				longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_STACKTRACE); //$NON-NLS-1$
+				IItemCollection mostCommonErrorItems = errorItems
+						.apply(ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS, mostCommonError));
+				IItemCollection itemsWithMessage = mostCommonErrorItems
+						.apply(ItemFilters.notEquals(JdkAttributes.EXCEPTION_MESSAGE, null));
+				if (itemsWithMessage.hasItems()) {
+					List<IntEntry<String>> mostCommonErrorMessageGrouping = RulesToolkit
+							.calculateGroupingScore(itemsWithMessage, JdkAttributes.EXCEPTION_MESSAGE);
+					String mostCommonErrorMessage = mostCommonErrorMessageGrouping
+							.get(mostCommonErrorMessageGrouping.size() - 1).getKey();
+					longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_ERROR_MESSAGE);
+					resultBuilder.addResult(MOST_COMMON_ERROR_MESSAGE, mostCommonErrorMessage);
+				}
+				IItemCollection itemsWithStackTrace = mostCommonErrorItems
+						.apply(ItemFilters.notEquals(JfrAttributes.EVENT_STACKTRACE, null));
+				if (itemsWithStackTrace.hasItems()) {
+					String mostCommonErrorStacktraceFrames = RulesToolkit
+							.getTopNFramesInMostCommonTrace(itemsWithStackTrace, 10);
+					longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_ERROR_STACKTRACE);
+					resultBuilder.addResult(MOST_COMMON_ERROR_STACKTRACE, mostCommonErrorStacktraceFrames);
+				}
 			}
-			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+			return resultBuilder.setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN)).setExplanation(longMessage)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)
 					.addResult(ERROR_RATE, maxErrorsPerMinute.left).addResult(MOST_COMMON_ERROR, mostCommonError)
 					.addResult(EXCLUDED_ERRORS, excludedErrors).addResult(TypedResult.ITEM_QUERY, JdkQueries.ERRORS)
-					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown))
-					.addResult(MOST_COMMON_ERROR_STACKTRACE, stackTraceFrames).build();
+					.addResult(MOST_COMMON_ERROR_COUNT, UnitLookup.NUMBER_UNITY.quantity(errorsThrown)).build();
 		}
 		return ResultBuilder.createFor(this, vp).setSeverity(Severity.OK)
 				.setSummary(Messages.getString(Messages.ErrorRule_TEXT_OK)).build();
