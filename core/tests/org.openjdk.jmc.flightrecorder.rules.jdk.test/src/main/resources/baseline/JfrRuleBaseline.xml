@@ -6290,9 +6290,9 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14.000 AM – 10:09:14 AM.</summary>
             <explanation>17 errors were thrown in total. The most common error was ''java.lang.NoSuchMethodError'', which was thrown 13 times. Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: ''(com.sun.el.parser.ELParser\$LookaheadSuccess)''.
-The most common error message was : 
+The most common error message was: 
  &amp;lt;clinit&amp;gt;
-The most common error stackrace was : 
+The most common error stack trace was: 
  java.lang.Error.&amp;lt;init&amp;gt;(String):71
 java.lang.LinkageError.&amp;lt;init&amp;gt;(String):55
 java.lang.IncompatibleClassChangeError.&amp;lt;init&amp;gt;(String):55

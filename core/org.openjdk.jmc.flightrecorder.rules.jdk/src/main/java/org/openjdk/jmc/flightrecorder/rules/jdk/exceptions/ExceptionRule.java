@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.rules.jdk.exceptions;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -71,6 +72,9 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 
 public class ExceptionRule implements IRule {
 
@@ -101,8 +105,8 @@ public class ExceptionRule implements IRule {
 			"mostCommonExceptionMessage", //$NON-NLS-1$
 			"Most Common Exception Message", "The most common exception message.", UnitLookup.PLAIN_TEXT, String.class);
 	public static final TypedResult<String> MOST_COMMON_EXCEPTION_STACKTRACE = new TypedResult<>(
-			"mostCommonExceptionStacktrace", "Most Common Exception Stacktrace", //$NON-NLS-1$
-			"The most common exception stacktrace frames.", UnitLookup.PLAIN_TEXT, String.class);
+			"mostCommonExceptionStacktrace", "Most Common Exception Stack Trace", //$NON-NLS-1$
+			"The most common exception stack trace frames.", UnitLookup.PLAIN_TEXT, String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, EXCEPTION_RATE, EXCEPTION_WINDOW, MOST_COMMON_EXCEPTION, MOST_COMMON_EXCEPTION_MESSAGE,
@@ -150,11 +154,28 @@ public class ExceptionRule implements IRule {
 					IItemCollection itemsWithStackTrace = mostCommonExceptionItems
 							.apply(ItemFilters.notEquals(JfrAttributes.EVENT_STACKTRACE, null));
 					if (itemsWithStackTrace.hasItems()) {
-						String mostCommonExceptionstackTraceFrames = RulesToolkit
+						List<StacktraceFrame> mostCommonExceptionStacktraceFrames = RulesToolkit
 								.getTopNFramesInMostCommonTrace(itemsWithStackTrace, 10);
+						List<String> formattedFrames = new ArrayList<String>(
+								mostCommonExceptionStacktraceFrames.size());
+						/*
+						 * FIXME: Consider defining the method formatting based on preferences.
+						 *
+						 * Currently it's a compromise between keeping the length short, but still
+						 * being able to identify the actual method, even if the line number is a
+						 * bit incorrect.
+						 */
+						FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
+						for (int i = 0; i < mostCommonExceptionStacktraceFrames.size(); i++) {
+							formattedFrames.add(StacktraceFormatToolkit.formatFrame(
+									mostCommonExceptionStacktraceFrames.get(i).getFrame(), sep, false, false, true,
+									true, true, false));
+						}
+						String mostCommonExceptionStacktraceFormattedFrames = String.join("\n", formattedFrames);
 						explanation += "\n"
 								+ Messages.getString(Messages.ExceptionRule_TEXT_MOST_COMMON_EXCEPTION_STACKTRACE);
-						resultBuilder.addResult(MOST_COMMON_EXCEPTION_STACKTRACE, mostCommonExceptionstackTraceFrames);
+						resultBuilder.addResult(MOST_COMMON_EXCEPTION_STACKTRACE,
+								mostCommonExceptionStacktraceFormattedFrames);
 					}
 				}
 			}

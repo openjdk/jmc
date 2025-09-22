@@ -74,6 +74,9 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 
 public class ErrorRule extends AbstractRule {
@@ -115,7 +118,7 @@ public class ErrorRule extends AbstractRule {
 			"The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class);
 	public static final TypedResult<String> MOST_COMMON_ERROR_STACKTRACE = new TypedResult<>(
 			"mostCommonErrorStacktrace", //$NON-NLS-1$
-			"Most Common Error Stacktrace", "The most common error stacktrace frames.", UnitLookup.PLAIN_TEXT,
+			"Most Common Error Stack Trace", "The most common error stack trace frames.", UnitLookup.PLAIN_TEXT,
 			String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
@@ -200,10 +203,25 @@ public class ErrorRule extends AbstractRule {
 				IItemCollection itemsWithStackTrace = mostCommonErrorItems
 						.apply(ItemFilters.notEquals(JfrAttributes.EVENT_STACKTRACE, null));
 				if (itemsWithStackTrace.hasItems()) {
-					String mostCommonErrorStacktraceFrames = RulesToolkit
+					List<StacktraceFrame> mostCommonErrorStacktraceFrames = RulesToolkit
 							.getTopNFramesInMostCommonTrace(itemsWithStackTrace, 10);
+					List<String> formattedFrames = new ArrayList<>(mostCommonErrorStacktraceFrames.size());
+					/*
+					 * FIXME: Consider defining the method formatting based on preferences.
+					 *
+					 * Currently it's a compromise between keeping the length short, but still being
+					 * able to identify the actual method, even if the line number is a bit
+					 * incorrect.
+					 */
+					FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
+					for (int i = 0; i < mostCommonErrorStacktraceFrames.size(); i++) {
+						formattedFrames.add(
+								StacktraceFormatToolkit.formatFrame(mostCommonErrorStacktraceFrames.get(i).getFrame(),
+										sep, false, false, true, true, true, false));
+					}
+					String mostCommonErrorStacktraceFormattedFrames = String.join("\n", formattedFrames);
 					longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_ERROR_STACKTRACE);
-					resultBuilder.addResult(MOST_COMMON_ERROR_STACKTRACE, mostCommonErrorStacktraceFrames);
+					resultBuilder.addResult(MOST_COMMON_ERROR_STACKTRACE, mostCommonErrorStacktraceFormattedFrames);
 				}
 			}
 			return resultBuilder.setSeverity(Severity.get(score))
