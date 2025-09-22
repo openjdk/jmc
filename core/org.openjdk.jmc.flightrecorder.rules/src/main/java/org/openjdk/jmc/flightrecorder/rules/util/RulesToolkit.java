@@ -59,6 +59,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.collection.EntryHashMap;
 import org.openjdk.jmc.common.collection.IteratorToolkit;
@@ -1440,33 +1441,65 @@ public class RulesToolkit {
 	}
 
 	/**
-	 * Gets the second frame in the most common stack trace. Useful when showing what called a
+	 * Returns up to {@code n} frames from the single most frequent branch in the aggregated stack
+	 * traces for the provided {@code items}.
+	 * <p>
+	 * The result starts at the frame where the event(s) occurred and includes successive caller
+	 * frames, up to the requested number. This is useful to see the most frequent path leading to
+	 * an interesting method, such as {@code java.lang.Integer.valueOf} (autoboxing).
+	 *
+	 * @param items
+	 *            the events for which to aggregate stack traces
+	 * @param n
+	 *            the maximum number of frames to return
+	 * @return a List of {@code n} frames, starting at the event site and moving toward the callers
+	 */
+	public static List<StacktraceFrame> getTopNFramesInMostCommonTrace(IItemCollection items, int n) {
+		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
+		StacktraceModel stacktraceModel = new StacktraceModel(false, sep, items);
+		Branch currentBranch = stacktraceModel.getRootFork().getBranch(0);
+		List<StacktraceFrame> frames = new ArrayList<>();
+		while (currentBranch != null && frames.size() < n) {
+			frames.add(currentBranch.getFirstFrame());
+			for (StacktraceFrame tf : currentBranch.getTailFrames()) {
+				if (frames.size() == n)
+					break;
+				frames.add(tf);
+			}
+			if (frames.size() == n)
+				break;
+			if (currentBranch.getEndFork().getBranchCount() > 0) {
+				currentBranch = currentBranch.getEndFork().getBranch(0);
+			} else {
+				break;
+			}
+		}
+		return frames;
+	}
+
+	/**
+	 * Gets the second frame in the most common stack trace. Useful when showing what called an
 	 * interesting method, like for example java.lang.Integer.valueOf (aka autoboxing)
 	 *
 	 * @param items
 	 *            the item collection to build the aggregated stack trace on
 	 * @return a stack trace frame
+	 * @deprecated Use {@link #getTopNFramesInMostCommonTrace(IItemCollection, int)} instead.
 	 */
-	// FIXME: Generalize this a bit, get the top N frames
 	public static String getSecondFrameInMostCommonTrace(IItemCollection items) {
-		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
-		StacktraceModel stacktraceModel = new StacktraceModel(false, sep, items);
-		Branch firstBranch = stacktraceModel.getRootFork().getBranch(0);
-		StacktraceFrame secondFrame = null;
-		if (firstBranch.getTailFrames().length > 0) {
-			secondFrame = firstBranch.getTailFrames()[0];
-		} else if (firstBranch.getEndFork().getBranchCount() > 0) {
-			secondFrame = firstBranch.getEndFork().getBranch(0).getFirstFrame();
-		} else {
+		List<StacktraceFrame> frames = getTopNFramesInMostCommonTrace(items, 2);
+		if (frames.size() < 2) {
 			return null;
 		}
+		IMCFrame secondFrame = frames.get(1).getFrame();
+		FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
 		/*
 		 * FIXME: Consider defining the method formatting based on preferences.
 		 *
 		 * Currently it's a compromise between keeping the length short, but still being able to
 		 * identify the actual method, even if the line number is a bit incorrect.
 		 */
-		return StacktraceFormatToolkit.formatFrame(secondFrame.getFrame(), sep, false, false, true, true, true, false);
+		return StacktraceFormatToolkit.formatFrame(secondFrame, sep, false, false, true, true, true, false);
 	}
 
 	/**
