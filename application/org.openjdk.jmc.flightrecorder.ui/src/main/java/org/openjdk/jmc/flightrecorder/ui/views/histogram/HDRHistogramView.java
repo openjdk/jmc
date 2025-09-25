@@ -269,7 +269,7 @@ public class HDRHistogramView extends ViewPart implements ISelectionListener {
 
 			// Get the maximum duration to set chart bounds
 			IQuantity maxDuration = itemsWithDuration.getAggregate(JdkAggregators.LONGEST_EVENT);
-			if (maxDuration == null) {
+			if (maxDuration == null || maxDuration.clampedLongValueIn(UnitLookup.NANOSECOND) == 0L) {
 				maxDuration = UnitLookup.MILLISECOND.quantity(100);
 			} else {
 				maxDuration = UnitLookup.MILLISECOND.quantity(maxDuration.doubleValueIn(UnitLookup.MILLISECOND) * 1.1);
