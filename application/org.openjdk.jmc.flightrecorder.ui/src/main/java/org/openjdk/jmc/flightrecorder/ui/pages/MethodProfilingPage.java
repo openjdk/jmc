@@ -222,7 +222,7 @@ public class MethodProfilingPage extends AbstractDataPage {
 
 	}
 
-	private static final IItemFilter TABLE_ITEMS = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE);
+	private static final IItemFilter TABLE_ITEMS = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE, JdkTypeIDs.EXECUTION_SAMPLE_WALL);
 	private static final ItemHistogramBuilder HOT_METHODS_HISTOGRAM = new ItemHistogramBuilder();
 
 	static {

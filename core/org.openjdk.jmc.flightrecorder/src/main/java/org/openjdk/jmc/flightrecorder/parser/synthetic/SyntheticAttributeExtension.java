@@ -81,7 +81,7 @@ public class SyntheticAttributeExtension implements IParserExtension {
 			public IEventSink create(
 				String identifier, String label, String[] category, String description,
 				List<ValueField> dataStructure) {
-				if (JdkTypeIDs.EXECUTION_SAMPLE.equals(identifier)) {
+				if (JdkTypeIDs.EXECUTION_SAMPLE.equals(identifier) || JdkTypeIDs.EXECUTION_SAMPLE_WALL.equals(identifier)) {
 					ValueField[] struct = new ValueField[dataStructure.size()];
 					for (int i = 0; i < struct.length; i++) {
 						ValueField vf = dataStructure.get(i);

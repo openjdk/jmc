@@ -108,7 +108,7 @@ public final class JdkFilters {
 			JdkTypeIDs.MONITOR_WAIT, JdkTypeIDs.THREAD_SLEEP, JdkTypeIDs.THREAD_PARK, JdkTypeIDs.SOCKET_READ,
 			JdkTypeIDs.SOCKET_WRITE, JdkTypeIDs.FILE_READ, JdkTypeIDs.FILE_WRITE, JdkTypeIDs.CLASS_LOAD,
 			JdkTypeIDs.COMPILATION, JdkTypeIDs.EXECUTION_SAMPLING_INFO_EVENT_ID);
-	public static final IItemFilter EXECUTION_SAMPLE = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE);
+	public static final IItemFilter EXECUTION_SAMPLE = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE, JdkTypeIDs.EXECUTION_SAMPLE_WALL);
 	public static final IItemFilter CONTEXT_SWITCH_RATE = ItemFilters.type(JdkTypeIDs.CONTEXT_SWITCH_RATE);
 	public static final IItemFilter CPU_LOAD = ItemFilters.type(JdkTypeIDs.CPU_LOAD);
 	public static final IItemFilter GC_G1MMU = ItemFilters.type(JdkTypeIDs.GC_G1MMU);

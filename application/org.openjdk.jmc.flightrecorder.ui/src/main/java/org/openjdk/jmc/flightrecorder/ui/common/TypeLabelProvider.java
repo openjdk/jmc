@@ -126,6 +126,7 @@ public class TypeLabelProvider {
 		case JdkTypeIDs.GC_DETAILED_PROMOTION_FAILED:
 			return new Color(0xD04E4E);
 		case JdkTypeIDs.EXECUTION_SAMPLE:
+		case JdkTypeIDs.EXECUTION_SAMPLE_WALL:
 			return new Color(0xCC66FF);
 		case JdkTypeIDs.EXECUTION_SAMPLING_INFO_EVENT_ID:
 			return new Color(0xE6C940);

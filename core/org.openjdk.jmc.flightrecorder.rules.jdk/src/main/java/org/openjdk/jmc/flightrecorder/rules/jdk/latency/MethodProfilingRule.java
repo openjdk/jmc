@@ -527,7 +527,7 @@ public class MethodProfilingRule implements IRule {
 					double periodsPerSecond = 1 / period.doubleValueIn(UnitLookup.SECOND);
 					double maxSamplesPerSecond = SAMPLES_PER_PERIOD * periodsPerSecond;
 					double samplesInPeriod = items
-							.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE)))
+							.getAggregate(Aggregators.count(ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE,JdkTypeIDs.EXECUTION_SAMPLE_WALL)))
 							.doubleValueIn(UnitLookup.NUMBER_UNITY);
 					double maxSamplesInPeriod = maxSamplesPerSecond * windowSize.doubleValueIn(UnitLookup.SECOND);
 					double relevancy = samplesInPeriod / maxSamplesInPeriod;
