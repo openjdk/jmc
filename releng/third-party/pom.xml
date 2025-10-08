@@ -59,7 +59,7 @@
 		<lz4.version>1.8.0</lz4.version>
 		<hdrhistogram.version>2.2.2</hdrhistogram.version>
 		<jemmy.version>2.0.0</jemmy.version>
-		<jetty.version>12.0.21</jetty.version>
+		<jetty.version>12.1.0</jetty.version>
 		<spifly.version>1.3.7</spifly.version>
 		<jolokia.version>2.0.2</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
