@@ -93,6 +93,7 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 	private final ConnectionWizardModel model;
 	private Text hostNameField;
 	private Text usernameField;
+	private Button requireSecureConnectionButton;
 	private Text portField;
 	private Text javaCommandField;
 	private Label javaCommandCaption;
@@ -408,7 +409,7 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 	private void createHostPortServiceURLComposite(Composite outer) {
 		// FIXME: Make sure to fix the layout to align for all components, for example commandline, pid and service url (for JDP)
 		Composite inner = new Composite(outer, SWT.NONE);
-		GridLayout l = new GridLayout(1, false);
+		GridLayout l = new GridLayout(2, false);
 		inner.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 2));
 
 		l.marginWidth = 0;
@@ -416,7 +417,7 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		inner.setLayout(l);
 
 		fieldStack = new Composite(inner, SWT.NONE);
-		fieldStack.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		fieldStack.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		fieldStackLayout = new StackLayout();
 		fieldStack.setLayout(fieldStackLayout);
 		createHostPortComposite(fieldStack);
@@ -425,6 +426,10 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 	}
 
 	private void createCustomURLButtonComposite(Composite inner) {
+		requireSecureConnectionButton = new Button(inner, SWT.CHECK);
+		requireSecureConnectionButton.setText(Messages.ConnectionWizardPage_REQUIRE_SECURE_CONNECTION_LABEL);
+		requireSecureConnectionButton
+				.setLayoutData(new GridData(SWT.LEFT, GridData.VERTICAL_ALIGN_BEGINNING, false, false));
 		CustomURLSelector customURLSelector = new CustomURLSelector();
 		customUrlButton = new Button(inner, SWT.TOGGLE);
 		customUrlButton.setText(Messages.ConnectionWizardPage_BUTTON_CUSTOM_JMX_SERVICE_URL_TEXT);
@@ -487,6 +492,9 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		if (server != null) {
 			currentUrl = server.getConnectionUrl();
 			name = server.getServerHandle().getServerDescriptor().getDisplayName();
+			if (server.getServerHandle().getConnectionDescriptor().requireSecureConnection()) {
+				this.requireSecureConnectionButton.setSelection(true);
+			}
 			ICredentials credential = server.getCredentials();
 			if (credential != null) {
 				try {
@@ -670,7 +678,7 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 
 				ServerModelCredentials credentials = new ServerModelCredentials(username, password, storePassword);
 				IConnectionDescriptor cd = new ConnectionDescriptorBuilder().url(currentUrl).credentials(credentials)
-						.build();
+						.requireSecureConnection(isSecureConnectionRequired()).build();
 
 				Server newServer;
 				if (server != null) {
@@ -692,6 +700,10 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 						Messages.ConnectionWizard_EXCEPTION_COULD_NOT_STORE_CONNECTION);
 			}
 		}
+	}
+
+	private boolean isSecureConnectionRequired() {
+		return requireSecureConnectionButton.getSelection();
 	}
 
 	private Exception testConnection() {
