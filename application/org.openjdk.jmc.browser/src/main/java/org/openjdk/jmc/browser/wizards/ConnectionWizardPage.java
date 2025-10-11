@@ -438,7 +438,6 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		if (isDiscovered()) {
 			customUrlButton.setVisible(false);
 		}
-
 	}
 
 	private void createServiceURLComposite(Composite parent) {
@@ -679,7 +678,7 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 
 				ServerModelCredentials credentials = new ServerModelCredentials(username, password, storePassword);
 				IConnectionDescriptor cd = new ConnectionDescriptorBuilder().url(currentUrl).credentials(credentials)
-						.requireSecureConnection(requireSecureConnection()).build();
+						.requireSecureConnection(isSecureConnectionRequired()).build();
 
 				Server newServer;
 				if (server != null) {
@@ -703,7 +702,7 @@ public class ConnectionWizardPage extends RelinkableWizardPage {
 		}
 	}
 
-	private boolean requireSecureConnection() {
+	private boolean isSecureConnectionRequired() {
 		return requireSecureConnectionButton.getSelection();
 	}
 
