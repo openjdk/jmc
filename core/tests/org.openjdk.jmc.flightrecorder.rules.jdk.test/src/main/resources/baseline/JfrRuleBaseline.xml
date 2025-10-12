@@ -328,6 +328,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>allocation_10s_fixed.jfr</file>
@@ -630,6 +634,10 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>autobox_allocation.jfr</file>
@@ -904,6 +912,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>autobox_allocation_sample.jfr</file>
@@ -1174,6 +1186,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -1468,6 +1484,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>dominating_thread_allocation.jfr</file>
@@ -1739,6 +1759,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>dominating_thread_allocation_sample.jfr</file>
@@ -2006,6 +2030,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -2331,6 +2359,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>flight_recording_hidden.jfr</file>
@@ -2627,6 +2659,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>full_gc_cms.jfr</file>
@@ -2912,6 +2948,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>full_gc_g1.jfr</file>
@@ -3195,6 +3235,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -3484,6 +3528,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>jdk18-finalizers.jfr</file>
@@ -3749,6 +3797,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>jdk21-inverted-parallelism.jfr</file>
@@ -4011,6 +4063,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -4333,6 +4389,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>openjdk8u292.jfr</file>
@@ -4603,6 +4663,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <id>biasedLockingRevocationPause</id>
             <severity>Not Applicable</severity>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>openjdk8u302ea.jfr</file>
@@ -4871,6 +4935,10 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -5192,6 +5260,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>parallel-on-singlecpu.jfr</file>
@@ -5510,6 +5582,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>pid1.jfr</file>
@@ -5782,6 +5858,10 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -6106,6 +6186,10 @@ To improve rule accuracy and/or get more details for further investigation, it i
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
         </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
+        </rule>
     </report>
     <report>
         <file>wldf.jfr</file>
@@ -6205,7 +6289,20 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>Errors</id>
             <severity>OK</severity>
             <summary>The program generated an average of 17 errors per minute during 9/24/2015 10:08:14.000 AM – 10:09:14 AM.</summary>
-            <explanation>17 errors were thrown in total. The most common error was ''java.lang.NoSuchMethodError'', which was thrown 13 times. Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: ''(com.sun.el.parser.ELParser\$LookaheadSuccess)''.</explanation>
+            <explanation>17 errors were thrown in total. The most common error was ''java.lang.NoSuchMethodError'', which was thrown 13 times. Investigate the thrown errors to see if they can be avoided. Errors indicate that something went wrong with the code execution and should never be used for flow control. The following regular expression was used to exclude 381 errors from this rule: ''(com.sun.el.parser.ELParser\$LookaheadSuccess)''.
+The most common error message was: 
+ &amp;lt;clinit&amp;gt;
+The most common error stack trace was: 
+ java.lang.Error.&amp;lt;init&amp;gt;(String):71
+java.lang.LinkageError.&amp;lt;init&amp;gt;(String):55
+java.lang.IncompatibleClassChangeError.&amp;lt;init&amp;gt;(String):55
+java.lang.NoSuchMethodError.&amp;lt;init&amp;gt;(String):58
+java.io.ObjectStreamClass.hasStaticInitializer(Class):-1
+java.io.ObjectStreamClass.computeDefaultSUID(Class):1743
+java.io.ObjectStreamClass.access$100(Class):72
+java.io.ObjectStreamClass$1.run():250
+java.io.ObjectStreamClass$1.run():248
+java.security.AccessController.doPrivileged(PrivilegedAction):-1</explanation>
         </rule>
         <rule>
             <id>Exceptions</id>
@@ -6471,6 +6568,10 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <id>biasedLockingRevocationPause</id>
             <severity>OK</severity>
             <summary>No revocation of biased locks found.</summary>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
+            <severity>Not Applicable</severity>
         </rule>
     </report>
     <report>
@@ -6746,6 +6847,10 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>biasedLockingRevocationPause</id>
+            <severity>Not Applicable</severity>
+        </rule>
+        <rule>
+            <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>

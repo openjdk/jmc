@@ -252,7 +252,9 @@ public class RulesHtmlToolkit {
 		description += (explanation != null) ? "<div class=\"longDescription\">" + explanation + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		description += (solution != null) ? "<div class=\"longDescription\">" + solution + "</div>" : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		Matcher matcher = LINK_PATTERN.matcher(description);
-		description.replace("\n", "<p>"); //$NON-NLS-1$//$NON-NLS-2$
+		description = description.replace("\n", "<br/>") //$NON-NLS-1$//$NON-NLS-2$
+				.replace("\u2022", "&#8226; ") //$NON-NLS-1$//$NON-NLS-2$
+				.replace("\\u2022", "&#8226; "); //$NON-NLS-1$//$NON-NLS-2$
 		while (matcher.find()) {
 			String title = matcher.group(1);
 			String url = matcher.group(2);

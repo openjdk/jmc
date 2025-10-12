@@ -58,6 +58,7 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.common.util.TypedPreference;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkQueries;
@@ -73,6 +74,9 @@ import org.openjdk.jmc.flightrecorder.rules.util.JfrRuleTopics;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.EventAvailability;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit.RequiredEventsBuilder;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFormatToolkit;
+import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceFrame;
 import org.openjdk.jmc.flightrecorder.rules.util.SlidingWindowToolkit;
 
 public class ErrorRule extends AbstractRule {
@@ -108,12 +112,18 @@ public class ErrorRule extends AbstractRule {
 	public static final TypedResult<IQuantity> MOST_COMMON_ERROR_COUNT = new TypedResult<>("mostCommonErrorCount", //$NON-NLS-1$
 			"Most Common Error Count", "The number of times the most common error type was thrown.", UnitLookup.NUMBER,
 			IQuantity.class);
+	public static final TypedResult<String> MOST_COMMON_ERROR_MESSAGE = new TypedResult<>("mostCommonErrorMessage", //$NON-NLS-1$
+			"Most Common Error Message", "The most common error message.", UnitLookup.PLAIN_TEXT, String.class);
 	public static final TypedResult<IQuantity> EXCLUDED_ERRORS = new TypedResult<>("excludedErrors", "Excluded Errors", //$NON-NLS-1$
 			"The number of errors excluded from the rule evaluation.", UnitLookup.NUMBER, IQuantity.class);
+	public static final TypedResult<String> MOST_COMMON_ERROR_STACKTRACE = new TypedResult<>(
+			"mostCommonErrorStacktrace", //$NON-NLS-1$
+			"Most Common Error Stack Trace", "The most common error stack trace frames.", UnitLookup.PLAIN_TEXT,
+			String.class);
 
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays.<TypedResult<?>> asList(
 			TypedResult.SCORE, ERROR_COUNT, EXCLUDED_ERRORS, ERROR_RATE, ERROR_WINDOW, MOST_COMMON_ERROR,
-			MOST_COMMON_ERROR_COUNT);
+			MOST_COMMON_ERROR_COUNT, MOST_COMMON_ERROR_MESSAGE, MOST_COMMON_ERROR_STACKTRACE);
 
 	private static final Map<String, EventAvailability> REQUIRED_EVENTS = RequiredEventsBuilder.create()
 			.addEventType(JdkTypeIDs.ERRORS_THROWN, EventAvailability.AVAILABLE).build();
@@ -167,17 +177,54 @@ public class ErrorRule extends AbstractRule {
 							return o1.left.compareTo(o2.left);
 						}
 					});
+			ResultBuilder resultBuilder = ResultBuilder.createFor(this, vp);
 			List<IntEntry<IMCType>> errorGrouping = RulesToolkit.calculateGroupingScore(errorItems,
 					JdkAttributes.EXCEPTION_THROWNCLASS);
 			IMCType mostCommonError = errorGrouping.get(errorGrouping.size() - 1).getKey();
 			int errorsThrown = errorGrouping.get(errorGrouping.size() - 1).getValue();
 			double score = RulesToolkit.mapExp100(maxErrorsPerMinute.left.doubleValue(), infoLimit, warnLimit);
 			String longMessage = Messages.getString(Messages.ErrorRule_TEXT_WARN_LONG);
-			// FIXME: List some frames of the most common stack trace
 			if (excludedErrors != null && excludedErrors.longValue() > 0) {
 				longMessage += " " + Messages.getString(Messages.ErrorRule_TEXT_WARN_EXCLUDED_INFO); //$NON-NLS-1$
 			}
-			return ResultBuilder.createFor(this, vp).setSeverity(Severity.get(score))
+			if (mostCommonError != null) {
+				IItemCollection mostCommonErrorItems = errorItems
+						.apply(ItemFilters.equals(JdkAttributes.EXCEPTION_THROWNCLASS, mostCommonError));
+				IItemCollection itemsWithMessage = mostCommonErrorItems
+						.apply(ItemFilters.notEquals(JdkAttributes.EXCEPTION_MESSAGE, null));
+				if (itemsWithMessage.hasItems()) {
+					List<IntEntry<String>> mostCommonErrorMessageGrouping = RulesToolkit
+							.calculateGroupingScore(itemsWithMessage, JdkAttributes.EXCEPTION_MESSAGE);
+					String mostCommonErrorMessage = mostCommonErrorMessageGrouping
+							.get(mostCommonErrorMessageGrouping.size() - 1).getKey();
+					longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_ERROR_MESSAGE);
+					resultBuilder.addResult(MOST_COMMON_ERROR_MESSAGE, mostCommonErrorMessage);
+				}
+				IItemCollection itemsWithStackTrace = mostCommonErrorItems
+						.apply(ItemFilters.notEquals(JfrAttributes.EVENT_STACKTRACE, null));
+				if (itemsWithStackTrace.hasItems()) {
+					List<StacktraceFrame> mostCommonErrorStacktraceFrames = RulesToolkit
+							.getTopNFramesInMostCommonTrace(itemsWithStackTrace, 10);
+					List<String> formattedFrames = new ArrayList<>(mostCommonErrorStacktraceFrames.size());
+					/*
+					 * FIXME: Consider defining the method formatting based on preferences.
+					 *
+					 * Currently it's a compromise between keeping the length short, but still being
+					 * able to identify the actual method, even if the line number is a bit
+					 * incorrect.
+					 */
+					FrameSeparator sep = new FrameSeparator(FrameSeparator.FrameCategorization.LINE, false);
+					for (int i = 0; i < mostCommonErrorStacktraceFrames.size(); i++) {
+						formattedFrames.add(
+								StacktraceFormatToolkit.formatFrame(mostCommonErrorStacktraceFrames.get(i).getFrame(),
+										sep, false, false, true, true, true, false));
+					}
+					String mostCommonErrorStacktraceFormattedFrames = String.join("\n", formattedFrames);
+					longMessage += "\n" + Messages.getString(Messages.ErrorRule_TEXT_WARN_MOST_COMMON_ERROR_STACKTRACE);
+					resultBuilder.addResult(MOST_COMMON_ERROR_STACKTRACE, mostCommonErrorStacktraceFormattedFrames);
+				}
+			}
+			return resultBuilder.setSeverity(Severity.get(score))
 					.setSummary(Messages.getString(Messages.ErrorRule_TEXT_WARN)).setExplanation(longMessage)
 					.addResult(TypedResult.SCORE, UnitLookup.NUMBER_UNITY.quantity(score))
 					.addResult(ERROR_COUNT, errorCount).addResult(ERROR_WINDOW, maxErrorsPerMinute.right)

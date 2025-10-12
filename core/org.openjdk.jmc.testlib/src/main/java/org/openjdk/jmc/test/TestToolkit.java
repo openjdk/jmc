@@ -42,7 +42,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.openjdk.jmc.common.io.IOToolkit;
@@ -74,24 +76,101 @@ public final class TestToolkit {
 	 */
 	public static IOResourceSet getResourcesInDirectory(Class<?> clazz, String directory, String indexFile)
 			throws IOException {
+		return getResourcesInDirectoryWithExclusions(clazz, directory, indexFile).included;
+	}
+
+	/**
+	 * Information about resources in an index file, including both included and excluded files.
+	 */
+	public static class IndexedResources {
+		public final IOResourceSet included;
+		public final Set<String> excluded;
+
+		public IndexedResources(IOResourceSet included, Set<String> excluded) {
+			this.included = included;
+			this.excluded = excluded;
+		}
+	}
+
+	/**
+	 * Load resources listed in an index file, with exclusions from a separate exclude file. Empty
+	 * lines and lines starting with '#' will be ignored in both files.
+	 *
+	 * @param clazz
+	 *            use the class loader of this class to find and load resources
+	 * @param directory
+	 *            resource directory
+	 * @param indexFile
+	 *            Resource file containing names of all available resources
+	 * @param excludeFile
+	 *            Resource file containing names of resources to exclude (can be null)
+	 * @return indexed resources containing included files and excluded file names
+	 */
+	public static IndexedResources getResourcesInDirectoryWithExclusions(
+		Class<?> clazz, String directory, String indexFile, String excludeFile) throws IOException {
+		// Read all available resources from index file
+		Set<String> allResources = readResourceNames(clazz, directory, indexFile);
+
+		// Read excluded resources from exclude file (if it exists)
+		Set<String> excludedResources = new HashSet<>();
+		if (excludeFile != null) {
+			excludedResources = readResourceNames(clazz, directory, excludeFile);
+		}
+
+		// Create included resources (all - excluded)
+		List<IOResource> includedResources = new ArrayList<>();
+		for (String resourceName : allResources) {
+			if (!excludedResources.contains(resourceName)) {
+				includedResources.add(new ResourceResource(clazz, directory, resourceName));
+			}
+		}
+
+		return new IndexedResources(new IOResourceSet(includedResources), excludedResources);
+	}
+
+	/**
+	 * Load resources listed in an index file, with exclusions from a separate exclude file. Uses
+	 * "exclude.txt" as the default exclude file name.
+	 *
+	 * @param clazz
+	 *            use the class loader of this class to find and load resources
+	 * @param directory
+	 *            resource directory
+	 * @param indexFile
+	 *            Resource file containing names of all available resources
+	 * @return indexed resources containing included files and excluded file names
+	 */
+	public static IndexedResources getResourcesInDirectoryWithExclusions(
+		Class<?> clazz, String directory, String indexFile) throws IOException {
+		return getResourcesInDirectoryWithExclusions(clazz, directory, indexFile, "exclude.txt");
+	}
+
+	/**
+	 * Read resource names from a file, ignoring empty lines and comments.
+	 */
+	private static Set<String> readResourceNames(Class<?> clazz, String directory, String fileName) throws IOException {
+		Set<String> resourceNames = new HashSet<>();
 		InputStream in = null;
 		BufferedReader br = null;
-		List<IOResource> resources = new ArrayList<>();
 		try {
-			in = clazz.getClassLoader().getResourceAsStream(directory + '/' + indexFile);
+			in = clazz.getClassLoader().getResourceAsStream(directory + '/' + fileName);
+			if (in == null) {
+				// File doesn't exist, return empty set
+				return resourceNames;
+			}
 			br = new BufferedReader(new InputStreamReader(in));
-			String filename;
-			while ((filename = br.readLine()) != null) {
-				filename = filename.trim();
-				if (!filename.isEmpty() && !filename.startsWith("#")) {
-					resources.add(new ResourceResource(clazz, directory, filename));
+			String line;
+			while ((line = br.readLine()) != null) {
+				line = line.trim();
+				if (!line.isEmpty() && !line.startsWith("#")) {
+					resourceNames.add(line);
 				}
 			}
 		} finally {
 			IOToolkit.closeSilently(in);
 			IOToolkit.closeSilently(br);
 		}
-		return new IOResourceSet(resources);
+		return resourceNames;
 	}
 
 	public static IOResource getNamedResource(Class<?> clazz, String directory, String fileName) throws IOException {

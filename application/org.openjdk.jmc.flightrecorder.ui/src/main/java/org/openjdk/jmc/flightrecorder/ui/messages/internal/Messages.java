@@ -469,6 +469,7 @@ public class Messages extends NLS {
 	public static String PREFERENCES_REMOVE_FINISHED_RECORDING_TEXT;
 	public static String PREFERENCES_RULES_CONFIGURE_SELECTED;
 	public static String PREFERENCES_SHOW_MONITORING_WARNING_TEXT;
+	public static String PREFERENCES_STACKTRACE_SHOW_HIDDEN_FRAMES;
 	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
 	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_TEXT;
 	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_TOOLTIP;
@@ -586,6 +587,7 @@ public class Messages extends NLS {
 	public static String SystemPage_SECTION_CPU;
 	public static String SystemPage_SECTION_MEMORY;
 	public static String SystemPage_SECTION_OS;
+	public static String SystemPage_SECTION_VIRTUALIZATION;
 	public static String SystemPropertiesPage_PAGE_NAME;
 	public static String TABLECOMPONENT_COMBINE_GROUP_BY;
 	public static String TABLECOMPONENT_GROUP_BY;

@@ -58,6 +58,7 @@ public final class JdkTypeIDs {
 	public static final String OS_MEMORY_SUMMARY = PREFIX + "PhysicalMemory";
 	public static final String OS_INFORMATION = PREFIX + "OSInformation";
 	public static final String CPU_INFORMATION = PREFIX + "CPUInformation";
+	public static final String VIRTUALIZATION_INFORMATION = PREFIX + "VirtualizationInformation";
 	public static final String THREAD_ALLOCATION_STATISTICS = PREFIX + "ThreadAllocationStatistics";
 	public static final String HEAP_CONF = PREFIX + "GCHeapConfiguration";
 	public static final String GC_CONF = PREFIX + "GCConfiguration";
@@ -107,6 +108,8 @@ public final class JdkTypeIDs {
 	public static final String METASPACE_SUMMARY = PREFIX + "MetaspaceSummary";
 	public static final String GARBAGE_COLLECTION = PREFIX + "GarbageCollection";
 	public static final String CONCURRENT_MODE_FAILURE = PREFIX + "ConcurrentModeFailure";
+
+	public static final String ZGC_ALLOCATION_STALL = PREFIX + "ZAllocationStall";
 
 	public static final String THROWABLES_STATISTICS = PREFIX + "ExceptionStatistics";
 	public static final String ERRORS_THROWN = PREFIX + "JavaErrorThrow";

@@ -68,5 +68,8 @@ public class Initializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceKeys.PROPERTY_OVERVIEW_SHOWOK, PreferenceKeys.PROPERTY_DEFAULT_OVERVIEW_SHOWOK);
 		store.setDefault(PreferenceKeys.PROPERTY_OVERVIEW_SHOWRESULTDETAILS,
 				PreferenceKeys.PROPERTY_DEFAULT_OVERVIEW_SHOWRESULTDETAILS);
+
+		store.setDefault(PreferenceKeys.PROPERTY_STACKTRACE_SHOW_HIDDEN_FRAMES,
+				PreferenceKeys.PROPERTY_DEFAULT_STACKTRACE_SHOW_HIDDEN_FRAMES);
 	}
 }

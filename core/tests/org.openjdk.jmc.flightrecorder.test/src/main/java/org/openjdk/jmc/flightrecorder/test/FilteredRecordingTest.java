@@ -95,7 +95,7 @@ public class FilteredRecordingTest {
 			try (InputStream recordingStream = resourceSet.getResource(0).open()) {
 				List<IParserExtension> extensions = new ArrayList<>(ParserExtensionRegistry.getParserExtensions());
 				extensions.add(new FilterExtension(onLoadFilter));
-				IItemCollection items = JfrLoaderToolkit.loadEvents(recordingStream, extensions);
+				IItemCollection items = JfrLoaderToolkit.loadEvents(recordingStream, extensions, true);
 				Assert.assertTrue("Expected some events to pass through the filter", items.hasItems());
 				for (IItemIterable ii : items) {
 					if (expect != ii.getType().getIdentifier().equals(typeToCheck)) {

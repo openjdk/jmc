@@ -56,8 +56,6 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.common.util.Environment;
-import org.openjdk.jmc.common.util.Environment.OSType;
 import org.openjdk.jmc.common.xydata.DefaultXYData;
 import org.openjdk.jmc.common.xydata.ITimestampedData;
 import org.openjdk.jmc.greychart.AxisContentType;
@@ -102,21 +100,6 @@ public class ChartComposite extends SelectionCanvas {
 	private static final double ZOOM_FACTOR_WHEEL_IN = 1.0 / ZOOM_FACTOR_WHEEL_OUT;
 	private static final double ZOOM_MIDDLE = 0.5;
 
-	private static final String DRAW_PROPERTY = "org.openjdk.jmc.rjmx.ui.chart.immediatedraw"; //$NON-NLS-1$
-	private static final boolean IMMEDIATE_DRAWING;
-
-	static {
-		// Workaround for slow SWT redraw on Cocoa.
-		boolean drawImmediately;
-		if (System.getProperty(DRAW_PROPERTY) != null) {
-			drawImmediately = Boolean.getBoolean(DRAW_PROPERTY);
-		} else {
-			// Enable on OS X due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=410293
-			drawImmediately = (Environment.getOSType() == OSType.MAC);
-		}
-		IMMEDIATE_DRAWING = drawImmediately;
-	}
-
 	private static class QuantityFormatter implements TickFormatter {
 		private final IUnit outUnit;
 		private final IFormatter<IQuantity> formatter;
@@ -143,16 +126,17 @@ public class ChartComposite extends SelectionCanvas {
 
 	final private ChartModel m_chartModel = new ChartModel();
 	private final DefaultXYGreyChart<ITimestampedData> m_chart;
-	private long m_viewWidth;
+	private long m_viewWidth = ONE_MINUTE;
 	private long m_viewEnd = System.currentTimeMillis() * 1000 * 1000;
-	private long m_dataStart = Long.MAX_VALUE;
-	private long m_dataEnd = Long.MIN_VALUE;
 	private boolean m_enableUpdates;
+	private boolean m_showAllMode = false;
 	private final Consumer<Boolean> m_enableUpdatesCallback;
 	private ChartSampleTooltipProvider m_cstp = null;
 	private Rectangle m_plotBounds;
 
 	/**
+	 * Constructs a ChartComposite on the provided parent and with the provided widget style.
+	 *
 	 * @param parent
 	 *            Parent widget
 	 * @param style
@@ -185,8 +169,6 @@ public class ChartComposite extends SelectionCanvas {
 	public void refresh() {
 		if (!isDisposed()) {
 			zoomInAction.setEnabled(m_viewWidth > MINIMUM_WORLD_WIDTH && !m_enableUpdates);
-			((NanosXAxis) getChart().getXAxis()).setRange(m_viewEnd - m_viewWidth, m_viewEnd);
-			m_chart.setXAxis(m_chart.getXAxis());
 			redraw();
 		}
 	}
@@ -333,8 +315,7 @@ public class ChartComposite extends SelectionCanvas {
 	}
 
 	private void updateXAxis() {
-		NanosXAxis xAxis = (NanosXAxis) getChart().getXAxis();
-		xAxis.setTitle(getChartModel().getXAxis().getTitle());
+		getXAxis().setTitle(getChartModel().getXAxis().getTitle());
 		redraw();
 	}
 
@@ -473,26 +454,103 @@ public class ChartComposite extends SelectionCanvas {
 	 */
 	public void showLast(long viewWidth) {
 		m_viewWidth = viewWidth;
-		if (m_enableUpdatesCallback != null) {
-			m_enableUpdatesCallback.accept(true);
-		}
-		if (m_dataEnd > 0) {
-			m_viewEnd = m_dataEnd;
-		}
+		m_showAllMode = false;
+
+		// Enable auto-range with fixed range
+		NanosXAxis xAxis = getXAxis();
+		xAxis.setAutoRangeEnabled(true);
+		xAxis.setFixedRange(viewWidth);
+
+		setUpdatesEnabled(true);
 		refresh();
 	}
 
 	/**
-	 * Show all values in the data series. Depends on that the data range is set correctly.
+	 * Show all values in the data series. Uses provider data bounds for the complete range.
 	 */
 	public void showAll() {
-		m_viewWidth = m_dataEnd - m_dataStart;
-		m_viewEnd = m_dataEnd;
+		m_showAllMode = true;
+
+		// Enable auto-range with no fixed range - axis will show full data range
+		NanosXAxis xAxis = getXAxis();
+		xAxis.setAutoRangeEnabled(true);
+		// Clear fixed range to show all data
+		xAxis.setFixedRange(0);
+
+		setUpdatesEnabled(true);
+		refresh();
+	}
+
+	/**
+	 * Show a specific time range and disable live updates.
+	 *
+	 * @param fromTimeNanos
+	 *            Start time in nanoseconds
+	 * @param toTimeNanos
+	 *            End time in nanoseconds
+	 */
+	public void showTimeRange(long fromTimeNanos, long toTimeNanos) {
+		m_showAllMode = false;
+
+		// Use manual range for custom time ranges
+		NanosXAxis xAxis = getXAxis();
+		xAxis.setAutoRangeEnabled(false);
+		xAxis.setRange(fromTimeNanos, toTimeNanos);
+
+		m_viewWidth = toTimeNanos - fromTimeNanos;
+		setUpdatesEnabled(false);
 		refresh();
 	}
 
 	public void extendsDataRangeToInclude(long timestamp) {
-		setDataRange(Math.min(m_dataStart, timestamp), Math.max(m_dataEnd, timestamp));
+		// Simply trigger a data update - no need to maintain separate bounds
+		onDataUpdated();
+	}
+
+	/**
+	 * Get the start timestamp of the available data range.
+	 *
+	 * @return Start timestamp in nanoseconds
+	 */
+	public long getDataStartTime() {
+		return getProviderMinTime();
+	}
+
+	/**
+	 * Get the end timestamp of the available data range.
+	 *
+	 * @return End timestamp in nanoseconds
+	 */
+	public long getDataEndTime() {
+		return getProviderMaxTime();
+	}
+
+	/**
+	 * Get the full available data range minimum timestamp. This returns the true dataset bounds
+	 * regardless of current view restrictions.
+	 *
+	 * @return Minimum timestamp in nanoseconds from the full dataset
+	 */
+	public long getProviderMinTime() {
+		OptimizingProvider provider = m_chart.getOptimizingProvider();
+		if (provider != null) {
+			return provider.getDataMinX();
+		}
+		return System.currentTimeMillis() * 1000 * 1000 - (60 * 1000 * 1000 * 1000L);
+	}
+
+	/**
+	 * Get the full available data range maximum timestamp. This returns the true dataset bounds
+	 * regardless of current view restrictions.
+	 *
+	 * @return Maximum timestamp in nanoseconds from the full dataset
+	 */
+	public long getProviderMaxTime() {
+		OptimizingProvider provider = m_chart.getOptimizingProvider();
+		if (provider != null) {
+			return provider.getDataMaxX();
+		}
+		return System.currentTimeMillis() * 1000 * 1000;
 	}
 
 	/**
@@ -504,26 +562,65 @@ public class ChartComposite extends SelectionCanvas {
 	 *            Highest X value available in the data series
 	 */
 	public void setDataRange(long dataStart, long dataEnd) {
-		if (dataEnd > 0 && (m_enableUpdates || m_dataEnd < 0)) {
+		// Update view end for live updates (if enabled)
+		if (dataEnd > 0 && m_enableUpdates) {
 			m_viewEnd = dataEnd;
 		}
-		m_dataStart = dataStart;
-		m_dataEnd = dataEnd;
+
+		onDataUpdated();
+	}
+
+	/**
+	 * Called when data has been updated (either incrementally or wholesale). Handles both "All"
+	 * mode dynamic expansion and regular refreshes.
+	 */
+	private void onDataUpdated() {
+		// Force provider rebuild to incorporate new data
+		m_chart.markProviderRebuildNeeded();
+		m_chart.rebuildOptimizingProvider();
+
+		if (m_showAllMode) {
+			// Use provider data bounds - want to see all available data
+			long dataMin = getProviderMinTime();
+			long dataMax = getProviderMaxTime();
+
+			if (dataMax > dataMin) {
+				m_viewWidth = dataMax - dataMin;
+				m_viewEnd = dataMax;
+			}
+		}
+
 		refresh();
 	}
 
 	public void setUpdatesEnabled(boolean enabled) {
+		// Only proceed if state is actually changing to avoid infinite recursion
+		if (m_enableUpdates == enabled) {
+			return;
+		}
+
 		m_enableUpdates = enabled;
 		zoomInAction.setEnabled(!enabled);
 		zoomOutAction.setEnabled(!enabled);
-		if (m_enableUpdates && m_dataEnd > 0) {
-			m_viewEnd = m_dataEnd;
-			refresh();
+		if (m_enableUpdates) {
+			long currentDataEnd = getProviderMaxTime();
+			if (currentDataEnd > Long.MIN_VALUE) {
+				m_viewEnd = currentDataEnd;
+				refresh();
+			}
+		}
+
+		// Notify the callback about the state change
+		if (m_enableUpdatesCallback != null) {
+			m_enableUpdatesCallback.accept(enabled);
 		}
 	}
 
 	private void zoom(double factor, double location) {
-		if (m_dataEnd > m_dataStart) {
+		long dataStart = getProviderMinTime();
+		long dataEnd = getProviderMaxTime();
+
+		if (dataEnd > dataStart) {
 			double padding = m_viewWidth * WORLD_PADDING;
 			long worldStart = m_viewEnd - m_viewWidth;
 			double zoomPoint = worldStart + m_viewWidth * location;
@@ -531,8 +628,8 @@ public class ChartComposite extends SelectionCanvas {
 			double newWorldEnd = zoomPoint + ((m_viewEnd - zoomPoint) * factor);
 			double newWorldStart = zoomPoint - ((zoomPoint - worldStart) * factor);
 
-			m_viewEnd = (long) Math.min(Math.max(m_viewEnd, m_dataEnd + padding), newWorldEnd);
-			newWorldStart = Math.max(Math.min(worldStart, m_dataStart - padding), newWorldStart);
+			m_viewEnd = (long) Math.min(Math.max(m_viewEnd, dataEnd + padding), newWorldEnd);
+			newWorldStart = Math.max(Math.min(worldStart, dataStart - padding), newWorldStart);
 			m_viewWidth = (long) (m_viewEnd - newWorldStart);
 
 			refresh();
