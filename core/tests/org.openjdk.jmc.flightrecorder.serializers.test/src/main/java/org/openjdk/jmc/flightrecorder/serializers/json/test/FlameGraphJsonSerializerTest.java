@@ -64,8 +64,7 @@ public class FlameGraphJsonSerializerTest {
 
 	@BeforeClass
 	public static void beforeAll() throws IOException, CouldNotLoadRecordingException {
-		IOResourceSet[] testResources = StacktraceTestToolkit.getTestResources();
-		IOResourceSet resourceSet = testResources[0];
+		IOResourceSet resourceSet = StacktraceTestToolkit.getTestResourceByRecordingName("7u40.jfr");
 		testRecording = RecordingToolkit.getFlightRecording(resourceSet);
 	}
 

@@ -36,7 +36,7 @@ import java.awt.Polygon;
 import java.util.Iterator;
 
 import org.openjdk.jmc.common.xydata.DataSeries;
-
+import org.openjdk.jmc.common.xydata.IXYData;
 import org.openjdk.jmc.greychart.YAxis;
 import org.openjdk.jmc.greychart.impl.LongWorldToDeviceConverter;
 import org.openjdk.jmc.greychart.impl.OptimizingProvider;
@@ -49,8 +49,7 @@ import org.openjdk.jmc.greychart.impl.WorldToDeviceConverter;
  * <p>
  * Works best when the stacked optimizing providers return samples for all points in the range.
  */
-
-public class IntermediateStackingProvider implements OptimizingProvider {
+public class IntermediateStackingProvider extends AbstractOptimizingProvider {
 
 	private final OptimizingProvider[] providers;
 	private final OptimizingProvider topProvider;
@@ -214,7 +213,7 @@ public class IntermediateStackingProvider implements OptimizingProvider {
 	}
 
 	@Override
-	public DataSeries getDataSeries() {
+	public DataSeries<IXYData<Long, Number>> getDataSeries() {
 		return topProvider.getDataSeries();
 	}
 

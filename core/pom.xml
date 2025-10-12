@@ -138,6 +138,26 @@
 				<module>coverage</module>
 			</modules>
 		</profile>
+		<profile>
+			<id>skip-jdp-multicast-tests-on-mac</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<skipJDPMulticastTests>true</skipJDPMulticastTests>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	<distributionManagement>
 		<repository>
