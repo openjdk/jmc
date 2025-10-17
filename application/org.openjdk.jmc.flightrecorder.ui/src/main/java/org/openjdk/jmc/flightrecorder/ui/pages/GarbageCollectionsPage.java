@@ -64,9 +64,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -92,6 +94,7 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
@@ -106,6 +109,7 @@ import org.openjdk.jmc.flightrecorder.ui.IPageDefinition;
 import org.openjdk.jmc.flightrecorder.ui.IPageUI;
 import org.openjdk.jmc.flightrecorder.ui.StreamModel;
 import org.openjdk.jmc.flightrecorder.ui.common.AbstractDataPage;
+import org.openjdk.jmc.flightrecorder.ui.common.BucketBuilder;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.FilterComponent;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector;
@@ -119,12 +123,14 @@ import org.openjdk.jmc.flightrecorder.ui.common.TypeLabelProvider;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.ui.charts.AWTChartToolkit;
+import org.openjdk.jmc.ui.charts.IQuantitySeries;
 import org.openjdk.jmc.ui.charts.ISpanSeries;
 import org.openjdk.jmc.ui.charts.IXDataRenderer;
 import org.openjdk.jmc.ui.charts.QuantitySeries;
 import org.openjdk.jmc.ui.charts.RendererToolkit;
 import org.openjdk.jmc.ui.charts.SpanRenderer;
 import org.openjdk.jmc.ui.charts.XYChart;
+import org.openjdk.jmc.ui.charts.XYDataRenderer;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
@@ -177,6 +183,9 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 	private final static Color LONGEST_PAUSE_COLOR = DataPageToolkit.GC_BASE_COLOR.brighter();
 	private final static Color SUM_OF_PAUSES_COLOR = DataPageToolkit.GC_BASE_COLOR.brighter().brighter();
 
+	private static final Color TENURING_DISTRIBUTION_EVENT_COLOR = TypeLabelProvider
+			.getColorOrDefault(JdkTypeIDs.TENURING_DISTRIBUTION);
+
 	public static final IAttribute<IQuantity> HEAP_USED_POST_GC = attr("heapUsed", Messages.ATTR_HEAP_USED_POST_GC, //$NON-NLS-1$
 			Messages.ATTR_HEAP_USED_POST_GC_DESC, MEMORY);
 
@@ -186,6 +195,8 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			.select(JdkAttributes.GC_METASPACE_USED, JdkAttributes.GC_METASPACE_CAPACITY,
 					JdkAttributes.GC_METASPACE_COMMITTED, JdkAttributes.GC_METASPACE_RESERVED)
 			.build();
+
+	private static final IAggregator<IQuantity, ?> tenuringAgeSizeAggregator = JdkAggregators.TENURING_AGE_SIZE;
 
 	private static class GC {
 		final IType<IItem> type;
@@ -288,6 +299,12 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private FilterComponent phasesFilter;
 		private ItemList metaspaceList;
 		private FilterComponent metaspaceFilter;
+		private Composite tenuringComposite;
+		private StackLayout tenuringLayout;
+		private ChartCanvas tenuringChartCanvas;
+		private XYChart tenuringChart;
+		private Label noGcIdSelectionLabel;
+		private Label multiGcIdSelectionLabel;
 		private CTabFolder gcInfoFolder;
 		private IItemCollection selectionItems;
 		private FlavorSelector flavorSelector;
@@ -341,6 +358,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				pageContainer.showSelection(ItemCollectionToolkit.build(gcSelectedGcItems()));
 				updatePhaseList();
 				updateMetaspaceList();
+				updateTenuringHistogram();
 			});
 
 			SelectionStoreActionToolkit.addSelectionStoreActions(gcList.getViewer(), pageContainer.getSelectionStore(),
@@ -387,6 +405,24 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			metaspaceMm.add(metaspaceFilter.getShowSearchAction());
 			DataPageToolkit.addTabItem(gcInfoFolder, metaspaceFilter.getComponent(),
 					Messages.GarbageCollectionsPage_METASPACE_TITLE);
+
+			tenuringComposite = toolkit.createComposite(gcInfoFolder);
+			tenuringLayout = new StackLayout();
+			tenuringComposite.setLayout(tenuringLayout);
+			noGcIdSelectionLabel = new Label(tenuringComposite, SWT.CENTER);
+			noGcIdSelectionLabel.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_NO_SELECTION_MESSAGE);
+			multiGcIdSelectionLabel = new Label(tenuringComposite, SWT.CENTER);
+			multiGcIdSelectionLabel
+					.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_MULTI_SELECTION_MESSAGE);
+			tenuringChart = new XYChart(UnitLookup.NUMBER.getDefaultUnit().quantity(0),
+					UnitLookup.NUMBER.getDefaultUnit().quantity(16), RendererToolkit.empty(), 95);
+			tenuringChartCanvas = new ChartCanvas(tenuringComposite);
+			tenuringChartCanvas.setChart(tenuringChart);
+			DataPageToolkit.createChartTooltip(tenuringChartCanvas);
+			tenuringLayout.topControl = noGcIdSelectionLabel;
+			tenuringComposite.layout();
+			DataPageToolkit.addTabItem(gcInfoFolder, tenuringComposite,
+					Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_TITLE);
 
 			Composite chartContainer = toolkit.createComposite(sash);
 			chartContainer.setLayout(new GridLayout(2, false));
@@ -450,6 +486,30 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 
 		private void updateMetaspaceList() {
 			metaspaceList.show(ItemCollectionToolkit.filterIfNotNull(getMetaspaceItems(), metaspaceFilterState));
+		}
+
+		private void updateTenuringHistogram() {
+			Set<IQuantity> selectedGcIds = getSelectedGcIds();
+			if (selectedGcIds.isEmpty()) {
+				tenuringLayout.topControl = noGcIdSelectionLabel;
+			} else if (selectedGcIds.size() > 1) {
+				tenuringLayout.topControl = multiGcIdSelectionLabel;
+			} else {
+				IQuantity selectedGcId = selectedGcIds.iterator().next();
+				IItemCollection items = getDataSource().getItems()
+						.apply(ItemFilters.type(JdkTypeIDs.TENURING_DISTRIBUTION))
+						.apply(ItemFilters.equals(JdkAttributes.GC_ID, selectedGcId));
+				IQuantitySeries<IQuantity[]> series = BucketBuilder.aggregatorSeries(items, tenuringAgeSizeAggregator,
+						JdkAttributes.TENURING_DISTRIBUTION_AGE);
+				XYDataRenderer renderer = new XYDataRenderer(UnitLookup.MEMORY.getDefaultUnit().quantity(0),
+						tenuringAgeSizeAggregator.getName(), tenuringAgeSizeAggregator.getDescription());
+				renderer.addBarChart(tenuringAgeSizeAggregator.getName(), series, TENURING_DISTRIBUTION_EVENT_COLOR);
+				IXDataRenderer itemRow = new ItemRow(Messages.GarbageCollectionsPage_TENURING_SIZE,
+						tenuringAgeSizeAggregator.getDescription(), renderer, items);
+				tenuringChartCanvas.replaceRenderer(itemRow);
+				tenuringLayout.topControl = tenuringChartCanvas;
+			}
+			tenuringComposite.layout();
 		}
 
 		private IItemCollection getMetaspaceItems() {
