@@ -332,10 +332,6 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>allocation_10s_fixed.jfr</file>
@@ -642,10 +638,6 @@ This recording is only 9.903 s long, consider creating a recording longer than 
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>autobox_allocation.jfr</file>
@@ -924,10 +916,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>autobox_allocation_sample.jfr</file>
@@ -1202,10 +1190,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -1504,10 +1488,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>dominating_thread_allocation.jfr</file>
@@ -1783,10 +1763,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>dominating_thread_allocation_sample.jfr</file>
@@ -2058,10 +2034,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;O
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -2391,10 +2363,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>flight_recording_hidden.jfr</file>
@@ -2695,10 +2663,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>full_gc_cms.jfr</file>
@@ -2988,10 +2952,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>full_gc_g1.jfr</file>
@@ -3279,10 +3239,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -3576,10 +3532,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>jdk18-finalizers.jfr</file>
@@ -3849,10 +3801,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>jdk21-inverted-parallelism.jfr</file>
@@ -4119,10 +4067,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;A
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -4449,10 +4393,6 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>openjdk8u292.jfr</file>
@@ -4727,10 +4667,6 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>openjdk8u302ea.jfr</file>
@@ -5003,10 +4939,6 @@ Some of these inspections were caused by the 'Object Count' JFR event. It trigge
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -5332,10 +5264,6 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>parallel-on-singlecpu.jfr</file>
@@ -5658,10 +5586,6 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>pid1.jfr</file>
@@ -5938,10 +5862,6 @@ Enabling the following event types would improve the accuracy of this rule: jdk.
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -6268,10 +6188,6 @@ To improve rule accuracy and/or get more details for further investigation, it i
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
@@ -6657,10 +6573,6 @@ String deduplication is only supported when using the G1 (JDK 8u20+) or Shenando
             <id>ZGCAllocationStallRule</id>
             <severity>Not Applicable</severity>
         </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
     </report>
     <report>
         <file>wls-medrec-jdk9.jfr</file>
@@ -6939,10 +6851,6 @@ Events of the following types have truncated stack traces: &lt;ul&gt;&lt;li&gt;D
         </rule>
         <rule>
             <id>ZGCAllocationStallRule</id>
-            <severity>Not Applicable</severity>
-        </rule>
-		<rule>
-            <id>CryptoSecurityRule</id>
             <severity>Not Applicable</severity>
         </rule>
     </report>
