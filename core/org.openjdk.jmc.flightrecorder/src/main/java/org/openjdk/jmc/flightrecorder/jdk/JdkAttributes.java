@@ -70,6 +70,7 @@ import org.openjdk.jmc.common.item.Attribute;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.security.CryptoUtil;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -1437,4 +1438,108 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> RSS_PEAK = new Attribute<IQuantity>("peak", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_RSS_PEAK), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), MEMORY) {
 	};
+
+	//Security related attributes
+	public static final IAttribute<String> SIGNATURE_ALGORITHM = new Attribute<String>("algorithm", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SIGNATURE_ALGORITHM),
+			Messages.getString(Messages.ATTR_SIGNATURE_ALGORITHM), PLAIN_TEXT) {
+	};
+
+	public static final IAttribute<Number> CERTIFICATE_ID = new Attribute<Number>("certificateId", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CERTIFICATE_ID), Messages.getString(Messages.ATTR_CERTIFICATE_ID),
+			RAW_NUMBER) {
+	};
+
+	public static final IAttribute<String> CERTIFICATE_ISSUER = new Attribute<String>("issuer", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CERTIFICATE_ISSUER), Messages.getString(Messages.ATTR_CERTIFICATE_ISSUER),
+			PLAIN_TEXT) {
+	};
+
+	public static final IAttribute<IQuantity> KEY_LENGTH = new Attribute<IQuantity>("keyLength", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_KEY_LENGTH), Messages.getString(Messages.ATTR_KEY_LENGTH), NUMBER) {
+	};
+
+	public static final IAttribute<String> KEY_TYPE = new Attribute<String>("keyType", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_KEY_TYPE), Messages.getString(Messages.ATTR_KEY_TYPE), PLAIN_TEXT) {
+	};
+
+	public static final IAttribute<String> SERIAL_NUMBER = new Attribute<String>("serialNumber", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SERIAL_NUMBER), Messages.getString(Messages.ATTR_SERIAL_NUMBER),
+			PLAIN_TEXT) {
+	};
+
+	public static final IAttribute<String> SUBJECT = new Attribute<String>("subject", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_SUBJECT), Messages.getString(Messages.ATTR_SUBJECT), PLAIN_TEXT) {
+	};
+
+	public static final IAttribute<IQuantity> VALID_FROM = new Attribute<IQuantity>("validFrom", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_VALID_FROM), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), TIMESTAMP) {
+	};
+
+	public static final IAttribute<IQuantity> VALID_UNTIL = new Attribute<IQuantity>("validUntil", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_VALID_UNTIL), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), TIMESTAMP) {
+	};
+
+	public static final IAttribute<String> CRYPTO_REMARK = Attribute.canonicalize(new Attribute<String>("cryptoRemark", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CRYPTO_REMARK), Messages.getString(Messages.ATTR_CRYPTO_REMARK_DESC),
+			PLAIN_TEXT) {
+		@Override
+		public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+			final IMemberAccessor<String, U> signatureAlgorithmAccessor = type
+					.getAccessor(SIGNATURE_ALGORITHM.getKey());
+			final IMemberAccessor<String, U> keyTypeAccessor = type.getAccessor(KEY_TYPE.getKey());
+			final IMemberAccessor<IQuantity, U> keyLengthAccessor = type.getAccessor(KEY_LENGTH.getKey());
+			final IMemberAccessor<IQuantity, U> expiryDateAccessor = type.getAccessor(VALID_UNTIL.getKey());
+			if ((signatureAlgorithmAccessor == null) || (keyTypeAccessor == null) || (keyLengthAccessor == null)) {
+				return null;
+			}
+			return new IMemberAccessor<String, U>() {
+				@Override
+				public String getMember(U i) {
+					String signatureAlgorithm = signatureAlgorithmAccessor.getMember(i);
+					String keyType = keyTypeAccessor.getMember(i);
+					IQuantity keyLength = keyLengthAccessor.getMember(i);
+					IQuantity expiryDate = null;
+					if (expiryDateAccessor != null) {
+						expiryDate = expiryDateAccessor.getMember(i);
+					}
+					return signatureAlgorithm != null && keyType != null && keyLength != null
+							? CryptoUtil.getCryptoRemark(signatureAlgorithm, keyType, keyLength.longValue(), expiryDate)
+							: null;
+				}
+			};
+		}
+	});
+
+	public static final IAttribute<String> CRYPTO_ICON = Attribute.canonicalize(new Attribute<String>("cryptoIcon", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_CRYPTO_ICON), Messages.getString(Messages.ATTR_CRYPTO_ICON_DESC),
+			PLAIN_TEXT) {
+		@Override
+		public <U> IMemberAccessor<String, U> customAccessor(IType<U> type) {
+			final IMemberAccessor<String, U> signatureAlgorithmAccessor = type
+					.getAccessor(SIGNATURE_ALGORITHM.getKey());
+			final IMemberAccessor<String, U> keyTypeAccessor = type.getAccessor(KEY_TYPE.getKey());
+			final IMemberAccessor<IQuantity, U> keyLengthAccessor = type.getAccessor(KEY_LENGTH.getKey());
+			final IMemberAccessor<IQuantity, U> expiryDateAccessor = type.getAccessor(VALID_UNTIL.getKey());
+			if ((signatureAlgorithmAccessor == null) || (keyTypeAccessor == null) || (keyLengthAccessor == null)) {
+				return null;
+			}
+			return new IMemberAccessor<String, U>() {
+				@Override
+				public String getMember(U i) {
+					String signatureAlgorithm = signatureAlgorithmAccessor.getMember(i);
+					String keyType = keyTypeAccessor.getMember(i);
+					IQuantity keyLength = keyLengthAccessor.getMember(i);
+					IQuantity expiryDate = null;
+					if (expiryDateAccessor != null) {
+						expiryDate = expiryDateAccessor.getMember(i);
+					}
+					return signatureAlgorithm != null && keyType != null && keyLength != null
+							? CryptoUtil.getCryptoIcon(signatureAlgorithm, keyType, keyLength.longValue(), expiryDate)
+							: null;
+				}
+			};
+		}
+	});
+
 }

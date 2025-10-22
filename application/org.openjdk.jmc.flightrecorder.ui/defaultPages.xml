@@ -929,6 +929,28 @@
 				</chart>
 			</state>
 		</page>
+		<page factory="org.openjdk.jmc.flightrecorder.ui.security" id="org.openjdk.jmc.flightrecorder.ui.security">
+			<state>
+				<sash weights="2,1" />
+				<table sortColumn="certId">
+					<column id="itemhistogram.key" width="100" />
+					<column id="cryptoRemark" hidden="false"/>
+					<column id="algorithm" hidden="false"/>
+					<column id="keyType" hidden="false"/>
+					<column id="keyLength" hidden="false"/>
+					<column id="serialNumber" hidden="false"/>
+					<column id="subject" hidden="false" />
+					<column id="validFrom" hidden="false" />
+					<column id="validUntil" hidden="false"/>
+					<column id="thread" hidden="false" />
+					<column id="certificateId" hidden="false" />
+					<column id="issuer" hidden="false"/>
+				</table>
+				<chart>
+					<series id="x509CertificateCount" />
+				</chart>
+			</state>
+		</page>
 	</page>
 	<page factory="org.openjdk.jmc.flightrecorder.ui.system" id="org.openjdk.jmc.flightrecorder.ui.environment">
 		<page factory="org.openjdk.jmc.flightrecorder.ui.processes" id="org.openjdk.jmc.flightrecorder.ui.processes">
