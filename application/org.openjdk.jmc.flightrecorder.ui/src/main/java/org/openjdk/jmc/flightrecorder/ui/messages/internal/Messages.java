@@ -241,6 +241,7 @@ public class Messages extends NLS {
 	public static String GarbageCollectionsPage_PAUSE_PHASES_TITLE;
 	public static String GarbageCollectionsPage_PAUSE_PHASE_SELECTION;
 	public static String GarbageCollectionsPage_TENURING_DISTRIBUTION_TITLE;
+	public static String GarbageCollectionsPage_TENURING_DISTRIBUTION_NO_EVENTS_MESSAGE;
 	public static String GarbageCollectionsPage_TENURING_DISTRIBUTION_NO_SELECTION_MESSAGE;
 	public static String GarbageCollectionsPage_TENURING_DISTRIBUTION_MULTI_SELECTION_MESSAGE;
 	public static String GarbageCollectionsPage_TENURING_SIZE;

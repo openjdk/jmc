@@ -310,6 +310,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 		private FlavorSelector flavorSelector;
 		private ThreadGraphLanes lanes;
 		private MCContextMenuManager mm;
+		private IItemCollection tenuringDistributionItems;
 
 		GarbageCollectionsUi(Composite parent, FormToolkit toolkit, IPageContainer pageContainer, IState state) {
 			this.pageContainer = pageContainer;
@@ -353,12 +354,15 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			gcList = ColumnManager.build(tableViewer, columns, TableSettings.forState(state.getChild(GCS)));
 			MCContextMenuManager itemListMm = MCContextMenuManager.create(gcList.getViewer().getControl());
 			ColumnMenusFactory.addDefaultMenus(gcList, itemListMm);
+			tenuringDistributionItems = getDataSource().getItems().apply(JdkFilters.TENURING_DISTRIBUTION);
 			gcList.getViewer().addSelectionChangedListener(e -> {
 				buildChart();
 				pageContainer.showSelection(ItemCollectionToolkit.build(gcSelectedGcItems()));
 				updatePhaseList();
 				updateMetaspaceList();
-				updateTenuringHistogram();
+				if (tenuringDistributionItems.hasItems()) {
+					updateTenuringHistogram();
+				}
 			});
 
 			SelectionStoreActionToolkit.addSelectionStoreActions(gcList.getViewer(), pageContainer.getSelectionStore(),
@@ -409,17 +413,24 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 			tenuringComposite = toolkit.createComposite(gcInfoFolder);
 			tenuringLayout = new StackLayout();
 			tenuringComposite.setLayout(tenuringLayout);
-			noGcIdSelectionLabel = new Label(tenuringComposite, SWT.CENTER);
-			noGcIdSelectionLabel.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_NO_SELECTION_MESSAGE);
-			multiGcIdSelectionLabel = new Label(tenuringComposite, SWT.CENTER);
-			multiGcIdSelectionLabel
-					.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_MULTI_SELECTION_MESSAGE);
-			tenuringChart = new XYChart(UnitLookup.NUMBER.getDefaultUnit().quantity(0),
-					UnitLookup.NUMBER.getDefaultUnit().quantity(16), RendererToolkit.empty(), 95);
-			tenuringChartCanvas = new ChartCanvas(tenuringComposite);
-			tenuringChartCanvas.setChart(tenuringChart);
-			DataPageToolkit.createChartTooltip(tenuringChartCanvas);
-			tenuringLayout.topControl = noGcIdSelectionLabel;
+			if (tenuringDistributionItems.hasItems()) {
+				noGcIdSelectionLabel = new Label(tenuringComposite, SWT.CENTER);
+				noGcIdSelectionLabel
+						.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_NO_SELECTION_MESSAGE);
+				multiGcIdSelectionLabel = new Label(tenuringComposite, SWT.CENTER);
+				multiGcIdSelectionLabel
+						.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_MULTI_SELECTION_MESSAGE);
+				tenuringChart = new XYChart(UnitLookup.NUMBER.getDefaultUnit().quantity(0),
+						UnitLookup.NUMBER.getDefaultUnit().quantity(16), RendererToolkit.empty(), 95);
+				tenuringChartCanvas = new ChartCanvas(tenuringComposite);
+				tenuringChartCanvas.setChart(tenuringChart);
+				DataPageToolkit.createChartTooltip(tenuringChartCanvas);
+				tenuringLayout.topControl = noGcIdSelectionLabel;
+			} else {
+				Label noTenuringItemsLabel = new Label(tenuringComposite, SWT.CENTER);
+				noTenuringItemsLabel.setText(Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_NO_EVENTS_MESSAGE);
+				tenuringLayout.topControl = noTenuringItemsLabel;
+			}
 			tenuringComposite.layout();
 			DataPageToolkit.addTabItem(gcInfoFolder, tenuringComposite,
 					Messages.GarbageCollectionsPage_TENURING_DISTRIBUTION_TITLE);
@@ -496,8 +507,7 @@ public class GarbageCollectionsPage extends AbstractDataPage {
 				tenuringLayout.topControl = multiGcIdSelectionLabel;
 			} else {
 				IQuantity selectedGcId = selectedGcIds.iterator().next();
-				IItemCollection items = getDataSource().getItems()
-						.apply(ItemFilters.type(JdkTypeIDs.TENURING_DISTRIBUTION))
+				IItemCollection items = tenuringDistributionItems
 						.apply(ItemFilters.equals(JdkAttributes.GC_ID, selectedGcId));
 				IQuantitySeries<IQuantity[]> series = BucketBuilder.aggregatorSeries(items, tenuringAgeSizeAggregator,
 						JdkAttributes.TENURING_DISTRIBUTION_AGE);
