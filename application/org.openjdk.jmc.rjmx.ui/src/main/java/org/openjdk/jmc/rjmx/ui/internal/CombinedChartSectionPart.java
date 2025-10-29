@@ -55,6 +55,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -534,12 +536,7 @@ public class CombinedChartSectionPart extends MCSectionPart implements IAttribut
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				MRI mri = (MRI) event.getElement();
 				boolean enable = event.getChecked();
-				setEnabled(mri, enable);
-				if (enable) {
-					setQuantityKindFromAttribute(mri);
-				}
-				refreshAll();
-
+				updateLegendCheckedState(mri, enable);
 			}
 
 		});
@@ -560,7 +557,23 @@ public class CombinedChartSectionPart extends MCSectionPart implements IAttribut
 		legend.setLabelProvider(new AttributeLabelProvider(mds, mris));
 		legend.setInput(this);
 		ColumnViewerToolTipSupport.enableFor(legend);
-
+		legend.getTable().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.CR) {
+					IStructuredSelection selection = legend.getStructuredSelection();
+					if (!selection.isEmpty()) {
+						Object element = selection.getFirstElement();
+						if (element != null) {
+							MRI mri = (MRI) element;
+							boolean isChecked = legend.getChecked(element);
+							legend.setChecked(element, !isChecked);
+							updateLegendCheckedState(mri, legend.getChecked(element));
+						}
+					}
+				}
+			}
+		});
 		GridData gd2 = new GridData(SWT.FILL, SWT.FILL, false, true);
 		gd2.heightHint = 60;
 		gd2.widthHint = 210;
@@ -617,4 +630,11 @@ public class CombinedChartSectionPart extends MCSectionPart implements IAttribut
 		}
 	}
 
+	private void updateLegendCheckedState(MRI mri, boolean enable) {
+		setEnabled(mri, enable);
+		if (enable) {
+			setQuantityKindFromAttribute(mri);
+		}
+		refreshAll();
+	}
 }
