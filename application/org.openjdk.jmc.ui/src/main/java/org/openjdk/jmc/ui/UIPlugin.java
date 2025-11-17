@@ -192,6 +192,12 @@ public class UIPlugin extends MCAbstractUIPlugin {
 
 	public static final String ICON_FIND = "search-glass.png"; //$NON-NLS-1$
 
+	public static final String ICON_CRYPTO_ACTION = "crypto_action.svg"; //$NON-NLS-1$
+
+	public static final String ICON_CRYPTO_ATTENTION = "crypto_attention.svg"; //$NON-NLS-1$
+
+	public static final String ICON_CRYPTO_OK = "crypto_ok.svg"; //$NON-NLS-1$
+
 	public static enum ImageRegistryPrefixes {
 		COLORED_SQUARE, TYPE_IMAGES, NONE // Use NONE prefix to avoid conflict with other prefixes
 	}

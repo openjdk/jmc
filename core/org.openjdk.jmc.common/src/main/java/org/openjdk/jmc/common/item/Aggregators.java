@@ -1044,6 +1044,10 @@ public class Aggregators {
 		}
 	};
 
+	public static IAggregator<String, ?> distinctAttribute(String typeId, IAttribute<String> attribute) {
+		return filter(distinctAsString(attribute, "~ "), ItemFilters.type(typeId)); //$NON-NLS-1$
+	}
+
 	public static IAggregator<String, ?> distinctAsString(String typeId, IAttribute<String> attribute) {
 		return filter(distinctAsString(attribute, ", "), ItemFilters.type(typeId)); //$NON-NLS-1$
 	}

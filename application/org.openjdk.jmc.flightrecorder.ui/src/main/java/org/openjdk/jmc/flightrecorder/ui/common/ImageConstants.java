@@ -132,6 +132,7 @@ public class ImageConstants {
 	public static final String PAGE_COMPILATIONS = "pages/compilations.png"; //$NON-NLS-1$
 	public static final String PAGE_CLASSLOADING = "pages/classloading.png"; //$NON-NLS-1$
 	public static final String PAGE_TLAB_ALLOCATIONS = "pages/allocations.png"; //$NON-NLS-1$
+	public static final String PAGE_SECURITY = "pages/security16.png"; //$NON-NLS-1$
 	public static final String PAGE_ENVIRONMENT = "pages/system.png"; //$NON-NLS-1$
 	public static final String PAGE_PROCESSES = "pages/processes.png"; //$NON-NLS-1$
 	public static final String PAGE_ENVIRONMENT_VARIABLES = "pages/environment.png"; //$NON-NLS-1$
