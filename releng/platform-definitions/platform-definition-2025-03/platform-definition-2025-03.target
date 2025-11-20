@@ -65,6 +65,7 @@
             <unit id="fireplace-swt-awt-bridge" version="0.0.1.rc9"/>
             <unit id="fireplace-swing-animation" version="0.0.1.rc9"/>
             <unit id="radiance-animation" version="7.5.0"/>
+            <unit id="org.awaitility" version="4.0.0"/>
             <repository location="http://localhost:8080/site"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
