@@ -642,13 +642,12 @@ public class DataPageToolkit {
 
 	public static boolean addEndTimeLines(
 		XYDataRenderer renderer, IItemCollection items, boolean fill, Stream<IAttribute<IQuantity>> yAttributes) {
-		// FIXME: JMC-4520 - Handle multiple item iterables
-		Iterator<IItemIterable> ii = items.iterator();
-		if (ii.hasNext()) {
-			IItemIterable itemStream = ii.next();
-			IType<IItem> type = itemStream.getType();
-			// FIXME: A better way to ensure sorting by endTime
-			return yAttributes.peek(a -> addEndTimeLine(renderer, itemStream.iterator(), type, a, fill))
+		if (items.hasItems()) {
+			Iterator<IItemIterable> ii = items.iterator();
+			IType<IItem> type = ii.hasNext() ? ii.next().getType() : null;
+			List<IItem> allItems = new ArrayList<>();
+			items.forEach(itemStream -> itemStream.forEach(allItems::add));
+			return yAttributes.peek(a -> addEndTimeLine(renderer, allItems.iterator(), type, a, fill))
 					.mapToLong(a -> 1L).sum() > 0;
 		}
 		return false;

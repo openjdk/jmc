@@ -62,6 +62,7 @@ import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
@@ -540,19 +541,18 @@ class ItemChart {
 							description);
 					for (IAttribute<?> attribute : attributes) {
 						// TODO: something other than time on x-axis?
-						Iterator<IItemIterable> chartItemsWithAttributeSomeType = itemsToChart
-								.apply(ItemFilters.hasAttribute(attribute)).iterator();
-						if (chartItemsWithAttributeSomeType.hasNext()
-								&& attribute.getContentType() instanceof LinearKindOfQuantity) {
-							IItemIterable is = chartItemsWithAttributeSomeType.next();
-							if (chartItemsWithAttributeSomeType.hasNext()) {
-								// FIXME: JMC-4520 - Add support for multiple item iterables
-								FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-										"Only charting a subset of the events!"); //$NON-NLS-1$
+						if (attribute.getContentType() instanceof LinearKindOfQuantity) {
+							IItemCollection itemsWithAttributeSomeType = itemsToChart
+									.apply(ItemFilters.hasAttribute(attribute));
+							if (itemsWithAttributeSomeType.hasItems()) {
+								Iterator<IItemIterable> iterator = itemsWithAttributeSomeType.iterator();
+								IType<IItem> type = iterator.hasNext() ? iterator.next().getType() : null;
+								List<IItem> allItems = new ArrayList<>();
+								itemsWithAttributeSomeType.forEach(itemStream -> itemStream.forEach(allItems::add));
+								@SuppressWarnings("unchecked")
+								IAttribute<IQuantity> qAttribute = (IAttribute<IQuantity>) attribute;
+								DataPageToolkit.addEndTimeLine(xyRenderer, allItems.iterator(), type, qAttribute, fill);
 							}
-							@SuppressWarnings("unchecked")
-							IAttribute<IQuantity> qAttribute = (IAttribute<IQuantity>) attribute;
-							DataPageToolkit.addEndTimeLine(xyRenderer, is.iterator(), is.getType(), qAttribute, fill);
 						}
 					}
 					rows.add(new ItemRow(name, description, xyRenderer, itemsToChart));
