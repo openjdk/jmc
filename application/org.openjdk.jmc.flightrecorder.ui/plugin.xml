@@ -319,6 +319,10 @@
             id="org.openjdk.jmc.flightrecorder.ui.tlab">
       </factory>
       <factory
+            class="org.openjdk.jmc.flightrecorder.ui.pages.SecurityPage$SecurityPageFactory"
+            id="org.openjdk.jmc.flightrecorder.ui.security">
+      </factory>
+      <factory
             class="org.openjdk.jmc.flightrecorder.ui.pages.SystemPage$SystemPageFactory"
             id="org.openjdk.jmc.flightrecorder.ui.system">
       </factory>

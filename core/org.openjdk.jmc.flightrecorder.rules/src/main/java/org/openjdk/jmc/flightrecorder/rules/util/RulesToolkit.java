@@ -287,6 +287,12 @@ public class RulesToolkit {
 						ItemFilters.and(ItemFilters.type(typeId), ItemFilters.matches(attribute, regexp))));
 	}
 
+	public static String findAttribute(String typeId, IItemCollection items, IAttribute<String> attribute) {
+
+		return items.getAggregate((IAggregator<String, ?>) Aggregators
+				.filter(Aggregators.distinctAttribute(typeId, attribute), ItemFilters.and(ItemFilters.type(typeId))));
+	}
+
 	/**
 	 * Gets the value of a certain attribute for a given item
 	 *

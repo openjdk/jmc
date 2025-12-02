@@ -524,6 +524,12 @@ public final class JdkAggregators {
 	public static final IAggregator<?, ?> TOP_ADDRESS = Aggregators.min(JdkTypeIDs.NATIVE_LIBRARY,
 			JdkAttributes.TOP_ADDRESS);
 
+	public static final IAggregator<IQuantity, ?> X509_CERTIFICATE_COUNT = Aggregators
+			.count(Messages.getString(Messages.AGGR_X509_CERTIFICATES_COUNT), JdkTypeIDs.X509_CERTIFICATE);
+
+	public static final IAggregator<Boolean, ?> IS_CERTIFICATE_ID_QTY = or(JdkTypeIDs.X509_CERTIFICATE,
+			JdkAttributes.IS_CERTIFICATE_ID_QTY);
+
 	/**
 	 * Aggregator for getting the first value, ie. the value from the event with the first occurring
 	 * start time.

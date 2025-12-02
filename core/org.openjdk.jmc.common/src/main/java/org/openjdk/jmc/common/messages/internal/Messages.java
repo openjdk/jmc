@@ -85,6 +85,20 @@ public class Messages {
 	public static final String TimestampKind_SINCE_1970_MSG = "TimestampKind_SINCE_1970_MSG"; //$NON-NLS-1$
 	public static final String TypeHandling_MESSAGE_SIZE = "TypeHandling_MESSAGE_SIZE"; //$NON-NLS-1$
 	public static final String UnitLookup_TIMESTAMP_OUT_OF_RANGE = "UnitLookup_TIMESTAMP_OUT_OF_RANGE"; //$NON-NLS-1$
+	public static final String Crypto_ACTION = "Crypto_ACTION"; //$NON-NLS-1$
+	public static final String Crypto_ATTENTION = "Crypto_ATTENTION"; //$NON-NLS-1$
+	public static final String Crypto_OK = "Crypto_OK"; //$NON-NLS-1$
+	public static final String Crypto_SHA1 = "Crypto_SHA1"; //$NON-NLS-1$
+	public static final String Crypto_MD2 = "Crypto_MD2"; //$NON-NLS-1$
+	public static final String Crypto_MD5 = "Crypto_MD5"; //$NON-NLS-1$
+	public static final String Crypto_RSA_INSUFFICIENT_KEY_SIZE = "Crypto_RSA_INSUFFICIENT_KEY_SIZE"; //$NON-NLS-1$
+	public static final String Crypto_RSA_KEY_SIZE_1024 = "Crypto_RSA_KEY_SIZE_1024"; //$NON-NLS-1$
+	public static final String Crypto_RSA_KEY_SIZE_LESS_2048 = "Crypto_RSA_KEY_SIZE_LESS_2048"; //$NON-NLS-1$
+	public static final String Crypto_DSA_INSUFFICIENT_KEY_SIZE = "Crypto_DSA_INSUFFICIENT_KEY_SIZE"; //$NON-NLS-1$
+	public static final String Crypto_DSA_KEY_SIZE_LESS_2048 = "Crypto_DSA_KEY_SIZE_LESS_2048"; //$NON-NLS-1$
+	public static final String Crypto_EC_INSUFFICIENT_KEY_SIZE = "Crypto_EC_INSUFFICIENT_KEY_SIZE"; //$NON-NLS-1$
+	public static final String Crypto_Certificate_Expiring = "Crypto_Certificate_Expiring"; //$NON-NLS-1$
+	public static final String Crypto_Certificate_Expired = "Crypto_Certificate_Expired"; //$NON-NLS-1$
 
 	private Messages() {
 	}

@@ -207,6 +207,7 @@ public class Messages {
 	public static final String AGGR_VM_OPERATION_COUNT_DESC = "AGGR_VM_OPERATION_COUNT_DESC"; //$NON-NLS-1$
 	public static final String AGGR_VM_OPERATION_DURATION = "AGGR_VM_OPERATION_DURATION"; //$NON-NLS-1$
 	public static final String AGGR_VM_OPERATION_DURATION_DESC = "AGGR_VM_OPERATION_DURATION_DESC"; //$NON-NLS-1$
+	public static final String AGGR_X509_CERTIFICATES_COUNT = "AGGR_X509_CERTIFICATES_COUNT"; //$NON-NLS-1$
 	public static final String ATTR_ADAPTORS = "ATTR_ADAPTORS"; //$NON-NLS-1$
 	public static final String ATTR_AGENT_DYNAMIC = "ATTR_AGENT_DYNAMIC"; //$NON-NLS-1$
 	public static final String ATTR_AGENT_DYNAMIC_DESC = "ATTR_AGENT_DYNAMIC_DESC"; //$NON-NLS-1$;
@@ -566,6 +567,19 @@ public class Messages {
 	public static final String ATTR_THREADS_DAEMON_COUNT_DESC = "ATTR_THREADS_DAEMON_COUNT_DESC";
 	public static final String ATTR_THREADS_PEAK_COUNT = "ATTR_THREADS_PEAK_COUNT";
 	public static final String ATTR_THREADS_PEAK_COUNT_DESC = "ATTR_THREADS_PEAK_COUNT_DESC";
+	public static final String ATTR_SIGNATURE_ALGORITHM = "ATTR_SIGNATURE_ALGORITHM"; //$NON-NLS-1$
+	public static final String ATTR_CERTIFICATE_ID = "ATTR_CERTIFICATE_ID"; //$NON-NLS-1$
+	public static final String ATTR_CERTIFICATE_ISSUER = "ATTR_CERTIFICATE_ISSUER"; //$NON-NLS-1$
+	public static final String ATTR_KEY_LENGTH = "ATTR_KEY_LENGTH"; //$NON-NLS-1$
+	public static final String ATTR_KEY_TYPE = "ATTR_KEY_TYPE"; //$NON-NLS-1$
+	public static final String ATTR_SERIAL_NUMBER = "ATTR_SERIAL_NUMBER"; //$NON-NLS-1$
+	public static final String ATTR_SUBJECT = "ATTR_SUBJECT"; //$NON-NLS-1$
+	public static final String ATTR_VALID_FROM = "ATTR_VALID_FROM"; //$NON-NLS-1$
+	public static final String ATTR_VALID_UNTIL = "ATTR_VALID_UNTIL"; //$NON-NLS-1$
+	public static final String ATTR_CRYPTO_REMARK = "ATTR_CRYPTO_REMARK"; //$NON-NLS-1$
+	public static final String ATTR_CRYPTO_REMARK_DESC = "ATTR_CRYPTO_REMARK_DESC"; //$NON-NLS-1$
+	public static final String ATTR_CRYPTO_ICON = "ATTR_CRYPTO_ICON"; //$NON-NLS-1$
+	public static final String ATTR_CRYPTO_ICON_DESC = "ATTR_CRYPTO_ICON_DESC"; //$NON-NLS-1$
 
 	private Messages() {
 	}

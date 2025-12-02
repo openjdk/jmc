@@ -118,6 +118,8 @@ public final class OracleJdkTypeIDsPre11 {
 	final static String MONITOR_ENTER = JVM_EVENT_ID_ROOT + "java/monitor_enter";
 	final static String MONITOR_WAIT = JVM_EVENT_ID_ROOT + "java/monitor_wait";
 
+	private final static String X509_CERTIFICATE = JDK_EVENT_ID_ROOT + "java/x509_certificate";
+
 	private final static String METASPACE_OOM = JVM_EVENT_ID_ROOT + "vm/gc/metaspace/out_of_memory";
 
 	private final static String CODE_CACHE_FULL = JVM_EVENT_ID_ROOT + "vm/code_cache/full";
@@ -416,6 +418,8 @@ public final class OracleJdkTypeIDsPre11 {
 			return JdkTypeIDs.RECORDINGS;
 		case GC_G1MMU:
 			return JdkTypeIDs.GC_G1MMU;
+		case X509_CERTIFICATE:
+			return JdkTypeIDs.X509_CERTIFICATE;
 		default:
 			return typeId;
 		}
