@@ -186,6 +186,7 @@ public final class JdkTypeIDs {
 	public static final String BIASED_LOCK_REVOCATION = PREFIX + "BiasedLockRevocation";
 	public static final String BIASED_LOCK_CLASS_REVOCATION = PREFIX + "BiasedLockClassRevocation";
 	public static final String GC_G1_ADAPTIVE_IHOP = PREFIX + "G1AdaptiveIHOP";
+	public static final String TENURING_DISTRIBUTION = PREFIX + "TenuringDistribution";
 
 	public static final String RECORDINGS = PREFIX + "ActiveRecording";
 	public static final String RECORDING_SETTING = PREFIX + "ActiveSetting";
