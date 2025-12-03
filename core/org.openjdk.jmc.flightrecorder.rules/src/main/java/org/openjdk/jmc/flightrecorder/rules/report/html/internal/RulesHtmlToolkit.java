@@ -229,7 +229,7 @@ public class RulesHtmlToolkit {
 				displayProgress, id);
 	}
 
-	private static final String HEADING_PATTERN = "<div id=\"{0}_group\"><div id=\"{0}_heading\" style=\"margin-left: {4}px;\" class=\"{2}\"><div onclick=\"overview.link(''{0}'');\"><img class=\"{2}_icon\" alt=\"{1}\" src=\"data:image/png;base64,{3}\"/>{1}</div></div>"; //$NON-NLS-1$
+	private static final String HEADING_PATTERN = "<div id=\"{0}_group\"><div id=\"{0}_heading\" style=\"margin-left: {4}px;\" class=\"{2}\" tabindex=\"0\"><div onclick=\"overview.link(''{0}'');\"><img class=\"{2}_icon\" alt=\"{1}\" src=\"data:image/png;base64,{3}\"/>{1}</div></div>"; //$NON-NLS-1$
 
 	private static String createSubHeading(String id, String name, String type, String image, int margin) {
 		return MessageFormat.format(HEADING_PATTERN, Encode.forHtml(id), Encode.forHtml(name), Encode.forHtml(type),

@@ -510,6 +510,21 @@ section {
 					}
 				}
 			}
+			document.body.addEventListener('keydown', function(e) {
+				if (e.key != 'Enter') return;
+				if (e.target.classList.contains('column_title') || e.target.classList.contains('page_heading')) {
+					var id = e.target.id.replace("_heading", "");
+					overview.link(id);
+				}
+				else if (e.target.classList.contains('rule_heading')) {
+					var id = e.target.id;
+					var loc = id.indexOf("_heading")
+					if (loc != -1) {
+						var id_to_toggle = id.slice(0, loc) + "_text";
+						overview.toggleVisibility(id_to_toggle, document.getElementById(id_to_toggle + "_hide"));
+					}
+				}
+			})
 		},
 
 		link : function(name) {
