@@ -89,6 +89,7 @@ import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorSta
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList;
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList.ItemListBuilder;
+import org.openjdk.jmc.flightrecorder.ui.common.TreeExpandCollapseSupport;
 import org.openjdk.jmc.flightrecorder.ui.common.TypeFilterBuilder;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
@@ -209,6 +210,7 @@ public class EventBrowserPage extends AbstractDataPage {
 			treeSash = new SashForm(form.getBody(), SWT.HORIZONTAL);
 			toolkit.adapt(treeSash);
 			typeFilterTree = DataPageToolkit.buildEventTypeTree(treeSash, toolkit, this::onTypeChange, false);
+			TreeExpandCollapseSupport.installFor(typeFilterTree.getViewer());
 			MCContextMenuManager mm = typeFilterTree.getMenuManager();
 			IAction addPageAction = ActionToolkit.action(() -> DataPageToolkit.addPage(selectedTypes),
 					Messages.EventBrowserPage_NEW_PAGE_USING_TYPES_ACTION, NEW_PAGE_ICON);
