@@ -312,7 +312,6 @@ public class EventBrowserPage extends AbstractDataPage {
 			}
 
 			// FIXME: Possibly move to attribute toolkit/handler?
-			// FIXME: Make sure to get Event Type as the first column
 			// FIXME: Stream<IType> -> Stream<IAttribute> should be delegated to some context (e.g. the editor)
 			Stream<IAttribute<?>> commonAttributes = Stream.empty();
 			if (types.hasNext()) {
