@@ -100,7 +100,7 @@ public class AgentEditorOpener implements IActionFactory {
 					DialogToolkit.showException(window.getShell(), Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
 							e);
 				});
-				return Status.OK_STATUS;
+				return Status.CANCEL_STATUS;
 			}
 		}
 
