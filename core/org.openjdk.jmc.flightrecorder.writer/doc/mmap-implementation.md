@@ -39,12 +39,24 @@ This document describes the memory-mapped file (mmap) implementation for the JFR
 
 ### Configuration
 
-Enable mmap mode via system properties:
+Enable mmap mode via the builder pattern API:
 
-```bash
--Dorg.openjdk.jmc.flightrecorder.writer.mmap.enabled=true
--Dorg.openjdk.jmc.flightrecorder.writer.mmap.chunkSize=4194304  # 4MB default
+```java
+// Default 4MB chunk size
+Recording recording = Recordings.newRecording(outputStream,
+    settings -> settings.withMmap()
+                        .withJdkTypeInitialization());
+
+// Custom chunk size
+Recording recording = Recordings.newRecording(outputStream,
+    settings -> settings.withMmap(8 * 1024 * 1024)  // 8MB per thread
+                        .withJdkTypeInitialization());
 ```
+
+**Configuration options:**
+- `withMmap()` - Enable mmap with default 4MB chunk size
+- `withMmap(int chunkSize)` - Enable mmap with custom chunk size in bytes
+- Default behavior: Heap mode (backward compatible)
 
 ### Memory Usage
 
@@ -142,16 +154,20 @@ To compare mmap vs heap performance:
 cd tests/org.openjdk.jmc.flightrecorder.writer.benchmarks
 mvn clean package
 
-# Run with heap mode (baseline)
+# Run all throughput benchmarks
 java -jar target/benchmarks.jar EventWriteThroughputBenchmark
 
-# Run with mmap mode
-java -Dorg.openjdk.jmc.flightrecorder.writer.mmap.enabled=true \
-     -Dorg.openjdk.jmc.flightrecorder.writer.mmap.chunkSize=4194304 \
-     -jar target/benchmarks.jar EventWriteThroughputBenchmark
+# Run specific benchmark
+java -jar target/benchmarks.jar EventWriteThroughputBenchmark.writeSimpleEvent
 
-# Compare results
+# Save results for comparison
+java -jar target/benchmarks.jar EventWriteThroughputBenchmark -rf json -rff results.json
+
+# Compare two runs
+python3 compare.py baseline.json optimized.json "Mmap vs Heap"
 ```
+
+See `tests/org.openjdk.jmc.flightrecorder.writer.benchmarks/README.md` for detailed benchmark documentation.
 
 ### Performance Goals
 
@@ -163,12 +179,13 @@ java -Dorg.openjdk.jmc.flightrecorder.writer.mmap.enabled=true \
 
 The implementation maintains full backward compatibility:
 
-- **Default behavior unchanged**: Mmap mode is opt-in via system property
-- **API unchanged**: No public API changes
+- **Default behavior unchanged**: Mmap mode is opt-in via builder pattern API
+- **Public API additions**: New `withMmap()` methods in `RecordingSettingsBuilder` (marked `@since 10.0.0`)
+- **No breaking changes**: Existing API unchanged, all constructors preserved
 - **File format unchanged**: Generated JFR files identical to legacy mode
 - **All existing tests pass**: No regressions in functionality
 
-The legacy heap-based code path (`chunkDataQueue`, `chunkDataMergingService`) is preserved and used when mmap is disabled.
+The legacy heap-based code path (`chunkDataQueue`, `chunkDataMergingService`) is preserved and used when mmap is not explicitly enabled.
 
 ## Future Improvements
 
