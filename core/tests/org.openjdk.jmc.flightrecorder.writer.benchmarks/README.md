@@ -202,7 +202,7 @@ java -jar target/benchmarks.jar ConstantPoolBenchmark -p poolSize=1000
 
 ## Comparing Results
 
-Use the included Python comparison script to compare two benchmark runs:
+Use the included `compare.py` Python script to compare two benchmark runs and see performance differences:
 
 ```bash
 # Run baseline
@@ -211,8 +211,34 @@ java -jar target/benchmarks.jar EventWriteThroughputBenchmark -rf json -rff base
 # Run after changes
 java -jar target/benchmarks.jar EventWriteThroughputBenchmark -rf json -rff optimized.json
 
-# Compare
-python compare.py baseline.json optimized.json
+# Compare with custom title
+python3 compare.py baseline.json optimized.json "My Optimization"
+```
+
+**Example Output:**
+```
+================================================================================
+My Optimization
+================================================================================
+
+writeSimpleEvent
+  Baseline:       943526.800 ops/s
+  Optimized:      984670.381 ops/s
+  Change:    ↑   4.36%
+
+writeMultiFieldEvent
+  Baseline:       787089.123 ops/s
+  Optimized:      880622.456 ops/s
+  Change:    ↑  11.88%
+```
+
+The script automatically detects benchmark mode and calculates improvements correctly:
+- **Throughput modes** (ops/s): Higher is better, shows ↑ for improvements
+- **Average time modes** (ms/op): Lower is better, shows ↓ for improvements
+
+**Usage:**
+```bash
+python3 compare.py <baseline.json> <optimized.json> [optional_title]
 ```
 
 ## Configuration
