@@ -89,11 +89,6 @@ public final class RecordingImpl extends Recording {
 	private static final long METADATA_OFFSET_OFFSET = 24;
 	private static final long DURATION_NANOS_OFFSET = 40;
 
-	// Configuration for memory-mapped file approach
-	private static final String PROP_MMAP_ENABLED = "org.openjdk.jmc.flightrecorder.writer.mmap.enabled";
-	private static final String PROP_MMAP_CHUNK_SIZE = "org.openjdk.jmc.flightrecorder.writer.mmap.chunkSize";
-	private static final int DEFAULT_MMAP_CHUNK_SIZE = 4 * 1024 * 1024; // 4MB
-
 	private final Set<Chunk> activeChunks = new CopyOnWriteArraySet<>();
 	private final LEB128Writer globalWriter = LEB128Writer.getInstance();
 	private final ThreadMmapManager mmapManager;
@@ -155,14 +150,12 @@ public final class RecordingImpl extends Recording {
 		this.outputStream = output;
 		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
 
-		// Initialize mmap support if enabled
-		this.useMmap = Boolean.parseBoolean(System.getProperty(PROP_MMAP_ENABLED, "false"));
+		// Initialize mmap support if enabled via settings
+		this.useMmap = settings.useMmap();
 		if (useMmap) {
-			int chunkSize = Integer
-					.parseInt(System.getProperty(PROP_MMAP_CHUNK_SIZE, String.valueOf(DEFAULT_MMAP_CHUNK_SIZE)));
 			try {
 				Path tempDir = Files.createTempDirectory("jfr-writer-mmap-");
-				this.mmapManager = new ThreadMmapManager(tempDir, chunkSize);
+				this.mmapManager = new ThreadMmapManager(tempDir, settings.getMmapChunkSize());
 			} catch (IOException e) {
 				throw new RuntimeException("Failed to initialize mmap manager", e);
 			}
