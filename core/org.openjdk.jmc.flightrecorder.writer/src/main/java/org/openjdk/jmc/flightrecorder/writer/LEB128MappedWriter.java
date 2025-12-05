@@ -135,12 +135,18 @@ final class LEB128MappedWriter extends AbstractLEB128Writer {
 
 	@Override
 	public long writeFloat(long offset, float data) {
-		return writeIntRaw(offset, Float.floatToIntBits(data));
+		int off = (int) offset;
+		buffer.putFloat(off, data);
+		position = Math.max(position, off + 4);
+		return off + 4;
 	}
 
 	@Override
 	public long writeDouble(long offset, double data) {
-		return writeLongRaw(offset, Double.doubleToLongBits(data));
+		int off = (int) offset;
+		buffer.putDouble(off, data);
+		position = Math.max(position, off + 8);
+		return off + 8;
 	}
 
 	@Override
