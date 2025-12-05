@@ -73,14 +73,38 @@ public interface RecordingSettingsBuilder {
 	/**
 	 * The recording will automatically initialize
 	 * {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Types.JDK} types.
-	 * 
+	 *
 	 * @return this instance for chaining
 	 */
 	RecordingSettingsBuilder withJdkTypeInitialization();
 
 	/**
+	 * Enable memory-mapped files for off-heap event storage. This reduces heap pressure by storing
+	 * event data in memory-mapped files instead of on-heap byte arrays.
+	 *
+	 * @return this instance for chaining
+	 * @since 10.0.0
+	 */
+	default RecordingSettingsBuilder withMmap() {
+		return this;
+	}
+
+	/**
+	 * Enable memory-mapped files with a custom chunk size. Each thread gets double-buffered chunks
+	 * of this size for lock-free writes with automatic rotation.
+	 *
+	 * @param chunkSize
+	 *            size of each memory-mapped buffer chunk in bytes (default: 4MB)
+	 * @return this instance for chaining
+	 * @since 10.0.0
+	 */
+	default RecordingSettingsBuilder withMmap(int chunkSize) {
+		return this;
+	}
+
+	/**
 	 * Build the settings instance.
-	 * 
+	 *
 	 * @return the settings instance
 	 */
 	RecordingSettings build();

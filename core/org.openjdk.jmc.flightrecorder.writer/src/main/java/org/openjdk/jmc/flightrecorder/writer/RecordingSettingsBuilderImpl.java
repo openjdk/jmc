@@ -41,6 +41,8 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	private long startTicks = -1;
 	private long duration = -1;
 	private boolean initializeJdkTypes = false;
+	private boolean useMmap = false;
+	private int mmapChunkSize = 4 * 1024 * 1024; // 4MB default
 
 	@Override
 	public RecordingSettingsBuilder withTimestamp(long timestamp) {
@@ -67,8 +69,21 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	}
 
 	@Override
+	public RecordingSettingsBuilder withMmap() {
+		this.useMmap = true;
+		return this;
+	}
+
+	@Override
+	public RecordingSettingsBuilder withMmap(int chunkSize) {
+		this.useMmap = true;
+		this.mmapChunkSize = chunkSize;
+		return this;
+	}
+
+	@Override
 	public RecordingSettings build() {
 		return new RecordingSettings(timestamp > 0 ? timestamp : System.currentTimeMillis() * 1_000_000L,
-				startTicks > 0 ? startTicks : System.nanoTime(), duration, initializeJdkTypes);
+				startTicks > 0 ? startTicks : System.nanoTime(), duration, initializeJdkTypes, useMmap, mmapChunkSize);
 	}
 }

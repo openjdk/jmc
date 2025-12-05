@@ -47,11 +47,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
+import org.openjdk.jmc.flightrecorder.writer.api.Recordings;
 
 class MmapRecordingIntegrationTest {
 	@Label("Test Event")
@@ -71,39 +69,11 @@ class MmapRecordingIntegrationTest {
 	@TempDir
 	Path tempDir;
 
-	private String originalMmapEnabled;
-	private String originalChunkSize;
-
-	@BeforeEach
-	void setup() {
-		// Save original system properties
-		originalMmapEnabled = System.getProperty("org.openjdk.jmc.flightrecorder.writer.mmap.enabled");
-		originalChunkSize = System.getProperty("org.openjdk.jmc.flightrecorder.writer.mmap.chunkSize");
-
-		// Enable mmap mode
-		System.setProperty("org.openjdk.jmc.flightrecorder.writer.mmap.enabled", "true");
-		System.setProperty("org.openjdk.jmc.flightrecorder.writer.mmap.chunkSize", String.valueOf(512 * 1024)); // 512KB for testing
-	}
-
-	@AfterEach
-	void teardown() {
-		// Restore original system properties
-		if (originalMmapEnabled != null) {
-			System.setProperty("org.openjdk.jmc.flightrecorder.writer.mmap.enabled", originalMmapEnabled);
-		} else {
-			System.clearProperty("org.openjdk.jmc.flightrecorder.writer.mmap.enabled");
-		}
-		if (originalChunkSize != null) {
-			System.setProperty("org.openjdk.jmc.flightrecorder.writer.mmap.chunkSize", originalChunkSize);
-		} else {
-			System.clearProperty("org.openjdk.jmc.flightrecorder.writer.mmap.chunkSize");
-		}
-	}
-
 	@Test
 	void testBasicMmapRecording() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		RecordingImpl recording = new RecordingImpl(baos, new RecordingSettings());
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
 		// Write some events
 		for (int i = 0; i < 100; i++) {
@@ -128,7 +98,8 @@ class MmapRecordingIntegrationTest {
 	@Test
 	void testMultiThreadedMmapRecording() throws IOException, InterruptedException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		RecordingImpl recording = new RecordingImpl(baos, new RecordingSettings());
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
 		int numThreads = 4;
 		int eventsPerThread = 250; // Total 1000 events
@@ -161,7 +132,8 @@ class MmapRecordingIntegrationTest {
 	@Test
 	void testLargeEventsMmapRecording() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		RecordingImpl recording = new RecordingImpl(baos, new RecordingSettings());
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
 		// Create large events to trigger rotation
 		StringBuilder largePayload = new StringBuilder();
@@ -187,7 +159,8 @@ class MmapRecordingIntegrationTest {
 	void testMmapRecordingToFile() throws IOException {
 		Path outputFile = tempDir.resolve("test-recording.jfr");
 		FileOutputStream fos = new FileOutputStream(outputFile.toFile());
-		RecordingImpl recording = new RecordingImpl(fos, new RecordingSettings());
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(fos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
 		for (int i = 0; i < 500; i++) {
 			TestEvent event = new TestEvent();
@@ -214,9 +187,10 @@ class MmapRecordingIntegrationTest {
 	void testComparisonMmapVsHeap() throws IOException {
 		int numEvents = 1000;
 
-		// Test with mmap (already enabled)
+		// Test with mmap
 		ByteArrayOutputStream mmapBaos = new ByteArrayOutputStream();
-		RecordingImpl mmapRecording = new RecordingImpl(mmapBaos, new RecordingSettings());
+		RecordingImpl mmapRecording = (RecordingImpl) Recordings.newRecording(mmapBaos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
 		for (int i = 0; i < numEvents; i++) {
 			TestEvent event = new TestEvent();
@@ -226,10 +200,10 @@ class MmapRecordingIntegrationTest {
 		}
 		mmapRecording.close();
 
-		// Test with heap
-		System.setProperty("org.openjdk.jmc.flightrecorder.writer.mmap.enabled", "false");
+		// Test with heap (no withMmap call)
 		ByteArrayOutputStream heapBaos = new ByteArrayOutputStream();
-		RecordingImpl heapRecording = new RecordingImpl(heapBaos, new RecordingSettings());
+		RecordingImpl heapRecording = (RecordingImpl) Recordings.newRecording(heapBaos,
+				settings -> settings.withJdkTypeInitialization());
 
 		for (int i = 0; i < numEvents; i++) {
 			TestEvent event = new TestEvent();
