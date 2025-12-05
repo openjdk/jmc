@@ -36,6 +36,8 @@ package org.openjdk.jmc.flightrecorder.writer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -87,12 +89,32 @@ public final class RecordingImpl extends Recording {
 	private static final long METADATA_OFFSET_OFFSET = 24;
 	private static final long DURATION_NANOS_OFFSET = 40;
 
+	// Configuration for memory-mapped file approach
+	private static final String PROP_MMAP_ENABLED = "org.openjdk.jmc.flightrecorder.writer.mmap.enabled";
+	private static final String PROP_MMAP_CHUNK_SIZE = "org.openjdk.jmc.flightrecorder.writer.mmap.chunkSize";
+	private static final int DEFAULT_MMAP_CHUNK_SIZE = 4 * 1024 * 1024; // 4MB
+
 	private final Set<Chunk> activeChunks = new CopyOnWriteArraySet<>();
 	private final LEB128Writer globalWriter = LEB128Writer.getInstance();
+	private final ThreadMmapManager mmapManager;
+	private final boolean useMmap;
+
 	private final InheritableThreadLocal<WeakReference<Chunk>> threadChunk = new InheritableThreadLocal<WeakReference<Chunk>>() {
 		@Override
 		protected WeakReference<Chunk> initialValue() {
-			Chunk chunk = new Chunk();
+			Chunk chunk;
+			if (useMmap && mmapManager != null) {
+				try {
+					long threadId = Thread.currentThread().getId();
+					LEB128MappedWriter mmapWriter = mmapManager.getActiveWriter(threadId);
+					chunk = new Chunk(mmapWriter, mmapManager);
+				} catch (IOException e) {
+					throw new RuntimeException(
+							"Failed to create mmap writer for thread " + Thread.currentThread().getId(), e);
+				}
+			} else {
+				chunk = new Chunk();
+			}
 			activeChunks.add(chunk);
 			/*
 			 * Use weak reference to minimize the damage caused by thread-local leaks. The chunk
@@ -112,7 +134,7 @@ public final class RecordingImpl extends Recording {
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	private final BlockingDeque<LEB128Writer> chunkDataQueue = new LinkedBlockingDeque<>();
-	private final ExecutorService chunkDataMergingService = Executors.newSingleThreadExecutor();
+	private final ExecutorService chunkDataMergingService;
 
 	private final ConstantPools constantPools = new ConstantPools();
 	private final MetadataImpl metadata = new MetadataImpl(constantPools);
@@ -132,19 +154,37 @@ public final class RecordingImpl extends Recording {
 		this.duration = settings.getDuration();
 		this.outputStream = output;
 		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
-		writeFileHeader();
 
-		chunkDataMergingService.submit(() -> {
+		// Initialize mmap support if enabled
+		this.useMmap = Boolean.parseBoolean(System.getProperty(PROP_MMAP_ENABLED, "false"));
+		if (useMmap) {
+			int chunkSize = Integer
+					.parseInt(System.getProperty(PROP_MMAP_CHUNK_SIZE, String.valueOf(DEFAULT_MMAP_CHUNK_SIZE)));
 			try {
-				while (!chunkDataMergingService.isShutdown()) {
-					processChunkDataQueue(500, TimeUnit.MILLISECONDS);
-				}
-				// process any outstanding elements in the queue
-				processChunkDataQueue(1, TimeUnit.NANOSECONDS);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
+				Path tempDir = Files.createTempDirectory("jfr-writer-mmap-");
+				this.mmapManager = new ThreadMmapManager(tempDir, chunkSize);
+			} catch (IOException e) {
+				throw new RuntimeException("Failed to initialize mmap manager", e);
 			}
-		});
+			this.chunkDataMergingService = null;
+		} else {
+			this.mmapManager = null;
+			// Only create and start background merging service for heap mode
+			this.chunkDataMergingService = Executors.newSingleThreadExecutor();
+			chunkDataMergingService.submit(() -> {
+				try {
+					while (!chunkDataMergingService.isShutdown()) {
+						processChunkDataQueue(500, TimeUnit.MILLISECONDS);
+					}
+					// process any outstanding elements in the queue
+					processChunkDataQueue(1, TimeUnit.NANOSECONDS);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			});
+		}
+
+		writeFileHeader();
 	}
 
 	private void processChunkDataQueue(long pollTimeout, TimeUnit timeUnit) throws InterruptedException {
@@ -180,38 +220,64 @@ public final class RecordingImpl extends Recording {
 	public void close() throws IOException {
 		if (closed.compareAndSet(false, true)) {
 			try {
-				/*
-				 * All active chunks are stable here - no new data will be added there so we can get
-				 * away with slightly racy code ....
-				 */
-				for (Chunk chunk : activeChunks) {
-					chunk.finish(writer -> {
-						try {
-							chunkDataQueue.put(writer);
-						} catch (InterruptedException ignored) {
-							Thread.currentThread().interrupt();
-						}
-					});
+				if (useMmap && mmapManager != null) {
+					// Mmap-based finalization
+					closeMmapRecording();
+				} else {
+					// Legacy heap-based finalization
+					closeHeapRecording();
 				}
-				activeChunks.clear();
-
-				chunkDataMergingService.shutdown();
-				boolean flushed = false;
-				try {
-					flushed = chunkDataMergingService.awaitTermination(5, TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-				if (!flushed) {
-					throw new RuntimeException("Unable to flush dangling JFR chunks");
-				}
-				finalizeRecording();
-
-				outputStream.write(globalWriter.export());
 			} finally {
 				outputStream.close();
+				if (mmapManager != null) {
+					mmapManager.cleanup();
+				}
 			}
 		}
+	}
+
+	private void closeHeapRecording() throws IOException {
+		/*
+		 * All active chunks are stable here - no new data will be added there so we can get away
+		 * with slightly racy code ....
+		 */
+		for (Chunk chunk : activeChunks) {
+			chunk.finish(writer -> {
+				try {
+					chunkDataQueue.put(writer);
+				} catch (InterruptedException ignored) {
+					Thread.currentThread().interrupt();
+				}
+			});
+		}
+		activeChunks.clear();
+
+		if (chunkDataMergingService != null) {
+			chunkDataMergingService.shutdown();
+			boolean flushed = false;
+			try {
+				flushed = chunkDataMergingService.awaitTermination(5, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			if (!flushed) {
+				throw new RuntimeException("Unable to flush dangling JFR chunks");
+			}
+		}
+		finalizeRecording();
+
+		outputStream.write(globalWriter.export());
+	}
+
+	private void closeMmapRecording() throws IOException {
+		// Flush all active buffers
+		mmapManager.finalFlush();
+		activeChunks.clear();
+
+		// chunkDataMergingService was never started in mmap mode, so no need to shut it down
+
+		// Sequential write: header → chunks → checkpoint → metadata
+		finalizeRecordingMmap();
 	}
 
 	private Chunk getChunk() {
@@ -671,6 +737,68 @@ public final class RecordingImpl extends Recording {
 		globalWriter.writeLongRaw(SIZE_OFFSET, globalWriter.position());
 		globalWriter.writeLongRaw(CONSTANT_OFFSET_OFFSET, checkpointOffset);
 		globalWriter.writeLongRaw(METADATA_OFFSET_OFFSET, metadataOffset);
+	}
+
+	private void finalizeRecordingMmap() throws IOException {
+		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
+		types.resolveAll();
+
+		// Create checkpoint and metadata in heap-based writer
+		LEB128Writer cpWriter = LEB128Writer.getInstance();
+		cpWriter.writeLong(1L) // checkpoint event ID
+				.writeLong(startNanos) // start timestamp
+				.writeLong(recDuration) // duration till now
+				.writeLong(0L) // fake delta-to-next
+				.writeInt(1) // all checkpoints are flush for now
+				.writeInt(metadata.getConstantPools().size()); // start writing constant pools array
+
+		for (ConstantPool cp : metadata.getConstantPools()) {
+			cp.writeTo(cpWriter);
+		}
+
+		// Prepare checkpoint event with size prefix
+		LEB128Writer cpEventWriter = LEB128Writer.getInstance();
+		cpEventWriter.writeInt(cpWriter.length());
+		cpEventWriter.writeBytes(cpWriter.export());
+
+		// Create metadata event
+		LEB128Writer mdWriter = LEB128Writer.getInstance();
+		metadata.writeMetaEvent(mdWriter, startTicks, recDuration);
+
+		// Calculate offsets
+		long headerSize = 68; // Fixed JFR header size
+		List<Path> flushedChunks = mmapManager.getFlushedChunks();
+		long chunksSize = 0;
+		for (Path chunk : flushedChunks) {
+			chunksSize += Files.size(chunk);
+		}
+
+		long checkpointOffset = headerSize + chunksSize;
+		long metadataOffset = checkpointOffset + cpEventWriter.length();
+		long totalSize = metadataOffset + mdWriter.length();
+
+		// Write header with correct offsets
+		LEB128Writer headerWriter = LEB128Writer.getInstance();
+		headerWriter.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(totalSize) // total file size
+				.writeLongRaw(checkpointOffset) // CP event offset
+				.writeLongRaw(metadataOffset) // meta event offset
+				.writeLongRaw(startNanos) // start time in nanoseconds
+				.writeLongRaw(recDuration) // duration
+				.writeLongRaw(startTicks) // start time in ticks
+				.writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
+				.writeIntRaw(1); // use compressed integers
+
+		// Sequential write: header → chunks → checkpoint → metadata
+		outputStream.write(headerWriter.export());
+
+		// Write all flushed chunks
+		for (Path chunkFile : flushedChunks) {
+			Files.copy(chunkFile, outputStream);
+		}
+
+		// Write checkpoint and metadata
+		outputStream.write(cpEventWriter.export());
+		outputStream.write(mdWriter.export());
 	}
 
 	private void writeCheckpointEvent(long duration) {
