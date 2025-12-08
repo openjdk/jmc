@@ -523,8 +523,8 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 	}
 
 	private void scrollCallersViewToBottom() {
-		if (callersView.component instanceof JScrollPane) {
-			var scrollPane = (JScrollPane) callersView.component;
+		JScrollPane scrollPane = findScrollPane(callersView.component);
+		if (scrollPane != null) {
 			var verticalBar = scrollPane.getVerticalScrollBar();
 			var listener = new java.awt.event.AdjustmentListener() {
 				@Override
@@ -537,5 +537,20 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 			};
 			verticalBar.addAdjustmentListener(listener);
 		}
+	}
+
+	private JScrollPane findScrollPane(java.awt.Container container) {
+		for (java.awt.Component child : container.getComponents()) {
+			if (child instanceof JScrollPane) {
+				return (JScrollPane) child;
+			}
+			if (child instanceof java.awt.Container) {
+				JScrollPane found = findScrollPane((java.awt.Container) child);
+				if (found != null) {
+					return found;
+				}
+			}
+		}
+		return null;
 	}
 }
