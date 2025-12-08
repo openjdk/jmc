@@ -36,7 +36,40 @@ package org.openjdk.jmc.flightrecorder.writer.api;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/** A fluent API for lazy initialization of a composite type value */
+/**
+ * A fluent API for lazy initialization of a composite type value.
+ * <p>
+ * This builder provides a chainable interface for setting field values in complex types. Use it
+ * with {@link Type#asValue(java.util.function.Consumer)} to construct typed values.
+ * <h2>Handling Null Values</h2>
+ * <p>
+ * When setting field values, avoid passing {@code null} directly as it causes compilation ambiguity
+ * due to overloaded methods. Instead:
+ * <ul>
+ * <li>For primitive types (String, int, long, etc.): cast to the specific type, e.g.,
+ * {@code (String) null}</li>
+ * <li>For complex types (Thread, StackTrace, custom types): use {@link Type#nullValue()}</li>
+ * </ul>
+ * <p>
+ * <strong>Example:</strong>
+ *
+ * <pre>
+ * {
+ * 	&#64;code
+ * 	Types types = recording.getTypes();
+ * 	Type threadType = types.getType(Types.JDK.THREAD);
+ *
+ * 	Type eventType = recording.registerEventType("custom.Event", builder -> {
+ * 		builder.addField("message", Types.Builtin.STRING).addField("thread", Types.JDK.THREAD);
+ * 	});
+ *
+ * 	recording.writeEvent(eventType.asValue(builder -> {
+ * 		builder.putField("message", (String) null) // primitive null with cast
+ * 				.putField("thread", threadType.nullValue()); // complex type null
+ * 	}));
+ * }
+ * </pre>
+ */
 public interface TypedValueBuilder {
 	Type getType();
 
