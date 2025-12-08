@@ -89,7 +89,7 @@ public interface IMCFrame {
 		/**
 		 * The frame compilation type is unknown.
 		 */
-		public static final Type UNKNOWN = new Type("UNKNONW"); //$NON-NLS-1$
+		public static final Type UNKNOWN = new Type("UNKNOWN"); //$NON-NLS-1$
 
 		private static final String MSG_PREFIX = "IMCFrame_Type_";
 

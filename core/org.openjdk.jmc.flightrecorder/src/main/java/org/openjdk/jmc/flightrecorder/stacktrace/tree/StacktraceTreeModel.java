@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import org.openjdk.jmc.common.IMCFrame;
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
@@ -271,5 +272,127 @@ public class StacktraceTreeModel {
 
 	private static <T> IMemberAccessor<T, IItem> getAccessor(IItemIterable iterable, IAttribute<T> attr) {
 		return (attr != null) ? iterable.getType().getAccessor(attr.getKey()) : null;
+	}
+
+	/**
+	 * Extracts a merged tree of successors (callees) for a given method. This finds all occurrences
+	 * of the specified method in the tree and merges their subtrees into a single tree rooted at
+	 * the method.
+	 *
+	 * @param typeName
+	 *            the fully qualified class name of the method
+	 * @param methodName
+	 *            the method name
+	 * @return a new Node representing the merged successor tree, or null if the method is not found
+	 */
+	public Node extractSuccessorsFor(String typeName, String methodName) {
+		AggregatableFrame pivotFrame = findFirstMatchingFrame(root, typeName, methodName);
+		if (pivotFrame == null) {
+			return null;
+		}
+		Node result = Node.newRootNode(pivotFrame);
+		traverseForSuccessors(root, typeName, methodName, result);
+		return result.getCumulativeWeight() > 0 ? result : null;
+	}
+
+	private boolean matchesMethod(Node node, String typeName, String methodName) {
+		IMCMethod method = node.getFrame().getMethod();
+		return method != null && methodName.equals(method.getMethodName())
+				&& typeName.equals(method.getType().getFullName());
+	}
+
+	private AggregatableFrame findFirstMatchingFrame(Node current, String typeName, String methodName) {
+		if (matchesMethod(current, typeName, methodName)) {
+			return current.getFrame();
+		}
+		for (Node child : current.getChildren()) {
+			AggregatableFrame found = findFirstMatchingFrame(child, typeName, methodName);
+			if (found != null) {
+				return found;
+			}
+		}
+		return null;
+	}
+
+	private void traverseForSuccessors(Node current, String typeName, String methodName, Node result) {
+		if (matchesMethod(current, typeName, methodName)) {
+			mergeSuccessorNode(result, current);
+		}
+		for (Node child : current.getChildren()) {
+			traverseForSuccessors(child, typeName, methodName, result);
+		}
+	}
+
+	private void mergeSuccessorNode(Node destNode, Node srcNode) {
+		destNode.addCumulativeWeight(srcNode.getCumulativeWeight());
+		for (Node child : srcNode.getChildren()) {
+			String key = child.getFrame().getMethodKey();
+			Node existing = findChildByKey(destNode, key);
+			if (existing == null) {
+				Node newChild = new Node(destNode, child.getFrame());
+				destNode.addChild(newChild);
+				mergeSuccessorNode(newChild, child);
+			} else {
+				mergeSuccessorNode(existing, child);
+			}
+		}
+	}
+
+	private Node findChildByKey(Node parent, String key) {
+		for (Node child : parent.getChildren()) {
+			if (child.getFrame().getMethodKey().equals(key)) {
+				return child;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Extracts a merged tree of predecessors (callers) for a given method. This finds all
+	 * occurrences of the specified method in the tree and merges their ancestor chains into a
+	 * single inverted tree rooted at the method.
+	 *
+	 * @param typeName
+	 *            the fully qualified class name of the method
+	 * @param methodName
+	 *            the method name
+	 * @return a new Node representing the merged predecessor tree, or null if the method is not
+	 *         found
+	 */
+	public Node extractPredecessorsFor(String typeName, String methodName) {
+		AggregatableFrame pivotFrame = findFirstMatchingFrame(root, typeName, methodName);
+		if (pivotFrame == null) {
+			return null;
+		}
+		Node result = Node.newRootNode(pivotFrame);
+		traverseForPredecessors(root, typeName, methodName, result);
+		return result.getCumulativeWeight() > 0 ? result : null;
+	}
+
+	private void traverseForPredecessors(Node current, String typeName, String methodName, Node result) {
+		if (matchesMethod(current, typeName, methodName)) {
+			result.addCumulativeWeight(current.getCumulativeWeight());
+			mergePredecessorChain(result, current.getParent(), current.getCumulativeWeight());
+		}
+		for (Node child : current.getChildren()) {
+			traverseForPredecessors(child, typeName, methodName, result);
+		}
+	}
+
+	private void mergePredecessorChain(Node destNode, Node srcAncestor, double weight) {
+		if (srcAncestor == null || srcAncestor.isRoot()) {
+			return;
+		}
+		String key = srcAncestor.getFrame().getMethodKey();
+		Node existing = findChildByKey(destNode, key);
+		if (existing == null) {
+			Node newChild = new Node(destNode, srcAncestor.getFrame());
+			newChild.addCumulativeWeight(weight);
+			destNode.addChild(newChild);
+			mergePredecessorChain(newChild, srcAncestor.getParent(), weight);
+		} else {
+			existing.addCumulativeWeight(weight);
+			mergePredecessorChain(existing, srcAncestor.getParent(), weight);
+		}
 	}
 }

@@ -42,6 +42,13 @@
 			icon="icons/flame.png"
 			id="org.openjdk.jmc.flightrecorder.flamegraph"
 			name="%FLAME_GRAPH_VIEW_NAME"/>
+		<view
+			allowMultiple="false"
+			category="org.openjdk.jmc.ui.main"
+			class="org.openjdk.jmc.flightrecorder.flamegraph.views.ButterflyView"
+			icon="icons/butterfly.png"
+			id="org.openjdk.jmc.flightrecorder.flamegraph.butterfly"
+			name="%BUTTERFLY_VIEW_NAME"/>
 	</extension>
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.openjdk.jmc.ui.idesupport.StandardPerspective">
@@ -51,6 +58,12 @@
 				relative="org.openjdk.jmc.flightrecorder.ui.StacktraceView"
 				showTitle="true"
 				visible="true"/>
+			<view
+				id="org.openjdk.jmc.flightrecorder.flamegraph.butterfly"
+				relationship="stack"
+				relative="org.openjdk.jmc.flightrecorder.flamegraph"
+				showTitle="true"
+				visible="false"/>
 		</perspectiveExtension>
 	</extension>
 </plugin>

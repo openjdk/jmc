@@ -37,6 +37,7 @@ import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.util.FormatToolkit;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
+import org.openjdk.jmc.flightrecorder.stacktrace.Messages;
 
 /**
  * Frame wrapper taking into account a frame separator for hash code and equals.
@@ -134,5 +135,20 @@ public final class AggregatableFrame implements IMCFrame {
 
 	public String getHumanReadableShortString() {
 		return FormatToolkit.getHumanReadable(getMethod(), false, false, true, false, true, false);
+	}
+
+	/**
+	 * Returns a unique key for this frame based on the fully qualified class name and method name.
+	 * This key can be used for merging frames from different stack traces.
+	 *
+	 * @return a key in the format "fully.qualified.ClassName::methodName", or a sentinel value for
+	 *         special frames (root or unclassifiable frames from truncated stacks)
+	 */
+	public String getMethodKey() {
+		IMCMethod method = frame.getMethod();
+		if (method == null || method.getType() == null) {
+			return Messages.getString(Messages.STACKTRACE_UNCLASSIFIABLE_FRAME);
+		}
+		return method.getType().getFullName() + "::" + method.getMethodName();
 	}
 }
