@@ -363,7 +363,7 @@ the Author.
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  THE POSSIBILITY OF SUCH DAMAGE.
  
-%% The following notice is provided with respect to lz4-java v1.10.1,
+%% The following notice is provided with respect to lz4-java v1.10.2,
 which may be included with this product.
 
 URL for License � http://opensource.org/licenses/Apache-2.0
