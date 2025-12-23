@@ -215,9 +215,12 @@ public class HeapPage extends AbstractDataPage {
 			XYDataRenderer heapRenderer = new XYDataRenderer(UnitLookup.MEMORY.getDefaultUnit().quantity(0),
 					Messages.HeapPage_ROW_MEMORY_USAGE, Messages.HeapPage_ROW_MEMORY_USAGE_DESC);
 
+			Optional<IItemCollection> optionalHeapSummaryItems = getMemoryEvents(allItems, HEAP_SUMMARY, heapRenderer);
+			Optional<IItemCollection> optionalRssItems = getRssEvents(allItems, heapRenderer);
+			Optional<IItemCollection> optionalOsMemorySummaryItems = getMemoryEvents(allItems, OS_MEMORY_SUMMARY,
+					heapRenderer);
 			Supplier<Stream<IItemCollection>> memoryEventsSupplier = () -> Stream
-					.of(getMemoryEvents(allItems, HEAP_SUMMARY, heapRenderer), getRssEvents(allItems, heapRenderer),
-							getMemoryEvents(allItems, OS_MEMORY_SUMMARY, heapRenderer))
+					.of(optionalHeapSummaryItems, optionalRssItems, optionalOsMemorySummaryItems)
 					.filter(Optional::isPresent).map(Optional::get);
 
 			IItemCollection mergedEvents = ItemCollectionToolkit.merge(memoryEventsSupplier);
