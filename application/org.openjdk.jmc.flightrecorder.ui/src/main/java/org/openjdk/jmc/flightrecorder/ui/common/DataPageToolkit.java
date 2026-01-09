@@ -1010,8 +1010,8 @@ public class DataPageToolkit {
 
 	/**
 	 * Checks if an attribute's ContentType is a filterable numeric type even without a Persister.
-	 * These types (COUNT, INDEX, RAW_NUMBER, RAW_LONG, etc.) can be compared using ItemFilters.equals()
-	 * and should appear in the "Add Filter from Attribute" menu.
+	 * These types (COUNT, INDEX, RAW_NUMBER, RAW_LONG, etc.) can be compared using
+	 * ItemFilters.equals() and should appear in the "Add Filter from Attribute" menu.
 	 *
 	 * @param attribute
 	 *            the attribute to check
@@ -1023,8 +1023,8 @@ public class DataPageToolkit {
 		// RAW_NUMBER: used by primitive types (byte, short, int, long, float, double, char)
 		// RAW_LONG: used by some custom Long attributes
 		// COUNT, INDEX, IDENTIFIER: legacy types, rarely used but included for completeness
-		return ct.equals(UnitLookup.RAW_NUMBER) || ct.equals(UnitLookup.RAW_LONG)
-				|| ct.equals(UnitLookup.COUNT) || ct.equals(UnitLookup.INDEX) || ct.equals(UnitLookup.IDENTIFIER);
+		return ct.equals(UnitLookup.RAW_NUMBER) || ct.equals(UnitLookup.RAW_LONG) || ct.equals(UnitLookup.COUNT)
+				|| ct.equals(UnitLookup.INDEX) || ct.equals(UnitLookup.IDENTIFIER);
 	}
 
 	/**
