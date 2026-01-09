@@ -50,6 +50,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -68,6 +69,9 @@ import org.openjdk.jmc.ui.misc.DisplayToolkit;
 import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 
 public class AlertDialog extends TitleAreaDialog {
+	// Minimum alert dialog height (in dialog units)
+	public static final int MIN_ALERT_DIALOG_HEIGHT = 200;
+
 	private Button m_clearButton;
 	private Text m_text;
 	private TableViewer m_viewer;
@@ -195,6 +199,12 @@ public class AlertDialog extends TitleAreaDialog {
 	}
 
 	@Override
+	protected Point getInitialSize() {
+		Point shellSize = super.getInitialSize();
+		return new Point(shellSize.x, Math.max(convertVerticalDLUsToPixels(MIN_ALERT_DIALOG_HEIGHT), shellSize.y));
+	}
+
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Control dialogArea = super.createDialogArea(parent);
 		SashForm sash = new SashForm((Composite) dialogArea, SWT.VERTICAL);
@@ -203,7 +213,7 @@ public class AlertDialog extends TitleAreaDialog {
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		m_text = createMessage(sash);
 		m_text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		sash.setWeights(new int[] {75, 25});
+		sash.setWeights(new int[] {60, 40});
 		sash.setLayout(new GridLayout());
 		return dialogArea;
 	}
