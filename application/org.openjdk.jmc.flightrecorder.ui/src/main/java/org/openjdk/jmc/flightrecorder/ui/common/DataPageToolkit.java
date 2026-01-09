@@ -1004,8 +1004,27 @@ public class DataPageToolkit {
 				.map(a -> a.equals(JdkAttributes.PARENT_CLASSLOADER) ? JdkAttributes.PARENT_CLASSLOADER_STRING : a)
 				.map(a -> a.equals(JdkAttributes.CLASSLOADER) ? JdkAttributes.CLASSLOADER_STRING : a)
 				.filter(a -> a.equals(JfrAttributes.EVENT_TYPE) || (a.getContentType() instanceof RangeContentType)
-						|| (a.getContentType().getPersister() != null))
+						|| (a.getContentType().getPersister() != null) || isFilterableNumericType(a))
 				.distinct();
+	}
+
+	/**
+	 * Checks if an attribute's ContentType is a filterable numeric type even without a Persister.
+	 * These types (COUNT, INDEX, RAW_NUMBER, RAW_LONG, etc.) can be compared using ItemFilters.equals()
+	 * and should appear in the "Add Filter from Attribute" menu.
+	 *
+	 * @param attribute
+	 *            the attribute to check
+	 * @return true if the attribute has a filterable numeric ContentType
+	 */
+	private static boolean isFilterableNumericType(IAttribute<?> attribute) {
+		org.openjdk.jmc.common.unit.ContentType<?> ct = attribute.getContentType();
+		// Check for known numeric types that don't have a Persister but support filtering
+		// RAW_NUMBER: used by primitive types (byte, short, int, long, float, double, char)
+		// RAW_LONG: used by some custom Long attributes
+		// COUNT, INDEX, IDENTIFIER: legacy types, rarely used but included for completeness
+		return ct.equals(UnitLookup.RAW_NUMBER) || ct.equals(UnitLookup.RAW_LONG)
+				|| ct.equals(UnitLookup.COUNT) || ct.equals(UnitLookup.INDEX) || ct.equals(UnitLookup.IDENTIFIER);
 	}
 
 	/**

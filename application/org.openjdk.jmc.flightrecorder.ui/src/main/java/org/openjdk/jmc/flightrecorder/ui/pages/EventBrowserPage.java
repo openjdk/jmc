@@ -287,7 +287,7 @@ public class EventBrowserPage extends AbstractDataPage {
 
 		private IItemCollection getFilteredItems() {
 			if (!selectedTypes.isEmpty()) {
-				Set<String> types = selectedTypes.stream().map(t -> t.getIdentifier()).collect(Collectors.toSet());
+				Set<String> types = selectedTypes.stream().map(IType::getIdentifier).collect(Collectors.toSet());
 				currentItemFilter = ItemFilters.type(types);
 				return selectionItems.apply(currentItemFilter);
 			}
