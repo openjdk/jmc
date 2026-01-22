@@ -50,7 +50,7 @@ import javax.management.ObjectName;
 import javax.management.modelmbean.DescriptorSupport;
 import javax.management.openmbean.TabularData;
 
-import org.jolokia.client.J4pClient;
+import org.jolokia.client.JolokiaClient;
 import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.jolokia.service.serializer.JolokiaSerializer;
 import org.jolokia.server.core.service.serializer.SerializeOptions;
@@ -75,7 +75,7 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 	private static final String ARGUMENT_OPTION = PREFIX + "arg.isOption"; //$NON-NLS-1$
 	private static final String ARGUMENT_MULITPLE = PREFIX + "arg.isMultiple"; //$NON-NLS-1$
 
-	public JmcJolokiaJmxConnection(J4pClient client) throws IOException {
+	public JmcJolokiaJmxConnection(JolokiaClient client) throws IOException {
 		super(client);
 	}
 
