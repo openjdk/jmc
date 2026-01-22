@@ -143,7 +143,7 @@ public class ProcessesPage extends AbstractDataPage {
 
 			// FIXME: Configure y-axis to always show 100%?
 			cpuCanvas = new ChartCanvas(sash);
-			cpuChart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), 100);
+			cpuChart = new XYChart(pageContainer.getRecordingRange(), RendererToolkit.empty(), 180);
 			cpuChart.setVisibleRange(timelineRange.getStart(), timelineRange.getEnd());
 			cpuChart.addVisibleRangeListener(r -> timelineRange = r);
 			DataPageToolkit.createChartTimestampTooltip(cpuCanvas);

@@ -524,6 +524,11 @@ public final class JdkAggregators {
 	public static final IAggregator<?, ?> TOP_ADDRESS = Aggregators.min(JdkTypeIDs.NATIVE_LIBRARY,
 			JdkAttributes.TOP_ADDRESS);
 
+	public static final IAggregator<IQuantity, ?> TENURING_AGE_SIZE = Aggregators.sum(
+			Messages.getString(Messages.AGGR_TENURING_AGE_SIZE),
+			Messages.getString(Messages.AGGR_TENURING_AGE_SIZE_DESC), JdkTypeIDs.TENURING_DISTRIBUTION,
+			JdkAttributes.TENURING_DISTRIBUTION_SIZE);
+
 	/**
 	 * Aggregator for getting the first value, ie. the value from the event with the first occurring
 	 * start time.

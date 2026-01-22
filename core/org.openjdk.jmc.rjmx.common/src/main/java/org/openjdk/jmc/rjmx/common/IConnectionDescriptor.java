@@ -52,6 +52,10 @@ import javax.management.remote.JMXServiceURL;
  */
 public interface IConnectionDescriptor {
 
+	// JMX convention. See e.g.
+	// https://github.com/openjdk/jdk/blob/master/src/java.management.rmi/share/classes/javax/management/remote/rmi/RMIConnector.java
+	static final String JMX_REMOTE_X_CHECK_STUB = "jmx.remote.x.check.stub"; //$NON-NLS-1$
+
 	/**
 	 * Returns a JMX service URL based on the settings in the descriptor. Some implementations may
 	 * want to just return a pre-configured service URL, whilst others may want to resolve the URL
@@ -70,4 +74,8 @@ public interface IConnectionDescriptor {
 	 * @return the JMX environment. Usually contains credentials and similar.
 	 */
 	Map<String, Object> getEnvironment();
+
+	default boolean requireSecureConnection() {
+		return "true".equals(getEnvironment().get(JMX_REMOTE_X_CHECK_STUB));
+	}
 }

@@ -361,7 +361,8 @@ public class RJMXConnection implements Closeable, IMBeanHelperService {
 				return true;
 			} catch (Exception e) {
 				m_server = null;
-				throw new WrappedConnectionException(m_serverDescriptor.getDisplayName(), url, e);
+				throw new WrappedConnectionException(m_serverDescriptor.getDisplayName(), url,
+						m_connectionDescriptor.requireSecureConnection(), e);
 			}
 		}
 	}

@@ -41,7 +41,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -52,7 +51,6 @@ import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.common.action.Executable;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.console.agent.AgentJmxHelper;
-import org.openjdk.jmc.console.agent.AgentPlugin;
 import org.openjdk.jmc.console.agent.editor.AgentEditor;
 import org.openjdk.jmc.console.agent.editor.AgentEditorInput;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
@@ -97,13 +95,12 @@ public class AgentEditorOpener implements IActionFactory {
 				helper.removeConnectionChangedListener(this);
 				return ret;
 			} catch (ConnectionException e) {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				DialogToolkit.showException(window.getShell(), Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT, e);
-
-				return new Status(IStatus.ERROR, AgentPlugin.PLUGIN_ID, IStatus.ERROR,
-						NLS.bind(Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
-								serverHandle.getServerDescriptor().getDisplayName(), e.getMessage()),
-						e);
+				DisplayToolkit.safeAsyncExec(Display.getDefault(), () -> {
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					DialogToolkit.showException(window.getShell(), Messages.AgentEditorOpener_MESSAGE_COULD_NOT_CONNECT,
+							e);
+				});
+				return Status.CANCEL_STATUS;
 			}
 		}
 

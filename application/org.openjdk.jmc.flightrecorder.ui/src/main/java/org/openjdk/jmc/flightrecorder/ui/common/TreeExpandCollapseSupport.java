@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2024, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2024, 2025, Kantega AS. All rights reserved.
+ * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,26 +30,39 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.jolokia;
 
-import java.io.IOException;
-import java.util.Map;
+package org.openjdk.jmc.flightrecorder.ui.common;
 
-import javax.management.remote.JMXServiceURL;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 
-import org.jolokia.client.JolokiaClientBuilder;
-import org.jolokia.client.jmxadapter.JolokiaJmxConnector;
-import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
+/**
+ * Enables double-click and enter key press to expand or collapse tree nodes.
+ */
+public final class TreeExpandCollapseSupport {
 
-public class JmcJolokiaJmxConnector extends JolokiaJmxConnector {
-
-	public JmcJolokiaJmxConnector(JMXServiceURL serviceURL, Map<String, ?> environment) {
-		super(serviceURL, environment);
+	/**
+	 * Private since we don't want any instances.
+	 */
+	private TreeExpandCollapseSupport() {
 	}
 
-	@Override
-	protected RemoteJmxAdapter instantiateAdapter(JolokiaClientBuilder clientBuilder, Map<String, Object> mergedEnv)
-			throws IOException {
-		return new JmcJolokiaJmxConnection(clientBuilder.build());
+	/**
+	 * Installs a handler for both double click and enter key press.
+	 *
+	 * @param viewer
+	 *            the TreeViewer to update
+	 */
+	public static void installFor(TreeViewer viewer) {
+		viewer.addDoubleClickListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+			if (!selection.isEmpty()) {
+				Object element = selection.getFirstElement();
+				if (element != null) {
+					boolean isExpanded = viewer.getExpandedState(element);
+					viewer.setExpandedState(element, !isExpanded);
+				}
+			}
+		});
 	}
 }
