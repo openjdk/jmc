@@ -82,8 +82,7 @@ public class JmcKubernetesPlugin extends MCAbstractUIPlugin
 
 	@Override
 	public boolean scanForInstances() {
-		// If credentials are locked and credentials are required, the scanner thread
-		// will get hung
+		// If credentials are locked and credentials are required, the scanner thread will get hung
 		// therefore await credentials store to be unlocked before proceeding to scan
 		return getPreferenceStore().getBoolean(P_SCAN_FOR_INSTANCES)
 				&& (getScanningCredentials() == null || !SecurityManagerFactory.getSecurityManager().isLocked());

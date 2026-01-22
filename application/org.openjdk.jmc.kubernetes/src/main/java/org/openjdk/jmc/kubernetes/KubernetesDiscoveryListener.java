@@ -117,10 +117,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		final String path = Utils.getSystemPropertyOrEnvVar(Config.KUBERNETES_KUBECONFIG_FILE,
 				new File(System.getProperty("user.home"), ".kube" + File.separator + "config").toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		File configPath = new File(path);
-		if (contexts != null && contextsCached > configPath.lastModified()) {// the YAML parsing is soo incredibly
-																				// sloow, hence cache context names for
-																				// later
-																				// runs
+        // the YAML parsing is soo incredibly sloow, hence cache context names for later runs
+		if (contexts != null && contextsCached > configPath.lastModified()) {
 			return contexts;
 		}
 		// reload config if kubeconfig has been modified since we cached the config

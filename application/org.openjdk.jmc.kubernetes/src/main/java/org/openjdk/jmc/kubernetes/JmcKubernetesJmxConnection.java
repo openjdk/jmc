@@ -61,8 +61,7 @@ public class JmcKubernetesJmxConnection extends JmcJolokiaJmxConnection {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected J4pResponse unwrapException(J4pException e) throws IOException, InstanceNotFoundException {
-		// recognize signs of disconnect and signal to the application for better
-		// handling
+		// recognize signs of disconnect and signal to the application for better handling
 		if (isKnownDisconnectException(e)) {
 			throw new ConnectionException(e.getMessage());
 		} else {
