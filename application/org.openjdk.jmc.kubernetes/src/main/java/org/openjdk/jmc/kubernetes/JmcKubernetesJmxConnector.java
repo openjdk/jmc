@@ -38,7 +38,7 @@ import java.util.Map;
 
 import javax.management.remote.JMXServiceURL;
 
-import org.jolokia.client.J4pClient;
+import org.jolokia.client.JolokiaClient;
 import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 
@@ -49,7 +49,7 @@ public class JmcKubernetesJmxConnector extends KubernetesJmxConnector {
 	}
 
 	@Override
-	protected RemoteJmxAdapter createAdapter(J4pClient client) throws IOException {
+	protected RemoteJmxAdapter createAdapter(JolokiaClient client) throws IOException {
 		return new JmcKubernetesJmxConnection(client);
 	}
 }

@@ -53,7 +53,7 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
 import org.apache.commons.codec.binary.Base64;
-import org.jolokia.client.J4pClient;
+import org.jolokia.client.JolokiaClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.jolokia.server.core.http.security.AuthorizationHeaderParser;
 import org.jolokia.server.core.util.Base64Util;
@@ -244,7 +244,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		if (context != null) {
 			env.put(KubernetesJmxConnector.KUBERNETES_CLIENT_CONTEXT, context);
 		}
-		J4pClient jvmClient = KubernetesJmxConnector.probeProxyPath(env, client, url, headers);
+		JolokiaClient jvmClient = KubernetesJmxConnector.probeProxyPath(env, client, url, headers);
 		if (jvmClient != null) {
 			try {
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());
