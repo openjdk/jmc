@@ -52,11 +52,10 @@ import java.util.stream.Collectors;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
 import org.jolokia.client.JolokiaClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.jolokia.server.core.http.security.AuthorizationHeaderParser;
-import org.jolokia.server.core.util.Base64Util;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
 import org.openjdk.jmc.jolokia.ServerConnectionDescriptor;
@@ -291,7 +290,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		}
 
 		headers.put(AuthorizationHeaderParser.JOLOKIA_ALTERNATE_AUTHORIZATION_HEADER,
-				"Basic " + Base64Util.encode((username + ":" + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
+				"Basic " + Base64.getEncoder().encode((username + ":" + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
 		jmxEnv.put(JMXConnector.CREDENTIALS, new String[] {username, password});
 
 	}
@@ -303,14 +302,14 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 			if (secret.getMetadata().getName().equals(secretName)) {
 				if ("kubernetes.io/basic-auth".equals(secret.getType())) { //$NON-NLS-1$
 					Map<String, String> data = secret.getData();
-					data.replaceAll((key, value) -> new String(Base64.decodeBase64(value)));
+					data.replaceAll((key, value) -> new String(Base64.getDecoder().decode(value)));
 					return data;
 				} else if ("Opaque".equals(secret.getType())) { //$NON-NLS-1$
 					for (Entry<String, String> entry : secret.getData().entrySet()) {
 						if (entry.getKey().endsWith(".properties")) { //$NON-NLS-1$
 							try {
 								Properties properties = new Properties();
-								properties.load(new ByteArrayInputStream(Base64.decodeBase64(entry.getValue())));
+								properties.load(new ByteArrayInputStream(Base64.getDecoder().decode(entry.getValue())));
 								return (Map) properties;
 							} catch (IOException ignore) {
 							}
