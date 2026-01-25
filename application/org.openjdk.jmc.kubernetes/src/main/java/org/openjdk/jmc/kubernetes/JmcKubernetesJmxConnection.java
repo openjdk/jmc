@@ -73,7 +73,8 @@ public class JmcKubernetesJmxConnection extends JmcJolokiaJmxConnection {
 		if (!(e instanceof JolokiaRemoteException)) {
 			return false;
 		}
-		if (!"io.fabric8.kubernetes.client.KubernetesClientException".equals(((JolokiaRemoteException) e).getErrorType())) { //$NON-NLS-1$
+		if (!"io.fabric8.kubernetes.client.KubernetesClientException" //$NON-NLS-1$
+				.equals(((JolokiaRemoteException) e).getErrorType())) {
 			return false;
 		}
 		return DISCONNECT_SIGNS.stream().anyMatch(pattern -> pattern.matcher(e.getMessage()).matches());
