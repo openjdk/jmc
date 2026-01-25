@@ -43,7 +43,7 @@ import javax.management.InstanceNotFoundException;
 import org.jolokia.client.JolokiaClient;
 import org.jolokia.client.exception.JolokiaException;
 import org.jolokia.client.exception.JolokiaRemoteException;
-import org.jolokia.client.request.JolokiaResponse;
+import org.jolokia.client.response.JolokiaResponse;
 import org.openjdk.jmc.jolokia.JmcJolokiaJmxConnection;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 
