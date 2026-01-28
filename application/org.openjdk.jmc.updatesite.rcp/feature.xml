@@ -34,7 +34,7 @@
 <feature
       id="org.openjdk.jmc.updatesite.rcp"
       label="JDK Mission Control Supported RCP Site"
-      version="9.1.1.qualifier">
+      version="9.1.2.qualifier">
 
    <description>
       This is a release engineering internal &quot;feature&quot;. It just happen

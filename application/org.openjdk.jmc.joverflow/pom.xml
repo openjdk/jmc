@@ -39,7 +39,7 @@
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>org.openjdk.jmc.joverflow</artifactId>
-	<version>9.1.1-SNAPSHOT</version>
+	<version>9.1.2-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	<properties>
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
