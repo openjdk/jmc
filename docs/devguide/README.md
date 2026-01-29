@@ -38,7 +38,7 @@ Then go to _Java / Installed JREs / Execution Environments_ and select your JDK1
 
 Ensure Eclipse compiler is set to Java 17. For that, go to _Preferences | Java / Compiler_, then for _Compiler compliance level_ choose `17`.
 
-![Set compiler comliance level](images/setcompilercompliancelevel.png)
+![Set compiler compliance level](images/setcompilercompliancelevel.png)
 
 ### Setting up the PDE target runtime environment
 
@@ -67,7 +67,7 @@ Now there is one final preparation for the import – we need to turn off certai
 
 **Optional: Show diff against git**
 
-By default Eclipse uses the version on disk. It may be practical to use instead the git version. Open _Window | Preferences_ then _General | Editors | Text Editors | Quick Diff_. Select _Git Revision for the reference source.
+By default Eclipse uses the version on disk. It may be practical to use instead the git version. Open _Window | Preferences_ then _General | Editors | Text Editors | Quick Diff_. Select _Git Revision_ for the reference source.
 
 ![Set quick diff reference source](images/setquickdiffreferencesource.png)
 
@@ -120,4 +120,4 @@ If you have the spotbugs plug-in installed, you should also import the spotbugs 
 
 For dynamic working sets, see http://hirt.se/blog/?p=1149.
 
-For testing: Run all tests as "JUnit Plugin-In Test" tests in eclipse and use the scripts in the `scripts` folder for running the tests. Run the class `org.openjdk.jmc.rjmx.test.testutil.JVMKeepAlive` with the VM arguments `-Dcom.sun.management.jmxremote.port=7091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false` alongside.
+For testing: Run all tests as "JUnit Plug-in Test" tests in eclipse and use the scripts in the `scripts` folder for running the tests. Run the class `org.openjdk.jmc.rjmx.test.testutil.JVMKeepAlive` with the VM arguments `-Dcom.sun.management.jmxremote.port=7091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false` alongside.
