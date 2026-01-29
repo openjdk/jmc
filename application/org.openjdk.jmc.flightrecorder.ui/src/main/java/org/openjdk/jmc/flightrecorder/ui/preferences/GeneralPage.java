@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -93,7 +93,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 	private Text itemListValue;
 	private Text propertiesArrayStringSizeValue;
 	private Text editorRuleEvaluationThreadsValue;
-	private Text websocketPortValue;
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -172,21 +171,12 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		editorRuleEvaluationThreadsValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		QuantityKindProposal.install(editorRuleEvaluationThreadsValue, UnitLookup.NUMBER);
 
-		Label websocketPortLabel = new Label(defaultTimespanContainer, SWT.NONE);
-		websocketPortLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		websocketPortLabel.setText(Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_TEXT);
-		websocketPortLabel.setToolTipText(Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_TOOLTIP);
-		websocketPortValue = new Text(defaultTimespanContainer, SWT.BORDER);
-		websocketPortValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		QuantityKindProposal.install(websocketPortValue, UnitLookup.NUMBER);
-
 		loadDumpTypeFromPrefStore(false);
 		loadTimespanFromPrefStore(false);
 		loadSelectionStoreSizeFromPrefStore(false);
 		loadItemListSizeFromPrefStore(false);
 		loadPropertiesArrayStringSizeFromPrefStore(false);
 		loadEditorRuleEvaluationThreadsFromPrefStore(false);
-		loadWebsocketPortFromPrefStore(false);
 		timespanValue.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -217,12 +207,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 				validatePage();
 			}
 		});
-		websocketPortValue.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				validatePage();
-			}
-		});
 
 		return container;
 	}
@@ -243,23 +227,7 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		if (error == null && error2 == null && error3 == null) {
 			setErrorMessage(error4);
 		}
-		String error5 = validateWebsocketPort(websocketPortValue.getText());
-		if (error == null && error2 == null && error3 == null) {
-			setErrorMessage(error5);
-		}
-		setValid(error == null && error2 == null && error3 == null && error4 == null && error5 == null);
-	}
-
-	public static String validateWebsocketPort(String text) {
-		try {
-			int port = Integer.parseInt(text);
-			if (port < 0 || port > 65535) {
-				return Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
-			}
-		} catch (NumberFormatException e) {
-			return Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
-		}
-		return null;
+		setValid(error == null && error2 == null && error3 == null && error4 == null);
 	}
 
 	public static String validateNumEvaluationThreads(String text) {
@@ -339,52 +307,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		editorRuleEvaluationThreadsValue.setText(FlightRecorderUI.parseItemListSize(size).interactiveFormat());
 	}
 
-	private void loadWebsocketPortFromPrefStore(boolean loadDefault) {
-		String port = loadDefault ? getPreferenceStore().getDefaultString(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT)
-				: getPreferenceStore().getString(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT);
-		websocketPortValue.setText(Integer.toString(FlightRecorderUI.parseWebsocketPort(port)));
-	}
-
-//	private Button createClearButton(Composite parent) {
-//		Button button = new Button(parent, SWT.NONE);
-//		button.setText(Messages.PREFERENCES_CLEAR_USER_SETTINGS_TEXT);
-//		button.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				if (ensureAllEditorsClosed()) {
-//					showConfirmUserSettingReset();
-//				}
-//			}
-//		});
-//		return button;
-//	}
-//
-//	private boolean ensureAllEditorsClosed() {
-//		for (IEditorReference ref : m_workbench.getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
-//			if (JfrEditor.EDITOR_ID.equals(ref.getId())) {
-//				showMustCloseEditor();
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-//
-//	private void showMustCloseEditor() {
-//		MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_INFORMATION);
-//		messageBox.setMessage(Messages.PREFERENCES_OPEN_FLIGHT_RECORDING_DIALOG_TEXT);
-//		messageBox.setText(Messages.PREFERENCES_OPEN_FLIGHT_RECORDING_DIALOG_TITLE);
-//		messageBox.open();
-//	}
-//
-//	private void showConfirmUserSettingReset() {
-//		MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
-//		messageBox.setMessage(Messages.PREFERENCES_RESET_USER_SETTINGS_DIALOG_TEXT);
-//		messageBox.setText(Messages.PREFERENCES_RESET_USER_SETTINGS_DIALOG_TITLE);
-//		if (messageBox.open() == SWT.YES) {
-//			ComponentsPlugin.getDefault().getUserInterfaceRepository().clearUserSettings(JfrEditor.EDITOR_ID);
-//		}
-//	}
-
 	private Button createRemoveRecordingsCheckBox(Composite parent) {
 		return createCheckBox(parent, Messages.PREFERENCES_REMOVE_FINISHED_RECORDING_TEXT,
 				PreferenceKeys.PROPERTY_REMOVE_FINISHED_RECORDING);
@@ -431,7 +353,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 		loadItemListSizeFromPrefStore(true);
 		loadPropertiesArrayStringSizeFromPrefStore(true);
 		loadEditorRuleEvaluationThreadsFromPrefStore(true);
-		loadWebsocketPortFromPrefStore(true);
 		super.performDefaults();
 	}
 
@@ -481,13 +402,6 @@ public class GeneralPage extends PreferencePage implements IWorkbenchPreferenceP
 					size.persistableString());
 		} catch (QuantityConversionException qce) {
 			setErrorMessage(qce.getLocalizedMessage());
-			return false;
-		}
-		try {
-			int port = Integer.parseInt(websocketPortValue.getText());
-			getPreferenceStore().setValue(PreferenceKeys.PROPERTY_WEBSOCKET_SERVER_PORT, Integer.toString(port));
-		} catch (NumberFormatException e) {
-			setErrorMessage(Messages.PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID);
 			return false;
 		}
 

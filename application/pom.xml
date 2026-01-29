@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -109,6 +109,7 @@
 		<module>org.openjdk.jmc.ui</module>
 		<module>org.openjdk.jmc.ui.common</module>
 		<module>org.openjdk.jmc.ui.celleditors</module>
+		<module>org.openjdk.jmc.ui.websocket</module>
 		<module>org.openjdk.jmc.updatesite.ide</module>
 		<module>org.openjdk.jmc.updatesite.rcp</module>
 		<module>org.openjdk.jmc.jolokia</module>
