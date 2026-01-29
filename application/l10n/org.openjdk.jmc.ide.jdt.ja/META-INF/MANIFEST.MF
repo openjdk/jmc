@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: Japanese Language Fragment
 Bundle-SymbolicName: org.openjdk.jmc.ide.jdt.ja
-Bundle-Version: 9.1.1.qualifier
+Bundle-Version: 9.1.2.qualifier
 Bundle-Vendor: Oracle Corporation
-Fragment-Host: org.openjdk.jmc.ide.jdt;bundle-version="9.1.1"
+Fragment-Host: org.openjdk.jmc.ide.jdt;bundle-version="9.1.2"
 Bundle-Localization: plugin
 Automatic-Module-Name: org.openjdk.jmc.ide.jdt.ja

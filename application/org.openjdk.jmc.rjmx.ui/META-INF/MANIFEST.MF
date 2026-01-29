@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Name: RJMX Services UI Plug-in
 Bundle-SymbolicName: org.openjdk.jmc.rjmx.ui;singleton:=true
-Bundle-Version: 9.1.1.qualifier
+Bundle-Version: 9.1.2.qualifier
 Bundle-Vendor: Oracle Corporation
 Require-Bundle: org.eclipse.ui.forms,
  org.openjdk.jmc.ui;visibility:=reexport,
