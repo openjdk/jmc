@@ -123,6 +123,26 @@ public final class Node {
 		return children.isEmpty();
 	}
 
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public void setCumulativeWeight(double cumulativeWeight) {
+		this.cumulativeWeight = cumulativeWeight;
+	}
+
+	public void addWeight(double delta) {
+		this.weight += delta;
+	}
+
+	public void addCumulativeWeight(double delta) {
+		this.cumulativeWeight += delta;
+	}
+
+	public void addChild(Node child) {
+		this.children.add(child);
+	}
+
 	@Override
 	public int hashCode() {
 		// This will get a few extra collisions.
