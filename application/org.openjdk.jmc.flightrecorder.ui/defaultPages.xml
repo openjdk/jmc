@@ -727,6 +727,30 @@
 				</eventList>
 			</state>
 		</page>
+
+		<page factory="org.openjdk.jmc.flightrecorder.ui.security" id="org.openjdk.jmc.flightrecorder.ui.security">
+			<state>
+				<sash />
+				<securityX509AlgorithmTable sortColumn="cryptoIcon">
+					<column id="cryptoIcon" width="100" sortAscending="true" />
+					<column id="cryptoRemark" hidden="false"/>
+					<column id="algorithm" hidden="false"/>
+					<column id="keyType" hidden="false"/>
+					<column id="keyLength" hidden="false" />
+					<column id="serialNumber" hidden="false"/>
+					<column id="subject" hidden="false" />
+					<column id="validFrom" hidden="false" />
+					<column id="validUntil" hidden="false"/>
+					<column id="thread" hidden="false" />
+					<column id="certificateId" hidden="false" />
+					<column id="issuer" hidden="false"/>
+				</securityX509AlgorithmTable>
+				<chart>
+					<series id="x509CertificateCount" />
+				</chart>
+			</state>
+		</page>
+
 		<page factory="org.openjdk.jmc.flightrecorder.ui.threaddumps" id="org.openjdk.jmc.flightrecorder.ui.threaddumps">
 		    <state>
 		        <sash weights="2,3" horizontal="true"/>

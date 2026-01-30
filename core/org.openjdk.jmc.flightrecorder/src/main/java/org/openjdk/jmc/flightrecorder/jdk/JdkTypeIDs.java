@@ -111,6 +111,8 @@ public final class JdkTypeIDs {
 
 	public static final String ZGC_ALLOCATION_STALL = PREFIX + "ZAllocationStall";
 
+	public static final String X509_CERTIFICATE = PREFIX + "X509Certificate";
+
 	public static final String THROWABLES_STATISTICS = PREFIX + "ExceptionStatistics";
 	public static final String ERRORS_THROWN = PREFIX + "JavaErrorThrow";
 	/*

@@ -49,6 +49,7 @@ org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ErrorRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.ExceptionRule
 org.openjdk.jmc.flightrecorder.rules.jdk.exceptions.FatalErrorRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.ClassLeakingRule
+org.openjdk.jmc.flightrecorder.rules.jdk.general.CryptoSecurityRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DMSIncidentRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DebugNonSafepointsRule
 org.openjdk.jmc.flightrecorder.rules.jdk.general.DiscouragedGcOptionsRule

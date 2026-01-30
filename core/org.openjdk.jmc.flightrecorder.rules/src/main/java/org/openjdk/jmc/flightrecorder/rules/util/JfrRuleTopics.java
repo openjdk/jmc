@@ -64,5 +64,6 @@ public final class JfrRuleTopics {
 	public static final String THREAD_DUMPS = "thread_dumps"; //$NON-NLS-1$
 	public static final String THREADS = "threads"; //$NON-NLS-1$
 	public static final String TLAB = "tlab"; //$NON-NLS-1$
+	public static final String SECURITY = "security"; //$NON-NLS-1$
 	public static final String VM_OPERATIONS = "vm_operations"; //$NON-NLS-1$
 }
