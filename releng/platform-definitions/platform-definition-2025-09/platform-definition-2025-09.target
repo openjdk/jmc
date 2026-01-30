@@ -85,6 +85,8 @@
             <unit id="org.eclipse.ui.themes" version="1.2.2900.v20250806-1940"/>
             <unit id="org.eclipse.sdk" version="4.37.0.v20250905-0730"/>
             <unit id="org.eclipse.osgi.services" version="3.12.300.v20250707-1221"/>
+            <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
+            <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
             <repository location="https://download.eclipse.org/releases/2025-09/" />
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
