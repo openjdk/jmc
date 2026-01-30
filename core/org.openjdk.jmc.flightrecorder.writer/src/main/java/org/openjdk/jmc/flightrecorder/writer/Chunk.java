@@ -33,17 +33,27 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 /** A representation of JFR chunk - self contained set of JFR data. */
 final class Chunk {
-	private final LEB128Writer writer = LEB128Writer.getInstance();
+	private final LEB128Writer writer;
+	private final ThreadMmapManager mmapManager;
+	private final long threadId;
 	private final long startTicks;
 	private final long startNanos;
 
 	Chunk() {
+		this(LEB128Writer.getInstance(), null);
+	}
+
+	Chunk(LEB128Writer writer, ThreadMmapManager mmapManager) {
+		this.writer = writer;
+		this.mmapManager = mmapManager;
+		this.threadId = Thread.currentThread().getId();
 		this.startTicks = System.nanoTime();
 		this.startNanos = System.currentTimeMillis() * 1_000_000L;
 	}
@@ -93,10 +103,6 @@ final class Chunk {
 			throw new IllegalArgumentException();
 		}
 
-		if (value == null && builtin != TypesImpl.Builtin.STRING) {
-			// skip the non-string built-in values
-			return;
-		}
 		switch (builtin) {
 		case STRING: {
 			if (value == null) {
@@ -114,35 +120,35 @@ final class Chunk {
 			break;
 		}
 		case BYTE: {
-			writer.writeByte((byte) value);
+			writer.writeByte(value == null ? (byte) 0 : (byte) value);
 			break;
 		}
 		case CHAR: {
-			writer.writeChar((char) value);
+			writer.writeChar(value == null ? (char) 0 : (char) value);
 			break;
 		}
 		case SHORT: {
-			writer.writeShort((short) value);
+			writer.writeShort(value == null ? (short) 0 : (short) value);
 			break;
 		}
 		case INT: {
-			writer.writeInt((int) value);
+			writer.writeInt(value == null ? 0 : (int) value);
 			break;
 		}
 		case LONG: {
-			writer.writeLong((long) value);
+			writer.writeLong(value == null ? 0L : (long) value);
 			break;
 		}
 		case FLOAT: {
-			writer.writeFloat((float) value);
+			writer.writeFloat(value == null ? 0.0f : (float) value);
 			break;
 		}
 		case DOUBLE: {
-			writer.writeDouble((double) value);
+			writer.writeDouble(value == null ? 0.0 : (double) value);
 			break;
 		}
 		case BOOLEAN: {
-			writer.writeBoolean((boolean) value);
+			writer.writeBoolean(value != null && (boolean) value);
 			break;
 		}
 		default: {
@@ -156,13 +162,44 @@ final class Chunk {
 			throw new IllegalArgumentException();
 		}
 
+		// Serialize event to temporary heap-based buffer
 		LEB128Writer eventWriter = LEB128Writer.getInstance();
 		eventWriter.writeLong(event.getType().getId());
 		for (TypedFieldValueImpl fieldValue : event.getFieldValues()) {
 			writeTypedValue(eventWriter, fieldValue.getValue());
 		}
 
-		writer.writeInt(eventWriter.length()) // write event size
+		int eventSize = eventWriter.length();
+
+		// Check if active buffer has space (size prefix + event data)
+		// LEB128 encoding uses at most 5 bytes for int32
+		int requiredSpace = 5 + eventSize;
+
+		// Get current active writer (may change after rotation)
+		LEB128Writer activeWriter;
+		if (mmapManager != null) {
+			try {
+				// Always get the current active writer in mmap mode
+				activeWriter = mmapManager.getActiveWriter(threadId);
+				if (activeWriter instanceof LEB128MappedWriter) {
+					LEB128MappedWriter mmapWriter = (LEB128MappedWriter) activeWriter;
+					if (!mmapWriter.canFit(requiredSpace)) {
+						// Trigger rotation - swap buffers and flush inactive in background
+						mmapManager.rotateChunk(threadId);
+						// Get the NEW active writer after rotation
+						activeWriter = mmapManager.getActiveWriter(threadId);
+					}
+				}
+			} catch (IOException e) {
+				throw new RuntimeException("Chunk rotation failed for thread " + threadId, e);
+			}
+		} else {
+			// Heap mode - use the fixed writer
+			activeWriter = writer;
+		}
+
+		// Write event to active writer (might be rotated)
+		activeWriter.writeInt(eventSize) // write event size
 				.writeBytes(eventWriter.export());
 	}
 
