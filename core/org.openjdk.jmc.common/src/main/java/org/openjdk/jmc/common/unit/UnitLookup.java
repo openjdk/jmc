@@ -435,9 +435,12 @@ final public class UnitLookup {
 	 *            the string representation of the number
 	 * @return a Number object (Integer, Long, or Double)
 	 * @throws NumberFormatException
-	 *             if the string cannot be parsed as a number
+	 *             if the string is empty, blank, or cannot be parsed as a number
 	 */
 	private static Number parseNumber(String numberStr) {
+		if (numberStr == null || numberStr.trim().isEmpty()) {
+			throw new NumberFormatException("Cannot parse empty or blank string as number");
+		}
 		try {
 			// Try to parse as Integer first
 			return Integer.parseInt(numberStr);
@@ -509,6 +512,9 @@ final public class UnitLookup {
 			@Override
 			public Long parsePersisted(String persistedValue) {
 				checkNull(persistedValue);
+				if (persistedValue.trim().isEmpty()) {
+					throw new NumberFormatException("Cannot parse empty string as long");
+				}
 				return Long.parseLong(persistedValue);
 			}
 
@@ -521,6 +527,9 @@ final public class UnitLookup {
 			@Override
 			public Long parseInteractive(String interactiveValue) {
 				checkNull(interactiveValue);
+				if (interactiveValue.trim().isEmpty()) {
+					throw new NumberFormatException("Cannot parse empty string as long");
+				}
 				return Long.parseLong(interactiveValue);
 			}
 		};
