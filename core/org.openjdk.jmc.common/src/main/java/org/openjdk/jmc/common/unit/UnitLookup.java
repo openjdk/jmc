@@ -428,12 +428,12 @@ final public class UnitLookup {
 
 	/**
 	 * Parses a string representation of a number into a Number object. This method attempts to
-	 * parse the string as an Integer, Long, or Double, in that order, returning the most
-	 * appropriate type.
+	 * parse the string as an Long or Double, returning the most appropriate type while ensuring
+	 * type compatibility for comparisons.
 	 *
 	 * @param numberStr
 	 *            the string representation of the number
-	 * @return a Number object (Integer, Long, or Double)
+	 * @return a Number object (Long for integers, Double for decimals)
 	 * @throws NumberFormatException
 	 *             if the string is empty, blank, or cannot be parsed as a number
 	 */
@@ -442,17 +442,12 @@ final public class UnitLookup {
 			throw new NumberFormatException("Cannot parse empty or blank string as number");
 		}
 		try {
-			// Try to parse as Integer first
-			return Integer.parseInt(numberStr);
-		} catch (NumberFormatException eInt) {
-			try {
-				// Try to parse as Long
-				return Long.parseLong(numberStr);
-			} catch (NumberFormatException eLong) {
-				// Finally, try to parse as Double
-				// This handles decimal numbers and scientific notation
-				return Double.parseDouble(numberStr);
-			}
+			// Try to parse as Long first (handles all integers)
+			return Long.parseLong(numberStr);
+		} catch (NumberFormatException eLong) {
+			// If not a long, try to parse as Double
+			// This handles decimal numbers and scientific notation
+			return Double.parseDouble(numberStr);
 		}
 	}
 
