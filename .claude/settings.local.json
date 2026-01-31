@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:readmedium.com)",
+      "WebFetch(domain:spring.io)",
+      "WebFetch(domain:alexanderobregon.substack.com)",
+      "WebFetch(domain:bugs.openjdk.org)",
+      "Bash(git log:*)",
+      "WebFetch(domain:wiki.openjdk.org)",
+      "Bash(curl:*)",
+      "Bash(mvn clean compile:*)",
+      "Bash(./build.sh compile:*)",
+      "Bash(java:*)",
+      "Bash(mvn -pl core/org.openjdk.jmc.common clean compile:*)",
+      "Bash(mvn spotless:apply:*)",
+      "Bash(./build.sh:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(mvn:*)",
+      "Bash(javap:*)",
+      "Bash(javac:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(while read hash msg)",
+      "Bash(do if git show $hash:.gitignore)",
+      "Bash(then echo \"$hash $msg\")",
+      "Bash(break)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
+}

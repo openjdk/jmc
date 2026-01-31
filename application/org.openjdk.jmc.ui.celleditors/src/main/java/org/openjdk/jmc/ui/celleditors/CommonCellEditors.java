@@ -111,6 +111,10 @@ public class CommonCellEditors {
 				errorDecorator.setDescriptionText(ex.getLocalizedMessage());
 				errorDecorator.show();
 				setValueValid(false);
+			} catch (IllegalArgumentException ex) {
+				errorDecorator.setDescriptionText(ex.getLocalizedMessage());
+				errorDecorator.show();
+				setValueValid(false);
 			}
 		}
 
