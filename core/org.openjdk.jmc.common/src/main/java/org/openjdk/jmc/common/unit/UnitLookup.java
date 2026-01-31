@@ -426,15 +426,104 @@ final public class UnitLookup {
 		return String.format("0x%08X", quantity.longValue());
 	}
 
+	/**
+	 * Parses a string representation of a number into a Number object. This method attempts to
+	 * parse the string as an Integer, Long, or Double, in that order, returning the most
+	 * appropriate type.
+	 *
+	 * @param numberStr
+	 *            the string representation of the number
+	 * @return a Number object (Integer, Long, or Double)
+	 * @throws NumberFormatException
+	 *             if the string cannot be parsed as a number
+	 */
+	private static Number parseNumber(String numberStr) {
+		try {
+			// Try to parse as Integer first
+			return Integer.parseInt(numberStr);
+		} catch (NumberFormatException eInt) {
+			try {
+				// Try to parse as Long
+				return Long.parseLong(numberStr);
+			} catch (NumberFormatException eLong) {
+				// Finally, try to parse as Double
+				// This handles decimal numbers and scientific notation
+				return Double.parseDouble(numberStr);
+			}
+		}
+	}
+
 	// FIXME: Rename to createPrimitiveNumber? Remove?
 	private static ContentType<Number> createRawNumber() {
-		ContentType<Number> contentType = new ContentType<>("raw number");
+		ContentType<Number> contentType = new LeafContentType<Number>("raw number") {
+
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				return parseNumber(persistedValue);
+			}
+
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				return parseNumber(interactiveValue);
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
 
 	private static ContentType<Long> createRawLong() {
-		ContentType<Long> contentType = new ContentType<>("raw long");
+		ContentType<Long> contentType = new LeafContentType<Long>("raw long") {
+
+			@Override
+			public boolean validate(Long value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				return Long.parseLong(persistedValue);
+			}
+
+			@Override
+			public String interactiveFormat(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				return Long.parseLong(interactiveValue);
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
@@ -569,7 +658,38 @@ final public class UnitLookup {
 	}
 
 	private static ContentType<Number> createCount() {
-		ContentType<Number> contentType = new ContentType<>("count");
+		ContentType<Number> contentType = new LeafContentType<Number>("count") {
+
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				return parseNumber(persistedValue);
+			}
+
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				return parseNumber(interactiveValue);
+			}
+		};
 //		contentType.addDisplayUnit(
 //				new DisplayUnit(contentType, DisplayUnit.ENGINEERING_NOTATION_IDENTIFIER, "Engineering Notation"));
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
@@ -580,13 +700,75 @@ final public class UnitLookup {
 	}
 
 	private static ContentType<Number> createIdentifier() {
-		ContentType<Number> contentType = new ContentType<>("identifier");
+		ContentType<Number> contentType = new LeafContentType<Number>("identifier") {
+
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				return parseNumber(persistedValue);
+			}
+
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				return parseNumber(interactiveValue);
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
 
 	private static ContentType<Number> createIndex() {
-		ContentType<Number> contentType = new ContentType<>("index");
+		ContentType<Number> contentType = new LeafContentType<Number>("index") {
+
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				return parseNumber(persistedValue);
+			}
+
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				return parseNumber(interactiveValue);
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
