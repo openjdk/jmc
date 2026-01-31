@@ -435,12 +435,9 @@ final public class UnitLookup {
 	 *            the string representation of the number
 	 * @return a Number object (Long for integers, Double for decimals)
 	 * @throws NumberFormatException
-	 *             if the string is empty, blank, or cannot be parsed as a number
+	 *             if the string cannot be parsed as a number
 	 */
 	private static Number parseNumber(String numberStr) {
-		if (numberStr == null || numberStr.trim().isEmpty()) {
-			throw new NumberFormatException("Cannot parse empty or blank string as number");
-		}
 		try {
 			// Try to parse as Long first (handles all integers)
 			return Long.parseLong(numberStr);
@@ -470,7 +467,13 @@ final public class UnitLookup {
 			@Override
 			public Number parsePersisted(String persistedValue) {
 				checkNull(persistedValue);
-				return parseNumber(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
 			}
 
 			@Override
@@ -482,7 +485,13 @@ final public class UnitLookup {
 			@Override
 			public Number parseInteractive(String interactiveValue) {
 				checkNull(interactiveValue);
-				return parseNumber(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
 			}
 		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
@@ -507,10 +516,11 @@ final public class UnitLookup {
 			@Override
 			public Long parsePersisted(String persistedValue) {
 				checkNull(persistedValue);
-				if (persistedValue.trim().isEmpty()) {
-					throw new NumberFormatException("Cannot parse empty string as long");
+				try {
+					return Long.parseLong(persistedValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a long");
 				}
-				return Long.parseLong(persistedValue);
 			}
 
 			@Override
@@ -522,10 +532,11 @@ final public class UnitLookup {
 			@Override
 			public Long parseInteractive(String interactiveValue) {
 				checkNull(interactiveValue);
-				if (interactiveValue.trim().isEmpty()) {
-					throw new NumberFormatException("Cannot parse empty string as long");
+				try {
+					return Long.parseLong(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a long");
 				}
-				return Long.parseLong(interactiveValue);
 			}
 		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
@@ -679,7 +690,13 @@ final public class UnitLookup {
 			@Override
 			public Number parsePersisted(String persistedValue) {
 				checkNull(persistedValue);
-				return parseNumber(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
 			}
 
 			@Override
@@ -691,7 +708,13 @@ final public class UnitLookup {
 			@Override
 			public Number parseInteractive(String interactiveValue) {
 				checkNull(interactiveValue);
-				return parseNumber(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
 			}
 		};
 //		contentType.addDisplayUnit(
@@ -721,7 +744,13 @@ final public class UnitLookup {
 			@Override
 			public Number parsePersisted(String persistedValue) {
 				checkNull(persistedValue);
-				return parseNumber(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
 			}
 
 			@Override
@@ -733,7 +762,13 @@ final public class UnitLookup {
 			@Override
 			public Number parseInteractive(String interactiveValue) {
 				checkNull(interactiveValue);
-				return parseNumber(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
 			}
 		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
@@ -758,7 +793,13 @@ final public class UnitLookup {
 			@Override
 			public Number parsePersisted(String persistedValue) {
 				checkNull(persistedValue);
-				return parseNumber(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
 			}
 
 			@Override
@@ -770,7 +811,13 @@ final public class UnitLookup {
 			@Override
 			public Number parseInteractive(String interactiveValue) {
 				checkNull(interactiveValue);
-				return parseNumber(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					// Use a simple message instead of QuantityConversionException.unparsable
+					// since Number is not Comparable<Number>
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
 			}
 		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
