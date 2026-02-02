@@ -33,6 +33,7 @@
 package org.openjdk.jmc.common.collection;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator wrapper that allows peeking at the next element.
@@ -51,6 +52,9 @@ public class PeekingIterator<T> implements Iterator<T> {
 
 	public T peek() {
 		if (!this.hasPeeked) {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			this.hasPeeked = true;
 			this.peekedElement = this.sourceIterator.next();
 		}
@@ -60,6 +64,9 @@ public class PeekingIterator<T> implements Iterator<T> {
 	@Override
 	public T next() {
 		if (!this.hasPeeked) {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			return this.sourceIterator.next();
 		}
 		this.hasPeeked = false;
