@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,11 +60,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.ContentType;
@@ -540,19 +544,22 @@ class ItemChart {
 							description);
 					for (IAttribute<?> attribute : attributes) {
 						// TODO: something other than time on x-axis?
-						Iterator<IItemIterable> chartItemsWithAttributeSomeType = itemsToChart
-								.apply(ItemFilters.hasAttribute(attribute)).iterator();
-						if (chartItemsWithAttributeSomeType.hasNext()
-								&& attribute.getContentType() instanceof LinearKindOfQuantity) {
-							IItemIterable is = chartItemsWithAttributeSomeType.next();
-							if (chartItemsWithAttributeSomeType.hasNext()) {
-								// FIXME: JMC-4520 - Add support for multiple item iterables
-								FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-										"Only charting a subset of the events!"); //$NON-NLS-1$
+						if (attribute.getContentType() instanceof LinearKindOfQuantity) {
+							IItemCollection itemsWithAttributeSomeType = itemsToChart
+									.apply(ItemFilters.hasAttribute(attribute));
+							if (itemsWithAttributeSomeType.hasItems()) {
+								List<Iterator<IItem>> iterators = new ArrayList<>();
+								for (IItemIterable ii : itemsWithAttributeSomeType) {
+									iterators.add(ii.iterator());
+								}
+								IType<IItem> type = itemsWithAttributeSomeType.iterator().next().getType();
+								IMemberAccessor<IQuantity, IItem> accessor = JfrAttributes.END_TIME.getAccessor(type);
+								Comparator<IItem> comparator = Comparator.comparing(item -> accessor.getMember(item));
+								@SuppressWarnings("unchecked")
+								IAttribute<IQuantity> qAttribute = (IAttribute<IQuantity>) attribute;
+								DataPageToolkit.addEndTimeLine(xyRenderer,
+										IteratorToolkit.mergedSorting(iterators, comparator), type, qAttribute, fill);
 							}
-							@SuppressWarnings("unchecked")
-							IAttribute<IQuantity> qAttribute = (IAttribute<IQuantity>) attribute;
-							DataPageToolkit.addEndTimeLine(xyRenderer, is.iterator(), is.getType(), qAttribute, fill);
 						}
 					}
 					rows.add(new ItemRow(name, description, xyRenderer, itemsToChart));

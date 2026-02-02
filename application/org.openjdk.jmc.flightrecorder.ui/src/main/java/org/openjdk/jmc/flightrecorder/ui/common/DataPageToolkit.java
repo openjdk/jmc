@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -98,6 +98,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.ICanonicalAccessorFactory;
@@ -642,13 +643,16 @@ public class DataPageToolkit {
 
 	public static boolean addEndTimeLines(
 		XYDataRenderer renderer, IItemCollection items, boolean fill, Stream<IAttribute<IQuantity>> yAttributes) {
-		// FIXME: JMC-4520 - Handle multiple item iterables
-		Iterator<IItemIterable> ii = items.iterator();
-		if (ii.hasNext()) {
-			IItemIterable itemStream = ii.next();
-			IType<IItem> type = itemStream.getType();
-			// FIXME: A better way to ensure sorting by endTime
-			return yAttributes.peek(a -> addEndTimeLine(renderer, itemStream.iterator(), type, a, fill))
+		if (items.hasItems()) {
+			List<Iterator<IItem>> iterators = new ArrayList<>();
+			for (IItemIterable ii : items) {
+				iterators.add(ii.iterator());
+			}
+			IType<IItem> type = items.iterator().next().getType();
+			IMemberAccessor<IQuantity, IItem> accessor = JfrAttributes.END_TIME.getAccessor(type);
+			Comparator<IItem> comparator = Comparator.comparing(item -> accessor.getMember(item));
+			return yAttributes.peek(
+					a -> addEndTimeLine(renderer, IteratorToolkit.mergedSorting(iterators, comparator), type, a, fill))
 					.mapToLong(a -> 1L).sum() > 0;
 		}
 		return false;
