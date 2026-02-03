@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -165,18 +165,18 @@ public class SecurityPage extends AbstractDataPage {
 				IMemberAccessor<? extends String, IItem> iconAccessor = (IMemberAccessor<? extends String, IItem>) JdkAttributes.CRYPTO_ICON
 						.getAccessor(iItem.getType());
 
-				ImageDescriptor descriptor;
+				Image iconImage;
 				if (iconAccessor != null) {
 					String iconText = iconAccessor.getMember(iItem);
 					if (iconText.contains("ACTION"))
-						descriptor = UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_CRYPTO_ACTION);
+						iconImage = UIPlugin.getDefault().getImage(UIPlugin.ICON_CRYPTO_ACTION);
 					else if (iconText.contains("ATTENTION"))
-						descriptor = UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_CRYPTO_ATTENTION);
+						iconImage = UIPlugin.getDefault().getImage(UIPlugin.ICON_CRYPTO_ATTENTION);
 					else
-						descriptor = UIPlugin.getDefault().getMCImageDescriptor(UIPlugin.ICON_CRYPTO_OK);
+						iconImage = UIPlugin.getDefault().getImage(UIPlugin.ICON_CRYPTO_OK);
 
-					if (descriptor != null) {
-						return descriptor.createImage();
+					if (iconImage != null) {
+						return iconImage;
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -361,6 +361,11 @@ public class UIPlugin extends MCAbstractUIPlugin {
 		registerImage(registry, ICON_RESET_TO_DEFAULTS, ICON_RESET_TO_DEFAULTS);
 
 		registerImage(registry, ICON_LOCK_TREE, ICON_LOCK_TREE);
+
+		//Crypto icons
+		registerImage(registry, ICON_CRYPTO_ACTION, ICON_CRYPTO_ACTION);
+		registerImage(registry, ICON_CRYPTO_ATTENTION, ICON_CRYPTO_ATTENTION);
+		registerImage(registry, ICON_CRYPTO_OK, ICON_CRYPTO_OK);
 
 	}
 

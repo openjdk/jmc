@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022, 2025, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -88,6 +88,7 @@ public class Messages {
 	public static final String Crypto_ACTION = "Crypto_ACTION"; //$NON-NLS-1$
 	public static final String Crypto_ATTENTION = "Crypto_ATTENTION"; //$NON-NLS-1$
 	public static final String Crypto_OK = "Crypto_OK"; //$NON-NLS-1$
+	public static final String Crypto_OK_DESC = "Crypto_OK_DESC"; //$NON-NLS-1$
 	public static final String Crypto_SHA1 = "Crypto_SHA1"; //$NON-NLS-1$
 	public static final String Crypto_MD2 = "Crypto_MD2"; //$NON-NLS-1$
 	public static final String Crypto_MD5 = "Crypto_MD5"; //$NON-NLS-1$

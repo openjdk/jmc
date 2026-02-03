@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,11 +43,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This utility class will be utilized to decide whether Action/Attention is required related to
+ * cryptography algorithm used based on different conditions.
+ */
 public class CryptoUtil {
 
 	private static final String ACTION = Messages.getString(Messages.Crypto_ACTION);
 	private static final String ATTENTION = Messages.getString(Messages.Crypto_ATTENTION);
 	private static final String OK = Messages.getString(Messages.Crypto_OK);
+	private static final int RSA_MINIMUM_KEY_SIZE = 1024;
+	private static final int RSA_RECOMMENDED_KEY_SIZE = 2048;
+	private static final int DSA_MINIMUM_KEY_SIZE = 1024;
+	private static final int DSA_RECOMMENDED_KEY_SIZE = 2048;
+	private static final int EC_MINIMUM_KEY_SIZE = 224;
 
 	public static String getCryptoRemark(
 		String signatureAlgorithm, String keyType, Long keyLength, IQuantity expiryDate) {
@@ -63,26 +72,37 @@ public class CryptoUtil {
 		}
 
 		if (keyType.contains("RSA")) {
-			if (keyLength < 1024) {
-				remark = ACTION.concat(Messages.getString(Messages.Crypto_RSA_INSUFFICIENT_KEY_SIZE)).concat(remark);
-			} else if (keyLength == 1024) {
+			if (keyLength < RSA_MINIMUM_KEY_SIZE) {
+				remark = ACTION
+						.concat(MessageFormat.format(Messages.getString(Messages.Crypto_RSA_INSUFFICIENT_KEY_SIZE),
+								keyLength, RSA_MINIMUM_KEY_SIZE))
+						.concat(remark);
+			} else if (keyLength == RSA_MINIMUM_KEY_SIZE) {
 				remark = ACTION.concat(Messages.getString(Messages.Crypto_RSA_KEY_SIZE_1024)).concat(remark);
-			} else if (keyLength < 2048) {
-				remark = remark.concat(ATTENTION).concat(Messages.getString(Messages.Crypto_RSA_KEY_SIZE_LESS_2048));
+			} else if (keyLength < RSA_RECOMMENDED_KEY_SIZE) {
+				remark = remark.concat(ATTENTION).concat(MessageFormat
+						.format(Messages.getString(Messages.Crypto_RSA_KEY_SIZE_LESS_2048), RSA_RECOMMENDED_KEY_SIZE));
 			}
 		}
 
 		if (keyType.contains("DSA")) {
-			if (keyLength < 1024) {
-				remark = ACTION.concat(Messages.getString(Messages.Crypto_DSA_INSUFFICIENT_KEY_SIZE)).concat(remark);
-			} else if (keyLength < 2048) {
-				remark = remark.concat(ATTENTION).concat(Messages.getString(Messages.Crypto_DSA_KEY_SIZE_LESS_2048));
+			if (keyLength < DSA_MINIMUM_KEY_SIZE) {
+				remark = ACTION
+						.concat(MessageFormat.format(Messages.getString(Messages.Crypto_DSA_INSUFFICIENT_KEY_SIZE),
+								keyLength, DSA_MINIMUM_KEY_SIZE))
+						.concat(remark);
+			} else if (keyLength < DSA_RECOMMENDED_KEY_SIZE) {
+				remark = remark.concat(ATTENTION).concat(MessageFormat
+						.format(Messages.getString(Messages.Crypto_DSA_KEY_SIZE_LESS_2048), DSA_RECOMMENDED_KEY_SIZE));
 			}
 		}
 
 		if (keyType.contains("EC")) {
-			if (keyLength < 224) {
-				remark = ACTION.concat(Messages.getString(Messages.Crypto_EC_INSUFFICIENT_KEY_SIZE)).concat(remark);
+			if (keyLength < EC_MINIMUM_KEY_SIZE) {
+				remark = ACTION
+						.concat(MessageFormat.format(Messages.getString(Messages.Crypto_EC_INSUFFICIENT_KEY_SIZE),
+								keyLength, EC_MINIMUM_KEY_SIZE))
+						.concat(remark);
 			}
 		}
 
@@ -122,25 +142,25 @@ public class CryptoUtil {
 		}
 
 		if (keyType.contains("RSA")) {
-			if (keyLength < 1024) {
+			if (keyLength < RSA_MINIMUM_KEY_SIZE) {
 				icon = "ACTION".concat(icon);
-			} else if (keyLength == 1024) {
+			} else if (keyLength == RSA_MINIMUM_KEY_SIZE) {
 				icon = "ACTION".concat(icon);
-			} else if (keyLength < 2048) {
+			} else if (keyLength < RSA_RECOMMENDED_KEY_SIZE) {
 				icon = icon.concat("ATTENTION");
 			}
 		}
 
 		if (keyType.contains("DSA")) {
-			if (keyLength < 1024) {
+			if (keyLength < DSA_MINIMUM_KEY_SIZE) {
 				icon = "ACTION".concat(icon);
-			} else if (keyLength < 2048) {
+			} else if (keyLength < DSA_RECOMMENDED_KEY_SIZE) {
 				icon = icon.concat("ATTENTION");
 			}
 		}
 
 		if (keyType.contains("EC")) {
-			if (keyLength < 224) {
+			if (keyLength < EC_MINIMUM_KEY_SIZE) {
 				icon = "ACTION".concat(icon);
 			}
 		}
@@ -183,32 +203,38 @@ public class CryptoUtil {
 		}
 
 		if (keyType.contains("RSA")) {
-			if (keyLength < 1024) {
+			if (keyLength < RSA_MINIMUM_KEY_SIZE) {
 				remarks.add(Map.entry(ACTION,
-						strCertificateId.concat(Messages.getString(Messages.Crypto_RSA_INSUFFICIENT_KEY_SIZE))));
-			} else if (keyLength == 1024) {
+						strCertificateId.concat(
+								MessageFormat.format(Messages.getString(Messages.Crypto_RSA_INSUFFICIENT_KEY_SIZE),
+										keyLength, RSA_MINIMUM_KEY_SIZE))));
+			} else if (keyLength == RSA_MINIMUM_KEY_SIZE) {
 				remarks.add(Map.entry(ACTION,
 						strCertificateId.concat(Messages.getString(Messages.Crypto_RSA_KEY_SIZE_1024))));
-			} else if (keyLength < 2048) {
-				remarks.add(Map.entry(ATTENTION,
-						strCertificateId.concat(Messages.getString(Messages.Crypto_RSA_KEY_SIZE_LESS_2048))));
+			} else if (keyLength < RSA_RECOMMENDED_KEY_SIZE) {
+				remarks.add(Map.entry(ATTENTION, strCertificateId.concat(MessageFormat.format(
+						Messages.getString(Messages.Crypto_RSA_KEY_SIZE_LESS_2048), RSA_RECOMMENDED_KEY_SIZE))));
 			}
 		}
 
 		if (keyType.contains("DSA")) {
-			if (keyLength < 1024) {
+			if (keyLength < DSA_MINIMUM_KEY_SIZE) {
 				remarks.add(Map.entry(ACTION,
-						strCertificateId.concat(Messages.getString(Messages.Crypto_DSA_INSUFFICIENT_KEY_SIZE))));
-			} else if (keyLength < 2048) {
-				remarks.add(Map.entry(ATTENTION,
-						strCertificateId.concat(Messages.getString(Messages.Crypto_DSA_KEY_SIZE_LESS_2048))));
+						strCertificateId.concat(
+								MessageFormat.format(Messages.getString(Messages.Crypto_DSA_INSUFFICIENT_KEY_SIZE),
+										keyLength, DSA_MINIMUM_KEY_SIZE))));
+			} else if (keyLength < DSA_RECOMMENDED_KEY_SIZE) {
+				remarks.add(Map.entry(ATTENTION, strCertificateId.concat(MessageFormat.format(
+						Messages.getString(Messages.Crypto_DSA_KEY_SIZE_LESS_2048), DSA_RECOMMENDED_KEY_SIZE))));
 			}
 		}
 
 		if (keyType.contains("EC")) {
-			if (keyLength < 224) {
+			if (keyLength < EC_MINIMUM_KEY_SIZE) {
 				remarks.add(Map.entry(ACTION,
-						strCertificateId.concat(Messages.getString(Messages.Crypto_EC_INSUFFICIENT_KEY_SIZE))));
+						strCertificateId.concat(
+								MessageFormat.format(Messages.getString(Messages.Crypto_EC_INSUFFICIENT_KEY_SIZE),
+										keyLength, EC_MINIMUM_KEY_SIZE))));
 			}
 		}
 
@@ -228,7 +254,7 @@ public class CryptoUtil {
 		}
 
 		if (remarks.isEmpty()) {
-			remarks.add(Map.entry(OK, "Everything is fine"));
+			remarks.add(Map.entry(OK, Messages.getString(Messages.Crypto_OK_DESC)));
 		}
 
 		return convertRemarksToFormattedString(remarks);
@@ -245,7 +271,7 @@ public class CryptoUtil {
 
 		for (Map.Entry<String, List<String>> entry : groupedMap.entrySet()) {
 			for (String value : entry.getValue()) {
-				if (value.contains("Everything is fine"))
+				if (value.contains(Messages.getString(Messages.Crypto_OK_DESC)))
 					continue;
 				result.append("   • ").append(value).append("\n");
 			}
