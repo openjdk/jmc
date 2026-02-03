@@ -198,7 +198,7 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 
 	@Override
 	public void showSelection(IFlavoredSelection selection) {
-		getSite().getSelectionProvider().setSelection(selection);
+		getSite().getSelectionProvider().setSelection(new StructuredSelection(selection));
 	}
 
 	@Override
