@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -81,6 +82,21 @@ public class ItemList {
 			// Requires update of all column id references, e.g. in the pages xml.
 			addColumn(a.getIdentifier(), a.getName(), a.getDescription(),
 					a.getContentType() instanceof LinearKindOfQuantity, accessor);
+		}
+
+		public void addColumn(IAttribute<?> a, ColumnLabelProvider iconProvider) {
+			@SuppressWarnings("deprecation")
+			IMemberAccessor<?, IItem> accessor = ItemToolkit.accessor(a);
+			addColumn(a.getIdentifier(), a.getName(), a.getDescription(),
+					a.getContentType() instanceof LinearKindOfQuantity, accessor, iconProvider);
+		}
+
+		private void addColumn(
+			String columnId, String name, String description, boolean right, IMemberAccessor<?, IItem> accessor,
+			ColumnLabelProvider iconProvider) {
+			columns.add(new ColumnBuilder(name, columnId, accessor, iconProvider).description(description)
+					.style(right ? SWT.RIGHT : SWT.NONE).build());
+
 		}
 
 		public void addColumn(

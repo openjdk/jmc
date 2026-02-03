@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -110,6 +110,8 @@ public final class JdkTypeIDs {
 	public static final String CONCURRENT_MODE_FAILURE = PREFIX + "ConcurrentModeFailure";
 
 	public static final String ZGC_ALLOCATION_STALL = PREFIX + "ZAllocationStall";
+
+	public static final String X509_CERTIFICATE = PREFIX + "X509Certificate";
 
 	public static final String THROWABLES_STATISTICS = PREFIX + "ExceptionStatistics";
 	public static final String ERRORS_THROWN = PREFIX + "JavaErrorThrow";

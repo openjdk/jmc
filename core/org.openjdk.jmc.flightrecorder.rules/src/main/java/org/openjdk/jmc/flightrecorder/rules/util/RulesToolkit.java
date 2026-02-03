@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -285,6 +285,12 @@ public class RulesToolkit {
 		return items.getAggregate(
 				(IAggregator<String, ?>) Aggregators.filter(Aggregators.distinctAsString(typeId, attribute),
 						ItemFilters.and(ItemFilters.type(typeId), ItemFilters.matches(attribute, regexp))));
+	}
+
+	public static String findAttribute(String typeId, IItemCollection items, IAttribute<String> attribute) {
+
+		return items.getAggregate((IAggregator<String, ?>) Aggregators
+				.filter(Aggregators.distinctAttribute(typeId, attribute), ItemFilters.and(ItemFilters.type(typeId))));
 	}
 
 	/**
