@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -475,9 +475,6 @@ public class Messages extends NLS {
 	public static String PREFERENCES_RULES_CONFIGURE_SELECTED;
 	public static String PREFERENCES_SHOW_MONITORING_WARNING_TEXT;
 	public static String PREFERENCES_STACKTRACE_SHOW_HIDDEN_FRAMES;
-	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_INVALID;
-	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_TEXT;
-	public static String PREFERENCES_WEBSOCKET_SERVER_PORT_TOOLTIP;
 	public static String ProcessesPage_AGGR_CONCURRENT_PROCESSES;
 	public static String ProcessesPage_AGGR_CONCURRENT_PROCESSES_DESC;
 	public static String ProcessesPage_AGGR_FIRST_SAMPLE;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -241,18 +241,18 @@ public class DefaultConnectionHandle implements IConnectionHandle {
 
 	private static class CleanupAction implements Runnable {
 		private final Map<Class<?>, Object> services;
-		private final RJMXConnection connection;
 
 		CleanupAction(Map<Class<?>, Object> services, RJMXConnection connection) {
 			this.services = new LinkedHashMap<>(services);
-			this.connection = connection;
+			// Note: We intentionally do NOT store or close the RJMXConnection here.
+			// The connection is shared among multiple DefaultConnectionHandle instances
+			// and is owned by ServerHandle, which is responsible for closing it.
 		}
 
 		@Override
 		public void run() {
 			try {
 				shutdownServicesQuietly(services);
-				connection.close();
 			} catch (Exception e) {
 				// Ignore all exceptions during cleanup
 			}
