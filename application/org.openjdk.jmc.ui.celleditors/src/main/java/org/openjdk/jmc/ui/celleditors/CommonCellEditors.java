@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -108,6 +108,10 @@ public class CommonCellEditors {
 				setValueValid(true);
 				errorDecorator.hide();
 			} catch (QuantityConversionException ex) {
+				errorDecorator.setDescriptionText(ex.getLocalizedMessage());
+				errorDecorator.show();
+				setValueValid(false);
+			} catch (IllegalArgumentException ex) {
 				errorDecorator.setDescriptionText(ex.getLocalizedMessage());
 				errorDecorator.show();
 				setValueValid(false);
