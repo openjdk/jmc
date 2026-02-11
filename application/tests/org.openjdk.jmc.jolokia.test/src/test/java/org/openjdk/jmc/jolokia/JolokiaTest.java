@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2024, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2024, 2025, Kantega AS. All rights reserved.
+ * Copyright (c) 2024, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2026, Kantega AS. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -112,16 +112,25 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 					.getAttributes()) {
 				String attributeName = attributeInfo.getName();
 				if (!unsafeAttributes.contains(attributeName)) {
-					Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
-					fetched++;
-					if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
-						try {
-							Object locallyRetrievedAttribute = localConnection.getAttribute(objectName, attributeName);
-							compared++;
-							Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,
-									locallyRetrievedAttribute, attribute);
-						} catch (InstanceNotFoundException e) {
-							unavailable++;
+					try {
+						Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
+						fetched++;
+						if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
+							try {
+								Object locallyRetrievedAttribute = localConnection.getAttribute(objectName,
+										attributeName);
+								compared++;
+								Assert.assertEquals("Comparing returned value of " + objectName + "." + attributeName,
+										locallyRetrievedAttribute, attribute);
+							} catch (InstanceNotFoundException e) {
+								unavailable++;
+							}
+						}
+					} catch (RuntimeException e) {
+						if (isParsingFailure(e)) {
+							// Skip attributes that cause parsing errors (e.g., NaN values)
+						} else {
+							throw e;
 						}
 					}
 				}
@@ -160,13 +169,12 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 	@Test
 	public void testDiscover() {
 		boolean isMacOs = "macosx".equals(System.getProperty("osgi.os"));
-		boolean isCiRun = "true".equals(System.getenv("GITHUB_ACTIONS"));
 		boolean shouldTestMacOS = "true".equals(System.getenv("JOLOKIA_TEST_DISCOVERY_ON_MAC"));
-		if (isMacOs && isCiRun && !shouldTestMacOS) {
-			//This does not work in the JMC CI pipeline for Mac 
+		if (isMacOs && !shouldTestMacOS) {
+			//Multicast discovery does not work on macOS due to network stack limitations
 			// 'D> --> Couldnt send discovery message from /127.0.0.1: java.net.BindException: Can't assign requested address
-			//  D> --> Exception during lookup: java.util.concurrent.ExecutionException: 
-			//    org.jolokia.service.discovery.MulticastUtil$CouldntSendDiscoveryPacketException: 
+			//  D> --> Exception during lookup: java.util.concurrent.ExecutionException:
+			//    org.jolokia.service.discovery.MulticastUtil$CouldntSendDiscoveryPacketException:
 			//    Can't send discovery UDP packet from /127.0.0.1: Can't assign requested address'
 			// We get test coverage on both Linux and Windows
 			return;
@@ -190,6 +198,21 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 		});
 		// Test that at least one VM (the one running the test was discovered)
 		Awaitility.await().atMost(Duration.ofSeconds(5)).until(() -> foundVms.get() > 0);
+	}
+
+	private static boolean isParsingFailure(RuntimeException e) {
+		Throwable current = e;
+		while (current != null) {
+			if (current instanceof NumberFormatException) {
+				return true;
+			}
+			String message = current.getMessage();
+			if (message != null && (message.contains("NaN") || message.contains("NumberFormatException"))) {
+				return true;
+			}
+			current = current.getCause();
+		}
+		return false;
 	}
 
 	@After

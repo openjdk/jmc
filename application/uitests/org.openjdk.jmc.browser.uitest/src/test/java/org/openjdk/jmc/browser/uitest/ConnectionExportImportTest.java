@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -132,7 +132,7 @@ public class ConnectionExportImportTest extends MCJemmyTestBase {
 	 */
 	@Test
 	public void testSetMasterPassword() {
-		MC.jvmBrowser.createConnection("localhost", "0", "username", "Password@123", true, "PasswordConnection");
+		MC.jvmBrowser.createConnection("localhost", "0", "username", "Password1!", true, "PasswordConnection");
 		MC.jvmBrowser.deleteItem("PasswordConnection");
 	}
 

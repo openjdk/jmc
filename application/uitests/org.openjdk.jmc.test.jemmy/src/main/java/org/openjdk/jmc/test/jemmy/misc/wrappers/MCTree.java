@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -628,6 +628,52 @@ public class MCTree extends MCJemmyBase {
 		return returnValue;
 	}
 
+	/**
+	 * Waits for a column with the specified header to appear with the given timeout
+	 *
+	 * @param columnHeader
+	 *            the column header to match
+	 * @param timeout
+	 *            timeout in milliseconds
+	 * @return the index of the matching column header, or -1 if not found within timeout
+	 */
+	public int waitForColumnIndex(String columnHeader, long timeout) {
+		long startTime = System.currentTimeMillis();
+		while (System.currentTimeMillis() - startTime < timeout) {
+			int index = getColumnIndex(columnHeader, false);
+			if (index != -1) {
+				return index;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				break;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns a list of all column headers in the tree
+	 *
+	 * @return a {@link List} of {@link String} with all column headers
+	 */
+	public List<String> getColumnHeaders() {
+		Fetcher<List<String>> fetcher = new Fetcher<List<String>>() {
+			@Override
+			public void run() {
+				List<String> headers = new ArrayList<>();
+				for (TreeColumn column : ((Tree) control.as(TreeWrap.class).getControl()).getColumns()) {
+					headers.add(column.getText());
+				}
+				setOutput(headers);
+			}
+		};
+		Display.getDefault().syncExec(fetcher);
+		return fetcher.getOutput();
+	}
+
 	private Wrap<? extends TreeItem> getSelectedItem() {
 		return new ItemWrap<>(control, control.as(TreeWrap.class).getSelectedItem());
 	}
@@ -766,7 +812,7 @@ public class MCTree extends MCJemmyBase {
 		scrollbarSafeSelection();
 		Wrap<? extends TreeItem> selectedWrap = getSelectedItem();
 		// workaround (needed on Mac OS X) to make sure that a yellow popup won't disturb during context clicking
-		if (OS_NAME.contains("os x")) {
+		if (isOSX()) {
 			selectedWrap.mouse().click();
 		}
 		StringPopupOwner<Tree> spo = control.as(StringPopupOwner.class);
@@ -850,9 +896,25 @@ public class MCTree extends MCJemmyBase {
 	 *            the text to set
 	 */
 	public void enterText(String text) {
-		contextChoose("Change Value");
+		int retries = isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			waitForIdle();
+			if (isOSX()) {
+				sleep(500);
+			}
+			try {
+				contextChoose("Change Value");
+				break;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		for (int i = 0; i < text.length(); i++) {
 			control.keyboard().typeChar(text.charAt(i));
+			sleep(BETWEEN_KEYSTROKES_SLEEP);
 		}
 		// make sure that the text entered is "submitted" before moving focus elsewhere (necessary for Mac)
 		control.keyboard().pushKey(KeyboardButtons.ENTER);
@@ -987,30 +1049,96 @@ public class MCTree extends MCJemmyBase {
 	}
 
 	/**
-	 * Toggles selection state on the currently selected item
-	 * 
+	 * Sets the selected item state (checked/unchecked) and fires CheckStateChangedEvent. This
+	 * method fires the event to listeners which may not be triggered by setChecked() alone.
+	 *
 	 * @param state
 	 *            the state to set
 	 */
 	public void setSelectedItemState(boolean state) {
 		if (selectedItemChecked() != state) {
-			// Ensuring focus on the TreeItem
-			getSelectedItem().mouse().click();
-			// Special case for selecting MenuItem objects in the Export dialog. Linux requires two left keys to set
-			// focus on the checkbox (within the MenuItem). Also, SPACE is the key to use in both Windows
-			// and Linux.
-			if (MCJemmyBase.OS_NAME.contains("linux")) {
-				getShell().keyboard().pushKey(KeyboardButtons.LEFT);
-				getShell().keyboard().pushKey(KeyboardButtons.LEFT);
-			}
-			getShell().keyboard().pushKey(KeyboardButtons.SPACE);
+			Fetcher<Void> fetcher = new Fetcher<Void>() {
+				@Override
+				public void run() {
+					try {
+						TreeItem item = control.as(TreeWrap.class).getSelectedItem();
+						Object data = item.getData();
+
+						Tree tree = (Tree) control.as(TreeWrap.class).getControl();
+
+						// Try standard JFace viewer storage keys first
+						Object viewerObj = tree.getData("org.eclipse.jface.viewer");
+						if (viewerObj == null) {
+							viewerObj = tree.getData("viewer");
+						}
+
+						// Fall back to workbench view reflection if not found in tree data
+						if (viewerObj == null) {
+							try {
+								org.eclipse.ui.IWorkbenchWindow window = org.eclipse.ui.PlatformUI.getWorkbench()
+										.getActiveWorkbenchWindow();
+								if (window != null && window.getActivePage() != null) {
+									org.eclipse.ui.IViewReference[] viewRefs = window.getActivePage()
+											.getViewReferences();
+									for (org.eclipse.ui.IViewReference viewRef : viewRefs) {
+										org.eclipse.ui.IViewPart part = window.getActivePage()
+												.findView(viewRef.getId());
+										if (part != null) {
+											java.lang.reflect.Field[] fields = part.getClass().getDeclaredFields();
+											for (java.lang.reflect.Field f : fields) {
+												f.setAccessible(true);
+												Object fieldValue = f.get(part);
+												if (fieldValue instanceof org.eclipse.jface.viewers.CheckboxTreeViewer) {
+													org.eclipse.jface.viewers.CheckboxTreeViewer viewer = (org.eclipse.jface.viewers.CheckboxTreeViewer) fieldValue;
+													if (viewer.getTree() == tree) {
+														viewerObj = viewer;
+														break;
+													}
+												}
+											}
+										}
+										if (viewerObj != null) {
+											break;
+										}
+									}
+								}
+							} catch (Exception e) {
+								System.err.println("Viewer lookup via reflection failed: " + e);
+							}
+						}
+
+						if (viewerObj instanceof org.eclipse.jface.viewers.CheckboxTreeViewer) {
+							org.eclipse.jface.viewers.CheckboxTreeViewer viewer = (org.eclipse.jface.viewers.CheckboxTreeViewer) viewerObj;
+							viewer.setChecked(data, state);
+							try {
+								org.eclipse.jface.viewers.CheckStateChangedEvent event = new org.eclipse.jface.viewers.CheckStateChangedEvent(
+										viewer, data, state);
+								java.lang.reflect.Method fireMethod = org.eclipse.jface.viewers.CheckboxTreeViewer.class
+										.getDeclaredMethod("fireCheckStateChanged",
+												org.eclipse.jface.viewers.CheckStateChangedEvent.class);
+								fireMethod.setAccessible(true);
+								fireMethod.invoke(viewer, event);
+							} catch (Exception fireEx) {
+								System.err.println("fireCheckStateChanged failed: " + fireEx);
+							}
+						} else {
+							item.setChecked(state);
+						}
+					} catch (Exception e) {
+						System.err.println("Unexpected error setting item state: " + e);
+					}
+					setOutput(null);
+				}
+			};
+			Display.getDefault().syncExec(fetcher);
+
 			if (state != selectedItemChecked()) {
 				Assert.fail("Unable to set TreeItem state to: " + state);
 			}
 		}
 	}
 
-	private boolean selectedItemChecked() {
+	public boolean selectedItemChecked() {
 		Fetcher<Boolean> fetcher = new Fetcher<Boolean>() {
 			@Override
 			public void run() {
