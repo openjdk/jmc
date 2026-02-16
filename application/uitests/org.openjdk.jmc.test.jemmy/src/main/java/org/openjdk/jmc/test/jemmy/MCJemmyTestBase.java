@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -47,6 +47,8 @@ import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.servermodel.IServer;
 import org.openjdk.jmc.rjmx.servermodel.IServerModel;
 import org.openjdk.jmc.test.TestToolkit;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.helpers.ConnectionHelper;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MC;
@@ -86,10 +88,31 @@ public abstract class MCJemmyTestBase {
 		}
 		// Always force focus on Mission Control at initial Jemmy test startup
 		MCJemmyBase.focusMc();
+		if (!MC.mcHasFocus() && MCJemmyBase.isOSX()) {
+			forceActivateShell();
+		}
 		Assert.assertTrue("Mission Control did not have focus when Jemmy was initialized.", MC.mcHasFocus());
 		MC.closeWelcome();
 		MC.setRecordingAnalysis(false);
 		initialized = true;
+	}
+
+	private static void forceActivateShell() {
+		for (int i = 0; i < 3; i++) {
+			Display.getDefault().syncExec(() -> {
+				for (Shell s : Display.getDefault().getShells()) {
+					if (!s.isDisposed() && s.isVisible()) {
+						s.forceActive();
+						break;
+					}
+				}
+			});
+			MCJemmyBase.waitForIdle();
+			sleep(500);
+			if (MC.mcHasFocus()) {
+				return;
+			}
+		}
 	}
 
 	@Rule
@@ -99,6 +122,9 @@ public abstract class MCJemmyTestBase {
 			if (!MC.mcHasFocus()) {
 				MCJemmyBase.focusMc();
 			}
+			if (!MC.mcHasFocus() && MCJemmyBase.isOSX()) {
+				forceActivateShell();
+			}
 			Assert.assertTrue("Mission Control did not have the focus when the test started.", MC.mcHasFocus());
 		}
 
@@ -106,6 +132,9 @@ public abstract class MCJemmyTestBase {
 		public void after() {
 			if (!MC.mcHasFocus()) {
 				MCJemmyBase.focusMc();
+			}
+			if (!MC.mcHasFocus() && MCJemmyBase.isOSX()) {
+				forceActivateShell();
 			}
 			Assert.assertTrue("Mission Control did not have the focus when the test ended.", MC.mcHasFocus());
 		}
@@ -121,6 +150,9 @@ public abstract class MCJemmyTestBase {
 			okToRun = true;
 			if (!MC.mcHasFocus()) {
 				MCJemmyBase.focusMc();
+			}
+			if (!MC.mcHasFocus() && MCJemmyBase.isOSX()) {
+				forceActivateShell();
 			}
 			Assert.assertTrue("Mission Control did not have focus when the test suite was initialized.",
 					MC.mcHasFocus());

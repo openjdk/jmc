@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,8 @@ package org.openjdk.jmc.test.jemmy.misc.wrappers;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
+
 import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.MCButton.Labels;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JmxConsole.Tabs;
@@ -43,7 +45,7 @@ import org.openjdk.jmc.test.jemmy.misc.wrappers.JmxConsole.Tabs;
  * The Jemmy wrapper for the Mission Control Triggers console page
  */
 public class MCTriggersPage extends MCJemmyBase {
-	private static final String SHOW_DIALOG_ON_ALERTS = org.openjdk.jmc.alert.Messages.AlertDialog_POP_UP_ON_ALERTS_TEXT;
+	public static final String SHOW_DIALOG_ON_ALERTS = org.openjdk.jmc.alert.Messages.AlertDialog_POP_UP_ON_ALERTS_TEXT;
 	private static final String TRIGGER_ALERTS_DIALOG_TITLE = org.openjdk.jmc.alert.Messages.AlertDialog_DIALOG_TITLE;
 	private static final String RULES_TREE_NAME = "triggers.RulesTree";
 	private static final String LIMIT_PERIOD_TOOLTIP = org.openjdk.jmc.rjmx.triggers.condition.internal.Messages.TriggerCondition_LIMIT_PERIOD_TOOLTIP;
@@ -67,6 +69,11 @@ public class MCTriggersPage extends MCJemmyBase {
 	public static void toggleTriggerRule(boolean state, String ... path) {
 		selectTriggerRule(path);
 		rulesTree.setSelectedItemState(state);
+		waitForIdle();
+		// Mac needs time for trigger system to register activation and complete first evaluation cycle
+		if (MCJemmyBase.isOSX()) {
+			sleep(2500);
+		}
 	}
 
 	/**
@@ -78,6 +85,19 @@ public class MCTriggersPage extends MCJemmyBase {
 	public static void selectTriggerRule(String ... path) {
 		initializeRulesTree();
 		rulesTree.select(path);
+	}
+
+	/**
+	 * Checks if a trigger rule is checked (enabled)
+	 *
+	 * @param path
+	 *            the path of the trigger rule
+	 * @return {@code true} if checked, otherwise {@code false}
+	 */
+	public static boolean isRuleChecked(String ... path) {
+		initializeRulesTree();
+		rulesTree.select(path);
+		return rulesTree.selectedItemChecked();
 	}
 
 	/**
@@ -102,7 +122,10 @@ public class MCTriggersPage extends MCJemmyBase {
 	 *            previous alerts
 	 */
 	public static void closeTriggerAlertDialog(boolean cleanUpAlerts) {
-		MCDialog dialog = new MCDialog(TRIGGER_ALERTS_DIALOG_TITLE);
+		MCDialog dialog = waitForDialog(TRIGGER_ALERTS_DIALOG_TITLE, 60000);
+		if (dialog == null) {
+			Assert.fail("Trigger alert dialog did not appear within 60 seconds");
+		}
 		dialog.setButtonState(SHOW_DIALOG_ON_ALERTS, !cleanUpAlerts);
 		if (cleanUpAlerts) {
 			dialog.clickButton("Clear");
@@ -232,12 +255,23 @@ public class MCTriggersPage extends MCJemmyBase {
 		Map<String, Comparable<?>> actionParams, String ruleGroup, String ruleName, String ... alertAttributePath) {
 		// select the triggers tab
 		JmxConsole.selectTab(Tabs.TRIGGERS);
+		initializeRulesTree();
+		if (rulesTree == null) {
+			Assert.fail("Triggers rules tree not found.");
+		}
+		waitForRulesTreeReady();
 
 		// Create a new application alert rule for CPULoad
-		MCButton.getByLabel("Add...").click();
+		MCDialog newRuleDialog = null;
+		for (int i = 0; i < 3 && newRuleDialog == null; i++) {
+			MCButton.getByLabel("Add...").click();
+			newRuleDialog = waitForDialog("Add New Rule", 30000);
+		}
+		if (newRuleDialog == null) {
+			Assert.fail("Failed to open Add New Rule dialog after retries.");
+		}
 
 		// first page
-		MCDialog newRuleDialog = new MCDialog("Add New Rule");
 		MCTree attributeTree = MCTree.getFirst(newRuleDialog);
 		attributeTree.select(alertAttributePath);
 		newRuleDialog.clickButton(Labels.NEXT);
@@ -280,6 +314,31 @@ public class MCTriggersPage extends MCJemmyBase {
 		newRuleDialog.replaceText("My Rule", ruleName);
 		// finish the new rule wizard
 		newRuleDialog.closeWithButton(Labels.FINISH);
+	}
+
+	private static void waitForRulesTreeReady() {
+		if (rulesTree == null) {
+			Assert.fail("Triggers rules tree not initialized.");
+		}
+		for (int i = 0; i < 20; i++) {
+			int count = rulesTree.getDirectChildItemsCount();
+			if (count > 0) {
+				return;
+			}
+			sleep(500);
+		}
+	}
+
+	private static MCDialog waitForDialog(String title, long timeoutMs) {
+		long deadline = System.currentTimeMillis() + timeoutMs;
+		while (System.currentTimeMillis() < deadline) {
+			MCDialog dialog = MCDialog.getByAnyDialogTitle(true, true, title);
+			if (dialog != null) {
+				return dialog;
+			}
+			sleep(500);
+		}
+		return null;
 	}
 
 	private static void initializeRulesTree() {

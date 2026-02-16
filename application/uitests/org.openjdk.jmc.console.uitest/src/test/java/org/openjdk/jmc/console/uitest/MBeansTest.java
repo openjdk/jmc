@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -134,6 +134,9 @@ public class MBeansTest extends MCJemmyTestBase {
 
 		// de-register the MBean
 		mBean2Runner.unregisterMBean(MBEAN_PATH);
+
+		// Wait for the subscription to fully stop before checking
+		sleep(sleepTime);
 
 		// verify that the chart isn't updated now
 		Assert.assertFalse(
