@@ -177,8 +177,8 @@
 								<artifact>
 									<id>org.osgi:org.osgi.service.servlet:2.0.0</id>
 								</artifact>
-								<artifact><id>org.apache:httpcomponents.httpcore:4.4.16</id></artifact>
-								<artifact><id>org.apache:httpcomponents.httpclient:4.5.14</id></artifact>
+								<artifact><id>org.apache.httpcomponents:httpcore:4.4.16</id></artifact>
+								<artifact><id>org.apache.httpcomponents:httpclient:4.5.14</id></artifact>
 								<artifact>
 									<id>org.jolokia:jolokia-client-kubernetes:jar:standalone:${jolokia.version}</id>
 									<transitive>false</transitive>
