@@ -11,7 +11,9 @@ Require-Bundle: org.openjdk.jmc.jolokia,
  org.openjdk.jmc.ui,
  org.eclipse.swt,
  org.jolokia.client-kubernetes.standalone;bundle-version="2.2.9",
- org.openjdk.jmc.rjmx
+ org.openjdk.jmc.rjmx,
+ org.apache.httpcomponents.httpcore;bundle-version="4.4.16",
+ org.apache.httpcomponents.httpclient;bundle-version="4.5.14"
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences
 Import-Package: org.apache.commons.logging;version="1.2.0"
