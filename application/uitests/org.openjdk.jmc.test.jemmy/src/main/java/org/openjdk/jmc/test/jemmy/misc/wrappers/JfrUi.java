@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -240,6 +240,10 @@ public class JfrUi extends MCJemmyBase {
 			// ensuring that one (any) table item is focused before trying to context choose
 			settingsTable.click();
 			settingsTable.contextChoose("Visible Columns", END_TIME_COLUMN_HEADER);
+			MCJemmyBase.waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				MCJemmyBase.sleep(500);
+			}
 		}
 
 		EventSettingsData settings = new EventSettingsData();

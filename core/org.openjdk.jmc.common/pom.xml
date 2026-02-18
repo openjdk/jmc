@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -49,9 +49,9 @@
 			<version>1.2.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.lz4</groupId>
+			<groupId>at.yawk.lz4</groupId>
 			<artifactId>lz4-java</artifactId>
-			<version>1.8.0</version>
+			<version>1.10.2</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,4 +1,4 @@
-#Contributors
+# Contributors
 
 A lot of people have been involved with Mission Control over the years. 
 This document is a thank you to everyone who has ever contributed to 

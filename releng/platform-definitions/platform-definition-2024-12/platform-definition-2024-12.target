@@ -36,10 +36,10 @@
 <target name="jmc-target-2024-12" sequenceNumber="47">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.angus.jakarta.mail" version="2.0.3"/>
-            <unit id="angus-activation" version="2.0.2"/>
+            <unit id="org.eclipse.angus.jakarta.mail" version="2.0.5"/>
+            <unit id="angus-activation" version="2.0.3"/>
             <unit id="org.owasp.encoder" version="1.2.3"/>
-            <unit id="lz4-java" version="1.8.0"/>
+            <unit id="lz4-java" version="1.10.2"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.2.2"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
