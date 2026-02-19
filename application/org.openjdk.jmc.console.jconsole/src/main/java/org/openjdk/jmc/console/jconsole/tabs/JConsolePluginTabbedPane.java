@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,9 +34,14 @@ package org.openjdk.jmc.console.jconsole.tabs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +50,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -52,6 +58,11 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.console.jconsole.Activator;
 import org.openjdk.jmc.console.jconsole.JConsolePluginLoader;
 import org.openjdk.jmc.console.jconsole.MissionControlContext;
@@ -71,6 +82,7 @@ public class JConsolePluginTabbedPane extends JTabbedPane {
 	private final Map<JConsolePlugin, SwingWorker<?, ?>> swingWorkers = new HashMap<>();
 	private volatile boolean disposeTimerTask;
 	private final MissionControlContext ctx;
+	private static final String STACKTRACE_VIEW_ID = "org.openjdk.jmc.flightrecorder.ui.StacktraceView";
 
 	public JConsolePluginTabbedPane(IConnectionHandle connectionHandle) {
 		// FIXME: Make placement configurable in settings
@@ -142,6 +154,78 @@ public class JConsolePluginTabbedPane extends JTabbedPane {
 		Activator.getLogger().log(Level.WARNING,
 				NLS.bind(Messages.JConsolePluginTabbedPane_ERROR_MESSAGE_COULD_NOT_CREATE_PLUGIN_TAB, message));
 		this.add(title, p);
+		setFocusTraversalProperties(p);
+		addKeyListener(p);
+		addKeyListenerForFwdFocusToSWT(p);
+	}
+
+	/**
+	 * Adding key listener to transfer focus forward or backward based on 'TAB' or 'Shift + TAB'
+	 */
+	private void addKeyListener(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+						e.getComponent().transferFocusBackward();
+					} else {
+						e.getComponent().transferFocus();
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Setting the focus traversal properties.
+	 */
+	private void setFocusTraversalProperties(JComponent comp) {
+		comp.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
+		comp.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
+		comp.setFocusable(true);
+		comp.setFocusTraversalKeysEnabled(true);
+	}
+
+	/**
+	 * Adding key listener and checking if all the swing components are already cycled (Fwd) once.
+	 * On completion of swing component cycle transferring focus back to SWT.
+	 */
+	private void addKeyListenerForFwdFocusToSWT(JComponent comp) {
+		comp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) != 0) {
+						e.getComponent().transferFocusBackward();
+					} else {
+						setFocusBackToSWT();
+					}
+					e.consume();
+				}
+			}
+		});
+	}
+
+	/**
+	 * This method sets the focus from swing to SWT. If outline page is active focus will be set to
+	 * outline view else to JVM Browser
+	 */
+	private void setFocusBackToSWT() {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				try {
+					IViewPart outlineView = activePage.showView(STACKTRACE_VIEW_ID);
+					if (activePage.getActiveEditor() != null) {
+						outlineView.setFocus();
+					}
+				} catch (PartInitException e) {
+					Activator.getLogger().log(Level.INFO, "Failed to set focus", e); //$NON-NLS-1$
+				}
+			}
+		});
 	}
 
 	private void startUpdateThread() {
