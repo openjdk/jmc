@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,11 +46,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
@@ -304,6 +306,20 @@ public class TlabPage extends AbstractDataPage {
 					OUTSIDE_SIZE, OUTSIDE_COLOR, b -> buildChart());
 
 			return Arrays.asList(insideSizeAction, outsideSizeAction);
+		}
+
+		@Override
+		protected void handleTableSelection() {
+			if (classifier == JdkAttributes.STACK_TRACE_TOP_METHOD) {
+				var selection = table.getSelection();
+				var methodOpt = selection.getSelectedRows((key, rowItems) -> (IMCMethod) key).findFirst();
+				if (methodOpt.isPresent()) {
+					pageContainer.showSelection(
+							new InViewMethodSelection(methodOpt.get(), getDataSource().getItems(), getName()));
+					return;
+				}
+			}
+			super.handleTableSelection();
 		}
 	}
 

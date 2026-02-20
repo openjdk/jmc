@@ -370,6 +370,11 @@
          <adapter type="org.openjdk.jmc.common.item.IItemCollection"/>
       </factory>
       <factory
+            adaptableType="org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection"
+            class="org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionAdapterFactory">
+         <adapter type="org.openjdk.jmc.common.item.IItemCollection"/>
+      </factory>
+      <factory
             adaptableType="org.openjdk.jmc.flightrecorder.ui.selection.ItemBackedSelection"
             class="org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionAdapterFactory">
          <adapter type="org.openjdk.jmc.common.item.IItemCollection"/>

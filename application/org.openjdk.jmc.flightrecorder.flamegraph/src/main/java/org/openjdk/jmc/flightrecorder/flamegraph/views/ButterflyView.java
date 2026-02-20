@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -49,9 +49,13 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -66,6 +70,11 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.DefaultToolTip;
@@ -82,18 +91,22 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.FormatToolkit;
+import org.openjdk.jmc.common.util.Pair;
 import org.openjdk.jmc.flightrecorder.flamegraph.Messages;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
-import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
-import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.AggregatableFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.Node;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
+import org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.StacktraceFrameSelection;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.common.util.ThemeUtils;
@@ -113,6 +126,9 @@ import io.github.bric3.fireplace.swt_awt.EmbeddingComposite;
 import io.github.bric3.fireplace.swt_awt.SWT_AWTBridge;
 
 public class ButterflyView extends ViewPart implements ISelectionListener {
+	private static final String PLUGIN_ID = "org.openjdk.jmc.flightrecorder.flamegraph"; //$NON-NLS-1$
+	private static final String EVENT_TYPE_FILTER_SEPARATOR_ID = "EventTypeFilterSep"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_SELECTION_SEPARATOR_ID = "AttrSelectionSep"; //$NON-NLS-1$
 	private static final int MODEL_EXECUTOR_THREADS_NUMBER = 3;
 	private static final ExecutorService MODEL_EXECUTOR = Executors.newFixedThreadPool(MODEL_EXECUTOR_THREADS_NUMBER,
 			new ThreadFactory() {
@@ -137,6 +153,12 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 	private volatile ModelState modelState = ModelState.NONE;
 	private ModelRebuildRunnable modelRebuildRunnable;
 	private IMCMethod selectedIMCMethod;
+	private IAttribute<IQuantity> currentAttribute;
+	private AttributeSelection attributeSelection;
+	private EventTypeFilterAction eventTypeFilter;
+	private final Set<String> selectedEventTypeIds = new HashSet<>();
+	private IToolBarManager toolBar;
+	private boolean pinned;
 
 	private enum ModelState {
 		NOT_STARTED, STARTED, FINISHED, NONE
@@ -185,12 +207,17 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 		private final ButterflyView view;
 		private final IItemCollection items;
 		private final IMCMethod pivotMethod;
+		private final IAttribute<IQuantity> attribute;
+		private final Set<String> selectedTypeIds;
 		private volatile boolean isInvalid;
 
-		private ModelRebuildRunnable(ButterflyView view, IItemCollection items, IMCMethod pivotMethod) {
+		private ModelRebuildRunnable(ButterflyView view, IItemCollection items, IMCMethod pivotMethod,
+				IAttribute<IQuantity> attribute, Set<String> selectedTypeIds) {
 			this.view = view;
 			this.items = items;
 			this.pivotMethod = pivotMethod;
+			this.attribute = attribute;
+			this.selectedTypeIds = new HashSet<>(selectedTypeIds);
 		}
 
 		private void setInvalid() {
@@ -210,19 +237,33 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 				List<FrameBox<Node>> calleeFrames = Collections.emptyList();
 				AggregatableFrame foundPivotFrame = null;
 
+				IItemCollection methodFilteredItems = items;
+				Map<String, String> availableTypes = Collections.emptyMap();
+				IItemCollection typeFilteredItems = items;
 				if (pivotMethod != null) {
 					String typeName = pivotMethod.getType().getFullName();
 					String methodName = pivotMethod.getMethodName();
 
 					var methodFilter = new JdkFilters.MethodFilter(typeName, methodName);
-					var executionSampleFilter = ItemFilters.type(JdkTypeIDs.EXECUTION_SAMPLE);
-					var filteredItems = items.apply(ItemFilters.and(executionSampleFilter, methodFilter));
+					methodFilteredItems = items.apply(methodFilter);
+
+					availableTypes = EventTypeFilterAction.extractEventTypes(methodFilteredItems);
+
+					typeFilteredItems = methodFilteredItems;
+					if (!selectedTypeIds.isEmpty()) {
+						typeFilteredItems = methodFilteredItems.apply(ItemFilters.type(selectedTypeIds));
+					}
+
+					var filteredItems = typeFilteredItems;
+					if (attribute != null) {
+						filteredItems = filteredItems.apply(ItemFilters.hasAttribute(attribute));
+					}
 
 					if (isInvalid) {
 						return;
 					}
 
-					var treeModel = new StacktraceTreeModel(filteredItems, view.frameSeparator, false, null,
+					var treeModel = new StacktraceTreeModel(filteredItems, view.frameSeparator, false, attribute,
 							() -> isInvalid);
 					if (isInvalid) {
 						return;
@@ -246,6 +287,14 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 				if (!isInvalid) {
 					view.modelState = ModelState.FINISHED;
 					view.setModel(items, callerFrames, calleeFrames, foundPivotFrame);
+					var types = availableTypes;
+					var attrItems = typeFilteredItems;
+					Display.getDefault().asyncExec(() -> {
+						view.createEventTypeFilter(types);
+						var attributeList = AttributeSelection.extractAttributes(attrItems);
+						String attrName = attribute != null ? attribute.getName() : null;
+						view.createAttributeSelection(attrName, attributeList);
+					});
 				}
 			} finally {
 				final var duration = Duration.ofMillis(System.currentTimeMillis() - start);
@@ -266,6 +315,25 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		frameSeparator = new FrameSeparator(FrameSeparator.FrameCategorization.METHOD, false);
+
+		toolBar = site.getActionBars().getToolBarManager();
+
+		var pinAction = new Action("Pin View", IAction.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				pinned = isChecked();
+			}
+		};
+		pinAction.setToolTipText("Pin the Butterfly View to prevent it from following selection changes");
+		ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, "icons/pin.png") //$NON-NLS-1$
+				.ifPresent(pinAction::setImageDescriptor);
+		toolBar.add(pinAction);
+
+		toolBar.add(new Separator(EVENT_TYPE_FILTER_SEPARATOR_ID));
+		createEventTypeFilter(Collections.emptyMap());
+		toolBar.add(new Separator(ATTRIBUTE_SELECTION_SEPARATOR_ID));
+		createAttributeSelection(null, Collections.emptyList());
+
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -424,28 +492,29 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (pinned) {
+			return;
+		}
+
+		if (selection instanceof InViewMethodSelection) {
+			var ms = (InViewMethodSelection) selection;
+			handleMethodSelection(ms.getMethod(), ms.getItems());
+			return;
+		}
+
 		if (selection instanceof IStructuredSelection) {
 			var first = ((IStructuredSelection) selection).getFirstElement();
 
 			if (first instanceof StacktraceFrameSelection) {
-				var frameSelection = (StacktraceFrameSelection) first;
-				var method = frameSelection.getMethod();
-				var items = frameSelection.getFullItems();
-				if (items == null) {
-					items = frameSelection.getSelectedItems();
-				}
+				var fs = (StacktraceFrameSelection) first;
+				var items = fs.getFullItems() != null ? fs.getFullItems() : fs.getSelectedItems();
+				handleMethodSelection(fs.getMethod(), items);
+				return;
+			}
 
-				if (items != null && method != null && !isSameMethod(method, selectedIMCMethod)) {
-					selectedIMCMethod = method;
-					currentItems = items;
-					updateMethodLabel(method);
-					triggerRebuildTask(items, method);
-				} else if (items != null && !items.equals(currentItems)) {
-					currentItems = items;
-					if (selectedIMCMethod != null) {
-						triggerRebuildTask(items, selectedIMCMethod);
-					}
-				}
+			if (first instanceof InViewMethodSelection) {
+				var ms = (InViewMethodSelection) first;
+				handleMethodSelection(ms.getMethod(), ms.getItems());
 				return;
 			}
 
@@ -457,6 +526,21 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 				if (selectedIMCMethod != null) {
 					triggerRebuildTask(items, selectedIMCMethod);
 				}
+			}
+		}
+	}
+
+	private void handleMethodSelection(IMCMethod method, IItemCollection items) {
+		if (items != null && method != null && !isSameMethod(method, selectedIMCMethod)) {
+			selectedIMCMethod = method;
+			currentItems = items;
+			selectedEventTypeIds.clear();
+			updateMethodLabel(method);
+			triggerRebuildTask(items, method);
+		} else if (items != null && !items.equals(currentItems)) {
+			currentItems = items;
+			if (selectedIMCMethod != null) {
+				triggerRebuildTask(items, selectedIMCMethod);
 			}
 		}
 	}
@@ -493,10 +577,48 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 
 		currentItems = items;
 		modelState = ModelState.NOT_STARTED;
-		modelRebuildRunnable = new ModelRebuildRunnable(this, items, pivotMethod);
+		modelRebuildRunnable = new ModelRebuildRunnable(this, items, pivotMethod, currentAttribute,
+				selectedEventTypeIds);
 		if (!modelRebuildRunnable.isInvalid) {
 			MODEL_EXECUTOR.execute(modelRebuildRunnable);
 		}
+	}
+
+	private void triggerRebuildTask() {
+		if (currentItems != null && selectedIMCMethod != null) {
+			triggerRebuildTask(currentItems, selectedIMCMethod);
+		}
+	}
+
+	private void createEventTypeFilter(Map<String, String> availableTypes) {
+		if (eventTypeFilter != null) {
+			toolBar.remove(eventTypeFilter.getId());
+		}
+		selectedEventTypeIds.retainAll(availableTypes.keySet());
+		if (selectedEventTypeIds.isEmpty()) {
+			selectedEventTypeIds.addAll(availableTypes.keySet());
+		}
+		eventTypeFilter = new EventTypeFilterAction(availableTypes, selectedEventTypeIds, this::triggerRebuildTask);
+		toolBar.insertAfter(EVENT_TYPE_FILTER_SEPARATOR_ID, eventTypeFilter);
+		toolBar.update(true);
+	}
+
+	private void createAttributeSelection(String attrName, Collection<Pair<String, IAttribute<IQuantity>>> items) {
+		if (attributeSelection != null) {
+			toolBar.remove(attributeSelection.getId());
+		}
+		attributeSelection = new AttributeSelection(items, attrName, this::getCurrentAttribute,
+				this::setCurrentAttribute, this::triggerRebuildTask);
+		toolBar.insertAfter(ATTRIBUTE_SELECTION_SEPARATOR_ID, attributeSelection);
+		toolBar.update(true);
+	}
+
+	private IAttribute<IQuantity> getCurrentAttribute() {
+		return currentAttribute;
+	}
+
+	private void setCurrentAttribute(IAttribute<IQuantity> attr) {
+		currentAttribute = attr;
 	}
 
 	private void setModel(

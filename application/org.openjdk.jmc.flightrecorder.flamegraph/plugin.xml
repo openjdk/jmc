@@ -63,7 +63,7 @@
 				relationship="stack"
 				relative="org.openjdk.jmc.flightrecorder.flamegraph"
 				showTitle="true"
-				visible="false"/>
+				visible="true"/>
 		</perspectiveExtension>
 	</extension>
 </plugin>

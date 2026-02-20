@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2025, 2026, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2025, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,35 +32,41 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.selection;
 
-import org.eclipse.core.runtime.IAdapterFactory;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemFilter;
 
 /**
- * Adapter factory that enables IFlavoredSelection implementations to be adapted to IItemCollection.
- * This allows views that expect IItemCollection selections to work with flavored selections.
+ * Selection type representing a method selected within a view. Views that display methods can fire
+ * this selection to signal that a method was chosen. Other views (such as the Butterfly View) can
+ * listen for this selection type and react accordingly.
  */
-public class FlavoredSelectionAdapterFactory implements IAdapterFactory {
+public class InViewMethodSelection extends FlavoredSelectionBase {
 
-	private static final Class<?>[] ADAPTER_LIST = new Class<?>[] {IItemCollection.class};
+	private final IMCMethod method;
+	private final IItemCollection items;
 
-	@Override
-	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-		if (adapterType == IItemCollection.class) {
-			if (adaptableObject instanceof StacktraceFrameSelection) {
-				return adapterType.cast(((StacktraceFrameSelection) adaptableObject).getSelectedItems());
-			}
-			if (adaptableObject instanceof InViewMethodSelection) {
-				return adapterType.cast(((InViewMethodSelection) adaptableObject).getItems());
-			}
-			if (adaptableObject instanceof ItemBackedSelection) {
-				return adapterType.cast(((ItemBackedSelection) adaptableObject).getItems());
-			}
-		}
-		return null;
+	public InViewMethodSelection(IMCMethod method, IItemCollection items, String name) {
+		super(name);
+		this.method = method;
+		this.items = items;
+	}
+
+	public IMCMethod getMethod() {
+		return method;
+	}
+
+	public IItemCollection getItems() {
+		return items;
 	}
 
 	@Override
-	public Class<?>[] getAdapterList() {
-		return ADAPTER_LIST;
+	public Stream<IItemStreamFlavor> getFlavors(
+		IItemFilter filter, IItemCollection items, List<IAttribute<?>> attributes) {
+		return Stream.of(IItemStreamFlavor.build(getName(), this.items));
 	}
 }
