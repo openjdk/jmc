@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jemmy.JemmyException;
 import org.jemmy.TimeoutExpiredException;
 import org.junit.Assert;
 
@@ -311,7 +312,18 @@ public class JvmBrowser extends MCJemmyBase {
 	 *            the name of the connection
 	 */
 	public void disconnect(String ... path) {
-		selectContextOption(ACTION_DISCONNECT_TEXT, path);
+		int maxRetries = 5;
+		for (int i = 0; i < maxRetries; i++) {
+			try {
+				selectContextOption(ACTION_DISCONNECT_TEXT, path);
+				break;
+			} catch (JemmyException e) {
+				if (i == maxRetries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		MCDialog disconnectDialog = new MCDialog(ACTION_DISCONNECT_TEXT);
 		disconnectDialog.clickButton(MCButton.Labels.OK);
 	}
