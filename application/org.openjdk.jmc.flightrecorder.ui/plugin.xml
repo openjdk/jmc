@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -360,6 +360,24 @@
       </factory>  
     </extension>
    <extension point="org.openjdk.jmc.flightrecorder.ui.datapage">
-         <pages weight="100" file="defaultPages.xml" /> 
+         <pages weight="100" file="defaultPages.xml" />
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.openjdk.jmc.flightrecorder.ui.selection.StacktraceFrameSelection"
+            class="org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionAdapterFactory">
+         <adapter type="org.openjdk.jmc.common.item.IItemCollection"/>
+      </factory>
+      <factory
+            adaptableType="org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection"
+            class="org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionAdapterFactory">
+         <adapter type="org.openjdk.jmc.common.item.IItemCollection"/>
+      </factory>
+      <factory
+            adaptableType="org.openjdk.jmc.flightrecorder.ui.selection.ItemBackedSelection"
+            class="org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionAdapterFactory">
+         <adapter type="org.openjdk.jmc.common.item.IItemCollection"/>
+      </factory>
    </extension>
 </plugin>

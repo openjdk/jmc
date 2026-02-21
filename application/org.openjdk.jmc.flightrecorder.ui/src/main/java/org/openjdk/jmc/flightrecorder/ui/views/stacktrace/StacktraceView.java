@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -95,6 +95,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IState;
@@ -123,10 +124,12 @@ import org.openjdk.jmc.flightrecorder.stacktrace.StacktraceModel.Fork;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
+import org.openjdk.jmc.flightrecorder.ui.JfrPropertySheet;
 import org.openjdk.jmc.flightrecorder.ui.common.AttributeSelection;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
+import org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
 import org.openjdk.jmc.flightrecorder.ui.selection.StacktraceFrameSelection;
@@ -135,6 +138,7 @@ import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.common.util.ThemeUtils;
+import org.openjdk.jmc.ui.misc.SelectionProvider;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.CopySelectionAction;
 import org.openjdk.jmc.ui.handlers.InFocusHandlerActivator;
@@ -246,6 +250,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private IToolBarManager toolBar;
 	private ViewerColumn valueColumn;
 	private CompletableFuture<StacktraceModel> modelRebuildFuture;
+	private SelectionProvider selectionProvider;
 
 	private static class StacktraceViewToolTipSupport extends ColumnViewerToolTipSupport {
 
@@ -513,6 +518,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		selectionProvider = new SelectionProvider();
+		getSite().setSelectionProvider(selectionProvider);
 		buildViewer(parent);
 	}
 
@@ -650,6 +657,15 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 				FocusTracker.enableFocusTracking(((TableViewer) viewer).getTable());
 			}
 		}
+
+		viewer.addSelectionChangedListener(e -> {
+			ISelection sel = e.getSelection();
+			if (sel instanceof IStructuredSelection && !sel.isEmpty()) {
+				StacktraceFrame frame = (StacktraceFrame) ((IStructuredSelection) sel).getFirstElement();
+				selectionProvider.setSelection(new InViewMethodSelection(frame.getFrame().getMethod(), itemsToShow,
+						Messages.STACKTRACE_VIEW_SELECTION));
+			}
+		});
 	}
 
 	private static TableViewer buildTable(Composite parent) {
@@ -753,6 +769,18 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		viewer.getControl().setFocus();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
+		if (adapter == IPropertySheetPage.class) {
+			IEditorPart editor = getSite().getPage().getActiveEditor();
+			if (editor instanceof IPageContainer) {
+				return (T) new JfrPropertySheet((IPageContainer) editor);
+			}
+		}
+		return super.getAdapter(adapter);
+	}
+
 	@Override
 	public void saveState(IMemento memento) {
 		memento.putString(COLUMNS_KEY, IntStream.of(getColumnWidths()).mapToObj(Integer::toString)
@@ -769,6 +797,9 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (part == this) {
+			return;
+		}
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);

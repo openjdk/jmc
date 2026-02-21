@@ -96,7 +96,6 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 	private static final int Y_OFFSET = 0;
 	protected ChartControlBar controlBar;
 	protected ChartTextCanvas textCanvas;
-	protected IPageContainer pageContainer;
 	private Composite zoomPanContainer;
 	private ChartButtonGroup buttonGroup;
 	private IItemCollection selectionItems;
