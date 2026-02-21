@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -76,6 +76,7 @@
 		<maven.deploy.version>3.1.1</maven.deploy.version>
 		<maven.gpg.version>3.1.0</maven.gpg.version>
 		<jacoco.plugin.version>0.8.10</jacoco.plugin.version>
+		<build.helper.maven.version>3.6.1</build.helper.maven.version>
 		<!-- Versions -->
 		<junit.version>4.13.2</junit.version>
 	</properties>
@@ -85,7 +86,7 @@
 			<name>Universal Permissive License Version 1.0</name>
 			<url>https://oss.oracle.com/licenses/upl</url>
 			<distribution>repo</distribution>
-			<comments>Copyright (c) 2018, 2025, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.</comments>
+			<comments>Copyright (c) 2018, 2026, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.</comments>
 		</license>
 	</licenses>
 	<organization>
@@ -406,6 +407,24 @@
 						<goals>
 							<goal>check</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${build.helper.maven.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${rootDir}/license</source>
+							</sources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
