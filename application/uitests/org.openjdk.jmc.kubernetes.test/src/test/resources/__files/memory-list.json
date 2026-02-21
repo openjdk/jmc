@@ -1,0 +1,46 @@
+{
+   "request" : {
+      "path" : "java.lang/type=Memory",
+      "type" : "list"
+   },
+   "status" : 200,
+   "timestamp" : 1658566168,
+   "value" : {
+      "attr" : {
+         "HeapMemoryUsage" : {
+            "desc" : "HeapMemoryUsage",
+            "rw" : false,
+            "type" : "javax.management.openmbean.CompositeData"
+         },
+         "NonHeapMemoryUsage" : {
+            "desc" : "NonHeapMemoryUsage",
+            "rw" : false,
+            "type" : "javax.management.openmbean.CompositeData"
+         },
+         "ObjectName" : {
+            "desc" : "ObjectName",
+            "rw" : false,
+            "type" : "javax.management.ObjectName"
+         },
+         "ObjectPendingFinalizationCount" : {
+            "desc" : "ObjectPendingFinalizationCount",
+            "rw" : false,
+            "type" : "int"
+         },
+         "Verbose" : {
+            "desc" : "Verbose",
+            "rw" : true,
+            "type" : "boolean"
+         }
+      },
+      "class" : "sun.management.MemoryImpl",
+      "desc" : "Information on the management interface of the MBean",
+      "op" : {
+         "gc" : {
+            "args" : [],
+            "desc" : "gc",
+            "ret" : "void"
+         }
+      }
+   }
+}
