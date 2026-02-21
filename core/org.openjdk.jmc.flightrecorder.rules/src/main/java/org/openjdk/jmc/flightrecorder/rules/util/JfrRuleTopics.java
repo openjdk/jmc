@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -64,5 +64,6 @@ public final class JfrRuleTopics {
 	public static final String THREAD_DUMPS = "thread_dumps"; //$NON-NLS-1$
 	public static final String THREADS = "threads"; //$NON-NLS-1$
 	public static final String TLAB = "tlab"; //$NON-NLS-1$
+	public static final String SECURITY = "security"; //$NON-NLS-1$
 	public static final String VM_OPERATIONS = "vm_operations"; //$NON-NLS-1$
 }
