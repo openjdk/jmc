@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.benchmarks;
 
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +49,7 @@ import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -68,6 +70,9 @@ import org.openjdk.jmh.annotations.Warmup;
 @State(Scope.Thread)
 public class StringEncodingBenchmark {
 
+	@Param({"heap", "mmap"})
+	private String mode;
+
 	private Recording recording;
 	private Type eventType;
 	private Path tempFile;
@@ -84,7 +89,12 @@ public class StringEncodingBenchmark {
 	@Setup(Level.Trial)
 	public void setup() throws Exception {
 		tempFile = Files.createTempFile("jfr-bench-string-", ".jfr");
-		recording = Recordings.newRecording(tempFile);
+		OutputStream out = Files.newOutputStream(tempFile);
+		if ("mmap".equals(mode)) {
+			recording = Recordings.newRecording(out, settings -> settings.withMmap());
+		} else {
+			recording = Recordings.newRecording(out);
+		}
 
 		eventType = recording.registerEventType("bench.StringEvent", builder -> {
 			builder.addField("str1", Types.Builtin.STRING).addField("str2", Types.Builtin.STRING)

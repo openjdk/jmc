@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.benchmarks;
 
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +74,9 @@ public class ConstantPoolBenchmark {
 	@Param({"100", "500", "1000"})
 	private int poolSize;
 
+	@Param({"heap", "mmap"})
+	private String mode;
+
 	private Recording recording;
 	private Type eventType;
 	private Path tempFile;
@@ -80,7 +84,12 @@ public class ConstantPoolBenchmark {
 	@Setup(Level.Trial)
 	public void setup() throws Exception {
 		tempFile = Files.createTempFile("jfr-bench-pool-", ".jfr");
-		recording = Recordings.newRecording(tempFile);
+		OutputStream out = Files.newOutputStream(tempFile);
+		if ("mmap".equals(mode)) {
+			recording = Recordings.newRecording(out, settings -> settings.withMmap());
+		} else {
+			recording = Recordings.newRecording(out);
+		}
 
 		eventType = recording.registerEventType("bench.PoolTest", builder -> {
 			builder.addField("str1", Types.Builtin.STRING).addField("str2", Types.Builtin.STRING).addField("value",
