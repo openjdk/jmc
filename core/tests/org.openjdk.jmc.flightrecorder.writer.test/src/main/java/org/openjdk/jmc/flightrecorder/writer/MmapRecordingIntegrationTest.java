@@ -155,7 +155,7 @@ class MmapRecordingIntegrationTest {
 						event.value = i;
 						recording.writeEvent(event);
 					}
-				} catch (BrokenBarrierException e) {
+				} catch (BrokenBarrierException | InterruptedException e) {
 					throw new RuntimeException(e);
 				} finally {
 					latch.countDown();
