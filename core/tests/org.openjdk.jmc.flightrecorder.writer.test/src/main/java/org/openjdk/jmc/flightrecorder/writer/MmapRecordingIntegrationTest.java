@@ -34,13 +34,17 @@
 package org.openjdk.jmc.flightrecorder.writer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,7 +74,7 @@ class MmapRecordingIntegrationTest {
 	Path tempDir;
 
 	@Test
-	void testBasicMmapRecording() throws IOException {
+	void testBasicMmapRecording() throws IOException, CouldNotLoadRecordingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
@@ -93,10 +97,14 @@ class MmapRecordingIntegrationTest {
 		assertEquals('L', recordingData[1]);
 		assertEquals('R', recordingData[2]);
 		assertEquals(0, recordingData[3]);
+
+		// Verify the recording is parseable
+		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
+				"Recording should be parseable");
 	}
 
 	@Test
-	void testMultiThreadedMmapRecording() throws IOException, InterruptedException {
+	void testMultiThreadedMmapRecording() throws IOException, InterruptedException, CouldNotLoadRecordingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
@@ -127,10 +135,14 @@ class MmapRecordingIntegrationTest {
 
 		byte[] recordingData = baos.toByteArray();
 		assertTrue(recordingData.length > 0, "Recording should contain data");
+
+		// Verify the recording is parseable (concurrent writes must not corrupt structure)
+		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
+				"Recording should be parseable after concurrent writes");
 	}
 
 	@Test
-	void testLargeEventsMmapRecording() throws IOException {
+	void testLargeEventsMmapRecording() throws IOException, CouldNotLoadRecordingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
@@ -153,10 +165,14 @@ class MmapRecordingIntegrationTest {
 
 		byte[] recordingData = baos.toByteArray();
 		assertTrue(recordingData.length > 512 * 1024, "Recording should be larger than one chunk");
+
+		// Verify chunk rotation did not corrupt the recording
+		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
+				"Recording should be parseable after chunk rotation");
 	}
 
 	@Test
-	void testMmapRecordingToFile() throws IOException {
+	void testMmapRecordingToFile() throws IOException, CouldNotLoadRecordingException {
 		Path outputFile = tempDir.resolve("test-recording.jfr");
 		FileOutputStream fos = new FileOutputStream(outputFile.toFile());
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(fos,
@@ -181,10 +197,13 @@ class MmapRecordingIntegrationTest {
 		assertEquals('L', header[1]);
 		assertEquals('R', header[2]);
 		assertEquals(0, header[3]);
+
+		// Verify the file is parseable
+		assertNotNull(JfrLoaderToolkit.loadEvents(outputFile.toFile()), "Recording file should be parseable");
 	}
 
 	@Test
-	void testComparisonMmapVsHeap() throws IOException {
+	void testComparisonMmapVsHeap() throws IOException, CouldNotLoadRecordingException {
 		int numEvents = 1000;
 
 		// Test with mmap
@@ -213,9 +232,11 @@ class MmapRecordingIntegrationTest {
 		}
 		heapRecording.close();
 
-		// Both should produce valid JFR files
-		assertTrue(mmapBaos.size() > 0);
-		assertTrue(heapBaos.size() > 0);
+		// Both should produce parseable JFR files
+		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(mmapBaos.toByteArray())),
+				"Mmap recording should be parseable");
+		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(heapBaos.toByteArray())),
+				"Heap recording should be parseable");
 
 		// Sizes should be reasonably similar (within 10%)
 		double mmapSize = mmapBaos.size();
