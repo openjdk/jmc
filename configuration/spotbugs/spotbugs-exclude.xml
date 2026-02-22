@@ -172,6 +172,8 @@
 			<Class name="org.openjdk.jmc.rcp.application.p2.UpdateSiteURLToolkit"/>
 			<!-- getLogger() -->
 			<Class name="org.openjdk.jmc.rcp.logging.LoggingToolkit"/>
+			<!-- getLogger() -->
+			 <Class name="org.openjdk.jmc.ui.websocket.WebsocketPlugin"/>
 		</Or>
 		<Bug pattern="MS_EXPOSE_REP" />
 	</Match>

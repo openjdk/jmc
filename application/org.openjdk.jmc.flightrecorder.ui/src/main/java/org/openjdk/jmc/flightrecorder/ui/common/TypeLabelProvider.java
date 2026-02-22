@@ -141,6 +141,8 @@ public class TypeLabelProvider {
 			return new Color(0x000096);
 		case JdkTypeIDs.THREAD_DUMP:
 			return new Color(0xFFA800);
+		case JdkTypeIDs.TENURING_DISTRIBUTION:
+			return new Color(0x4682B4);
 		default:
 			// "http://www.oracle.com/hotspot/jvm/vm/gc/collector/old_garbage_collection" -> new Color(0x800000);
 			// "http://www.oracle.com/hotspot/jvm/vm/gc/collector/young_garbage_collection" -> new Color(0xFF8080);

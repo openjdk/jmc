@@ -150,7 +150,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 	}
 
 	private void setAddress(String address) {
-		if (isSelfMonitoring() || address == null) {
+		if (isSelfMonitoring()) {
 			// If we're attempting to monitor ourselves, use the local
 			// JVM (since the poor agent currently may go into infinite
 			// recursion otherwise).
@@ -160,7 +160,7 @@ public class LocalConnectionDescriptor implements IConnectionDescriptor {
 				// Not going to happen...
 				LOGGER.log(Level.SEVERE, "Failed to parse url", e);
 			}
-		} else {
+		} else if (address != null) {
 			try {
 				url = new JMXServiceURL(address);
 			} catch (MalformedURLException e) {
