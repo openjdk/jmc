@@ -687,6 +687,12 @@ public final class JdkAttributes {
 	public static final IAttribute<IQuantity> TENURING_THRESHOLD_MAXIMUM = attr("maxTenuringThreshold", //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_TENURING_THRESHOLD_MAXIMUM),
 			Messages.getString(Messages.ATTR_TENURING_THRESHOLD_MAXIMUM_DESC), NUMBER);
+	public static final IAttribute<IQuantity> TENURING_DISTRIBUTION_SIZE = attr("size", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TENURING_DISTRIBUTION_SIZE),
+			Messages.getString(Messages.ATTR_TENURING_DISTRIBUTION_SIZE_DESC), MEMORY);
+	public static final IAttribute<IQuantity> TENURING_DISTRIBUTION_AGE = attr("age", //$NON-NLS-1$
+			Messages.getString(Messages.ATTR_TENURING_DISTRIBUTION_AGE),
+			Messages.getString(Messages.ATTR_TENURING_DISTRIBUTION_AGE_DESC), NUMBER);
 	public static final IAttribute<Boolean> USES_TLABS = attr("usesTLABs", Messages.getString(Messages.ATTR_USES_TLABS), //$NON-NLS-1$
 			Messages.getString(Messages.ATTR_USES_TLABS_DESC), FLAG);
 	public static final IAttribute<IQuantity> TLAB_MIN_SIZE = attr("minTLABSize", //$NON-NLS-1$

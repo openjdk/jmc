@@ -92,6 +92,7 @@ import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector;
 import org.openjdk.jmc.flightrecorder.ui.common.FlavorSelector.FlavorSelectorState;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
+import org.openjdk.jmc.flightrecorder.ui.common.TreeExpandCollapseSupport;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.common.util.FilterMatcher;
@@ -303,6 +304,7 @@ public class ThreadDumpsPage extends AbstractDataPage {
 
 			};
 			tree.setLabelProvider(labelProvider);
+			TreeExpandCollapseSupport.installFor(tree);
 			tree.addSelectionChangedListener(
 					s -> text.setText(joinSelection(((IStructuredSelection) s.getSelection()).toList())));
 			treeTextFilter = TreeFilterWithTextInput.addFilterControl(filterComposite, tree,

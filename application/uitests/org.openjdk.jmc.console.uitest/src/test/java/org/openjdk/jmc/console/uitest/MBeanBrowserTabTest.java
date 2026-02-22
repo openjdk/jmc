@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -292,6 +292,10 @@ public class MBeanBrowserTabTest extends MCJemmyTestBase {
 		MCTree paramsTree = MCTree.getByItem("p0");
 		paramsTree.select("p0");
 		paramsTree.enterText("2");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		for (int i = 0; i < 2; i++) {
 			paramsTree.select("p0", "[" + i + "]");
 			paramsTree.enterText(Long.toString(threadIds[i]));

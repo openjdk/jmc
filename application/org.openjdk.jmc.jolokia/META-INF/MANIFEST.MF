@@ -7,7 +7,7 @@ Automatic-Module-Name: org.openjdk.jmc.jolokia
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- org.jolokia.client-jmx-adapter.standalone;visibility:=reexport,
+ org.jolokia.client-jmx-adapter.standalone;bundle-version="2.4.2";visibility:=reexport,
  org.openjdk.jmc.common,
  org.openjdk.jmc.rjmx,
  org.openjdk.jmc.ui,

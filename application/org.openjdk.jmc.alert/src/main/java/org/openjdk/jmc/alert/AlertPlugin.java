@@ -148,12 +148,12 @@ public class AlertPlugin extends MCAbstractUIPlugin {
 					new Object[] {df1.format(d), df2.format(d)}));
 		}
 		builder.append(NLS.bind(Messages.AlertPlugin_MESSAGE_EXCEPTION_INVOKING_ACTION, rule.getName()));
-		if (triggerMessage != null) {
-			builder.append("\n" + triggerMessage + "\n");
-		}
 		builder.append(NLS.bind(Messages.AlertPlugin_MESSAGE_EXCEPTION_INVOKING_ACTION_MESSAGE_CAPTION,
 				exception.getLocalizedMessage()));
 		builder.append(Messages.AlertPlugin_MESSAGE_EXCEPTION_INVOKING_ACTION_MESSAGE_MORE_INFORMATION);
+		if (triggerMessage != null) {
+			builder.append("\n" + triggerMessage);
+		}
 		return builder.toString();
 	}
 

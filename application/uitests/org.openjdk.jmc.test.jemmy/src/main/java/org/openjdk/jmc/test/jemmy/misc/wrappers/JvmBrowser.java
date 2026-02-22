@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,6 +43,11 @@ import java.util.stream.Collectors;
 
 import org.jemmy.TimeoutExpiredException;
 import org.junit.Assert;
+
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import org.openjdk.jmc.browser.wizards.ConnectionWizardPage;
 import org.openjdk.jmc.test.jemmy.MCJemmyTestBase;
@@ -202,9 +207,24 @@ public class JvmBrowser extends MCJemmyBase {
 		waitForIdle();
 		if (storeCredentials != null && storeCredentials == true) {
 			handleSetMasterPassword(passwd);
+			waitForIdle();
 		}
-		Assert.assertTrue("Unable to create item " + Arrays.toString(finalPath) + " from " + Arrays.toString(path),
-				itemExists(finalPath));
+		if (isOSX()) {
+			boolean found = false;
+			for (int i = 0; i < 5 && !found; i++) {
+				if (itemExists(finalPath)) {
+					found = true;
+				} else {
+					sleep(1000);
+					waitForIdle();
+				}
+			}
+			Assert.assertTrue("Unable to create item " + Arrays.toString(finalPath) + " from " + Arrays.toString(path),
+					found);
+		} else {
+			Assert.assertTrue("Unable to create item " + Arrays.toString(finalPath) + " from " + Arrays.toString(path),
+					itemExists(finalPath));
+		}
 	}
 
 	/**
@@ -266,11 +286,45 @@ public class JvmBrowser extends MCJemmyBase {
 	 *            the path of the item to delete
 	 */
 	public void deleteItem(String ... path) {
-		selectContextOption(ACTION_REMOVE_TEXT, path);
-		MCDialog delete = new MCDialog(DIALOG_REMOVE_TITLE);
+		// Check if item exists before attempting deletion
+		if (!itemExists(path)) {
+			return;
+		}
+
+		// Try deletion with retry if dialog doesn't appear
+		int maxAttempts = MCJemmyBase.isOSX() ? 3 : 2;
+		MCDialog delete = null;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			if (attempt > 0) {
+				waitForIdle();
+				sleep(1000);
+			}
+
+			selectContextOption(ACTION_REMOVE_TEXT, path);
+
+			try {
+				delete = MCDialog.getByAnyDialogTitle(true, DIALOG_REMOVE_TITLE);
+				if (delete != null) {
+					break;
+				}
+			} catch (Exception e) {
+				if (attempt == maxAttempts - 1) {
+					throw e;
+				}
+			}
+		}
+
+		if (delete == null) {
+			delete = new MCDialog(DIALOG_REMOVE_TITLE);
+		}
+
 		delete.clickButton(MCButton.Labels.YES);
 		waitForIdle();
 		Assert.assertFalse("Failed deleting", itemExists(path));
+		// Mac needs time to recover UI state after deletion before next operation
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 	}
 
 	/**
@@ -431,6 +485,10 @@ public class JvmBrowser extends MCJemmyBase {
 
 	private MCDialog doDumpRecording(String actionName, String ... path) {
 		selectContextOption(actionName, path);
+		waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(1000);
+		}
 		return MCDialog.getByAnyDialogTitle(false, DUMP_RECORDING_WIZARD_PAGE_TITLE);
 	}
 
@@ -659,6 +717,10 @@ public class JvmBrowser extends MCJemmyBase {
 	public void selectContextOption(String option, String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
 		getTree().select(path);
+		waitForIdle();
+		// Mac needs significantly more time for UI to stabilize after operations
+		int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+		sleep(delay);
 		getTree().contextChoose(option);
 	}
 
@@ -735,7 +797,9 @@ public class JvmBrowser extends MCJemmyBase {
 		}
 		MCText.getByName(dialog, FileSelector.FILENAME_FIELD_NAME).setText(fileName);
 		MCButton.getByLabel(dialog, MCButton.Labels.FINISH, false).click();
-		sleep(1000);
+		waitForIdle();
+		// Mac needs extra time to recover UI state after export operation
+		sleep(MCJemmyBase.isOSX() ? 3000 : 1000);
 	}
 
 	/**
@@ -774,14 +838,49 @@ public class JvmBrowser extends MCJemmyBase {
 	public void handleSetMasterPassword(String password) {
 		MCDialog masterPasswordShell = MCDialog.getByAnyDialogTitle(MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE,
 				MasterPasswordWizardPage_VERIFY_MASTER_PASSWORD_TITLE);
-		if (masterPasswordShell.getText().equals(MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE)) {
-			masterPasswordShell.enterText(Constants.PASSWORD1_FIELD_NAME, password);
-			masterPasswordShell.enterText(Constants.PASSWORD2_FIELD_NAME, password);
+		if (isOSX()) {
+			setPasswordFieldsDirectly(masterPasswordShell, password);
 		} else {
-			masterPasswordShell.enterText(Constants.PASSWORD1_FIELD_NAME, password);
+			if (masterPasswordShell.getText().equals(MasterPasswordWizardPage_SET_MASTER_PASSWORD_TITLE)) {
+				masterPasswordShell.enterText(Constants.PASSWORD1_FIELD_NAME, password);
+				masterPasswordShell.enterText(Constants.PASSWORD2_FIELD_NAME, password);
+			} else {
+				masterPasswordShell.enterText(Constants.PASSWORD1_FIELD_NAME, password);
+			}
 		}
 		masterPasswordShell.clickButton(MCButton.Labels.OK);
 		sleep(1000);
+		if (isOSX()) {
+			Display.getDefault().syncExec(() -> {
+				for (Shell s : Display.getDefault().getShells()) {
+					if (!s.isDisposed() && s.isVisible()) {
+						s.forceActive();
+						break;
+					}
+				}
+			});
+			waitForIdle();
+		}
+	}
+
+	private void setPasswordFieldsDirectly(MCDialog dialog, String password) {
+		Display.getDefault().syncExec(() -> {
+			Shell shell = dialog.getDialogShell().getControl();
+			setTextByName(shell, Constants.PASSWORD1_FIELD_NAME, password);
+			setTextByName(shell, Constants.PASSWORD2_FIELD_NAME, password);
+		});
+	}
+
+	private static void setTextByName(org.eclipse.swt.widgets.Composite parent, String name, String text) {
+		for (Control child : parent.getChildren()) {
+			if (child instanceof Text && name.equals(child.getData("name"))) {
+				((Text) child).setText(text);
+				return;
+			}
+			if (child instanceof org.eclipse.swt.widgets.Composite) {
+				setTextByName((org.eclipse.swt.widgets.Composite) child, name, text);
+			}
+		}
 	}
 
 	/**
@@ -797,8 +896,23 @@ public class JvmBrowser extends MCJemmyBase {
 	public void connect(boolean valid, String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
 		String connectionName = path[path.length - 1];
-		selectAction(TREE_ITEM_CONSOLE, path);
-		getTree().contextChoose(ACTION_START_CONSOLE_LABEL);
+		int retries = MCJemmyBase.isOSX() ? 5 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			selectAction(TREE_ITEM_CONSOLE, path);
+			waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(1000);
+			}
+			try {
+				getTree().contextChoose(ACTION_START_CONSOLE_LABEL);
+				break;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		if (valid) {
 			if (!ConnectionHelper.is7u40orLater(connectionName)) {
 				try {

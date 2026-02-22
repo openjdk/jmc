@@ -527,7 +527,7 @@ public class LocalJVMToolkit {
 	 */
 	public static String executeCommandForPid(String pid, String command)
 			throws AttachNotSupportedException, IOException, AgentLoadException {
-		return executeCommandForPid(pid, command, false);
+		return executeCommandForPid(pid, command, true);
 	}
 
 	/**

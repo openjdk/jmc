@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -224,28 +224,21 @@ public final class ServerHandle implements IServerHandle {
 	}
 
 	private static class CleanupAction implements Runnable {
-		private final List<DefaultConnectionHandle> connectionHandles;
+		private final RJMXConnection connection;
 
 		CleanupAction(RJMXConnection connection, List<DefaultConnectionHandle> connectionHandles) {
-			this.connectionHandles = new ArrayList<>(connectionHandles);
+			// Store the connection so we can close it as a fallback if dispose() was never called.
+			// Note: We don't copy connectionHandles because it would be empty at construction time
+			// and handles are managed via explicit close() calls anyway.
+			this.connection = connection;
 		}
 
 		@Override
 		public void run() {
 			try {
-				disconnectQuietly();
+				connection.close();
 			} catch (Exception e) {
 				// Ignore all exceptions during cleanup
-			}
-		}
-
-		private void disconnectQuietly() {
-			for (DefaultConnectionHandle handle : connectionHandles) {
-				try {
-					IOToolkit.closeSilently(handle);
-				} catch (Exception e) {
-					// Ignore exceptions during cleanup
-				}
 			}
 		}
 	}

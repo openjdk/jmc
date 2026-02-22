@@ -17,7 +17,7 @@ message should be "6789: Commit message".
 
 The mailing list for JDK Mission Control is `jmc-dev@openjdk.java.net`. See
 <https://mail.openjdk.java.net/mailman/listinfo/jmc-dev> for instructions
-on how to subscribe of if you want to read the archives.
+on how to subscribe or if you want to read the archives.
 
 ## Issues
 
@@ -45,4 +45,3 @@ If not, ask for an invite in the jmc-dev mailing list.
 
 If you have a question or need help, please send an email to our mailing list
 `jmc-dev@openjdk.java.net` or stop by the JMC slack channel.
-

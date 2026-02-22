@@ -2,7 +2,7 @@
 
 Mission Control is an open source production time profiling and diagnostics tool for Java.
 
-Builds of Mission Control can currently be found in the Oracle JDK on supported platforms and in the Eclipse marketplace. 
+Builds of Mission Control can currently be found in the Oracle JDK on supported platforms and in the Eclipse Marketplace.
 
 For more information on Mission Control, see https://www.oracle.com/missioncontrol.
 
@@ -217,7 +217,7 @@ Prerequisites for building Mission Control:
 
 2. Install a JDK 21 distribution and make sure that it too is declared in the local maven toolchain.
 
-3. Install Maven (version 3.5.x. or above)
+3. Install Maven (version 3.5.x or above)
 
 On Linux or macOS you can use the `build.sh` script to build JMC:
 ```
@@ -268,7 +268,7 @@ If maven reports a toolchain error, e.g. :
 [ERROR] Please make sure you define the required toolchains in your ~/.m2/toolchains.xml file.
 ```
 
-Create or amend the local maven toolchain file by pointing to the right/any JDK 17.
+Create or amend the local maven toolchain file by pointing to any JDK 17 installation.
 
 <details><summary><code>~/.m2/toolchains.xml</code></summary>
 
@@ -346,7 +346,7 @@ mvn verify -P uitests -Dspotbugs.skip=true
 ```
 
 ## Filtering Test Runs
-Aside from the from the simple -test Maven flag test classes that should be run/not run can be specified by means of the system properties "test.includes" and/or "test.excludes". Multiple patterns can be specified by comma separation.
+Aside from the simple -test Maven flag, test classes that should be run/not run can be specified by means of the system properties "test.includes" and/or "test.excludes". Multiple patterns can be specified by comma separation.
 
 For example:
 
@@ -422,7 +422,7 @@ There is another update site for the Eclipse plug-ins, providing plug-ins for ru
 application/org.openjdk.jmc.updatesite.ide/target/
 ```
 
-To install it into Eclipe, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
+To install it into Eclipse, simply open Eclipse and select Help | Install New Software... In the dialog, click Add... and then click the Archive... button. Select the built update site, e.g. 
 
 ```bash
 application/org.openjdk.jmc.updatesite.ide/target/org.openjdk.jmc.updatesite.ide-10.0.0-SNAPSHOT.zip

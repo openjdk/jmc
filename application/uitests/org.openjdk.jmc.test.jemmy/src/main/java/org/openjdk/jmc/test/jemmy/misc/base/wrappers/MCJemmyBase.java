@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -106,7 +106,9 @@ public class MCJemmyBase {
 	public static final long VISIBLE_LOOKUP_DEFAULT_TIMEOUT_MS = 10000;
 	private static final long VISIBLE_LOOKUP_TIMEOUT_MS = Long.getLong("jmc.test.visible.lookup.timeout",
 			VISIBLE_LOOKUP_DEFAULT_TIMEOUT_MS);
-	private static final int BETWEEN_KEYSTROKES_SLEEP = 100;
+	private static final int BETWEEN_KEYSTROKES_DEFAULT_SLEEP_MS = 25;
+	protected static final int BETWEEN_KEYSTROKES_SLEEP = Integer.getInteger("jmc.test.between.keystrokes.sleep",
+			BETWEEN_KEYSTROKES_DEFAULT_SLEEP_MS);
 	public static final int LOOKUP_SLEEP_TIME_MS = 100;
 	protected static Wrap<? extends Shell> shell;
 	protected Wrap<? extends Control> control;
@@ -116,6 +118,7 @@ public class MCJemmyBase {
 	public static final KeyboardButtons CLOSE_BUTTON;
 	public static final KeyboardModifiers SHORTCUT_MODIFIER;
 	public static final String OS_NAME;
+	private static final boolean IS_OS_X;
 	private static final int IDLE_LOOP_COUNT = 3;
 	private static final int IDLE_LOOP_TIME_STEP = 100;
 	private static final int IDLE_LOOP_TIMEOUT_MS = 10000;
@@ -151,18 +154,18 @@ public class MCJemmyBase {
 		Screen.SCREEN.getEnvironment().setInputFactory(new AWTRobotInputFactory());
 
 		OS_NAME = System.getProperty("os.name").toLowerCase();
+		IS_OS_X = OS_NAME.contains("os x");
 		SELECTION_BUTTON = OS_NAME.contains("linux") ? KeyboardButtons.SPACE : KeyboardButtons.ENTER;
-		EXPAND_BUTTON = OS_NAME.contains("os x") ? KeyboardButtons.RIGHT : KeyboardButtons.ADD;
-		COLLAPSE_BUTTON = OS_NAME.contains("os x") ? KeyboardButtons.LEFT : KeyboardButtons.SUBTRACT;
+		EXPAND_BUTTON = IS_OS_X ? KeyboardButtons.RIGHT : KeyboardButtons.ADD;
+		COLLAPSE_BUTTON = IS_OS_X ? KeyboardButtons.LEFT : KeyboardButtons.SUBTRACT;
 		CLOSE_BUTTON = KeyboardButtons.W;
-		SHORTCUT_MODIFIER = OS_NAME.contains("os x") ? KeyboardModifiers.META_DOWN_MASK
-				: KeyboardModifiers.CTRL_DOWN_MASK;
+		SHORTCUT_MODIFIER = IS_OS_X ? KeyboardModifiers.META_DOWN_MASK : KeyboardModifiers.CTRL_DOWN_MASK;
 
 		Environment.getEnvironment().setProperty(Boolean.class, SWTMenu.SKIPS_DISABLED_PROP,
 				(OS_NAME.contains("windows")) ? false : true);
 
 		// keyboard re-mapping for Mac OS X with Swedish keyboard
-		if ("sv".equalsIgnoreCase(InputContext.getInstance().getLocale().getLanguage()) && OS_NAME.contains("os x")) {
+		if ("sv".equalsIgnoreCase(InputContext.getInstance().getLocale().getLanguage()) && IS_OS_X) {
 			// first making sure that the DefaultCharBindingMap has been loaded and initialized
 			getShell().keyboard();
 			DefaultCharBindingMap map = (DefaultCharBindingMap) Environment.getEnvironment().getBindingMap();
@@ -551,9 +554,10 @@ public class MCJemmyBase {
 	 *            origin point of context (right-click)
 	 */
 	private void openContextMenuAtPoint(Point p) {
-		Display.getDefault().syncExec(() -> {
-			control.mouse().click(1, p, MouseButtons.BUTTON3);
-		});
+		// Jemmy Robot handles its own threading. Wrapping in syncExec causes
+		// deadlock on macOS: Robot.waitForIdle -> EventQueue.invokeAndWait
+		// blocks because AWT needs the main thread which is running the syncExec.
+		control.mouse().click(1, p, MouseButtons.BUTTON3);
 	}
 
 	/**
@@ -765,6 +769,13 @@ public class MCJemmyBase {
 	 */
 	public boolean isWidgetUpdating(int waitTimeMillis) {
 		return isWidgetUpdating(control, waitTimeMillis);
+	}
+
+	/**
+	 * @return {@code true} if running on macOS
+	 */
+	public static boolean isOSX() {
+		return IS_OS_X;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -44,10 +44,9 @@
 		<jmc.config.path>${project.basedir}/../../configuration</jmc.config.path>
 	</properties>
 	<modules>
+		<module>platform-definition-2025-09</module>
 		<module>platform-definition-2025-06</module>
 		<module>platform-definition-2025-03</module>
 		<module>platform-definition-2024-12</module>
-		<module>platform-definition-2024-09</module>
-		<module>platform-definition-2024-06</module>
 	</modules>
 </project>

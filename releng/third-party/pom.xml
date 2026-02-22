@@ -51,17 +51,17 @@
 		<jetty-maven-plugin.version>11.0.15</jetty-maven-plugin.version>
 		<maven-enforcer-plugin.version>3.3.0</maven-enforcer-plugin.version>
 		<!-- Versions -->
-		<jakarta.mail.version>2.0.3</jakarta.mail.version>
-		<angus.activation.version>2.0.2</angus.activation.version>
-		<jakarta.activation.version>2.1.3</jakarta.activation.version>
+		<jakarta.mail.version>2.0.5</jakarta.mail.version>
+		<angus.activation.version>2.0.3</angus.activation.version>
+		<jakarta.activation.version>2.1.4</jakarta.activation.version>
 		<osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 		<owasp.encoder.version>1.2.3</owasp.encoder.version>
-		<lz4.version>1.8.0</lz4.version>
+		<lz4.version>1.10.2</lz4.version>
 		<hdrhistogram.version>2.2.2</hdrhistogram.version>
 		<jemmy.version>2.0.0</jemmy.version>
-		<jetty.version>12.0.21</jetty.version>
+		<jetty.version>12.1.0</jetty.version>
 		<spifly.version>1.3.7</spifly.version>
-		<jolokia.version>2.0.2</jolokia.version>
+		<jolokia.version>2.4.2</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
 		<fireplace.version>0.0.1-rc.9</fireplace.version>
 		<radiance.version>7.5.0</radiance.version>
@@ -104,7 +104,7 @@
 									<id>org.owasp.encoder:encoder:${owasp.encoder.version}</id>
 								</artifact>
 								<artifact>
-									<id>org.lz4:lz4-java:${lz4.version}</id>
+									<id>at.yawk.lz4:lz4-java:${lz4.version}</id>
 								</artifact>
 								<artifact>
 									<id>org.hdrhistogram:HdrHistogram:${hdrhistogram.version}</id>

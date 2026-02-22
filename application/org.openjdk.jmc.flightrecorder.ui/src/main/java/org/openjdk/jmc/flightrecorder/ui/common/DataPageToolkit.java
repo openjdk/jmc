@@ -198,10 +198,11 @@ public class DataPageToolkit {
 
 		// FIXME: Handle ColorProvider and combined events
 		Map<String, Integer> columnsOrderMap = new HashMap<>();
-		columnsOrderMap.put(createColumnId(JfrAttributes.START_TIME), 1);
-		columnsOrderMap.put(createColumnId(JfrAttributes.DURATION), 2);
-		columnsOrderMap.put(createColumnId(JfrAttributes.END_TIME), 3);
-		columnsOrderMap.put(createColumnId(JfrAttributes.EVENT_THREAD), 4);
+		columnsOrderMap.put(createColumnId(JfrAttributes.EVENT_TYPE), 1);
+		columnsOrderMap.put(createColumnId(JfrAttributes.START_TIME), 2);
+		columnsOrderMap.put(createColumnId(JfrAttributes.DURATION), 3);
+		columnsOrderMap.put(createColumnId(JfrAttributes.END_TIME), 4);
+		columnsOrderMap.put(createColumnId(JfrAttributes.EVENT_THREAD), 5);
 		DEFAULT_COLUMNS_ORDER = Collections.unmodifiableMap(columnsOrderMap);
 	}
 

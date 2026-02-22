@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -31,9 +31,10 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openjdk.jmc.flightrecorder.ui.websocket;
+package org.openjdk.jmc.ui.websocket;
 
 import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +46,12 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.ee9.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee9.websocket.api.Session;
 import org.eclipse.jetty.ee9.websocket.api.WebSocketAdapter;
 import org.eclipse.jetty.ee9.websocket.server.config.JettyWebSocketServletContainerInitializer;
-import org.eclipse.jetty.ee9.websocket.servlet.WebSocketUpgradeFilter;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.serializers.dot.DotSerializer;
 import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
@@ -60,14 +60,8 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
 import org.openjdk.jmc.flightrecorder.stacktrace.graph.StacktraceGraphModel;
 import org.openjdk.jmc.flightrecorder.stacktrace.tree.StacktraceTreeModel;
-import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 
-public class WebsocketServer {
-
-	private static int MAX_MESSAGE_SIZE = 1024 * 1024 * 1024;
-	private static int IDLE_TIMEOUT_MINUTES = 5;
-
-	private final int port;
+public class MCWebsocketServer {
 	private Server server;
 	private List<WebsocketConnectionHandler> handlers = new CopyOnWriteArrayList<>();
 	private List<WebsocketConnectionHandler> treeHandlers = new CopyOnWriteArrayList<>();
@@ -75,16 +69,11 @@ public class WebsocketServer {
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private IItemCollection currentSelection = null;
 
-	public WebsocketServer(int port) {
-		this.port = port;
-		executorService.execute(() -> startServer());
+	public MCWebsocketServer(int port) {
+		executorService.execute(() -> startServer(port));
 	}
 
-	public int getPort() {
-		return port;
-	}
-
-	private void startServer() {
+	public void startServer(int port) {
 		server = new Server();
 		ServerConnector connector = new ServerConnector(server);
 		connector.setHost("127.0.0.1");
@@ -96,24 +85,22 @@ public class WebsocketServer {
 		server.setHandler(context);
 
 		JettyWebSocketServletContainerInitializer.configure(context, (servletContext, container) -> {
-			container.setMaxBinaryMessageSize(MAX_MESSAGE_SIZE);
-			container.setIdleTimeout(Duration.ofMinutes(IDLE_TIMEOUT_MINUTES));
+			container.setMaxBinaryMessageSize(Long.MAX_VALUE);
+			container.setIdleTimeout(Duration.ofMinutes(Long.MAX_VALUE));
 			container.addMapping("/events/*", (req, resp) -> {
-				// try to send the current selection when the client connects
-				// for simplicity, we serialise for every new connection
-				String eventsJson = WebsocketServer.toEventsJsonString(currentSelection);
+				String eventsJson = MCWebsocketServer.toEventsJsonString(currentSelection);
 				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(eventsJson);
 				handlers.add(handler);
 				return handler;
 			});
 			container.addMapping("/tree/*", (req, resp) -> {
-				String treeJson = WebsocketServer.toTreeModelJsonString(currentSelection);
+				String treeJson = MCWebsocketServer.toTreeModelJsonString(currentSelection);
 				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(treeJson);
 				treeHandlers.add(handler);
 				return handler;
 			});
 			container.addMapping("/graph/*", (req, resp) -> {
-				String dot = WebsocketServer.toGraphModelDotString(currentSelection);
+				String dot = MCWebsocketServer.toGraphModelDotString(currentSelection);
 				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(dot);
 				graphHandlers.add(handler);
 				return handler;
@@ -121,13 +108,9 @@ public class WebsocketServer {
 		});
 
 		try {
-			WebSocketUpgradeFilter.ensureFilter(context.getServletContext());
-			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-					"Starting websocket server listening on port " + port);
 			server.start();
-			server.join();
 		} catch (Exception e) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to start websocket server", e);
+			WebsocketPlugin.getLogger().log(Level.SEVERE, "Failed to start websocket server", e);
 		}
 	}
 
@@ -139,15 +122,15 @@ public class WebsocketServer {
 	}
 
 	private void notifyAllEventHandlers(IItemCollection events) {
-		handlers = notifyAllHandlers(events, handlers, WebsocketServer::toEventsJsonString);
+		handlers = notifyAllHandlers(events, handlers, MCWebsocketServer::toEventsJsonString);
 	}
 
 	private void notifyAllGraphHandlers(IItemCollection events) {
-		graphHandlers = notifyAllHandlers(events, graphHandlers, WebsocketServer::toGraphModelDotString);
+		graphHandlers = notifyAllHandlers(events, graphHandlers, MCWebsocketServer::toGraphModelDotString);
 	}
 
 	private void notifyAllTreeHandlers(IItemCollection events) {
-		treeHandlers = notifyAllHandlers(events, treeHandlers, WebsocketServer::toTreeModelJsonString);
+		treeHandlers = notifyAllHandlers(events, treeHandlers, MCWebsocketServer::toTreeModelJsonString);
 	}
 
 	private static String toEventsJsonString(IItemCollection items) {
@@ -187,15 +170,8 @@ public class WebsocketServer {
 		return handlers;
 	}
 
-	public void shutdown() {
-		try {
-			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-					"Stopping websocket server listening on port " + port);
-			server.stop();
-			// TODO: see if we need to cleanup executor service and thread
-		} catch (Exception e) {
-			FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to stop websocket server", e);
-		}
+	public void shutdown() throws Exception {
+		server.stop();
 	}
 
 	private static class WebsocketConnectionHandler extends WebSocketAdapter {
@@ -207,12 +183,12 @@ public class WebsocketServer {
 
 		public void sendMessage(String message) {
 			if (getSession() != null && isConnected()) {
-				FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
+				WebsocketPlugin.getLogger().log(Level.INFO,
 						"Sending message to " + getSession().getRemoteAddress().toString());
 				try {
 					getSession().getRemote().sendString(message);
 				} catch (IOException e) {
-					FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to send websocket message", e);
+					WebsocketPlugin.getLogger().log(Level.SEVERE, "Failed to send websocket message", e);
 				}
 			}
 		}
@@ -220,15 +196,14 @@ public class WebsocketServer {
 		@Override
 		public void onWebSocketConnect(Session sess) {
 			super.onWebSocketConnect(sess);
-			FlightRecorderUI.getDefault().getLogger().log(Level.INFO,
-					"Socket connected to " + sess.getRemoteAddress().toString());
+			WebsocketPlugin.getLogger().log(Level.INFO, "Socket connected to " + sess.getRemoteAddress().toString());
 			try {
 				if (firstMessage != null) {
 					getSession().getRemote().sendString(firstMessage);
 					firstMessage = null;
 				}
 			} catch (IOException e) {
-				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Failed to show outline view", e);
+				WebsocketPlugin.getLogger().log(Level.SEVERE, "Failed to show outline view", e);
 			}
 		}
 
@@ -240,16 +215,18 @@ public class WebsocketServer {
 		@Override
 		public void onWebSocketClose(int statusCode, String reason) {
 			super.onWebSocketClose(statusCode, reason);
-			FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Socket closed: [" + statusCode + "] " + reason);
+			WebsocketPlugin.getLogger().log(Level.INFO, "Socket closed: [" + statusCode + "] " + reason);
 		}
 
 		@Override
 		public void onWebSocketError(Throwable cause) {
 			super.onWebSocketError(cause);
-			if (cause.getCause() instanceof TimeoutException) {
-				FlightRecorderUI.getDefault().getLogger().log(Level.INFO, "Websocket timed out");
+			if (cause instanceof TimeoutException) {
+				WebsocketPlugin.getLogger().log(Level.INFO, "Websocket timed out");
+			} else if (cause instanceof ClosedChannelException) {
+				WebsocketPlugin.getLogger().log(Level.INFO, "Websocket channel has closed");
 			} else {
-				FlightRecorderUI.getDefault().getLogger().log(Level.SEVERE, "Websocket error", cause);
+				WebsocketPlugin.getLogger().log(Level.SEVERE, "Websocket error", cause);
 			}
 		}
 	}
