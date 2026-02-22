@@ -36,6 +36,7 @@ package org.openjdk.jmc.flightrecorder.writer;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -269,5 +270,18 @@ class LEB128MappedWriterTest {
 		writer.writeBytes(new byte[1000]);
 
 		assertEquals(initialCapacity, writer.capacity()); // Capacity is fixed
+	}
+
+	@Test
+	void testWriteBeyondCapacity() throws IOException {
+		Path tinyFile = tempDir.resolve("tiny.mmap");
+		LEB128MappedWriter tinyWriter = new LEB128MappedWriter(tinyFile, 10);
+		try {
+			byte[] oversized = new byte[15]; // Exceeds 10-byte capacity
+			assertThrows(IndexOutOfBoundsException.class, () -> tinyWriter.writeBytes(oversized));
+		} finally {
+			tinyWriter.close();
+			Files.deleteIfExists(tinyFile);
+		}
 	}
 }

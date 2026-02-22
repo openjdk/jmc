@@ -109,8 +109,7 @@ final class LEB128MappedWriter extends AbstractLEB128Writer {
 	 */
 	void copyTo(OutputStream out) throws IOException {
 		byte[] data = new byte[position];
-		buffer.position(0);
-		buffer.get(data);
+		buffer.get(0, data, 0, position);
 		out.write(data);
 	}
 
@@ -163,8 +162,7 @@ final class LEB128MappedWriter extends AbstractLEB128Writer {
 			return offset;
 		}
 		int off = (int) offset;
-		buffer.position(off);
-		buffer.put(data);
+		buffer.put(off, data, 0, data.length);
 		position = Math.max(position, off + data.length);
 		return off + data.length;
 	}
@@ -209,8 +207,7 @@ final class LEB128MappedWriter extends AbstractLEB128Writer {
 	 */
 	byte[] exportBytes() {
 		byte[] data = new byte[position];
-		buffer.position(0);
-		buffer.get(data);
+		buffer.get(0, data, 0, position);
 		return data;
 	}
 

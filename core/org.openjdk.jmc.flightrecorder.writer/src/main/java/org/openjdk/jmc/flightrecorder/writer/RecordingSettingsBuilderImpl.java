@@ -76,6 +76,9 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 
 	@Override
 	public RecordingSettingsBuilder withMmap(int chunkSize) {
+		if (chunkSize <= 0) {
+			throw new IllegalArgumentException("chunkSize must be positive, got: " + chunkSize);
+		}
 		this.useMmap = true;
 		this.mmapChunkSize = chunkSize;
 		return this;

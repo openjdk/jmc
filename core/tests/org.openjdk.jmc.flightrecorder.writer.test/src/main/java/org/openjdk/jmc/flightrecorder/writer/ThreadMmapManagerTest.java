@@ -100,6 +100,14 @@ class ThreadMmapManagerTest {
 		assertTrue(writer1 != writer2);
 	}
 
+	/** Polls until manager has at least {@code count} flushed chunks or 5 seconds elapse. */
+	private static void awaitChunkCount(ThreadMmapManager mgr, int count) throws InterruptedException {
+		long deadline = System.currentTimeMillis() + 5_000;
+		while (mgr.getFlushedChunks().size() < count && System.currentTimeMillis() < deadline) {
+			Thread.sleep(10);
+		}
+	}
+
 	@Test
 	void testRotateChunk() throws IOException, InterruptedException {
 		long threadId = Thread.currentThread().getId();
@@ -113,8 +121,7 @@ class ThreadMmapManagerTest {
 		// Rotate
 		manager.rotateChunk(threadId);
 
-		// Give background flush time to complete
-		Thread.sleep(100);
+		awaitChunkCount(manager, 1);
 
 		// Should have flushed chunks
 		List<Path> flushed = manager.getFlushedChunks();
@@ -159,8 +166,7 @@ class ThreadMmapManagerTest {
 		writer.writeByte((byte) 3);
 		manager.rotateChunk(threadId);
 
-		// Give background flushes time to complete
-		Thread.sleep(200);
+		awaitChunkCount(manager, 3);
 
 		// Should have multiple flushed chunks
 		List<Path> flushed = manager.getFlushedChunks();
@@ -213,19 +219,14 @@ class ThreadMmapManagerTest {
 	}
 
 	@Test
-	void testCleanup() throws IOException {
+	void testCleanup() throws IOException, InterruptedException {
 		long threadId = Thread.currentThread().getId();
 		LEB128MappedWriter writer = manager.getActiveWriter(threadId);
 
 		writer.writeByte((byte) 1);
 		manager.rotateChunk(threadId);
 
-		// Wait for flush
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		awaitChunkCount(manager, 1);
 
 		List<Path> flushed = manager.getFlushedChunks();
 		assertFalse(flushed.isEmpty());
@@ -247,8 +248,7 @@ class ThreadMmapManagerTest {
 		writer.writeByte((byte) 42);
 		manager.rotateChunk(threadId);
 
-		// Wait for background flush
-		Thread.sleep(200);
+		awaitChunkCount(manager, 1);
 
 		List<Path> flushed = manager.getFlushedChunks();
 		assertFalse(flushed.isEmpty());
@@ -271,7 +271,7 @@ class ThreadMmapManagerTest {
 			manager.rotateChunk(threadId);
 		}
 
-		Thread.sleep(300);
+		awaitChunkCount(manager, 3);
 
 		List<Path> flushed = manager.getFlushedChunks();
 		assertEquals(3, flushed.size());

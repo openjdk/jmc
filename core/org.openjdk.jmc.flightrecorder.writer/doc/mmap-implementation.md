@@ -61,9 +61,9 @@ Recording recording = Recordings.newRecording(outputStream,
 ### Memory Usage
 
 **Mmap mode:**
-- Per-thread memory: 2 × chunk size (default 8MB per thread)
-- Metadata/checkpoint: ~6MB heap (bounded)
-- Total heap: ~6MB + O(threads)
+- Per-thread memory: 2 × chunk size (default 4MB per thread, configurable)
+- Metadata/checkpoint heap: proportional to registered types, constant pool entries, and cached frames
+- Total off-heap: O(threads × chunkSize); heap usage is bounded by metadata structures, not event data
 
 **Legacy heap mode:**
 - All event data in heap
@@ -172,7 +172,7 @@ See `tests/org.openjdk.jmc.flightrecorder.writer.benchmarks/README.md` for detai
 ### Performance Goals
 
 - **Throughput**: < 5% regression vs heap mode
-- **Memory**: Bounded at ~6MB + (threads × 8MB)
+- **Memory**: Bounded at metadata overhead + (threads × 2 × chunkSize)
 - **Latency**: No significant increase in p99 event write time
 
 ## Backward Compatibility

@@ -156,10 +156,13 @@ java -jar target/benchmarks.jar AllocationRate -prof gc
 - **CPU**: Apple M1 Max
 - **Heap**: 2GB (-Xms2G -Xmx2G)
 - **Branch**: jb/JMC-7992 (pre-optimization)
+- **Mode**: Heap-based writer (mmap mode not covered by these benchmarks)
 
 ### Results Summary
 
-**Note**: This is a quick baseline run using `-wi 1 -i 2 -f 1` for faster validation. For production benchmarking, use the full configuration with 3 warmup iterations and 5 measurement iterations.
+**Note**: These results cover heap-based recording only. The existing benchmarks do not include mmap-mode variants; mmap vs heap comparison requires adding `@Param`-based mode switching to the benchmark classes.
+
+This is a quick baseline run using `-wi 1 -i 2 -f 1` for faster validation. For production benchmarking, use the full configuration with 3 warmup iterations and 5 measurement iterations.
 
 #### Event Throughput Benchmarks (ops/sec - Higher is Better)
 ```

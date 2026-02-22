@@ -35,20 +35,24 @@ package org.openjdk.jmc.flightrecorder.writer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
-import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
 import org.junit.jupiter.api.Test;
@@ -72,6 +76,32 @@ class MmapRecordingIntegrationTest {
 
 	@TempDir
 	Path tempDir;
+
+	@Test
+	void testZeroEventMmapRecording() throws IOException, CouldNotLoadRecordingException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
+
+		recording.close();
+
+		byte[] recordingData = baos.toByteArray();
+		assertTrue(recordingData.length > 0, "Empty recording should still produce JFR output");
+		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
+				"Empty mmap recording should be parseable");
+	}
+
+	@Test
+	void testWriteAfterClosedThrows() throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
+
+		recording.close();
+
+		TestEvent event = new TestEvent();
+		assertThrows(IllegalStateException.class, () -> recording.writeEvent(event));
+	}
 
 	@Test
 	void testBasicMmapRecording() throws IOException, CouldNotLoadRecordingException {
@@ -112,17 +142,21 @@ class MmapRecordingIntegrationTest {
 		int numThreads = 4;
 		int eventsPerThread = 250; // Total 1000 events
 		CountDownLatch latch = new CountDownLatch(numThreads);
+		CyclicBarrier startBarrier = new CyclicBarrier(numThreads);
 		ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
 		for (int t = 0; t < numThreads; t++) {
 			executor.submit(() -> {
 				try {
+					startBarrier.await(); // Start all threads simultaneously for better race coverage
 					for (int i = 0; i < eventsPerThread; i++) {
 						TestEvent event = new TestEvent();
 						event.message = "Thread " + Thread.currentThread().getId();
 						event.value = i;
 						recording.writeEvent(event);
 					}
+				} catch (BrokenBarrierException e) {
+					throw new RuntimeException(e);
 				} finally {
 					latch.countDown();
 				}
@@ -192,7 +226,9 @@ class MmapRecordingIntegrationTest {
 
 		// Verify file is valid JFR
 		byte[] header = new byte[4];
-		Files.newInputStream(outputFile).read(header);
+		try (InputStream is = Files.newInputStream(outputFile)) {
+			is.read(header);
+		}
 		assertEquals('F', header[0]);
 		assertEquals('L', header[1]);
 		assertEquals('R', header[2]);
