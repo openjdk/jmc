@@ -84,7 +84,7 @@ public class EventWriteThroughputBenchmark {
 		tempFile = Files.createTempFile("jfr-bench-throughput-", ".jfr");
 		OutputStream out = Files.newOutputStream(tempFile);
 		if ("mmap".equals(mode)) {
-			recording = Recordings.newRecording(out, settings -> settings.withMmap());
+			recording = Recordings.newRecording(out, settings -> settings.withMmap().withJdkTypeInitialization());
 		} else {
 			recording = Recordings.newRecording(out);
 		}

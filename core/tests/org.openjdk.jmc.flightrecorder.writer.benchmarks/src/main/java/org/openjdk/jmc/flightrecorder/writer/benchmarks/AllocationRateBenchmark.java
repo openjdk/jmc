@@ -84,7 +84,7 @@ public class AllocationRateBenchmark {
 		tempFile = Files.createTempFile("jfr-bench-alloc-", ".jfr");
 		OutputStream out = Files.newOutputStream(tempFile);
 		if ("mmap".equals(mode)) {
-			recording = Recordings.newRecording(out, settings -> settings.withMmap());
+			recording = Recordings.newRecording(out, settings -> settings.withMmap().withJdkTypeInitialization());
 		} else {
 			recording = Recordings.newRecording(out);
 		}
