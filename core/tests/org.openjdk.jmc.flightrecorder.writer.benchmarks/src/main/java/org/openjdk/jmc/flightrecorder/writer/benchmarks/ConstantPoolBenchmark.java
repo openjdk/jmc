@@ -81,7 +81,7 @@ public class ConstantPoolBenchmark {
 	private Type eventType;
 	private Path tempFile;
 
-	@Setup(Level.Trial)
+	@Setup(Level.Iteration)
 	public void setup() throws Exception {
 		tempFile = Files.createTempFile("jfr-bench-pool-", ".jfr");
 		OutputStream out = Files.newOutputStream(tempFile);
@@ -97,7 +97,7 @@ public class ConstantPoolBenchmark {
 		});
 	}
 
-	@TearDown(Level.Trial)
+	@TearDown(Level.Iteration)
 	public void teardown() throws Exception {
 		if (recording != null) {
 			recording.close();

@@ -79,7 +79,7 @@ public class AllocationRateBenchmark {
 	private Type eventType;
 	private Path tempFile;
 
-	@Setup(Level.Trial)
+	@Setup(Level.Iteration)
 	public void setup() throws Exception {
 		tempFile = Files.createTempFile("jfr-bench-alloc-", ".jfr");
 		OutputStream out = Files.newOutputStream(tempFile);
@@ -95,7 +95,7 @@ public class AllocationRateBenchmark {
 		});
 	}
 
-	@TearDown(Level.Trial)
+	@TearDown(Level.Iteration)
 	public void teardown() throws Exception {
 		if (recording != null) {
 			recording.close();

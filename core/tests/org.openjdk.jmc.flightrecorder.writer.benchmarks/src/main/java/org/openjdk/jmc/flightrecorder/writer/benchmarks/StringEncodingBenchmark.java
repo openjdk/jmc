@@ -86,7 +86,7 @@ public class StringEncodingBenchmark {
 	// Unique strings to test uncached path
 	private int counter = 0;
 
-	@Setup(Level.Trial)
+	@Setup(Level.Iteration)
 	public void setup() throws Exception {
 		tempFile = Files.createTempFile("jfr-bench-string-", ".jfr");
 		OutputStream out = Files.newOutputStream(tempFile);
@@ -102,7 +102,7 @@ public class StringEncodingBenchmark {
 		});
 	}
 
-	@TearDown(Level.Trial)
+	@TearDown(Level.Iteration)
 	public void teardown() throws Exception {
 		if (recording != null) {
 			recording.close();
