@@ -35,7 +35,6 @@ package org.openjdk.jmc.flightrecorder.writer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
@@ -426,8 +425,8 @@ public interface LEB128Writer {
 	void export(Consumer<ByteBuffer> consumer);
 
 	/**
-	 * Write the recorded data directly to an {@linkplain OutputStream} without creating an
-	 * intermediate copy. Implementations should override this for allocation-free streaming.
+	 * Write the recorded data to an {@linkplain OutputStream}. Implementations should override this
+	 * for allocation-free streaming.
 	 *
 	 * @param out
 	 *            the output stream to write to
@@ -435,24 +434,7 @@ public interface LEB128Writer {
 	 *             if an I/O error occurs
 	 */
 	default void writeTo(OutputStream out) throws IOException {
-		try {
-			export(buffer -> {
-				buffer.flip();
-				try {
-					if (buffer.hasArray()) {
-						out.write(buffer.array(), buffer.arrayOffset() + buffer.position(), buffer.remaining());
-					} else {
-						byte[] tmp = new byte[buffer.remaining()];
-						buffer.get(tmp);
-						out.write(tmp);
-					}
-				} catch (IOException e) {
-					throw new UncheckedIOException(e);
-				}
-			});
-		} catch (UncheckedIOException e) {
-			throw e.getCause();
-		}
+		out.write(export());
 	}
 
 	/** @return current writer position */
