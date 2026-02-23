@@ -80,11 +80,22 @@ java -jar target/benchmarks.jar -lprof
 
 ### Run with GC Profiler
 
-Measure allocation rates and GC pressure:
+Raw throughput (ops/s) numbers are similar between heap and mmap modes because the dominant
+cost is event construction, not byte storage. The meaningful difference between modes is in
+**GC behaviour**: mmap keeps serialised bytes off-heap, reducing allocation rate and GC pauses.
+Use `-prof gc` to see this:
 
 ```bash
-java -jar target/benchmarks.jar AllocationRateBenchmark -prof gc
+# Compare GC pressure between modes
+java -jar target/benchmarks.jar -wi 3 -i 5 -f 2 -p mode=heap -prof gc
+java -jar target/benchmarks.jar -wi 3 -i 5 -f 2 -p mode=mmap -prof gc
 ```
+
+Key metrics in the output:
+- `·gc.alloc.rate` (MB/s) — allocation rate per second
+- `·gc.alloc.rate.norm` (B/op) — allocations per operation
+- `·gc.count` — number of GC collections
+- `·gc.time` (ms) — total GC pause time
 
 ### Run with Stack Profiler
 

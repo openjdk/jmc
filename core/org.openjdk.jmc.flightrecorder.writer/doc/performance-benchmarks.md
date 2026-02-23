@@ -326,17 +326,37 @@ Recording recording = Recordings.newRecording(outputStream,
                         .withJdkTypeInitialization());
 ```
 
-**Measured Results (JMC-8477):**
-- writeSimpleEvent: +8.3% (909K → 985K ops/s)
-- writeMultiFieldEvent: +11.9% (787K → 881K ops/s)
-- writeRepeatedStringsEvent: +11.9% (793K → 887K ops/s)
-- writeStringHeavyEvent: +10.4% (801K → 884K ops/s)
+#### Why throughput numbers look similar between modes
 
-**Benefits:**
-- Reduced heap pressure (event data stored off-heap)
-- Predictable memory footprint (fixed per-thread buffers)
-- 8-12% throughput improvement
-- Fully backward compatible (opt-in only)
+Raw ops/s numbers are nearly identical between heap and mmap because the dominant cost is
+**event construction**, not byte storage: `TypedValue` building, field encoding, string
+deduplication, and LEB128 serialisation are shared by both modes. Only the final byte write
+differs (heap array vs `MappedByteBuffer`), which is a tiny fraction of total work.
+
+The mmap benefit shows up in **GC behaviour**, not raw throughput:
+- Heap mode accumulates serialised bytes in a growing on-heap byte array, increasing GC
+  pressure under sustained load.
+- Mmap mode keeps those bytes off-heap, reducing GC pause frequency and duration.
+
+#### Measuring GC impact
+
+Use `-prof gc` to expose GC overhead for each mode:
+
+```bash
+# Heap mode GC profile
+java -jar target/benchmarks.jar -wi 3 -i 5 -f 2 -p mode=heap -prof gc \
+     -rf json -rff heap-gc.json
+
+# Mmap mode GC profile
+java -jar target/benchmarks.jar -wi 3 -i 5 -f 2 -p mode=mmap -prof gc \
+     -rf json -rff mmap-gc.json
+```
+
+Key metrics to compare in the output:
+- `·gc.alloc.rate` (MB/s) — allocation rate; should be lower for mmap
+- `·gc.alloc.rate.norm` (B/op) — allocations per operation
+- `·gc.count` — number of GC collections
+- `·gc.time` (ms) — total GC pause time
 
 See `mmap-implementation.md` for implementation details.
 
