@@ -41,8 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,6 +60,7 @@ final class ThreadMmapManager {
 	private final int chunkSize;
 	private final ConcurrentHashMap<Long, ThreadBufferState> threadStates;
 	private final ExecutorService flushExecutor;
+	private final ConcurrentLinkedQueue<Future<?>> flushFutures;
 	private final ConcurrentLinkedQueue<Path> flushedChunks;
 
 	ThreadMmapManager(Path tempDir, int chunkSize) throws IOException {
@@ -71,6 +74,7 @@ final class ThreadMmapManager {
 					t.setDaemon(true);
 					return t;
 				});
+		this.flushFutures = new ConcurrentLinkedQueue<>();
 		this.flushedChunks = new ConcurrentLinkedQueue<>();
 
 		// Ensure temp directory exists
@@ -112,7 +116,7 @@ final class ThreadMmapManager {
 	void rotateChunk(long threadId) throws IOException {
 		ThreadBufferState state = threadStates.get(threadId);
 		if (state == null) {
-			return;
+			throw new IllegalStateException("No buffer state for thread " + threadId);
 		}
 
 		// Swap buffers - get old active for flushing
@@ -122,7 +126,7 @@ final class ThreadMmapManager {
 		int sequence = state.nextSequence();
 		Path chunkFile = tempDir.resolve("chunk-" + threadId + "-" + sequence + ".dat");
 
-		flushExecutor.submit(() -> {
+		flushFutures.add(flushExecutor.submit(() -> {
 			try {
 				oldActive.force();
 				// Copy to persistent file
@@ -135,7 +139,7 @@ final class ThreadMmapManager {
 			} catch (IOException e) {
 				throw new RuntimeException("Failed to flush chunk for thread " + threadId, e);
 			}
-		});
+		}));
 	}
 
 	/**
@@ -179,6 +183,30 @@ final class ThreadMmapManager {
 		} catch (InterruptedException e) {
 			flushExecutor.shutdownNow();
 			Thread.currentThread().interrupt();
+		}
+
+		// Check for background flush failures — collect all before throwing
+		IOException first = null;
+		int failureCount = 0;
+		for (Future<?> future : flushFutures) {
+			try {
+				future.get();
+			} catch (ExecutionException e) {
+				failureCount++;
+				Throwable cause = e.getCause();
+				if (first == null) {
+					first = cause instanceof IOException ? (IOException) cause
+							: new IOException("Background chunk flush failed", cause);
+				} else {
+					first.addSuppressed(cause);
+				}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new IOException("Interrupted while checking background flush results", e);
+			}
+		}
+		if (first != null) {
+			throw new IOException(failureCount + " background chunk flush(es) failed", first);
 		}
 	}
 

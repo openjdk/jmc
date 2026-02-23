@@ -181,14 +181,17 @@ final class Chunk {
 			try {
 				// Always get the current active writer in mmap mode
 				activeWriter = mmapManager.getActiveWriter(threadId);
-				if (activeWriter instanceof LEB128MappedWriter) {
-					LEB128MappedWriter mmapWriter = (LEB128MappedWriter) activeWriter;
+				if (activeWriter instanceof LEB128MappedWriter mmapWriter) {
 					if (!mmapWriter.canFit(requiredSpace)) {
 						// Trigger rotation - swap buffers and flush inactive in background
 						mmapManager.rotateChunk(threadId);
 						// Get the NEW active writer after rotation
 						activeWriter = mmapManager.getActiveWriter(threadId);
 					}
+				} else {
+					throw new IllegalStateException(
+							"Expected LEB128MappedWriter from mmap manager, got "
+									+ (activeWriter == null ? "null" : activeWriter.getClass().getName()));
 				}
 			} catch (IOException e) {
 				throw new RuntimeException("Chunk rotation failed for thread " + threadId, e);
