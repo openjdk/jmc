@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
@@ -68,6 +69,7 @@ final class MetadataImpl {
 	private static final String VAL_1_VALUE = "1";
 
 	private final AtomicLong typeCounter = new AtomicLong(1);
+	private final AtomicInteger stringPointer = new AtomicInteger(0);
 	private final ConstantPools constantPools;
 	private final Map<String, TypeImpl> metadata = new ConcurrentHashMap<>();
 	private final Map<String, Integer> stringTable = new ConcurrentHashMap<>();
@@ -351,7 +353,7 @@ final class MetadataImpl {
 
 	private void storeString(String value) {
 		stringTable.computeIfAbsent(value, k -> {
-			int pointer = stringTable.size();
+			int pointer = stringPointer.getAndIncrement();
 			reverseStringTable.put(pointer, k);
 			return pointer;
 		});

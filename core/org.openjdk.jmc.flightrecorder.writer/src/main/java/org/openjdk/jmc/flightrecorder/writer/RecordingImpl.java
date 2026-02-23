@@ -767,8 +767,8 @@ public final class RecordingImpl extends Recording {
 		}
 
 		long checkpointOffset = headerSize + chunksSize;
-		long metadataOffset = checkpointOffset + cpEventWriter.length();
-		long totalSize = metadataOffset + mdWriter.length();
+		long metadataOffset = checkpointOffset + cpEventWriter.position();
+		long totalSize = metadataOffset + mdWriter.position();
 
 		// Write header with correct offsets
 		LEB128Writer headerWriter = LEB128Writer.getInstance();
@@ -781,8 +781,12 @@ public final class RecordingImpl extends Recording {
 				.writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
 				.writeIntRaw(1); // use compressed integers
 
+		byte[] headerBytes = headerWriter.export();
+		byte[] cpBytes = cpEventWriter.export();
+		byte[] mdBytes = mdWriter.export();
+
 		// Sequential write: header → chunks → checkpoint → metadata
-		outputStream.write(headerWriter.export());
+		outputStream.write(headerBytes);
 
 		// Write all flushed chunks
 		for (Path chunkFile : flushedChunks) {
@@ -790,8 +794,8 @@ public final class RecordingImpl extends Recording {
 		}
 
 		// Write checkpoint and metadata
-		outputStream.write(cpEventWriter.export());
-		outputStream.write(mdWriter.export());
+		outputStream.write(cpBytes);
+		outputStream.write(mdBytes);
 	}
 
 	private void writeCheckpointEvent(long duration) {
