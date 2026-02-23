@@ -67,13 +67,13 @@ final class ThreadMmapManager {
 		this.tempDir = tempDir;
 		this.chunkSize = chunkSize;
 		this.threadStates = new ConcurrentHashMap<>();
-		// Create thread pool with daemon threads so they don't prevent JVM shutdown
-		this.flushExecutor = Executors.newFixedThreadPool(Math.min(4, Runtime.getRuntime().availableProcessors()),
-				r -> {
-					Thread t = new Thread(r);
-					t.setDaemon(true);
-					return t;
-				});
+		// Fixed pool for I/O-bound flush tasks. Thread count is intentionally decoupled from CPU
+		// cores — concurrent disk writes have diminishing returns beyond a small number of threads.
+		this.flushExecutor = Executors.newFixedThreadPool(2, r -> {
+			Thread t = new Thread(r);
+			t.setDaemon(true);
+			return t;
+		});
 		this.flushFutures = new ConcurrentLinkedQueue<>();
 		this.flushedChunks = new ConcurrentLinkedQueue<>();
 
