@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -119,6 +121,11 @@ final class LEB128ByteArrayWriter extends AbstractLEB128Writer {
 		ByteBuffer bb = ByteBuffer.wrap(array, 0, pointer);
 		bb.position(pointer);
 		consumer.accept(bb);
+	}
+
+	@Override
+	public void writeTo(OutputStream out) throws IOException {
+		out.write(array, 0, pointer);
 	}
 
 	@Override

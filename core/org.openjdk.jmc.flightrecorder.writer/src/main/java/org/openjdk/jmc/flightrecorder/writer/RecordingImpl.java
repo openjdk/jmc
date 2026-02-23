@@ -259,7 +259,7 @@ public final class RecordingImpl extends Recording {
 		}
 		finalizeRecording();
 
-		outputStream.write(globalWriter.export());
+		globalWriter.writeTo(outputStream);
 	}
 
 	private void closeMmapRecording() throws IOException {
