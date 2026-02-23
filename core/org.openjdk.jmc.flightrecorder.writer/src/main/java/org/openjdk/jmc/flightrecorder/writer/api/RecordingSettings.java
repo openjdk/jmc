@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
+import java.nio.file.Path;
+
 /**
  * A settings data-class for a {@linkplain Recording} instance
  */
@@ -43,6 +45,38 @@ public final class RecordingSettings {
 	private final boolean initializeJDKTypes;
 	private final boolean useMmap;
 	private final int mmapChunkSize;
+	private final Path mmapTempDir;
+
+	/**
+	 * @param startTimestamp
+	 *            the recording start timestamp in epoch nanoseconds (nanoseconds since 1970-01-01)
+	 *            or -1 to use {@linkplain System#currentTimeMillis()} * 1_000_000
+	 * @param startTicks
+	 *            the recording start timestamp in ticks or -1 to use {@linkplain System#nanoTime()}
+	 * @param duration
+	 *            the recording duration in ticks or -1 to use the current
+	 *            {@linkplain System#nanoTime()} to compute the diff from {@linkplain #startTicks}
+	 * @param initializeJDKTypes
+	 *            should the {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Types.JDK} types
+	 *            be initialized
+	 * @param useMmap
+	 *            use memory-mapped files for off-heap event storage
+	 * @param mmapChunkSize
+	 *            size of each memory-mapped buffer chunk in bytes (only used if useMmap is true)
+	 * @param mmapTempDir
+	 *            base directory for mmap temp files, or {@literal null} for the system default
+	 * @since 10.0.0
+	 */
+	public RecordingSettings(long startTimestamp, long startTicks, long duration, boolean initializeJDKTypes,
+			boolean useMmap, int mmapChunkSize, Path mmapTempDir) {
+		this.startTimestamp = startTimestamp;
+		this.startTicks = startTicks;
+		this.duration = duration;
+		this.initializeJDKTypes = initializeJDKTypes;
+		this.useMmap = useMmap;
+		this.mmapChunkSize = mmapChunkSize;
+		this.mmapTempDir = mmapTempDir;
+	}
 
 	/**
 	 * @param startTimestamp
@@ -64,12 +98,7 @@ public final class RecordingSettings {
 	 */
 	public RecordingSettings(long startTimestamp, long startTicks, long duration, boolean initializeJDKTypes,
 			boolean useMmap, int mmapChunkSize) {
-		this.startTimestamp = startTimestamp;
-		this.startTicks = startTicks;
-		this.duration = duration;
-		this.initializeJDKTypes = initializeJDKTypes;
-		this.useMmap = useMmap;
-		this.mmapChunkSize = mmapChunkSize;
+		this(startTimestamp, startTicks, duration, initializeJDKTypes, useMmap, mmapChunkSize, null);
 	}
 
 	/**
@@ -174,5 +203,13 @@ public final class RecordingSettings {
 	 */
 	public int getMmapChunkSize() {
 		return mmapChunkSize;
+	}
+
+	/**
+	 * @return base directory for mmap temp files, or {@literal null} for the system default
+	 * @since 10.0.0
+	 */
+	public Path getMmapTempDir() {
+		return mmapTempDir;
 	}
 }

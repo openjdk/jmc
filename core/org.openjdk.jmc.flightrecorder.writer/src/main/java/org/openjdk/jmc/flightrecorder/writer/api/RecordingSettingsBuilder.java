@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
 
+import java.nio.file.Path;
+
 /**
  * A builder type for {@linkplain RecordingSettings}
  */
@@ -99,6 +101,20 @@ public interface RecordingSettingsBuilder {
 	 * @since 10.0.0
 	 */
 	default RecordingSettingsBuilder withMmap(int chunkSize) {
+		return this;
+	}
+
+	/**
+	 * Set the base directory for memory-mapped temporary files. A unique subdirectory will be
+	 * created under this path for each recording. If not set, the system default temporary directory
+	 * is used.
+	 *
+	 * @param baseDir
+	 *            the base directory for mmap temp files
+	 * @return this instance for chaining
+	 * @since 10.0.0
+	 */
+	default RecordingSettingsBuilder withMmapTempDir(Path baseDir) {
 		return this;
 	}
 

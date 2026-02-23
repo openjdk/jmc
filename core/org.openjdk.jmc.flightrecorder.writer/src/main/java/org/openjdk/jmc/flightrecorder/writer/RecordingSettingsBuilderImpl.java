@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.nio.file.Path;
+
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettingsBuilder;
 
@@ -43,6 +45,7 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	private boolean initializeJdkTypes = false;
 	private boolean useMmap = false;
 	private int mmapChunkSize = 4 * 1024 * 1024; // 4MB default
+	private Path mmapTempDir = null;
 
 	@Override
 	public RecordingSettingsBuilder withTimestamp(long timestamp) {
@@ -85,8 +88,15 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	}
 
 	@Override
+	public RecordingSettingsBuilder withMmapTempDir(Path baseDir) {
+		this.mmapTempDir = baseDir;
+		return this;
+	}
+
+	@Override
 	public RecordingSettings build() {
 		return new RecordingSettings(timestamp > 0 ? timestamp : System.currentTimeMillis() * 1_000_000L,
-				startTicks > 0 ? startTicks : System.nanoTime(), duration, initializeJdkTypes, useMmap, mmapChunkSize);
+				startTicks > 0 ? startTicks : System.nanoTime(), duration, initializeJdkTypes, useMmap, mmapChunkSize,
+				mmapTempDir);
 	}
 }

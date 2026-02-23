@@ -154,7 +154,9 @@ public final class RecordingImpl extends Recording {
 		this.useMmap = settings.useMmap();
 		if (useMmap) {
 			try {
-				Path tempDir = Files.createTempDirectory("jfr-writer-mmap-");
+				Path baseDir = settings.getMmapTempDir();
+				Path tempDir = baseDir != null ? Files.createTempDirectory(baseDir, "jfr-writer-mmap-")
+						: Files.createTempDirectory("jfr-writer-mmap-");
 				this.mmapManager = new ThreadMmapManager(tempDir, settings.getMmapChunkSize());
 			} catch (IOException e) {
 				throw new RuntimeException("Failed to initialize mmap manager", e);
