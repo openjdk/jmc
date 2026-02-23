@@ -48,10 +48,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Manages double-buffered memory-mapped files per thread with background flushing. Each thread gets
- * two fixed-size mmap buffers (active and inactive). Normal event writes go to the per-thread active
- * buffer without cross-thread locking; only buffer rotation (swap) is synchronized per thread state.
- * When the active buffer fills, buffers are swapped and the inactive buffer is flushed to disk in the
- * background.
+ * two fixed-size mmap buffers (active and inactive). Normal event writes go to the per-thread
+ * active buffer without cross-thread locking; only buffer rotation (swap) is synchronized per
+ * thread state. When the active buffer fills, buffers are swapped and the inactive buffer is
+ * flushed to disk in the background.
  */
 final class ThreadMmapManager {
 	private final Path tempDir;
