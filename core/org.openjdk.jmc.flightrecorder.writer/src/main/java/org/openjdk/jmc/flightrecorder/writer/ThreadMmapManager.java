@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.writer;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ final class ThreadMmapManager {
 			try {
 				return createThreadBuffers(id);
 			} catch (IOException e) {
-				throw new RuntimeException("Failed to create thread buffers for thread " + id, e);
+				throw new UncheckedIOException("Failed to create thread buffers for thread " + id, e);
 			}
 		});
 		return state.getActiveWriter();
@@ -137,7 +138,7 @@ final class ThreadMmapManager {
 				// Reset buffer for reuse
 				oldActive.reset();
 			} catch (IOException e) {
-				throw new RuntimeException("Failed to flush chunk for thread " + threadId, e);
+				throw new UncheckedIOException("Failed to flush chunk for thread " + threadId, e);
 			}
 		}));
 	}

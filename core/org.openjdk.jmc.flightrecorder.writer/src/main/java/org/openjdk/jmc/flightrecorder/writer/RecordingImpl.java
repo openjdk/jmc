@@ -35,6 +35,7 @@ package org.openjdk.jmc.flightrecorder.writer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -104,7 +105,7 @@ public final class RecordingImpl extends Recording {
 					LEB128MappedWriter mmapWriter = mmapManager.getActiveWriter(threadId);
 					chunk = new Chunk(mmapWriter, mmapManager);
 				} catch (IOException e) {
-					throw new RuntimeException(
+					throw new UncheckedIOException(
 							"Failed to create mmap writer for thread " + Thread.currentThread().getId(), e);
 				}
 			} else {
@@ -159,7 +160,7 @@ public final class RecordingImpl extends Recording {
 						: Files.createTempDirectory("jfr-writer-mmap-");
 				this.mmapManager = new ThreadMmapManager(tempDir, settings.getMmapChunkSize());
 			} catch (IOException e) {
-				throw new RuntimeException("Failed to initialize mmap manager", e);
+				throw new UncheckedIOException("Failed to initialize mmap manager", e);
 			}
 			this.chunkDataMergingService = null;
 		} else {
@@ -256,7 +257,7 @@ public final class RecordingImpl extends Recording {
 				Thread.currentThread().interrupt();
 			}
 			if (!flushed) {
-				throw new RuntimeException("Unable to flush dangling JFR chunks");
+				throw new IllegalStateException("Unable to flush dangling JFR chunks");
 			}
 		}
 		finalizeRecording();
@@ -567,7 +568,7 @@ public final class RecordingImpl extends Recording {
 					}
 					}
 				} catch (IllegalAccessException e) {
-					throw new RuntimeException();
+					throw new IllegalStateException(e);
 				}
 			}
 			if (!startTimeWritten) {

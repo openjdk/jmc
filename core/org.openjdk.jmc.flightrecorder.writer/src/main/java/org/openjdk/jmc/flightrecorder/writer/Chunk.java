@@ -34,6 +34,7 @@
 package org.openjdk.jmc.flightrecorder.writer;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
@@ -194,7 +195,7 @@ final class Chunk {
 									+ (activeWriter == null ? "null" : activeWriter.getClass().getName()));
 				}
 			} catch (IOException e) {
-				throw new RuntimeException("Chunk rotation failed for thread " + threadId, e);
+				throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
 			}
 		} else {
 			// Heap mode - use the fixed writer
