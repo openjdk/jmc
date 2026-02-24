@@ -95,7 +95,7 @@ public final class RecordingImpl extends Recording {
 	private final ThreadMmapManager mmapManager;
 	private final boolean useMmap;
 
-	private final InheritableThreadLocal<WeakReference<Chunk>> threadChunk = new InheritableThreadLocal<WeakReference<Chunk>>() {
+	private final ThreadLocal<WeakReference<Chunk>> threadChunk = new ThreadLocal<WeakReference<Chunk>>() {
 		@Override
 		protected WeakReference<Chunk> initialValue() {
 			Chunk chunk;

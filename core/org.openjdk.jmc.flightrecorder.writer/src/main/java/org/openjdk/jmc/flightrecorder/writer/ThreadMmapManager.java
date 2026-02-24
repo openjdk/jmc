@@ -127,7 +127,7 @@ final class ThreadMmapManager {
 		int sequence = state.nextSequence();
 		Path chunkFile = tempDir.resolve("chunk-" + threadId + "-" + sequence + ".dat");
 
-		flushFutures.add(flushExecutor.submit(() -> {
+		Future<?> flushFuture = flushExecutor.submit(() -> {
 			try {
 				oldActive.force();
 				// Copy to persistent file
@@ -140,7 +140,9 @@ final class ThreadMmapManager {
 			} catch (IOException e) {
 				throw new UncheckedIOException("Failed to flush chunk for thread " + threadId, e);
 			}
-		}));
+		});
+		flushFutures.add(flushFuture);
+		state.setPendingFlush(flushFuture);
 	}
 
 	/**
@@ -257,6 +259,7 @@ final class ThreadMmapManager {
 		private final LEB128MappedWriter buffer1;
 		private volatile boolean activeIsBuffer0 = true;
 		private final AtomicInteger sequence = new AtomicInteger(0);
+		private volatile Future<?> pendingFlush;
 
 		ThreadBufferState(long threadId, LEB128MappedWriter buffer0, LEB128MappedWriter buffer1) {
 			this.threadId = threadId;
@@ -273,14 +276,36 @@ final class ThreadMmapManager {
 		}
 
 		/**
-		 * Swap active/inactive buffers, returning the old active buffer for flushing.
+		 * Swap active/inactive buffers, returning the old active buffer for flushing. Waits for any
+		 * pending flush on the inactive buffer to complete before swapping, ensuring the inactive
+		 * buffer is safe to reuse as the new active buffer.
 		 *
-		 * @return the old active buffer
+		 * @return the old active buffer (now inactive, ready for background flushing)
+		 * @throws IOException
+		 *             if waiting for a pending flush fails
 		 */
-		synchronized LEB128MappedWriter swapBuffers() {
+		synchronized LEB128MappedWriter swapBuffers() throws IOException {
+			// Wait for any pending flush on the buffer that is about to become active
+			Future<?> pending = pendingFlush;
+			if (pending != null) {
+				try {
+					pending.get();
+				} catch (ExecutionException e) {
+					Throwable cause = e.getCause();
+					throw cause instanceof IOException ? (IOException) cause
+							: new IOException("Pending buffer flush failed", cause);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					throw new IOException("Interrupted while waiting for pending buffer flush", e);
+				}
+			}
 			LEB128MappedWriter oldActive = getActiveWriter();
 			activeIsBuffer0 = !activeIsBuffer0;
 			return oldActive;
+		}
+
+		void setPendingFlush(Future<?> future) {
+			this.pendingFlush = future;
 		}
 
 		int nextSequence() {
