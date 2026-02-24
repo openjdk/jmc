@@ -106,8 +106,8 @@ public interface RecordingSettingsBuilder {
 
 	/**
 	 * Set the base directory for memory-mapped temporary files. A unique subdirectory will be
-	 * created under this path for each recording. If not set, the system default temporary directory
-	 * is used.
+	 * created under this path for each recording. If not set, the system default temporary
+	 * directory is used.
 	 *
 	 * @param baseDir
 	 *            the base directory for mmap temp files

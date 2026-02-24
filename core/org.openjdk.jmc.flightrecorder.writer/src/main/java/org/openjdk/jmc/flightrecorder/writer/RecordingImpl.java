@@ -44,11 +44,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -137,11 +137,11 @@ public final class RecordingImpl extends Recording {
 	private final TypesImpl types;
 
 	// a cache to hold already computed stack frames
-	private final Map<StackTraceElement, TypedValue> frameCache = new HashMap<>(16000);
+	private final Map<StackTraceElement, TypedValue> frameCache = new ConcurrentHashMap<>(16000);
 	// a cache to hold already resolved class loaders
-	private final Map<String, TypedValue> classLoaderCache = new HashMap<>(128);
+	private final Map<String, TypedValue> classLoaderCache = new ConcurrentHashMap<>(128);
 	// a cache to hold already resolved modules
-	private final Map<String, TypedValue> moduleCache = new HashMap<>(4096);
+	private final Map<String, TypedValue> moduleCache = new ConcurrentHashMap<>(4096);
 
 	public RecordingImpl(OutputStream output, RecordingSettings settings) {
 		this.startTicks = settings.getStartTicks() != -1 ? settings.getStartTicks() : System.nanoTime();
@@ -631,11 +631,13 @@ public final class RecordingImpl extends Recording {
 		});
 	}
 
+	private static final String NULL_SENTINEL = "\0__null__";
+
 	private TypedValue classLoaderValue(Types types, String classLoaderName) {
-		return classLoaderCache.computeIfAbsent(classLoaderName,
-				k -> types.getType(Types.JDK.CLASS_LOADER).asValue(p -> {
-					p.putField("name", k);
-				}));
+		String key = classLoaderName != null ? classLoaderName : NULL_SENTINEL;
+		return classLoaderCache.computeIfAbsent(key, k -> types.getType(Types.JDK.CLASS_LOADER).asValue(p -> {
+			p.putField("name", classLoaderName);
+		}));
 	}
 
 	private TypedValue packageValue(Types types, String packageName, String module) {
@@ -645,8 +647,9 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private TypedValue moduleValue(Types types, String module) {
-		return moduleCache.computeIfAbsent(module, k -> types.getType(Types.JDK.MODULE).asValue(p -> {
-			p.putField("name", k);
+		String key = module != null ? module : NULL_SENTINEL;
+		return moduleCache.computeIfAbsent(key, k -> types.getType(Types.JDK.MODULE).asValue(p -> {
+			p.putField("name", module);
 		}));
 	}
 

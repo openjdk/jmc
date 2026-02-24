@@ -42,23 +42,34 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.BrokenBarrierException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
-import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+
 import jdk.jfr.Event;
 import jdk.jfr.Label;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.openjdk.jmc.common.item.Attribute;
+import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.item.IItem;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IType;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
+import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
 import org.openjdk.jmc.flightrecorder.writer.api.Recordings;
 
+@SuppressWarnings("restriction")
 class MmapRecordingIntegrationTest {
 	@Label("Test Event")
 	public static class TestEvent extends Event {
@@ -87,8 +98,9 @@ class MmapRecordingIntegrationTest {
 
 		byte[] recordingData = baos.toByteArray();
 		assertTrue(recordingData.length > 0, "Empty recording should still produce JFR output");
-		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
-				"Empty mmap recording should be parseable");
+
+		IItemCollection events = JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData));
+		assertNotNull(events, "Empty mmap recording should be parseable");
 	}
 
 	@Test
@@ -105,12 +117,12 @@ class MmapRecordingIntegrationTest {
 
 	@Test
 	void testBasicMmapRecording() throws IOException, CouldNotLoadRecordingException {
+		int eventCount = 100;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
-		// Write some events
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < eventCount; i++) {
 			TestEvent event = new TestEvent();
 			event.message = "Test " + i;
 			event.value = i;
@@ -119,18 +131,36 @@ class MmapRecordingIntegrationTest {
 
 		recording.close();
 
-		byte[] recordingData = baos.toByteArray();
-		assertTrue(recordingData.length > 0, "Recording should contain data");
+		IItemCollection events = JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(baos.toByteArray()));
+		assertNotNull(events, "Recording should be parseable");
 
-		// Verify JFR magic bytes
-		assertEquals('F', recordingData[0]);
-		assertEquals('L', recordingData[1]);
-		assertEquals('R', recordingData[2]);
-		assertEquals(0, recordingData[3]);
+		IAttribute<String> messageAttr = Attribute.attr("message", "message", UnitLookup.PLAIN_TEXT);
+		IAttribute<IQuantity> valueAttr = Attribute.attr("value", "value", UnitLookup.NUMBER);
 
-		// Verify the recording is parseable
-		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
-				"Recording should be parseable");
+		int parsedCount = 0;
+		Set<Integer> seenValues = new HashSet<>();
+		for (IItemIterable lane : events) {
+			IType<IItem> type = lane.getType();
+			if (!type.getIdentifier().equals("TestEvent")) {
+				continue;
+			}
+			var messageAccessor = messageAttr.getAccessor(type);
+			var valueAccessor = valueAttr.getAccessor(type);
+			assertNotNull(messageAccessor, "message accessor should exist");
+			assertNotNull(valueAccessor, "value accessor should exist");
+
+			for (IItem item : lane) {
+				String message = messageAccessor.getMember(item);
+				int value = (int) valueAccessor.getMember(item).longValue();
+				assertEquals("Test " + value, message, "message should match value");
+				seenValues.add(value);
+				parsedCount++;
+			}
+		}
+		assertEquals(eventCount, parsedCount, "All events should be present");
+		for (int i = 0; i < eventCount; i++) {
+			assertTrue(seenValues.contains(i), "Missing event with value " + i);
+		}
 	}
 
 	@Test
@@ -140,7 +170,8 @@ class MmapRecordingIntegrationTest {
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
 		int numThreads = 4;
-		int eventsPerThread = 250; // Total 1000 events
+		int eventsPerThread = 250;
+		int totalEvents = numThreads * eventsPerThread;
 		CountDownLatch latch = new CountDownLatch(numThreads);
 		CyclicBarrier startBarrier = new CyclicBarrier(numThreads);
 		ExecutorService executor = Executors.newFixedThreadPool(numThreads);
@@ -148,14 +179,14 @@ class MmapRecordingIntegrationTest {
 		for (int t = 0; t < numThreads; t++) {
 			executor.submit(() -> {
 				try {
-					startBarrier.await(); // Start all threads simultaneously for better race coverage
+					startBarrier.await();
 					for (int i = 0; i < eventsPerThread; i++) {
 						TestEvent event = new TestEvent();
 						event.message = "Thread " + Thread.currentThread().getId();
 						event.value = i;
 						recording.writeEvent(event);
 					}
-				} catch (BrokenBarrierException | InterruptedException e) {
+				} catch (Exception e) {
 					throw new RuntimeException(e);
 				} finally {
 					latch.countDown();
@@ -167,29 +198,44 @@ class MmapRecordingIntegrationTest {
 		executor.shutdown();
 		recording.close();
 
-		byte[] recordingData = baos.toByteArray();
-		assertTrue(recordingData.length > 0, "Recording should contain data");
+		IItemCollection events = JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(baos.toByteArray()));
+		assertNotNull(events, "Recording should be parseable after concurrent writes");
 
-		// Verify the recording is parseable (concurrent writes must not corrupt structure)
-		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
-				"Recording should be parseable after concurrent writes");
+		IAttribute<IQuantity> valueAttr = Attribute.attr("value", "value", UnitLookup.NUMBER);
+
+		int parsedCount = 0;
+		for (IItemIterable lane : events) {
+			IType<IItem> type = lane.getType();
+			if (!type.getIdentifier().equals("TestEvent")) {
+				continue;
+			}
+			var valueAccessor = valueAttr.getAccessor(type);
+			assertNotNull(valueAccessor, "value accessor should exist");
+
+			for (IItem item : lane) {
+				int value = (int) valueAccessor.getMember(item).longValue();
+				assertTrue(value >= 0 && value < eventsPerThread,
+						"value should be in range [0, " + eventsPerThread + "), got " + value);
+				parsedCount++;
+			}
+		}
+		assertEquals(totalEvents, parsedCount, "All " + totalEvents + " events should be present, got " + parsedCount);
 	}
 
 	@Test
 	void testLargeEventsMmapRecording() throws IOException, CouldNotLoadRecordingException {
+		int eventCount = 20;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
-		// Create large events to trigger rotation
 		StringBuilder largePayload = new StringBuilder();
 		for (int i = 0; i < 1000; i++) {
 			largePayload.append("Large payload data segment ").append(i).append(". ");
 		}
 		String payload = largePayload.toString();
 
-		// Write enough large events to exceed one chunk (512KB)
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < eventCount; i++) {
 			LargeEvent event = new LargeEvent();
 			event.payload = payload + " Event " + i;
 			recording.writeEvent(event);
@@ -200,19 +246,47 @@ class MmapRecordingIntegrationTest {
 		byte[] recordingData = baos.toByteArray();
 		assertTrue(recordingData.length > 512 * 1024, "Recording should be larger than one chunk");
 
-		// Verify chunk rotation did not corrupt the recording
-		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData)),
-				"Recording should be parseable after chunk rotation");
+		IItemCollection events = JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData));
+		assertNotNull(events, "Recording should be parseable after chunk rotation");
+
+		IAttribute<String> payloadAttr = Attribute.attr("payload", "payload", UnitLookup.PLAIN_TEXT);
+
+		int parsedCount = 0;
+		Set<String> seenSuffixes = new HashSet<>();
+		for (IItemIterable lane : events) {
+			IType<IItem> type = lane.getType();
+			if (!type.getIdentifier().equals("LargeEvent")) {
+				continue;
+			}
+			var payloadAccessor = payloadAttr.getAccessor(type);
+			assertNotNull(payloadAccessor, "payload accessor should exist");
+
+			for (IItem item : lane) {
+				String p = payloadAccessor.getMember(item);
+				assertNotNull(p, "payload should not be null");
+				assertTrue(p.startsWith("Large payload data segment 0."), "payload should start with expected prefix");
+				// Extract the " Event N" suffix
+				int idx = p.lastIndexOf(" Event ");
+				assertTrue(idx > 0, "payload should contain ' Event ' suffix");
+				seenSuffixes.add(p.substring(idx));
+				parsedCount++;
+			}
+		}
+		assertEquals(eventCount, parsedCount, "All large events should be present");
+		for (int i = 0; i < eventCount; i++) {
+			assertTrue(seenSuffixes.contains(" Event " + i), "Missing large event " + i);
+		}
 	}
 
 	@Test
 	void testMmapRecordingToFile() throws IOException, CouldNotLoadRecordingException {
+		int eventCount = 500;
 		Path outputFile = tempDir.resolve("test-recording.jfr");
 		FileOutputStream fos = new FileOutputStream(outputFile.toFile());
 		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(fos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
 
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < eventCount; i++) {
 			TestEvent event = new TestEvent();
 			event.message = "File test";
 			event.value = i;
@@ -224,25 +298,35 @@ class MmapRecordingIntegrationTest {
 		assertTrue(Files.exists(outputFile), "Output file should exist");
 		assertTrue(Files.size(outputFile) > 0, "Output file should not be empty");
 
-		// Verify file is valid JFR
-		byte[] header = new byte[4];
-		try (InputStream is = Files.newInputStream(outputFile)) {
-			is.read(header);
-		}
-		assertEquals('F', header[0]);
-		assertEquals('L', header[1]);
-		assertEquals('R', header[2]);
-		assertEquals(0, header[3]);
+		IItemCollection events = JfrLoaderToolkit.loadEvents(outputFile.toFile());
+		assertNotNull(events, "Recording file should be parseable");
 
-		// Verify the file is parseable
-		assertNotNull(JfrLoaderToolkit.loadEvents(outputFile.toFile()), "Recording file should be parseable");
+		IAttribute<String> messageAttr = Attribute.attr("message", "message", UnitLookup.PLAIN_TEXT);
+		IAttribute<IQuantity> valueAttr = Attribute.attr("value", "value", UnitLookup.NUMBER);
+
+		int parsedCount = 0;
+		for (IItemIterable lane : events) {
+			IType<IItem> type = lane.getType();
+			if (!type.getIdentifier().equals("TestEvent")) {
+				continue;
+			}
+			var messageAccessor = messageAttr.getAccessor(type);
+			var valueAccessor = valueAttr.getAccessor(type);
+
+			for (IItem item : lane) {
+				assertEquals("File test", messageAccessor.getMember(item), "message should be 'File test'");
+				int value = (int) valueAccessor.getMember(item).longValue();
+				assertTrue(value >= 0 && value < eventCount, "value should be in range [0, " + eventCount + ")");
+				parsedCount++;
+			}
+		}
+		assertEquals(eventCount, parsedCount, "All events should be present in the file");
 	}
 
 	@Test
 	void testComparisonMmapVsHeap() throws IOException, CouldNotLoadRecordingException {
 		int numEvents = 1000;
 
-		// Test with mmap
 		ByteArrayOutputStream mmapBaos = new ByteArrayOutputStream();
 		RecordingImpl mmapRecording = (RecordingImpl) Recordings.newRecording(mmapBaos,
 				settings -> settings.withMmap(512 * 1024).withJdkTypeInitialization());
@@ -255,7 +339,6 @@ class MmapRecordingIntegrationTest {
 		}
 		mmapRecording.close();
 
-		// Test with heap (no withMmap call)
 		ByteArrayOutputStream heapBaos = new ByteArrayOutputStream();
 		RecordingImpl heapRecording = (RecordingImpl) Recordings.newRecording(heapBaos,
 				settings -> settings.withJdkTypeInitialization());
@@ -268,17 +351,44 @@ class MmapRecordingIntegrationTest {
 		}
 		heapRecording.close();
 
-		// Both should produce parseable JFR files
-		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(mmapBaos.toByteArray())),
-				"Mmap recording should be parseable");
-		assertNotNull(JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(heapBaos.toByteArray())),
-				"Heap recording should be parseable");
+		IAttribute<String> messageAttr = Attribute.attr("message", "message", UnitLookup.PLAIN_TEXT);
+		IAttribute<IQuantity> valueAttr = Attribute.attr("value", "value", UnitLookup.NUMBER);
+
+		// Verify both recordings have the same event content
+		int mmapCount = countAndVerifyEvents(mmapBaos.toByteArray(), messageAttr, valueAttr, numEvents);
+		int heapCount = countAndVerifyEvents(heapBaos.toByteArray(), messageAttr, valueAttr, numEvents);
+		assertEquals(numEvents, mmapCount, "Mmap recording should have all events");
+		assertEquals(numEvents, heapCount, "Heap recording should have all events");
 
 		// Sizes should be reasonably similar (within 10%)
-		double mmapSize = mmapBaos.size();
-		double heapSize = heapBaos.size();
-		double ratio = mmapSize / heapSize;
+		double ratio = (double) mmapBaos.size() / heapBaos.size();
 		assertTrue(ratio > 0.9 && ratio < 1.1,
 				"Mmap and heap recordings should have similar sizes, got ratio: " + ratio);
+	}
+
+	private int countAndVerifyEvents(
+		byte[] recordingData, IAttribute<String> messageAttr, IAttribute<IQuantity> valueAttr, int expectedMax)
+			throws IOException, CouldNotLoadRecordingException {
+		IItemCollection events = JfrLoaderToolkit.loadEvents(new ByteArrayInputStream(recordingData));
+		int count = 0;
+		Set<Integer> seenValues = new HashSet<>();
+		for (IItemIterable lane : events) {
+			IType<IItem> type = lane.getType();
+			if (!type.getIdentifier().equals("TestEvent")) {
+				continue;
+			}
+			var messageAccessor = messageAttr.getAccessor(type);
+			var valueAccessor = valueAttr.getAccessor(type);
+
+			for (IItem item : lane) {
+				assertEquals("Compare test", messageAccessor.getMember(item));
+				int value = (int) valueAccessor.getMember(item).longValue();
+				assertTrue(value >= 0 && value < expectedMax);
+				seenValues.add(value);
+				count++;
+			}
+		}
+		assertEquals(expectedMax, seenValues.size(), "All distinct values should be present");
+		return count;
 	}
 }
