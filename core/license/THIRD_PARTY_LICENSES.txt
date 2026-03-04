@@ -47,7 +47,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ===============================================================================
-## at.yawk.lz4:lz4-java@1.10.3 (Apache-2.0)
+## at.yawk.lz4:lz4-java@1.10.4 (Apache-2.0)
 
 URL for License – http://opensource.org/licenses/Apache-2.0
 
