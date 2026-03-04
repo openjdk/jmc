@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, 2025, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2025, Datadog, Inc. All rights reserved.
+   Copyright (c) 2019, 2026, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2026, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -74,7 +74,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/@hpcc-js/wasm@2.18.0/dist/index.js</url>
+							<url>https://unpkg.com/@hpcc-js/wasm@2.33.0/dist/index.js</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>
@@ -102,7 +102,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>https://unpkg.com/@hpcc-js/wasm@2.18.0/dist/graphvizlib.wasm</url>
+							<url>https://unpkg.com/@hpcc-js/wasm@2.33.0/dist/graphvizlib.wasm</url>
 							<unpack>false</unpack>
 							<outputDirectory>${download-maven-plugin.output}</outputDirectory>
 							<skipCache>true</skipCache>

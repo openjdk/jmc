@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -55,8 +55,8 @@
 		<angus.activation.version>2.0.3</angus.activation.version>
 		<jakarta.activation.version>2.1.4</jakarta.activation.version>
 		<osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
-		<owasp.encoder.version>1.2.3</owasp.encoder.version>
-		<lz4.version>1.10.2</lz4.version>
+		<owasp.encoder.version>1.4.0</owasp.encoder.version>
+		<lz4.version>1.10.3</lz4.version>
 		<hdrhistogram.version>2.2.2</hdrhistogram.version>
 		<jemmy.version>2.0.0</jemmy.version>
 		<jetty.version>12.1.0</jetty.version>
@@ -64,7 +64,7 @@
 		<jolokia.version>2.4.2</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
 		<fireplace.version>0.0.1-rc.9</fireplace.version>
-		<radiance.version>7.5.0</radiance.version>
+		<radiance.version>8.5.0</radiance.version>
 		<jakarta.inject.version>2.0.1</jakarta.inject.version>
 		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 	</properties>
