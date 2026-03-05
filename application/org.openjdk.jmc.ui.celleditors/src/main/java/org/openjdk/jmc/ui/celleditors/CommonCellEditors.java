@@ -107,11 +107,7 @@ public class CommonCellEditors {
 				value = persister.parseInteractive(str);
 				setValueValid(true);
 				errorDecorator.hide();
-			} catch (QuantityConversionException ex) {
-				errorDecorator.setDescriptionText(ex.getLocalizedMessage());
-				errorDecorator.show();
-				setValueValid(false);
-			} catch (IllegalArgumentException ex) {
+			} catch (QuantityConversionException | IllegalArgumentException ex) {
 				errorDecorator.setDescriptionText(ex.getLocalizedMessage());
 				errorDecorator.show();
 				setValueValid(false);

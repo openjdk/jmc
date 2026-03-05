@@ -514,12 +514,12 @@ final public class UnitLookup {
 			}
 
 			@Override
-			public Long parsePersisted(String persistedValue) {
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
 				checkNull(persistedValue);
 				try {
 					return Long.parseLong(persistedValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a long");
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
 				}
 			}
 
@@ -530,12 +530,12 @@ final public class UnitLookup {
 			}
 
 			@Override
-			public Long parseInteractive(String interactiveValue) {
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
 				checkNull(interactiveValue);
 				try {
 					return Long.parseLong(interactiveValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a long");
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
 				}
 			}
 		};
