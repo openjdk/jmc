@@ -220,12 +220,35 @@ public class MCTabFolder extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void closeAll() {
-		ensureAlive();
-		click();
-		StringPopupOwner<Shell> popupMenu = control.as(StringPopupOwner.class);
-		Wrap<? extends CTabItem> item = control.as(Parent.class, CTabItem.class).lookup(CTabItem.class).wrap();
-		popupMenu.setPolicy(policy);
-		popupMenu.push(item.getClickPoint(), "Close All");
+		int retries = isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			try {
+				ensureAlive();
+			} catch (RuntimeException | AssertionError e) {
+				if (attempt == retries - 1) {
+					return;
+				}
+				sleep(500);
+				continue;
+			}
+			click();
+			waitForIdle();
+			if (isOSX()) {
+				sleep(500);
+			}
+			try {
+				StringPopupOwner<Shell> popupMenu = control.as(StringPopupOwner.class);
+				Wrap<? extends CTabItem> item = control.as(Parent.class, CTabItem.class).lookup(CTabItem.class).wrap();
+				popupMenu.setPolicy(policy);
+				popupMenu.push(item.getClickPoint(), "Close All");
+				return;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 	}
 
 	/**
