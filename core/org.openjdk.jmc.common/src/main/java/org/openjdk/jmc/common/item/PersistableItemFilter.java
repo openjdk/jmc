@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -253,6 +253,8 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 			try {
 				return persister.parsePersisted(persistedValue);
 			} catch (QuantityConversionException e) {
+				LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
+			} catch (IllegalArgumentException e) {
 				LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
 			}
 		}
