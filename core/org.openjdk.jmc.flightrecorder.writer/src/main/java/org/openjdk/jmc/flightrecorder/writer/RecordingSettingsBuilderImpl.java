@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.nio.file.Path;
+
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettingsBuilder;
 
@@ -41,6 +43,9 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	private long startTicks = -1;
 	private long duration = -1;
 	private boolean initializeJdkTypes = false;
+	private boolean useMmap = false;
+	private int mmapChunkSize = 4 * 1024 * 1024; // 4MB default
+	private Path mmapTempDir = null;
 
 	@Override
 	public RecordingSettingsBuilder withTimestamp(long timestamp) {
@@ -67,8 +72,31 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 	}
 
 	@Override
+	public RecordingSettingsBuilder withMmap() {
+		this.useMmap = true;
+		return this;
+	}
+
+	@Override
+	public RecordingSettingsBuilder withMmap(int chunkSize) {
+		if (chunkSize <= 0) {
+			throw new IllegalArgumentException("chunkSize must be positive, got: " + chunkSize);
+		}
+		this.useMmap = true;
+		this.mmapChunkSize = chunkSize;
+		return this;
+	}
+
+	@Override
+	public RecordingSettingsBuilder withMmapTempDir(Path baseDir) {
+		this.mmapTempDir = baseDir;
+		return this;
+	}
+
+	@Override
 	public RecordingSettings build() {
 		return new RecordingSettings(timestamp > 0 ? timestamp : System.currentTimeMillis() * 1_000_000L,
-				startTicks > 0 ? startTicks : System.nanoTime(), duration, initializeJdkTypes);
+				startTicks > 0 ? startTicks : System.nanoTime(), duration, initializeJdkTypes, useMmap, mmapChunkSize,
+				mmapTempDir);
 	}
 }
