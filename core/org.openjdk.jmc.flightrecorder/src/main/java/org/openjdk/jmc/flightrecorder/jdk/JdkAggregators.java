@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -523,6 +523,12 @@ public final class JdkAggregators {
 			JdkAttributes.BASE_ADDRESS);
 	public static final IAggregator<?, ?> TOP_ADDRESS = Aggregators.min(JdkTypeIDs.NATIVE_LIBRARY,
 			JdkAttributes.TOP_ADDRESS);
+
+	public static final IAggregator<IQuantity, ?> X509_CERTIFICATE_COUNT = Aggregators
+			.count(Messages.getString(Messages.AGGR_X509_CERTIFICATES_COUNT), JdkTypeIDs.X509_CERTIFICATE);
+
+	public static final IAggregator<Boolean, ?> IS_CERTIFICATE_ID_QTY = or(JdkTypeIDs.X509_CERTIFICATE,
+			JdkAttributes.IS_CERTIFICATE_ID_QTY);
 
 	public static final IAggregator<IQuantity, ?> TENURING_AGE_SIZE = Aggregators.sum(
 			Messages.getString(Messages.AGGR_TENURING_AGE_SIZE),

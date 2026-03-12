@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -325,6 +325,13 @@ public class Messages {
 	public static final String GcFreedRatioRule_RESULT_SHORT_DESCRIPTION = "GcFreedRatioRule_RESULT_SHORT_DESCRIPTION"; //$NON-NLS-1$
 	public static final String GarbageCollectionInfo_RULE_NAME = "GarbageCollectionInfo_RULE_NAME"; //$NON-NLS-1$
 	public static final String ZGCAllocationStall_RULE_NAME = "ZGCAllocationStall_RULE_NAME"; //$NON-NLS-1$
+	public static final String CryptoSecurity_RULE_NAME = "CryptoSecurity_RULE_NAME"; //$NON-NLS-1$
+	public static final String Crypto_ACTION = "Crypto_ACTION"; //$NON-NLS-1$
+	public static final String Crypto_ATTENTION = "Crypto_ATTENTION"; //$NON-NLS-1$
+	public static final String Crypto_ACTION_INFO = "Crypto_ACTION_INFO"; //$NON-NLS-1$
+	public static final String Crypto_ATTENTION_INFO = "Crypto_ATTENTION_INFO"; //$NON-NLS-1$
+	public static final String Crypto_ACTION_ATTENTION_INFO = "Crypto_ACTION_ATTENTION_INFO"; //$NON-NLS-1$
+	public static final String Crypto_REFERENCE_INFO = "Crypto_REFERENCE_INFO"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_RATE = "ZGCAllocationStallRule_RATE"; //$NON-NLS-1$

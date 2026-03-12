@@ -525,6 +525,11 @@ public class Messages extends NLS {
 	public static String SAVE_AS_NO_SRC_ERROR_MSG;
 	public static String SAVE_AS_TITLE;
 	public static String SEARCH_TREE_TEXT;
+	public static String SecurityPage_PAGE_NAME;
+	public static String SecurityPage_TIMELINE_SELECTION;
+	public static String SecurityPage_TABLE_SELECTION;
+	public static String SecurityPage_SECTION_X509_CERTIFICATES;
+	public static String SecurityPage_SECTION_X509_ALGORITHMS;
 	public static String SELECTION_STORE_NO_SELECTION;
 	public static String SELECT_RANGE_WIZARD_DESCRIPTION;
 	public static String SELECT_RANGE_WIZARD_TEXT;
