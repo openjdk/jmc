@@ -466,7 +466,21 @@ public class JvmBrowser extends MCJemmyBase {
 	 * @return a {@link MCDialog}
 	 */
 	public MCDialog doubleClickRecording(String name, String ... path) {
-		getTree().selectAndClick(2, createRecordingPath(name, path));
+		int maxAttempts = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			getTree().selectAndClick(2, createRecordingPath(name, path));
+			waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(1000);
+			}
+			MCDialog dialog = MCDialog.getByAnyDialogTitle(true, DUMP_RECORDING_WIZARD_PAGE_TITLE);
+			if (dialog != null) {
+				System.out.println("[JvmBrowser] doubleClickRecording: dialog found on attempt " + (attempt + 1));
+				return dialog;
+			}
+			System.out.println("[JvmBrowser] doubleClickRecording: dialog not found on attempt " + (attempt + 1));
+			sleep(1000);
+		}
 		return MCDialog.getByAnyDialogTitle(true, DUMP_RECORDING_WIZARD_PAGE_TITLE);
 	}
 
@@ -532,7 +546,23 @@ public class JvmBrowser extends MCJemmyBase {
 	 * @return a {@link JfrWizard}
 	 */
 	public JfrWizard editRecording(String name, String ... path) {
-		selectContextOption(ACTION_EDIT_RECORDING_LABEL, createRecordingPath(name, path));
+		int maxAttempts = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			selectContextOption(ACTION_EDIT_RECORDING_LABEL, createRecordingPath(name, path));
+			waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(1000);
+			}
+			MCDialog dialog = MCDialog.getByAnyDialogTitle(true, JfrWizard.EDIT_RECORDING_WIZARD_PAGE_TITLE);
+			if (dialog != null) {
+				System.out.println("[JvmBrowser] editRecording: dialog found on attempt " + (attempt + 1));
+				return new JfrWizard(dialog);
+			}
+			System.out.println(
+					"[JvmBrowser] editRecording: dialog not found on attempt " + (attempt + 1) + ", retrying...");
+			sleep(1000);
+		}
+		System.out.println("[JvmBrowser] editRecording: falling back to direct constructor");
 		return new JfrWizard(JfrWizard.EDIT_RECORDING_WIZARD_PAGE_TITLE);
 	}
 
