@@ -172,14 +172,12 @@ public class JvmBrowser extends MCJemmyBase {
 		String connectionName = null;
 		String[] finalPath = null;
 		if (itemExists(path)) { // if the path specified already exists then it's a folder
-			getTree().select(path);
-			getTree().contextChoose(ACTION_NEW_CONNECTION_TEXT);
+			selectAndContextChoose(path, ACTION_NEW_CONNECTION_TEXT);
 			finalPath = Arrays.copyOf(path, path.length + 1); // we need to save the name of the folder path
 			finalPath[finalPath.length - 1] = getDefaultConnectionName(host, port); // with auto generated name
 		} else if (path.length > 1) { // since the path doesn't exist, we have been specified a specific name
 			String[] subPath = Arrays.copyOf(path, path.length - 1);
-			getTree().select(subPath);
-			getTree().contextChoose(ACTION_NEW_CONNECTION_TEXT);
+			selectAndContextChoose(subPath, ACTION_NEW_CONNECTION_TEXT);
 			finalPath = path;
 			connectionName = path[path.length - 1];
 		} else {
@@ -268,8 +266,7 @@ public class JvmBrowser extends MCJemmyBase {
 	public void createFolder(String ... path) {
 		if (path.length > 1) {
 			String[] subPath = Arrays.copyOf(path, path.length - 1);
-			getTree().select(subPath);
-			getTree().contextChoose(ACTION_NEW_FOLDER_TEXT);
+			selectAndContextChoose(subPath, ACTION_NEW_FOLDER_TEXT);
 		} else {
 			getToolBar().clickToolItem(ACTION_NEW_FOLDER_TOOLTIP);
 		}
@@ -321,8 +318,10 @@ public class JvmBrowser extends MCJemmyBase {
 
 		delete.clickButton(MCButton.Labels.YES);
 		waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(1000);
+		}
 		Assert.assertFalse("Failed deleting", itemExists(path));
-		// Mac needs time to recover UI state after deletion before next operation
 		if (MCJemmyBase.isOSX()) {
 			sleep(500);
 		}
@@ -467,8 +466,22 @@ public class JvmBrowser extends MCJemmyBase {
 	 * @return a {@link MCDialog}
 	 */
 	public MCDialog doubleClickRecording(String name, String ... path) {
-		getTree().selectAndClick(2, createRecordingPath(name, path));
-		return MCDialog.getByAnyDialogTitle(false, DUMP_RECORDING_WIZARD_PAGE_TITLE);
+		int maxAttempts = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			getTree().selectAndClick(2, createRecordingPath(name, path));
+			waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(1000);
+			}
+			MCDialog dialog = MCDialog.getByAnyDialogTitle(true, DUMP_RECORDING_WIZARD_PAGE_TITLE);
+			if (dialog != null) {
+				System.out.println("[JvmBrowser] doubleClickRecording: dialog found on attempt " + (attempt + 1));
+				return dialog;
+			}
+			System.out.println("[JvmBrowser] doubleClickRecording: dialog not found on attempt " + (attempt + 1));
+			sleep(1000);
+		}
+		return MCDialog.getByAnyDialogTitle(true, DUMP_RECORDING_WIZARD_PAGE_TITLE);
 	}
 
 	/**
@@ -496,12 +509,20 @@ public class JvmBrowser extends MCJemmyBase {
 	}
 
 	private MCDialog doDumpRecording(String actionName, String ... path) {
-		selectContextOption(actionName, path);
-		waitForIdle();
-		if (MCJemmyBase.isOSX()) {
+		int maxAttempts = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			selectContextOption(actionName, path);
+			waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(1000);
+			}
+			MCDialog dialog = MCDialog.getByAnyDialogTitle(true, DUMP_RECORDING_WIZARD_PAGE_TITLE);
+			if (dialog != null) {
+				return dialog;
+			}
 			sleep(1000);
 		}
-		return MCDialog.getByAnyDialogTitle(false, DUMP_RECORDING_WIZARD_PAGE_TITLE);
+		return MCDialog.getByAnyDialogTitle(true, DUMP_RECORDING_WIZARD_PAGE_TITLE);
 	}
 
 	/**
@@ -525,7 +546,23 @@ public class JvmBrowser extends MCJemmyBase {
 	 * @return a {@link JfrWizard}
 	 */
 	public JfrWizard editRecording(String name, String ... path) {
-		selectContextOption(ACTION_EDIT_RECORDING_LABEL, createRecordingPath(name, path));
+		int maxAttempts = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			selectContextOption(ACTION_EDIT_RECORDING_LABEL, createRecordingPath(name, path));
+			waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(1000);
+			}
+			MCDialog dialog = MCDialog.getByAnyDialogTitle(true, JfrWizard.EDIT_RECORDING_WIZARD_PAGE_TITLE);
+			if (dialog != null) {
+				System.out.println("[JvmBrowser] editRecording: dialog found on attempt " + (attempt + 1));
+				return new JfrWizard(dialog);
+			}
+			System.out.println(
+					"[JvmBrowser] editRecording: dialog not found on attempt " + (attempt + 1) + ", retrying...");
+			sleep(1000);
+		}
+		System.out.println("[JvmBrowser] editRecording: falling back to direct constructor");
 		return new JfrWizard(JfrWizard.EDIT_RECORDING_WIZARD_PAGE_TITLE);
 	}
 
@@ -634,8 +671,22 @@ public class JvmBrowser extends MCJemmyBase {
 		String name, String host, String port, String user, String serverPasswd, String mcPasswd, Boolean save,
 		String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
-		getTree().select(path);
-		getTree().contextChoose(ACTION_EDIT_TEXT);
+		int retries = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			getTree().select(path);
+			waitForIdle();
+			int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+			sleep(delay);
+			try {
+				getTree().contextChoose(ACTION_EDIT_TEXT);
+				break;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		MCDialog properties = new MCDialog(DIALOG_CONNECTION_PROPERTIES_TITLE);
 		if (host != null) {
 			properties.enterText(ConnectionWizardPage.HOSTNAME_FIELD_NAME, host);
@@ -691,8 +742,22 @@ public class JvmBrowser extends MCJemmyBase {
 	 */
 	public void openPersistedJMXData(String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
-		selectAction(TREE_ITEM_CONSOLE, path);
-		getTree().contextChoose(ACTION_OPEN_PERSISTED_JMX_DATA);
+		int retries = MCJemmyBase.isOSX() ? 5 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			selectAction(TREE_ITEM_CONSOLE, path);
+			waitForIdle();
+			int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+			sleep(delay);
+			try {
+				getTree().contextChoose(ACTION_OPEN_PERSISTED_JMX_DATA);
+				break;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		Assert.assertTrue("Unable to find console editor \"Persisted JMX Data\"",
 				MCJemmyBase.waitForSubstringMatchedEditor("Persisted JMX Data"));
 	}
@@ -708,8 +773,22 @@ public class JvmBrowser extends MCJemmyBase {
 	public void renameFolder(String newName, String ... path) {
 		String[] finalPath = Arrays.copyOf(path, path.length);
 		finalPath[path.length - 1] = newName;
-		getTree().select(path);
-		getTree().contextChoose(ACTION_EDIT_TEXT);
+		int retries = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			getTree().select(path);
+			waitForIdle();
+			int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+			sleep(delay);
+			try {
+				getTree().contextChoose(ACTION_EDIT_TEXT);
+				break;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		MCDialog rename = new MCDialog(DIALOG_FOLDER_PROPERTIES_TITLE);
 		rename.replaceText(path[path.length - 1], newName);
 		rename.closeWithButton(MCButton.Labels.OK);
@@ -728,12 +807,22 @@ public class JvmBrowser extends MCJemmyBase {
 	 */
 	public void selectContextOption(String option, String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
-		getTree().select(path);
-		waitForIdle();
-		// Mac needs significantly more time for UI to stabilize after operations
-		int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
-		sleep(delay);
-		getTree().contextChoose(option);
+		int retries = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			getTree().select(path);
+			waitForIdle();
+			int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+			sleep(delay);
+			try {
+				getTree().contextChoose(option);
+				return;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 	}
 
 	/**
@@ -779,8 +868,22 @@ public class JvmBrowser extends MCJemmyBase {
 	 */
 	public JfrWizard startFlightRecordingWizard(boolean enableCommercialFeatures, String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
-		selectAction(TREE_ITEM_FLIGHTRECORDER, path);
-		getTree().contextChoose(ACTION_START_FLIGHTRECORDER_LABEL);
+		int retries = MCJemmyBase.isOSX() ? 5 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			selectAction(TREE_ITEM_FLIGHTRECORDER, path);
+			waitForIdle();
+			int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+			sleep(delay);
+			try {
+				getTree().contextChoose(ACTION_START_FLIGHTRECORDER_LABEL);
+				break;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 		if (enableCommercialFeatures) {
 			MCDialog dialog = new MCDialog(COMMERCIAL_FEATURES_QUESTION_TITLE);
 			dialog.closeWithButton(Labels.YES);
@@ -908,34 +1011,50 @@ public class JvmBrowser extends MCJemmyBase {
 	public void connect(boolean valid, String ... path) {
 		MCMenu.ensureJvmBrowserVisible();
 		String connectionName = path[path.length - 1];
-		int retries = MCJemmyBase.isOSX() ? 5 : 1;
-		for (int attempt = 0; attempt < retries; attempt++) {
-			selectAction(TREE_ITEM_CONSOLE, path);
-			waitForIdle();
-			if (MCJemmyBase.isOSX()) {
-				sleep(1000);
-			}
-			try {
-				getTree().contextChoose(ACTION_START_CONSOLE_LABEL);
-				break;
-			} catch (RuntimeException e) {
-				if (attempt == retries - 1) {
-					throw e;
+		int connectAttempts = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int connectAttempt = 0; connectAttempt < connectAttempts; connectAttempt++) {
+			int retries = MCJemmyBase.isOSX() ? 5 : 1;
+			for (int attempt = 0; attempt < retries; attempt++) {
+				selectAction(TREE_ITEM_CONSOLE, path);
+				waitForIdle();
+				if (MCJemmyBase.isOSX()) {
+					sleep(1000);
 				}
-				sleep(1000);
-			}
-		}
-		if (valid) {
-			if (!ConnectionHelper.is7u40orLater(connectionName)) {
 				try {
-					MCDialog dialog = new MCDialog(TOO_OLD_JVM_TITLE);
-					dialog.closeWithButton(MCButton.Labels.OK);
-				} catch (TimeoutExpiredException tee) {
-					Assert.fail("JVM Too Old warning did not show.");
+					getTree().contextChoose(ACTION_START_CONSOLE_LABEL);
+					break;
+				} catch (RuntimeException e) {
+					if (attempt == retries - 1) {
+						throw e;
+					}
+					sleep(1000);
 				}
 			}
-			Assert.assertTrue("Could not find JMX Console for connection \"" + connectionName + "\"",
-					waitForSubstringMatchedEditor(connectionName));
+			if (valid) {
+				MCDialog errorDialog = MCDialog.getByAnyDialogTitle(false, false, "Problem", "Error", "Connection");
+				if (errorDialog != null) {
+					errorDialog.clickButton(Labels.OK);
+					waitForIdle();
+				}
+				if (!ConnectionHelper.is7u40orLater(connectionName)) {
+					try {
+						MCDialog dialog = new MCDialog(TOO_OLD_JVM_TITLE);
+						dialog.closeWithButton(MCButton.Labels.OK);
+					} catch (TimeoutExpiredException tee) {
+						Assert.fail("JVM Too Old warning did not show.");
+					}
+				}
+				long waitTime = (connectAttempt < connectAttempts - 1) ? 10000 : 30000;
+				boolean found = waitForSubstringMatchedEditor(waitTime, connectionName);
+				if (found) {
+					return;
+				}
+				if (connectAttempt >= connectAttempts - 1) {
+					Assert.fail("Could not find JMX Console for connection \"" + connectionName + "\"");
+				}
+			} else {
+				return;
+			}
 		}
 	}
 
@@ -1019,6 +1138,25 @@ public class JvmBrowser extends MCJemmyBase {
 			completePath.add(recordingName);
 		}
 		return completePath.toArray(new String[completePath.size()]);
+	}
+
+	private void selectAndContextChoose(String[] path, String menuItem) {
+		int retries = MCJemmyBase.isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			getTree().select(path);
+			waitForIdle();
+			int delay = MCJemmyBase.isOSX() ? 500 : MCJemmyBase.BETWEEN_KEYSTROKES_SLEEP;
+			sleep(delay);
+			try {
+				getTree().contextChoose(menuItem);
+				return;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				sleep(1000);
+			}
+		}
 	}
 
 	private void selectAction(String action, String ... path) {

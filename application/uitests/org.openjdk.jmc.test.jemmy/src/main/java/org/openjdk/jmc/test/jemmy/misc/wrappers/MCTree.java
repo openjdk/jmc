@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
- * 
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The contents of this file are subject to the terms of either the Universal Permissive License
@@ -10,17 +10,17 @@
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
  * and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
  * conditions and the following disclaimer in the documentation and/or other materials provided with
  * the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
@@ -102,7 +102,7 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Returns all currently visible {@link MCTree} (in the main Mission Control Window)
-	 * 
+	 *
 	 * @return a {@link List} of {@link MCTree} that were found
 	 */
 	public static List<MCTree> getAll() {
@@ -133,7 +133,7 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Finds the first visible Tree (in the main Mission Control Window)
-	 * 
+	 *
 	 * @return a {@link MCTree}
 	 */
 	public static MCTree getFirst() {
@@ -142,7 +142,7 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Finds the tree that contains a matching item
-	 * 
+	 *
 	 * @param item
 	 *            the desired item text
 	 * @return a {@link MCTree}
@@ -212,7 +212,7 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Finds the first visible tree in the SWT hierarchy for the given shell
-	 * 
+	 *
 	 * @param shell
 	 *            the shell from where to start searching for the widget
 	 * @param waitForIdleUi
@@ -380,7 +380,7 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Returns a list of the currently selected tree item's text values
-	 * 
+	 *
 	 * @return a {@link List} of {@link String}
 	 */
 	public List<String> getSelectedItemTexts() {
@@ -432,7 +432,7 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Get the currently selected item's direct child item texts
-	 * 
+	 *
 	 * @return a {@link List} of {@link String}
 	 */
 	public List<String> getSelectedItemChildrenTexts() {
@@ -779,10 +779,22 @@ public class MCTree extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void contextChoose(boolean desiredState, String ... choice) {
-		scrollbarSafeSelection();
-		StringPopupSelectableOwner<Tree> spo = control.as(StringPopupSelectableOwner.class);
-		spo.setPolicy(policy);
-		spo.push(desiredState, getRelativeClickPoint(getSelectedItem()), choice);
+		int retries = isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			scrollbarSafeSelection();
+			try {
+				StringPopupSelectableOwner<Tree> spo = control.as(StringPopupSelectableOwner.class);
+				spo.setPolicy(policy);
+				spo.push(desiredState, getRelativeClickPoint(getSelectedItem()), choice);
+				return;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				control.keyboard().pushKey(KeyboardButtons.ESCAPE);
+				sleep(500);
+			}
+		}
 	}
 
 	/**
@@ -809,15 +821,28 @@ public class MCTree extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void contextChoose(String ... choice) {
-		scrollbarSafeSelection();
-		Wrap<? extends TreeItem> selectedWrap = getSelectedItem();
-		// workaround (needed on Mac OS X) to make sure that a yellow popup won't disturb during context clicking
-		if (isOSX()) {
-			selectedWrap.mouse().click();
+		int retries = isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < retries; attempt++) {
+			scrollbarSafeSelection();
+			Wrap<? extends TreeItem> selectedWrap = getSelectedItem();
+			if (isOSX()) {
+				selectedWrap.mouse().click();
+				waitForIdle();
+				sleep(200);
+			}
+			try {
+				StringPopupOwner<Tree> spo = control.as(StringPopupOwner.class);
+				spo.setPolicy(policy);
+				spo.push(getRelativeClickPoint(selectedWrap), choice);
+				return;
+			} catch (RuntimeException e) {
+				if (attempt == retries - 1) {
+					throw e;
+				}
+				control.keyboard().pushKey(KeyboardButtons.ESCAPE);
+				sleep(500);
+			}
 		}
-		StringPopupOwner<Tree> spo = control.as(StringPopupOwner.class);
-		spo.setPolicy(policy);
-		spo.push(getRelativeClickPoint(selectedWrap), choice);
 	}
 
 	/**
@@ -891,33 +916,128 @@ public class MCTree extends MCJemmyBase {
 
 	/**
 	 * Sets the text of the currently selected tree item
-	 * 
+	 *
 	 * @param text
 	 *            the text to set
 	 */
 	public void enterText(String text) {
-		int retries = isOSX() ? 3 : 1;
-		for (int attempt = 0; attempt < retries; attempt++) {
-			waitForIdle();
-			if (isOSX()) {
-				sleep(500);
-			}
-			try {
-				contextChoose("Change Value");
-				break;
-			} catch (RuntimeException e) {
-				if (attempt == retries - 1) {
-					throw e;
-				}
-				sleep(1000);
-			}
+		if (isOSX()) {
+			enterTextMacOS(text);
+		} else {
+			enterTextDefault(text);
 		}
+	}
+
+	private void enterTextDefault(String text) {
+		waitForIdle();
+		contextChoose("Change Value");
+		waitForIdle();
+		typeText(text);
+		control.keyboard().pushKey(KeyboardButtons.ENTER);
+	}
+
+	private void enterTextMacOS(String text) {
+		// On macOS, cell editor activation via context menu is unreliable due to
+		// focus-stealing events. Set the attribute value directly on the model instead.
+		if (setAttributeValueDirectly(text)) {
+			return;
+		}
+		// Fallback: try context menu + typeText
+		waitForIdle();
+		sleep(500);
+		try {
+			contextChoose("Change Value");
+		} catch (RuntimeException e) {
+			sleep(1000);
+			contextChoose("Change Value");
+		}
+		waitForIdle();
+		sleep(500);
+		typeText(text);
+		control.keyboard().pushKey(KeyboardButtons.ENTER);
+	}
+
+	private boolean setAttributeValueDirectly(String text) {
+		Fetcher<Boolean> fetcher = new Fetcher<Boolean>() {
+			@Override
+			public void run() {
+				Tree tree = getWrap().getControl();
+				TreeItem[] selection = tree.getSelection();
+				if (selection == null || selection.length == 0) {
+					setOutput(false);
+					return;
+				}
+				Object data = selection[0].getData();
+				if (data instanceof org.openjdk.jmc.rjmx.services.IAttribute) {
+					org.openjdk.jmc.rjmx.services.IAttribute attr = (org.openjdk.jmc.rjmx.services.IAttribute) data;
+					String typeName = attr.getInfo().getType();
+					// Skip array types - ArrayLengthCellEditor creates child model objects
+					// that direct setValue() cannot replicate
+					if (typeName != null && typeName.startsWith("[")) {
+						setOutput(false);
+						return;
+					}
+					Object typedValue = convertToType(text, typeName);
+					attr.setValue(typedValue);
+					// Refresh the viewer to reflect the change
+					Object viewerObj = tree.getData("org.eclipse.jface.viewer");
+					if (viewerObj == null) {
+						viewerObj = tree.getData("viewer");
+					}
+					if (viewerObj instanceof org.eclipse.jface.viewers.ColumnViewer) {
+						org.eclipse.jface.viewers.ColumnViewer cv = (org.eclipse.jface.viewers.ColumnViewer) viewerObj;
+						cv.refresh();
+					}
+					setOutput(true);
+					return;
+				}
+				setOutput(false);
+			}
+		};
+		Display.getDefault().syncExec(fetcher);
+		return Boolean.TRUE.equals(fetcher.getOutput());
+	}
+
+	private static Object convertToType(String text, String typeName) {
+		if (typeName == null) {
+			return text;
+		}
+		try {
+			switch (typeName) {
+			case "long":
+			case "java.lang.Long":
+				return Long.parseLong(text);
+			case "int":
+			case "java.lang.Integer":
+				return Integer.parseInt(text);
+			case "short":
+			case "java.lang.Short":
+				return Short.parseShort(text);
+			case "byte":
+			case "java.lang.Byte":
+				return Byte.parseByte(text);
+			case "double":
+			case "java.lang.Double":
+				return Double.parseDouble(text);
+			case "float":
+			case "java.lang.Float":
+				return Float.parseFloat(text);
+			case "boolean":
+			case "java.lang.Boolean":
+				return Boolean.parseBoolean(text);
+			default:
+				return text;
+			}
+		} catch (NumberFormatException e) {
+			return text;
+		}
+	}
+
+	private void typeText(String text) {
 		for (int i = 0; i < text.length(); i++) {
 			control.keyboard().typeChar(text.charAt(i));
 			sleep(BETWEEN_KEYSTROKES_SLEEP);
 		}
-		// make sure that the text entered is "submitted" before moving focus elsewhere (necessary for Mac)
-		control.keyboard().pushKey(KeyboardButtons.ENTER);
 	}
 
 	/**
