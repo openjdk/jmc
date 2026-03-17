@@ -416,7 +416,7 @@
 				<version>${build.helper.maven.version}</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>add-source</goal>
 						</goals>
