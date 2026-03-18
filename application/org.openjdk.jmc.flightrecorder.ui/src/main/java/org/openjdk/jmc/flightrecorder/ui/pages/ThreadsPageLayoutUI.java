@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -96,7 +96,6 @@ abstract class ThreadsPageLayoutUI extends ChartAndTableUI {
 	private static final int Y_OFFSET = 0;
 	protected ChartControlBar controlBar;
 	protected ChartTextCanvas textCanvas;
-	protected IPageContainer pageContainer;
 	private Composite zoomPanContainer;
 	private ChartButtonGroup buttonGroup;
 	private IItemCollection selectionItems;

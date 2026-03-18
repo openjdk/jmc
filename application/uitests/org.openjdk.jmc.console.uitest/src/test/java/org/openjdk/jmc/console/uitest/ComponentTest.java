@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.openjdk.jmc.test.jemmy.MCJemmyTestBase;
+import org.openjdk.jmc.test.jemmy.misc.base.wrappers.MCJemmyBase;
 import org.openjdk.jmc.test.jemmy.MCUITestRule;
 import org.openjdk.jmc.test.jemmy.misc.helpers.ConnectionHelper;
 import org.openjdk.jmc.test.jemmy.misc.wrappers.JmxConsole;
@@ -87,6 +88,10 @@ public class ComponentTest extends MCJemmyTestBase {
 		if (mbeanAttributesTree.getColumnIndex("Type", false) != -1) {
 			mbeanAttributesTree.select("VmVendor");
 			mbeanAttributesTree.contextChoose("Visible Columns", "Type");
+			MCJemmyBase.waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(500);
+			}
 			Assert.assertTrue("The tree contains the \"Type\" column!",
 					mbeanAttributesTree.getColumnIndex("Type", false) == -1);
 		}
@@ -95,16 +100,28 @@ public class ComponentTest extends MCJemmyTestBase {
 		// grouped by type)
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Visible Columns", "Type");
-		mbeanAttributesTree.getColumnIndex("Type");
+		int typeColumnIndex = mbeanAttributesTree.waitForColumnIndex("Type", 5000);
+		if (typeColumnIndex == -1) {
+			Assert.fail("Could not find the column with header \"Type\". Columns: "
+					+ mbeanAttributesTree.getColumnHeaders());
+		}
 
 		// Select an item in the tree and sort on Name - Ascending
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Sort Columns", "Name", "Ascending");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		List<String> namesColumnAscending = getColumn(mbeanAttributesTree.getAllItemTexts(), getColumnIndex("Name"));
 
 		// Select an item in the tree and sort on Name - Descending
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Sort Columns", "Name", "Descending");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		List<String> namesColumnDescending = getColumn(mbeanAttributesTree.getAllItemTexts(), getColumnIndex("Name"));
 
 		// Verify that resorting has happened.
@@ -118,6 +135,10 @@ public class ComponentTest extends MCJemmyTestBase {
 		// Select an item in the tree and sort on Value - Ascending
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Sort Columns", "Value", "Ascending");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		Map<String, List<String>> valueColumnAscending = getColumnGroupedByType(mbeanAttributesTree.getAllItemTexts(),
 				getColumnIndex("Value"), getColumnIndex("Type"));
 
@@ -125,6 +146,10 @@ public class ComponentTest extends MCJemmyTestBase {
 			// Select an item in the tree and sort on Value - Descending
 			mbeanAttributesTree.select("VmVendor");
 			mbeanAttributesTree.contextChoose("Sort Columns", "Value", "Descending");
+			MCJemmyBase.waitForIdle();
+			if (MCJemmyBase.isOSX()) {
+				sleep(500);
+			}
 			Map<String, List<String>> valueColumnDescending = getColumnGroupedByType(
 					mbeanAttributesTree.getAllItemTexts(), getColumnIndex("Value"), getColumnIndex("Type"));
 
@@ -142,6 +167,10 @@ public class ComponentTest extends MCJemmyTestBase {
 		// Select an item in the tree and sort on Type - Ascending
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Sort Columns", "Type", "Ascending");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		List<String> typeColumnAscending = getColumn(mbeanAttributesTree.getAllItemTexts(), getColumnIndex("Type"));
 		// Verify sorting by Type
 		Assert.assertTrue("Type column not correctly sorted ascending: " + formatForPrinting(typeColumnAscending),
@@ -150,12 +179,20 @@ public class ComponentTest extends MCJemmyTestBase {
 		// Remove the Type column and verify that the table doesn't contain that column (again)
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Visible Columns", "Type");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		Assert.assertTrue("The tree still contains the \"Type\" column!",
 				mbeanAttributesTree.getColumnIndex("Type", false) == -1);
 
 		// Resort on Name column again, ascending
 		mbeanAttributesTree.select("VmVendor");
 		mbeanAttributesTree.contextChoose("Sort Columns", "Name", "Ascending");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		namesColumnAscending = getColumn(mbeanAttributesTree.getAllItemTexts(), getColumnIndex("Name"));
 		Assert.assertTrue("Name column not sorted ascending: " + formatForPrinting(namesColumnAscending),
 				listIsSorted(namesColumnAscending, true));

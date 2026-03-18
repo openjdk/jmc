@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -86,10 +86,10 @@
                 value="27,400,686,15"/>
          <property
                name="startupForegroundColor"
-               value="C0C0C0"/>
+               value="000000"/>
          <property
                name="startupMessageRect"
-               value="260,375,440,15"/>   
+               value="260,365,450,30"/>
          <property
                name="preferenceCustomization"
                value="plugin_customization.ini">

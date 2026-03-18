@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -72,8 +72,7 @@ public class RuleCheckedStateProvider implements ICheckStateProvider, ICheckStat
 		if (element instanceof TriggerRule) {
 			setRuleChecked((TriggerRule) element, event.getChecked());
 		} else if (element instanceof RuleGroup) {
-			RuleGroup group = ((RuleGroup) element);
-			group.getRules().forEach(rule -> setRuleChecked(rule, event.getChecked()));
+			((RuleGroup) element).getRules().forEach(rule -> setRuleChecked(rule, event.getChecked()));
 		}
 	}
 

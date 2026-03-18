@@ -279,7 +279,7 @@ version(s), and exceptions or additional permissions here}."
 
   You may add additional accurate notices of copyright ownership.
 
-%% The following notice is provided with respect to OWASP Java Encoder Project v1.2.3, 
+%% The following notice is provided with respect to OWASP Java Encoder Project v1.4.0,
 which may be included with this product.
 
 Copyright (c) 2015 Jeff Ichnowski
@@ -363,7 +363,7 @@ the Author.
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  THE POSSIBILITY OF SUCH DAMAGE.
  
-%% The following notice is provided with respect to lz4-java v1.10.2,
+%% The following notice is provided with respect to lz4-java v1.10.4,
 which may be included with this product.
 
 URL for License � http://opensource.org/licenses/Apache-2.0
@@ -435,7 +435,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-%% The following notice is provided with respect to hpcc-js-wasm v2.18.0,
+%% The following notice is provided with respect to hpcc-js-wasm v2.33.0,
 which may be included with this product.
 
 ------------------------------------------------------------------------------------
@@ -1973,7 +1973,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 ------------------------------------------------------------------------------------------
 
-%% The following notice is provided with respect to FontAwesome v6.5.1,
+%% The following notice is provided with respect to FontAwesome v7.2.0,
 which may be included with this product in the form of icons.
 
 Font Awesome Free License
@@ -2223,7 +2223,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -------------------------------------------------------------
 
-%% The following notice is provided with respect to ASM v9.7, 
+%% The following notice is provided with respect to ASM v9.9.1,
 which may be included with this product.
 
 https://gitlab.ow2.org/asm/asm/blob/master/LICENSE.txt
