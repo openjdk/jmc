@@ -33,14 +33,13 @@
  */
 package org.openjdk.jmc.jolokia;
 
-import java.io.IOException;
 import java.util.Map;
 
+import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXServiceURL;
+import javax.security.auth.Subject;
 
-import org.jolokia.client.JolokiaClientBuilder;
 import org.jolokia.client.jmxadapter.JolokiaJmxConnector;
-import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 
 public class JmcJolokiaJmxConnector extends JolokiaJmxConnector {
 
@@ -49,8 +48,13 @@ public class JmcJolokiaJmxConnector extends JolokiaJmxConnector {
 	}
 
 	@Override
-	protected RemoteJmxAdapter instantiateAdapter(JolokiaClientBuilder clientBuilder, Map<String, Object> mergedEnv)
-			throws IOException {
-		return new JmcJolokiaJmxConnection(clientBuilder.build());
+	public MBeanServerConnection getMBeanServerConnection() {
+		return new JmcJolokiaJmxConnection(super.getMBeanServerConnection());
 	}
+
+	@Override
+	public MBeanServerConnection getMBeanServerConnection(Subject delegationSubject) {
+		return new JmcJolokiaJmxConnection(super.getMBeanServerConnection(delegationSubject));
+	}
+
 }

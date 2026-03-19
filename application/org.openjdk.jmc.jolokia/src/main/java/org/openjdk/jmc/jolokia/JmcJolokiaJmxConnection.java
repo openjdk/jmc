@@ -35,31 +35,35 @@ package org.openjdk.jmc.jolokia;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.Descriptor;
 import javax.management.ImmutableDescriptor;
 import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
+import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.management.modelmbean.DescriptorSupport;
 import javax.management.openmbean.TabularData;
 
-import org.jolokia.client.JolokiaClient;
-import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
+import org.jolokia.core.service.serializer.SerializeOptions;
 import org.jolokia.service.serializer.JolokiaSerializer;
-import org.jolokia.server.core.service.serializer.SerializeOptions;
+import org.openjdk.jmc.rjmx.common.ConnectionDelegate;
 
 /**
  * Make JMC specific adjustments to Jolokia JMX connection. May consider to use the decorator
  * pattern if differences are big, but for now subclass
  */
-public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
+public class JmcJolokiaJmxConnection extends ConnectionDelegate {
 
 	private static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
 	private static final String DIAGNOSTIC_OPTIONS = "com.sun.management:type=DiagnosticCommand"; //$NON-NLS-1$
@@ -74,13 +78,15 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 	private static final String ARGUMENT_TYPE = PREFIX + "arg.type"; //$NON-NLS-1$
 	private static final String ARGUMENT_OPTION = PREFIX + "arg.isOption"; //$NON-NLS-1$
 	private static final String ARGUMENT_MULITPLE = PREFIX + "arg.isMultiple"; //$NON-NLS-1$
+	private Map<ObjectName, MBeanInfo> mbeanInfoCache = new HashMap<>();
 
-	public JmcJolokiaJmxConnection(JolokiaClient client) throws IOException {
-		super(client);
+	public JmcJolokiaJmxConnection(MBeanServerConnection delegate) {
+		super(delegate);
 	}
 
 	@Override
-	public MBeanInfo getMBeanInfo(ObjectName name) throws InstanceNotFoundException, IOException {
+	public MBeanInfo getMBeanInfo(ObjectName name)
+			throws InstanceNotFoundException, ReflectionException, IOException, IntrospectionException {
 		MBeanInfo mBeanInfo = super.getMBeanInfo(name);
 		// the diagnostic options tab and memory relies on descriptor info in MBeanInfo,
 		// modify descriptors the first time
@@ -115,7 +121,7 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 
 	@Override
 	public Object invoke(ObjectName name, String operationName, Object[] params, String[] signature)
-			throws InstanceNotFoundException, MBeanException, IOException {
+			throws InstanceNotFoundException, MBeanException, IOException, ReflectionException {
 
 		if (params != null) {
 			for (int i = 0; i < params.length; i++) {
@@ -211,14 +217,14 @@ public class JmcJolokiaJmxConnection extends RemoteJmxAdapter {
 
 	@Override
 	public boolean isInstanceOf(ObjectName objectName, String type) throws InstanceNotFoundException, IOException {
-		if ("java.lang.management.OperatingSystemMXBean".equals(type) //$NON-NLS-1$
-				&& "com.sun.management.internal.OperatingSystemImpl" //$NON-NLS-1$
-						.equals(this.getMBeanInfo(objectName).getClassName())) {
-			return true;
-		}
 		try {
+			if ("java.lang.management.OperatingSystemMXBean".equals(type) //$NON-NLS-1$
+					&& "com.sun.management.internal.OperatingSystemImpl" //$NON-NLS-1$
+							.equals(this.getMBeanInfo(objectName).getClassName())) {
+				return true;
+			}
 			return super.isInstanceOf(objectName, type);
-		} catch (NoClassDefFoundError | UnsatisfiedLinkError e) {
+		} catch (NoClassDefFoundError | UnsatisfiedLinkError | ReflectionException | IntrospectionException e) {
 			//Handle this until it is fixed in jolokia https://github.com/jolokia/jolokia/issues/666
 			return false;
 		}
