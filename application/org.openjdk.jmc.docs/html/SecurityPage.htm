@@ -23,8 +23,8 @@
 <link rel="copyright" href="https://oss.oracle.com/licenses/upl" title="Copyright" type="text/html" />
 
 <link rel="contents" href="toc.htm" title="Contents" type="text/html" />
-<link rel="prev" href="GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm" title="Previous" type="text/html" />
-<link rel="next" href="GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm" title="Next" type="text/html" />
+<link rel="prev" href="GUID-0352E76D-96F5-4EDA-A8DE-88B9E18635B9.htm" title="Previous" type="text/html" />
+<link rel="next" href="GUID-63742D06-CF58-47F2-9CF2-08C0DB9F09F1.htm" title="Next" type="text/html" />
 </head>
 <body>
 <table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
@@ -33,14 +33,14 @@
 
 
 <td align="center">
-<a href="GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm">
-<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<a href="GUID-0352E76D-96F5-4EDA-A8DE-88B9E18635B9.htm">
+<img src="dcommon/gifs/leftnav.gif" alt="Previous" /><br />
 <span class="icon">Previous</span>
 </a>
 </td>
 <td align="center">
-<a href="GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm">
-<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<a href="GUID-63742D06-CF58-47F2-9CF2-08C0DB9F09F1.htm">
+<img src="dcommon/gifs/rightnav.gif" alt="Next" /><br />
 <span class="icon">Next</span>
 </a>
 </td>
@@ -48,8 +48,20 @@
 
 
 </tr>
-</table><div class="ind"><a id="GUID-4F885E48-A548-4140-B985-74B1685BEDEA" name="GUID-4F885E48-A548-4140-B985-74B1685BEDEA"></a><!-- End Header -->
-<h1 id="JMCOH-GUID-4F885E48-A548-4140-B985-74B1685BEDEA" class="sect1">Using the Security Page</h1>
+</table>
+
+<div class="ind"><a id="SecurityPage" name="SecurityPage"></a><!-- End Header -->
+<h1 id="JMCOH-SecurityPage" class="sect1">Using the Security Page</h1>
+<div><p>The security page is designed to display information related to certificates used. It mainly displays the information derived from X509Certificate events. </p>
+<p>There is one table which shows information related to the cryptographic algorithm. For ex: Signature Algorithm, Key type, Key length, Certificate Valid from, Certificate expiring on, Certificate Id and Issuer details. </p>
+<p>We have also added a new column Crypto Remark which will help customer to identify the action/attention item. Action and attention items are decided based on the JDK guidelines for Crypto usages.</p>
+<div class="p">Examples of Action and attention items:<ul style="list-style-type: disc;" id="GUID-D63A7C7C-CFC4-4CCE-A23C-59D7907F7680__UL_RNG_14Z_P3C"><li>Action Required. The Certificate has expired before 1,822 days. It should be replaced.</li>
+<li>Attention Needed. SHA-1 signature. It should be updated to use SHA-256 or SHA-512.</li>
+</ul>
+</div>
+<p>If everything is fine we are displaying OK as crypto remark.</p>
+<p>There is one chart where we are displaying the occurrences of X509Certificate events with respect to the timeline.</p>
+</div>
 
 </div><!-- class="ind" --><!-- Start Footer -->
 <table class="simple oac_no_warn" summary="" cellspacing="0" cellpadding="0" width="100%">
@@ -59,14 +71,14 @@
 
 
 <td align="center">
-<a href="GUID-8E04A807-3D2B-4896-AD06-B0DE61ACBBD9.htm">
-<img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
+<a href="GUID-0352E76D-96F5-4EDA-A8DE-88B9E18635B9.htm">
+<img src="dcommon/gifs/leftnav.gif" alt="Previous" /><br />
 <span class="icon">Previous</span>
 </a>
 </td>
 <td align="center">
-<a href="GUID-F85CDA8B-CFD2-4155-A140-9DD4079F0139.htm">
-<img src="./dcommon/gifs/rightnav.gif" alt="Next" /><br />
+<a href="GUID-63742D06-CF58-47F2-9CF2-08C0DB9F09F1.htm">
+<img src="dcommon/gifs/rightnav.gif" alt="Next" /><br />
 <span class="icon">Next</span>
 </a>
 </td>
