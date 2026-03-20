@@ -46,7 +46,9 @@
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
             <unit id="org.osgi.service.servlet" version="2.0.0.202212101352"/>
+            <unit id="org.jolokia.core" version="2.5.1"/>
             <unit id="org.jolokia.client.jmx-adapter" version="2.5.1"/>
+            <unit id="org.jolokia.core" version="2.5.1"/>
             <unit id="org.jolokia.service.discovery" version="2.5.1"/>
             <unit id="org.jolokia.service.serializer" version="2.5.1"/>
             <unit id="org.jolokia.server.core" version="2.5.1"/>
