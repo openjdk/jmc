@@ -58,7 +58,6 @@
 		<module>org.openjdk.jmc.flightrecorder.uitest</module>
 		<module>org.openjdk.jmc.rcp.application.uitest</module>
 		<module>org.openjdk.jmc.test.jemmy</module>
-    <module>org.openjdk.jmc.jolokia.test</module>
 	</modules>
 	<dependencies>
 		<dependency>
