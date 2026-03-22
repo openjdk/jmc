@@ -38,7 +38,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openjdk.jmc</groupId>
-		<artifactId>missioncontrol.application.tests</artifactId>
+		<artifactId>missioncontrol.application.uitests</artifactId>
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>org.openjdk.jmc.jolokia.test</artifactId>
