@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -170,6 +170,8 @@ public class TriggerSectionPart extends MCSectionPart {
 		tree.setData("name", "triggers.RulesTree"); //$NON-NLS-1$ //$NON-NLS-2$
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		m_viewer = createViewer(toolkit, tree, client);
+		tree.setData("org.eclipse.jface.viewer", m_viewer); //$NON-NLS-1$
+		tree.setData("viewer", m_viewer); //$NON-NLS-1$
 
 		tree.setLayoutData(gd);
 

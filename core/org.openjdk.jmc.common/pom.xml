@@ -46,12 +46,12 @@
 		<dependency>
 			<groupId>org.owasp.encoder</groupId>
 			<artifactId>encoder</artifactId>
-			<version>1.2.3</version>
+			<version>1.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>at.yawk.lz4</groupId>
 			<artifactId>lz4-java</artifactId>
-			<version>1.10.2</version>
+			<version>1.10.4</version>
 		</dependency>
 	</dependencies>
 </project>
