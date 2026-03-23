@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -89,7 +89,7 @@ public interface IMCFrame {
 		/**
 		 * The frame compilation type is unknown.
 		 */
-		public static final Type UNKNOWN = new Type("UNKNONW"); //$NON-NLS-1$
+		public static final Type UNKNOWN = new Type("UNKNOWN"); //$NON-NLS-1$
 
 		private static final String MSG_PREFIX = "IMCFrame_Type_";
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
    Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -33,7 +33,7 @@
 <div class="sect2"><a id="sthref11" name="sthref11"></a>
 <h1>Changing Your JVM</h1>
 <a name="BEGIN" id="BEGIN"></a>
-<p>While the JDK Mission Control client can work with many different JVMs, it is highly recommended that you use the Oracle JDK/JVM as your JVM when running the JDK Mission Control Client on the Eclipse platform. Make sure to use Oracle HotSpot JDK 7 Update 14 or later. Running on a JRE is not recommended, as this will disable the autodetection of local JVMs.</p>
+<p>While the JDK Mission Control client can work with many different JVMs, it is highly recommended that you use the Oracle JDK/JVM as your JVM when running the JDK Mission Control Client on the Eclipse platform. Make sure to use Oracle HotSpot JDK 21 or later. Running on a JRE is not recommended, as this will disable the autodetection of local JVMs.</p>
 <p><span class="bold">To change the JVM on which you run Eclipse:</span></p>
 <ol>
 <li>
@@ -60,9 +60,9 @@
 <p>On the third line down (after <code>org.eclipse.platform</code>), add the following:</p>
 <p><code>-vm &lt;Full path JAVA_HOME/jre/bin/ folder&gt;</code></p>
 <p>The full path might look like this on Windows:</p>
-<p><code>C:\Program Files\Java\jdk1.7.0\jre\bin\</code></p>
+<p><code>C:\Program Files\Java\jdk21\jre\bin\</code></p>
 <p>Or, the path might look like this on Linux and Solaris:</p>
-<p><code>$HOME/jdk1.7.0/jre/bin/</code></p>
+<p><code>$HOME/jdk21/jre/bin/</code></p>
 </li>
 <li>
 <p>Depending upon your particular JVM implementation and the applications running on it, you can set any valid JVM command-line option.</p>
@@ -78,7 +78,7 @@
 <code>-showsplash</code><br />
 <code>org.eclipse.platform</code><br />
 <code>-vm</code><br />
-<code>C:\Program Files\Java\jdk1.7.0\bin\javaw.exe</code><br />
+<code>C:\Program Files\Java\jdk21\bin\javaw.exe</code><br />
 <code>-vmargs</code><br />
 <code>-Dosgi.requiredJavaVersion=1.5</code><br />
 <code>-Xms256m</code><br />
@@ -92,7 +92,7 @@
 <col width="86%" />
 <col width="*" />
 <tr>
-<td align="left"><span class="copyrightlogo">Copyright&nbsp;&copy;&nbsp;2018,&nbsp;2022,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span><br />
+<td align="left"><span class="copyrightlogo">Copyright&nbsp;&copy;&nbsp;2018,&nbsp;2026,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span><br />
 <a href="https://oss.oracle.com/licenses/upl"  target="_blank"><span class="copyrightlogo">Legal Notices</span></a></td>
 <td align="center"><a href="using002.htm"><img src="./dcommon/gifs/leftnav.gif" alt="Previous" /><br />
 <span class="icon">Previous</span></a>&nbsp;</td>

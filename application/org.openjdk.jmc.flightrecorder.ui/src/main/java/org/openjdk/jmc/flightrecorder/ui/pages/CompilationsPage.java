@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,15 +42,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.IWritableState;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.IMemberAccessor;
+import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAggregators;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
@@ -163,8 +168,16 @@ public class CompilationsPage extends AbstractDataPage {
 			// FIXME: Might like to have Method Formatting Options here
 			compilationsTable = COMPILATIONS_LIST.buildWithoutBorder(tabFolder,
 					TableSettings.forState(state.getChild(COMPILATIONS_TABLE)));
-			compilationsTable.getManager().getViewer().addSelectionChangedListener(e -> pageContainer
-					.showSelection(ItemCollectionToolkit.build(compilationsTable.getSelection().get())));
+			compilationsTable.getManager().getViewer().addSelectionChangedListener(e -> {
+				IItemCollection items = ItemCollectionToolkit.build(compilationsTable.getSelection().get());
+				IMCMethod method = extractCompilerMethod(items);
+				if (method != null) {
+					pageContainer
+							.showSelection(new InViewMethodSelection(method, getDataSource().getItems(), getName()));
+				} else {
+					pageContainer.showSelection(items);
+				}
+			});
 			compilationsFilter = FilterComponent.createFilterComponent(compilationsTable, compilationsFilterState,
 					getDataSource().getItems().apply(JdkFilters.COMPILATION),
 					pageContainer.getSelectionStore()::getSelections, this::onCompilationsFilterChange);
@@ -263,6 +276,23 @@ public class CompilationsPage extends AbstractDataPage {
 			compilationsFailedState = compilationsFailedTable.getManager().getSelectionState();
 			tabFolderIndex = tabFolder.getSelectionIndex();
 			flavorSelectorState = flavorSelector.getFlavorSelectorState();
+		}
+
+		@SuppressWarnings("unchecked")
+		private IMCMethod extractCompilerMethod(IItemCollection items) {
+			for (var iterable : items) {
+				IType<IItem> type = (IType<IItem>) iterable.getType();
+				IMemberAccessor<IMCMethod, IItem> accessor = JdkAttributes.COMPILER_METHOD.getAccessor(type);
+				if (accessor != null) {
+					for (IItem item : iterable) {
+						IMCMethod method = accessor.getMember(item);
+						if (method != null) {
+							return method;
+						}
+					}
+				}
+			}
+			return null;
 		}
 
 		private void onInputSelected(IItemCollection items, IRange<IQuantity> timeRange) {

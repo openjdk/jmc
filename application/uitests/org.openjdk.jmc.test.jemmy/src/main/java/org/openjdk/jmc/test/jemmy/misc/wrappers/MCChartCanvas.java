@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -109,6 +109,10 @@ public class MCChartCanvas extends MCJemmyBase {
 		StringPopupOwner<Shell> contextMenu = control.as(StringPopupOwner.class);
 		contextMenu.setPolicy(StringComparePolicy.SUBSTRING);
 		contextMenu.push(getRelativeClickPoint(), new String[] {menuItemText});
+		waitForIdle();
+		if (isOSX()) {
+			sleep(500);
+		}
 	}
 
 	/**

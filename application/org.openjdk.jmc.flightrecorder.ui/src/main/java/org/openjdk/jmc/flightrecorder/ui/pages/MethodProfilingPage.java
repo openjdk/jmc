@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -80,6 +80,7 @@ import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
@@ -115,6 +116,7 @@ import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.pages.internal.MethodWithFrameType;
 import org.openjdk.jmc.flightrecorder.ui.pages.internal.MethodWithFrameTypeLabelProvider;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
+import org.openjdk.jmc.flightrecorder.ui.selection.StacktraceFrameSelection;
 import org.openjdk.jmc.ui.column.ColumnManager.SelectionState;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
 import org.openjdk.jmc.ui.column.TableSettings;
@@ -258,8 +260,19 @@ public class MethodProfilingPage extends AbstractDataPage {
 			SelectionStoreActionToolkit.addSelectionStoreActions(pageContainer.getSelectionStore(), table,
 					Messages.FileIOPage_HISTOGRAM_SELECTION, mm);
 			table.getManager().getViewer().addSelectionChangedListener(e -> updateDetails(e));
-			table.getManager().getViewer()
-					.addSelectionChangedListener(e -> pageContainer.showSelection(table.getSelection().getItems()));
+			table.getManager().getViewer().addSelectionChangedListener(e -> {
+				var selection = table.getSelection();
+				var items = selection.getItems();
+				var methodOpt = selection.getSelectedRows((key, rowItems) -> (MethodWithFrameType) key).findFirst();
+				if (methodOpt.isPresent()) {
+					var methodWithType = methodOpt.get();
+					var frame = new MCFrame(methodWithType.getMethod(), null, null, methodWithType.getFrameType());
+					pageContainer.showSelection(new StacktraceFrameSelection(frame, items, getDataSource().getItems(),
+							Messages.MethodProfilingPage_PAGE_NAME));
+				} else {
+					pageContainer.showSelection(items);
+				}
+			});
 			tableFilter = FilterComponent.createFilterComponent(table, MethodProfilingPage.this.tableFilter,
 					getDataSource().getItems().apply(TABLE_ITEMS), pageContainer.getSelectionStore()::getSelections,
 					this::onTableFilterChange);
@@ -390,28 +403,13 @@ public class MethodProfilingPage extends AbstractDataPage {
 
 		}
 
-		private void mergeNode(SuccessorTreeModel model, SuccessorNode destNode, Node srcNode) {
-			destNode.count += (int) srcNode.getCumulativeWeight();
+		private SuccessorNode convertToSuccessorNode(SuccessorTreeModel model, SuccessorNode parent, Node srcNode) {
+			SuccessorNode node = new SuccessorNode(model, parent, srcNode);
 			for (Node child : srcNode.getChildren()) {
-				String key = SuccessorTreeModel.makeKey(child.getFrame());
-				SuccessorNode existing = destNode.children.putIfAbsent(key, new SuccessorNode(model, destNode, child));
-				if (existing != null) {
-					mergeNode(model, existing, child);
-				}
+				String key = child.getFrame().getMethodKey();
+				node.children.put(key, convertToSuccessorNode(model, node, child));
 			}
-		}
-
-		private void traverse(Node current, String typeName, String methodName, SuccessorTreeModel model) {
-			if (methodName.equals(current.getFrame().getMethod().getMethodName())
-					&& typeName.equals(current.getFrame().getMethod().getType().getFullName())) {
-				if (model.root == null) {
-					model.root = new SuccessorNode(model, null, current);
-				}
-				mergeNode(model, model.root, current);
-			}
-			for (Node child : current.getChildren()) {
-				traverse(child, typeName, methodName, model);
-			}
+			return node;
 		}
 
 		private void setModelSuccessor(SuccessorTreeModel model) {
@@ -465,12 +463,15 @@ public class MethodProfilingPage extends AbstractDataPage {
 					return null;
 				}
 				MethodFilter methodFilter = new JdkFilters.MethodFilter(typeName, methodName);
-				// Filters event containing the current method
 				IItemCollection methodEvents = getDataSource().getItems()
 						.apply(ItemFilters.and(TABLE_ITEMS, methodFilter));
 				StacktraceTreeModel stacktraceTreeModel = new StacktraceTreeModel(methodEvents);
+				Node successorRoot = stacktraceTreeModel.extractSuccessorsFor(typeName, methodName);
+				if (successorRoot == null) {
+					return null;
+				}
 				SuccessorTreeModel model = new SuccessorTreeModel();
-				traverse(stacktraceTreeModel.getRoot(), typeName, methodName, model);
+				model.root = convertToSuccessorNode(model, null, successorRoot);
 				return model;
 			});
 		}
@@ -793,10 +794,6 @@ public class MethodProfilingPage extends AbstractDataPage {
 
 	private static class SuccessorTreeModel {
 		SuccessorNode root;
-
-		public static String makeKey(IMCFrame frame) {
-			return frame.getMethod().getType().getFullName() + "::" + frame.getMethod().getMethodName();
-		}
 	}
 
 	private static class SuccessorNode {

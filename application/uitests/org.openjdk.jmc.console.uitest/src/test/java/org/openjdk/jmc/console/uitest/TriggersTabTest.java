@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -73,6 +73,11 @@ public class TriggersTabTest extends MCJemmyTestBase {
 	@Rule
 	public MCUITestRule testRule = new MCUITestRule(verboseRuleOutput) {
 		@Override
+		public void before() {
+			org.openjdk.jmc.alert.AlertPlugin.getDefault().setPopup(true);
+		}
+
+		@Override
 		public void after() {
 			MCTriggersPage.resetTriggerRules();
 			MCJemmyBase.focusMc();
@@ -97,7 +102,7 @@ public class TriggersTabTest extends MCJemmyTestBase {
 		Assume.assumeTrue("This feature is only valid on JDK7u4 or later.",
 				ConnectionHelper.is7u4orLater(TEST_CONNECTION));
 
-		MCTriggersPage.createTriggerRule(null, null, "1 s", ALERT_ACTION_NAME, null, ALERT_RULE_GROUP_NAME,
+		MCTriggersPage.createTriggerRule("1 %", "0 s", "1 s", ALERT_ACTION_NAME, null, ALERT_RULE_GROUP_NAME,
 				ALERT_RULE_NAME + "Application Alert", ALERT_ATTRIBUTE_PATH);
 
 		// Activate the new rule
@@ -121,7 +126,7 @@ public class TriggersTabTest extends MCJemmyTestBase {
 		actionParams.put(DIAGNOSTIC_COMMAND_LOG_FILE_TOOLTIP, filename);
 		actionParams.put(DIAGNOSTIC_COMMAND_TOOLTIP, DIAGNOSTIC_COMMAND);
 
-		MCTriggersPage.createTriggerRule(null, null, "1 s", DIAGNOSTIC_COMMAND_ACTION_NAME, actionParams,
+		MCTriggersPage.createTriggerRule("1 %", "0 s", "1 s", DIAGNOSTIC_COMMAND_ACTION_NAME, actionParams,
 				ALERT_RULE_GROUP_NAME, ALERT_RULE_NAME + "Diagnostic Command", ALERT_ATTRIBUTE_PATH);
 
 		// Activate the new rule
@@ -210,4 +215,5 @@ public class TriggersTabTest extends MCJemmyTestBase {
 		}
 		return updated;
 	}
+
 }
