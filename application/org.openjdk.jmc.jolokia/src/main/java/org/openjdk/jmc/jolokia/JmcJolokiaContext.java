@@ -48,8 +48,8 @@ import org.jolokia.server.core.service.api.AgentDetails;
 import org.jolokia.server.core.service.api.JolokiaContext;
 
 /**
- * A minimal Jolokia context, just in order to support discovery (other server
- * side functionality is not relevant)
+ * A minimal Jolokia context, just in order to support discovery (other server side functionality is
+ * not relevant)
  */
 public class JmcJolokiaContext {
 	// Note: Discovery will register and unregister jolokia during lifetime, this is
@@ -61,7 +61,7 @@ public class JmcJolokiaContext {
 
 	public static JolokiaContext proxyJolokiaContext() {
 		return (JolokiaContext) Proxy.newProxyInstance(JmcJolokiaContext.class.getClassLoader(),
-				new Class[] { JolokiaContext.class }, new InvocationHandler() {
+				new Class[] {JolokiaContext.class}, new InvocationHandler() {
 
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
