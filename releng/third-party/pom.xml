@@ -177,6 +177,10 @@
 									<id>org.jolokia:jolokia-server-core:${jolokia.version}</id>
 								</artifact>
 								<artifact>
+									<id>org.jolokia:jolokia-client-java:${jolokia.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+								<artifact>
 									<id>org.osgi:org.osgi.service.servlet:2.0.0</id>
 								</artifact>
 								<artifact>
