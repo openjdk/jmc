@@ -39,23 +39,29 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.jolokia.core.api.LogHandler;
 import org.jolokia.server.core.service.api.AgentDetails;
 import org.jolokia.server.core.service.api.JolokiaContext;
 
 /**
- * A minimal Jolokia context, just in order to support discovery (other server side functionality is
- * not relevant)
+ * A minimal Jolokia context, just in order to support discovery (other server
+ * side functionality is not relevant)
  */
 public class JmcJolokiaContext {
-	// Note: Discovery will register and unregister jolokia during lifetime, this is not needed within jmc
+	// Note: Discovery will register and unregister jolokia during lifetime, this is
+	// not needed within jmc
 	private static final Set<String> METHODS_TO_IGNORE = new HashSet<>(
 			Arrays.asList("registerMBean", "unregisterMBean"));
 
+	private static final LogHandler logHandler = new JulLoggerAdapter(Logger.getLogger("org.openjdk.jmc.jolokia"));
+
 	public static JolokiaContext proxyJolokiaContext() {
 		return (JolokiaContext) Proxy.newProxyInstance(JmcJolokiaContext.class.getClassLoader(),
-				new Class[] {JolokiaContext.class}, new InvocationHandler() {
+				new Class[] { JolokiaContext.class }, new InvocationHandler() {
 
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -64,8 +70,8 @@ public class JmcJolokiaContext {
 						} else if (METHODS_TO_IGNORE.contains(method.getName())) {
 							return null;
 						} else if (method.getDeclaringClass().getName().equals(LogHandler.class.getName())) {
-							handleLogInvocation(method, args);
-							return null;
+							// Redirect logs to java util logging
+							return method.invoke(logHandler, args);
 						}
 						throw new UnsupportedOperationException(
 								method.getName() + " is not supported for JMC Jolokia context");
@@ -76,6 +82,41 @@ public class JmcJolokiaContext {
 	protected static void handleLogInvocation(Method method, Object[] args) {
 		System.out.println(method.getName() + ": " + args[0]);
 
+	}
+
+}
+
+class JulLoggerAdapter implements LogHandler {
+
+	private final Logger julLogger;
+
+	public JulLoggerAdapter(Logger julLogger) {
+		this.julLogger = julLogger;
+	}
+
+	@Override
+	public void debug(String message) {
+		julLogger.fine(message);
+
+	}
+
+	@Override
+	public void error(String message, Throwable err) {
+		LogRecord logRecord = new LogRecord(Level.SEVERE, message);
+		logRecord.setThrown(err);
+		julLogger.log(logRecord);
+
+	}
+
+	@Override
+	public void info(String message) {
+		julLogger.info(message);
+
+	}
+
+	@Override
+	public boolean isDebug() {
+		return julLogger.isLoggable(Level.FINE);
 	}
 
 }

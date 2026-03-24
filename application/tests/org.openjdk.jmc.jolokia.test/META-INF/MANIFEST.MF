@@ -16,6 +16,6 @@ Require-Bundle: org.junit,
  org.hamcrest,
  org.osgi.service.servlet;bundle-version="2.0.0"
 Automatic-Module-Name: org.openjdk.jmc.jolokia.test
-Import-Package: org.jolokia.server.core.config;version="[2.5.0,3.0.0)",
+Import-Package: org.jolokia.server.core.config;version="2.5.1",
  org.jolokia.server.core.service.api;version="2.5.1",
- org.jolokia.service.discovery;version="[2.5.0,3.0.0)"
+ org.jolokia.service.discovery;version="2.5.1"
