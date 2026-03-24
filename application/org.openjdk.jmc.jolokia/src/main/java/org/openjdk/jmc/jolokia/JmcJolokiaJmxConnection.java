@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2026x, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2026, Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2024, 2026, Kantega AS. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -57,13 +57,13 @@ import javax.management.openmbean.TabularData;
 
 import org.jolokia.core.service.serializer.SerializeOptions;
 import org.jolokia.service.serializer.JolokiaSerializer;
-import org.openjdk.jmc.rjmx.common.ConnectionDelegate;
+import org.openjdk.jmc.rjmx.common.ConnectionDecorator;
 
 /**
  * Make JMC specific adjustments to Jolokia JMX connection. May consider to use the decorator
  * pattern if differences are big, but for now subclass
  */
-public class JmcJolokiaJmxConnection extends ConnectionDelegate {
+public class JmcJolokiaJmxConnection extends ConnectionDecorator {
 
 	private static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
 	private static final String DIAGNOSTIC_OPTIONS = "com.sun.management:type=DiagnosticCommand"; //$NON-NLS-1$

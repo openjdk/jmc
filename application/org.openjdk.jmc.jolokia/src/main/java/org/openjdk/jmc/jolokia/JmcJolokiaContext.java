@@ -39,9 +39,8 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.jolokia.core.api.LogHandler;
 import org.jolokia.server.core.service.api.AgentDetails;
@@ -49,15 +48,15 @@ import org.jolokia.server.core.service.api.JolokiaContext;
 
 /**
  * A minimal Jolokia context, just in order to support discovery (other server side functionality is
- * not relevant)
+ * not relevant in our context)
  */
 public class JmcJolokiaContext {
 	// Note: Discovery will register and unregister jolokia during lifetime, this is
 	// not needed within jmc
 	private static final Set<String> METHODS_TO_IGNORE = new HashSet<>(
-			Arrays.asList("registerMBean", "unregisterMBean"));
+			Arrays.asList("registerMBean", "unregisterMBean")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final LogHandler logHandler = new JulLoggerAdapter(Logger.getLogger("org.openjdk.jmc.jolokia"));
+	private static final LogHandler logHandler = new JulLoggerAdapter(Logger.getLogger("org.openjdk.jmc.jolokia")); //$NON-NLS-1$
 
 	public static JolokiaContext proxyJolokiaContext() {
 		return (JolokiaContext) Proxy.newProxyInstance(JmcJolokiaContext.class.getClassLoader(),
@@ -65,8 +64,8 @@ public class JmcJolokiaContext {
 
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-						if ("getAgentDetails".equals(method.getName())) {
-							return new AgentDetails("jmc");
+						if ("getAgentDetails".equals(method.getName())) { //$NON-NLS-1$
+							return new AgentDetails("jmc"); //$NON-NLS-1$
 						} else if (METHODS_TO_IGNORE.contains(method.getName())) {
 							return null;
 						} else if (method.getDeclaringClass().getName().equals(LogHandler.class.getName())) {
@@ -74,18 +73,18 @@ public class JmcJolokiaContext {
 							return method.invoke(logHandler, args);
 						}
 						throw new UnsupportedOperationException(
-								method.getName() + " is not supported for JMC Jolokia context");
+								method.getName() + " is not supported for JMC Jolokia context"); //$NON-NLS-1$
 					}
 				});
 	}
 
-	protected static void handleLogInvocation(Method method, Object[] args) {
-		System.out.println(method.getName() + ": " + args[0]);
-
-	}
-
 }
 
+/**
+ * Simple adapter based on
+ * https://github.com/jolokia/jolokia/blob/main/server/core/src/main/java/org/jolokia/server/core/service/impl/JulLogHandler.java
+ * (Which is not directly accessible due to OSGi constraints)
+ */
 class JulLoggerAdapter implements LogHandler {
 
 	private final Logger julLogger;
@@ -96,27 +95,21 @@ class JulLoggerAdapter implements LogHandler {
 
 	@Override
 	public void debug(String message) {
-		julLogger.fine(message);
-
+		julLogger.finer(message);
 	}
 
 	@Override
 	public void error(String message, Throwable err) {
-		LogRecord logRecord = new LogRecord(Level.SEVERE, message);
-		logRecord.setThrown(err);
-		julLogger.log(logRecord);
-
+		julLogger.log(Level.SEVERE, message, err);
 	}
 
 	@Override
 	public void info(String message) {
 		julLogger.info(message);
-
 	}
 
 	@Override
 	public boolean isDebug() {
-		return julLogger.isLoggable(Level.FINE);
+		return julLogger.isLoggable(Level.FINER);
 	}
-
 }

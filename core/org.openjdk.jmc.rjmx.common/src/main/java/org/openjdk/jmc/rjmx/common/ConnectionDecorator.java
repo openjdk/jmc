@@ -56,13 +56,13 @@ import javax.management.QueryExp;
 import javax.management.ReflectionException;
 
 /**
- * Simple adapter for intercepting calls to a server connection
+ * Simple decorator for inserting JMC specific handling to a server connection
  */
-public class ConnectionDelegate implements MBeanServerConnection {
+public class ConnectionDecorator implements MBeanServerConnection {
 
 	private final MBeanServerConnection delegate;
 
-	public ConnectionDelegate(final MBeanServerConnection delegate) {
+	public ConnectionDecorator(final MBeanServerConnection delegate) {
 		this.delegate = delegate;
 	}
 
