@@ -166,10 +166,6 @@
 								</artifact>
 								<artifact>
 									<id>org.jolokia:jolokia-service-discovery:${jolokia.version}</id>
-									<override>true</override>
-									<instructions>
-										<Export-Package>org.jolokia.service.discovery</Export-Package>
-									</instructions>
 								</artifact>
 								<artifact>
 									<id>org.jolokia:jolokia-service-serializer:${jolokia.version}</id>

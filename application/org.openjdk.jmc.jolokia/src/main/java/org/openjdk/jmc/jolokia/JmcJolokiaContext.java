@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2025, 2026, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2025, 2026, Kantega AS. All rights reserved.
+ * Copyright (c) 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026, Kantega AS. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,50 +33,49 @@
  */
 package org.openjdk.jmc.jolokia;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jolokia.core.api.LogHandler;
+import org.jolokia.server.core.service.api.AgentDetails;
 import org.jolokia.server.core.service.api.JolokiaContext;
-import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
-import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 
-public class JmcJolokiaPlugin extends MCAbstractUIPlugin implements JolokiaDiscoverySettings, PreferenceConstants {
+/**
+ * A minimal Jolokia context, just in order to support discovery (other server side functionality is
+ * not relevant)
+ */
+public class JmcJolokiaContext {
+	// Note: Discovery will register and unregister jolokia during lifetime, this is not needed within jmc
+	private static final Set<String> METHODS_TO_IGNORE = new HashSet<>(
+			Arrays.asList("registerMBean", "unregisterMBean"));
 
-	public final static String PLUGIN_ID = "org.openjdk.jmc.jolokia"; //$NON-NLS-1$
-	private static JmcJolokiaPlugin plugin;
+	public static JolokiaContext proxyJolokiaContext() {
+		return (JolokiaContext) Proxy.newProxyInstance(JmcJolokiaContext.class.getClassLoader(),
+				new Class[] {JolokiaContext.class}, new InvocationHandler() {
 
-	public JmcJolokiaPlugin() {
-		super(PLUGIN_ID);
-		plugin = this;
+					@Override
+					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+						if ("getAgentDetails".equals(method.getName())) {
+							return new AgentDetails("jmc");
+						} else if (METHODS_TO_IGNORE.contains(method.getName())) {
+							return null;
+						} else if (method.getDeclaringClass().getName().equals(LogHandler.class.getName())) {
+							handleLogInvocation(method, args);
+							return null;
+						}
+						throw new UnsupportedOperationException(
+								method.getName() + " is not supported for JMC Jolokia context");
+					}
+				});
 	}
 
-	public static JmcJolokiaPlugin getDefault() {
-		return plugin;
+	protected static void handleLogInvocation(Method method, Object[] args) {
+		System.out.println(method.getName() + ": " + args[0]);
+
 	}
 
-	@Override
-	public boolean shouldRunDiscovery() {
-		return getPreferenceStore().getBoolean(P_SCAN);
-	}
-
-	/**
-	 * @return a very basic Jolokia context to satisfy discovery. We are not interested in the
-	 *         server side aspects here.
-	 */
-	@Override
-	public JolokiaContext getJolokiaContext() {
-		return JmcJolokiaContext.proxyJolokiaContext();
-	}
-
-	@Override
-	public String getMulticastGroup() {
-		return this.getPreferenceStore().getString(P_MULTICAST_GROUP);
-	}
-
-	@Override
-	public int getMulticastPort() {
-		return this.getPreferenceStore().getInt(P_MULTICAST_PORT);
-	}
-
-	@Override
-	public int getDiscoveryTimeout() {
-		return this.getPreferenceStore().getInt(P_DISCOVER_TIMEOUT);
-	}
 }

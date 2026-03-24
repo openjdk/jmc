@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.jolokia.service.serializer;bundle-version="2.5.1",
  org.jolokia.server.core;bundle-version="2.5.1",
  org.jolokia.core;bundle-version="2.5.1"
+Import-Package: org.jolokia.service.discovery
 Export-Package:  org.openjdk.jmc.jolokia,
  org.openjdk.jmc.jolokia.preferences
 Bundle-Activator: org.openjdk.jmc.jolokia.JmcJolokiaPlugin
