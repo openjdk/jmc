@@ -584,7 +584,16 @@ public class MCJemmyBase {
 			}
 		};
 		Display.getDefault().syncExec(fetcher);
-		return (fetcher.getOutput() == null) ? false : fetcher.getOutput();
+		boolean result = (fetcher.getOutput() == null) ? false : fetcher.getOutput();
+		// Dismiss the context menu by pressing Escape to prevent interference
+		// with subsequent context menu operations, especially on macOS
+		control.keyboard().pushKey(KeyboardButtons.ESCAPE);
+		waitForIdle();
+		if (isOSX()) {
+			sleep(500);
+		}
+		System.out.println("[MCJemmyBase] isContextMenuItemEnabled(\"" + menuItemText + "\") = " + result);
+		return result;
 	}
 
 	/**

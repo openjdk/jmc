@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -82,7 +82,7 @@ public class MCDialog extends MCJemmyBase {
 	 * @return a matching {@link MCDialog} or {@code null} if not found
 	 */
 	public static MCDialog getByAnyDialogTitle(boolean exactMatching, boolean waitForIdleUi, String ... dialogTitles) {
-		int maxRetries = 10;
+		int maxRetries = waitForIdleUi ? 20 : 10;
 		MCDialog result = null;
 		while (result == null && maxRetries > 0) {
 			for (Wrap<? extends Shell> thisShell : getVisible(Shells.SHELLS.lookup(Shell.class), waitForIdleUi,
@@ -96,6 +96,9 @@ public class MCDialog extends MCJemmyBase {
 				}
 			}
 			maxRetries--;
+			if (result == null && waitForIdleUi) {
+				sleep(200);
+			}
 		}
 		return result;
 	}

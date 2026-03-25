@@ -40,7 +40,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.Attribute;
@@ -51,23 +50,17 @@ import javax.management.InvalidAttributeValueException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
+import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
-import javax.management.MBeanServerFactory;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
 import org.awaitility.Awaitility;
 import org.jolokia.server.core.config.ConfigKey;
-import org.jolokia.server.core.config.StaticConfiguration;
-import org.jolokia.server.core.detector.ServerDetector;
-import org.jolokia.server.core.restrictor.AllowAllRestrictor;
-import org.jolokia.server.core.service.JolokiaServiceManagerFactory;
 import org.jolokia.server.core.service.api.JolokiaContext;
-import org.jolokia.server.core.service.api.JolokiaServiceManager;
-import org.jolokia.server.core.service.impl.StdoutLogHandler;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -97,7 +90,7 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 	@BeforeClass
 	public static void startServer() throws Exception {
 		// wait for Jolokia to be ready before commencing tests
-		Awaitility.await().atMost(Duration.ofSeconds(15))//Note: hard code property to avoid module dependency on agent
+		Awaitility.await().atMost(Duration.ofSeconds(15))// Note: hard code property to avoid module dependency on agent
 				.until(() -> (jolokiaUrl = System.getProperty("jolokia.agent")) != null);
 		jolokiaConnection = getJolokiaMBeanConnector();
 		localConnection = MBeanServerFactory.createMBeanServer();
@@ -115,7 +108,9 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 					try {
 						Object attribute = getJolokiaMBeanConnector().getAttribute(objectName, attributeName);
 						fetched++;
-						if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and booleans are safe to compare directly
+						if (attribute instanceof String || attribute instanceof Boolean) { // Assume strings and
+																							// booleans are safe to
+																							// compare directly
 							try {
 								Object locallyRetrievedAttribute = localConnection.getAttribute(objectName,
 										attributeName);
@@ -154,7 +149,7 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 		String attribute = "Verbose";
 		jolokiaConnection.setAttribute(objectName, new Attribute(attribute, true));
 		Assert.assertEquals(true, jolokiaConnection.getAttribute(objectName, attribute));
-		//set it back as it otherwise generates a lot of noise in the output
+		// set it back as it otherwise generates a lot of noise in the output
 		jolokiaConnection.setAttribute(objectName, new Attribute(attribute, false));
 	}
 
@@ -171,11 +166,13 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 		boolean isMacOs = "macosx".equals(System.getProperty("osgi.os"));
 		boolean shouldTestMacOS = "true".equals(System.getenv("JOLOKIA_TEST_DISCOVERY_ON_MAC"));
 		if (isMacOs && !shouldTestMacOS) {
-			//Multicast discovery does not work on macOS due to network stack limitations
-			// 'D> --> Couldnt send discovery message from /127.0.0.1: java.net.BindException: Can't assign requested address
-			//  D> --> Exception during lookup: java.util.concurrent.ExecutionException:
-			//    org.jolokia.service.discovery.MulticastUtil$CouldntSendDiscoveryPacketException:
-			//    Can't send discovery UDP packet from /127.0.0.1: Can't assign requested address'
+			// Multicast discovery does not work on macOS due to network stack limitations
+			// 'D> --> Couldnt send discovery message from /127.0.0.1:
+			// java.net.BindException: Can't assign requested address
+			// D> --> Exception during lookup: java.util.concurrent.ExecutionException:
+			// org.jolokia.service.discovery.MulticastUtil$CouldntSendDiscoveryPacketException:
+			// Can't send discovery UDP packet from /127.0.0.1: Can't assign requested
+			// address'
 			// We get test coverage on both Linux and Windows
 			return;
 
@@ -229,11 +226,7 @@ public class JolokiaTest implements JolokiaDiscoverySettings, PreferenceConstant
 
 	@Override
 	public JolokiaContext getJolokiaContext() {
-		StaticConfiguration configuration = new StaticConfiguration(ConfigKey.AGENT_ID, "jolokiatest");
-		JolokiaServiceManager serviceManager = JolokiaServiceManagerFactory.createJolokiaServiceManager(configuration,
-				new StdoutLogHandler(true), new AllowAllRestrictor(),
-				logHandler -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
-		return serviceManager.start();
+		return JmcJolokiaContext.proxyJolokiaContext();
 	}
 
 	@Override

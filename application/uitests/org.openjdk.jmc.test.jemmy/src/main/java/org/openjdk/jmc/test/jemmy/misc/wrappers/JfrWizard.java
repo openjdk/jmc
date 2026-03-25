@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -84,12 +84,22 @@ public class JfrWizard extends MCJemmyBase {
 
 	/**
 	 * Get a wrapper for the flight recording wizard
-	 * 
+	 *
 	 * @param wizardTitle
 	 *            the title of the wizard shell
 	 */
 	public JfrWizard(String wizardTitle) {
 		wizardDialog = new MCDialog(wizardTitle);
+	}
+
+	/**
+	 * Get a wrapper for the flight recording wizard using an already found dialog
+	 *
+	 * @param dialog
+	 *            the already found dialog
+	 */
+	public JfrWizard(MCDialog dialog) {
+		wizardDialog = dialog;
 	}
 
 	/**
