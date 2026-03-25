@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -93,6 +93,7 @@ public class JfrThreadsPageLegacyTest extends MCJemmyTestBase {
 	public void testHideAllThreads() {
 		final int numSelection = 7;
 		final int numThreads = threadsTable.getItemCount();
+		System.out.println("[testHideAllThreads] numThreads=" + numThreads + ", numSelection=" + numSelection);
 		Assert.assertTrue(numThreads > 0 && numThreads >= numSelection);
 		Assert.assertTrue(chartCanvas.isContextMenuItemEnabled(HIDE_THREAD));
 		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
@@ -102,12 +103,17 @@ public class JfrThreadsPageLegacyTest extends MCJemmyTestBase {
 
 		// Hide all the threads from the chart
 		for (int i = 0; i < numSelection; i++) {
+			System.out.println("[testHideAllThreads] Hiding thread " + (i + 1) + " of " + numSelection);
 			chartCanvas.clickContextMenuItem(HIDE_THREAD);
 		}
 
 		// Once all threads are hidden from the chart, the hide thread menu item will be disabled
-		Assert.assertFalse(chartCanvas.isContextMenuItemEnabled(HIDE_THREAD));
-		Assert.assertTrue(chartCanvas.isContextMenuItemEnabled(RESET_CHART));
+		boolean hideEnabled = chartCanvas.isContextMenuItemEnabled(HIDE_THREAD);
+		boolean resetEnabled = chartCanvas.isContextMenuItemEnabled(RESET_CHART);
+		System.out.println("[testHideAllThreads] After hiding: HIDE_THREAD enabled=" + hideEnabled
+				+ ", RESET_CHART enabled=" + resetEnabled);
+		Assert.assertFalse("HIDE_THREAD should be disabled after hiding all selected threads", hideEnabled);
+		Assert.assertTrue("RESET_CHART should be enabled after hiding threads", resetEnabled);
 
 		chartCanvas.clickContextMenuItem(RESET_CHART);
 

@@ -105,13 +105,33 @@ public class MCChartCanvas extends MCJemmyBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void clickContextMenuItem(String menuItemText) {
-		focusMc();
-		StringPopupOwner<Shell> contextMenu = control.as(StringPopupOwner.class);
-		contextMenu.setPolicy(StringComparePolicy.SUBSTRING);
-		contextMenu.push(getRelativeClickPoint(), new String[] {menuItemText});
-		waitForIdle();
-		if (isOSX()) {
-			sleep(500);
+		int maxAttempts = isOSX() ? 3 : 1;
+		for (int attempt = 0; attempt < maxAttempts; attempt++) {
+			try {
+				focusMc();
+				if (isOSX()) {
+					sleep(300);
+				}
+				StringPopupOwner<Shell> contextMenu = control.as(StringPopupOwner.class);
+				contextMenu.setPolicy(StringComparePolicy.SUBSTRING);
+				contextMenu.push(getRelativeClickPoint(), new String[] {menuItemText});
+				waitForIdle();
+				if (isOSX()) {
+					sleep(500);
+				}
+				System.out.println("[MCChartCanvas] clickContextMenuItem(\"" + menuItemText
+						+ "\") succeeded on attempt " + (attempt + 1));
+				return;
+			} catch (RuntimeException e) {
+				System.out.println("[MCChartCanvas] clickContextMenuItem(\"" + menuItemText + "\") failed on attempt "
+						+ (attempt + 1) + ": " + e.getMessage());
+				if (attempt == maxAttempts - 1) {
+					throw e;
+				}
+				// Press Escape to clear any stale menu state
+				control.keyboard().pushKey(KeyboardButtons.ESCAPE);
+				sleep(500);
+			}
 		}
 	}
 
