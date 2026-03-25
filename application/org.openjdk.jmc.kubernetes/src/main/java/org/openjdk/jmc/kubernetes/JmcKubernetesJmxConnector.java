@@ -36,20 +36,26 @@ package org.openjdk.jmc.kubernetes;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXServiceURL;
+import javax.security.auth.Subject;
 
-import org.jolokia.client.JolokiaClient;
-import org.jolokia.client.jmxadapter.RemoteJmxAdapter;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 
 public class JmcKubernetesJmxConnector extends KubernetesJmxConnector {
 
-	public JmcKubernetesJmxConnector(JMXServiceURL serviceURL, Map<String, ?> environment) {
+	public JmcKubernetesJmxConnector(JMXServiceURL serviceURL, Map<String, ?> environment) throws IOException {
 		super(serviceURL, environment);
 	}
 
 	@Override
-	protected RemoteJmxAdapter createAdapter(JolokiaClient client) throws IOException {
-		return new JmcKubernetesJmxConnection(client);
+	public MBeanServerConnection getMBeanServerConnection() {
+		return new JmcKubernetesJmxConnection(super.getMBeanServerConnection());
 	}
+
+	@Override
+	public MBeanServerConnection getMBeanServerConnection(Subject delegationSubject) {
+		return new JmcKubernetesJmxConnection(super.getMBeanServerConnection(delegationSubject));
+	}
+
 }

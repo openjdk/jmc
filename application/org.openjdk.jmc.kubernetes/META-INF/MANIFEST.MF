@@ -17,6 +17,9 @@ Require-Bundle: org.openjdk.jmc.jolokia,
  org.apache.httpcomponents.httpclient;bundle-version="4.5.14"
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences
-Import-Package: org.apache.commons.logging;version="1.2.0"
+Import-Package: org.apache.commons.logging;version="1.2.0",
+ org.jolokia.client;version="2.5.1",
+ org.jolokia.client.exception;version="2.5.1",
+ org.jolokia.client.response;version="2.5.1"
 Bundle-Activator: org.openjdk.jmc.kubernetes.JmcKubernetesPlugin
 Bundle-ActivationPolicy: lazy

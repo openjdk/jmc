@@ -37,6 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,10 +53,8 @@ import java.util.stream.Collectors;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
-import java.util.Base64;
 import org.jolokia.client.JolokiaClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
-import org.jolokia.server.core.http.security.AuthorizationHeaderParser;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
 import org.openjdk.jmc.jolokia.ServerConnectionDescriptor;
@@ -289,7 +288,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 			password = secretValues.get(passwordMatcher.group("itemName")); //$NON-NLS-1$
 		}
 
-		headers.put(AuthorizationHeaderParser.JOLOKIA_ALTERNATE_AUTHORIZATION_HEADER,
+		headers.put("X-jolokia-authorization", //$NON-NLS-1$
 				"Basic " + Base64.getEncoder().encode((username + ":" + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
 		jmxEnv.put(JMXConnector.CREDENTIALS, new String[] {username, password});
 
