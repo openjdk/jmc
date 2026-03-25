@@ -245,7 +245,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.jolokia.client-jmx-adapter.standalone"
+         id="org.jolokia.client.jmx-adapter"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -257,6 +257,13 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
+   <plugin
+         id="org.jolokia.service.serializer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>         
 
    <plugin
          id="org.jolokia.server.core"
