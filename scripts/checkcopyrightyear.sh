@@ -5,7 +5,9 @@ git remote -v | grep -w upstream || git remote add upstream https://github.com/o
 git fetch upstream
 
 CURRENT_YEAR=$(date +'%Y')
-MODIFIED_FILES=$(git diff --name-only upstream/master)
+COMMITTED_FILES=$(git diff --name-only --diff-filter=d upstream/master...HEAD)
+UNCOMMITTED_FILES=$(git diff --name-only --diff-filter=d)
+MODIFIED_FILES=$(echo -e "$COMMITTED_FILES\n$UNCOMMITTED_FILES" | sort -u | grep -v '^$')
 counter=0
 
 for fileToCheck in $MODIFIED_FILES
