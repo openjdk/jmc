@@ -1507,11 +1507,11 @@ public final class JdkAttributes {
 	};
 
 	public static final IAttribute<IQuantity> VALID_FROM = new Attribute<IQuantity>("validFrom", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_VALID_FROM), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), TIMESTAMP) {
+			Messages.getString(Messages.ATTR_VALID_FROM), Messages.getString(Messages.ATTR_VALID_FROM), TIMESTAMP) {
 	};
 
 	public static final IAttribute<IQuantity> VALID_UNTIL = new Attribute<IQuantity>("validUntil", //$NON-NLS-1$
-			Messages.getString(Messages.ATTR_VALID_UNTIL), Messages.getString(Messages.ATTR_RSS_PEAK_DESC), TIMESTAMP) {
+			Messages.getString(Messages.ATTR_VALID_UNTIL), Messages.getString(Messages.ATTR_VALID_UNTIL), TIMESTAMP) {
 	};
 
 	public static final IAttribute<String> CRYPTO_REMARK = Attribute.canonicalize(new Attribute<String>("cryptoRemark", //$NON-NLS-1$

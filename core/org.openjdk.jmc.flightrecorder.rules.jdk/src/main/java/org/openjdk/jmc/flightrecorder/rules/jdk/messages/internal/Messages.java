@@ -332,6 +332,8 @@ public class Messages {
 	public static final String Crypto_ATTENTION_INFO = "Crypto_ATTENTION_INFO"; //$NON-NLS-1$
 	public static final String Crypto_ACTION_ATTENTION_INFO = "Crypto_ACTION_ATTENTION_INFO"; //$NON-NLS-1$
 	public static final String Crypto_REFERENCE_INFO = "Crypto_REFERENCE_INFO"; //$NON-NLS-1$
+	public static final String Crypto_CERTIFICATE_EXPIRY_WARNING_THRESHOLD = "Crypto_CERTIFICATE_EXPIRY_WARNING_THRESHOLD"; //$NON-NLS-1$
+	public static final String Crypto_CERTIFICATE_EXPIRY_WARNING_THRESHOLD_LONG = "Crypto_CERTIFICATE_EXPIRY_WARNING_THRESHOLD_LONG"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG = "ZGCAllocationStallRule_CONFIG_INFO_LIMIT_LONG"; //$NON-NLS-1$
 	public static final String ZGCAllocationStallRule_RATE = "ZGCAllocationStallRule_RATE"; //$NON-NLS-1$

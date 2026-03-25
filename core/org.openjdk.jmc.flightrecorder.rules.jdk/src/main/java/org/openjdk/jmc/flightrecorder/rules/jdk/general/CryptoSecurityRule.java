@@ -32,11 +32,13 @@
  */
 package org.openjdk.jmc.flightrecorder.rules.jdk.general;
 
+import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
+import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER_UNITY;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -47,6 +49,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.security.CryptoUtil;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.util.IPreferenceValueProvider;
 import org.openjdk.jmc.common.util.TypedPreference;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
@@ -74,6 +78,15 @@ public class CryptoSecurityRule implements IRule {
 
 	private static final String ATTENTION = Messages.getString(Messages.Crypto_ATTENTION);
 
+	public static final TypedPreference<IQuantity> CERTIFICATE_EXPIRY_WARNING_THRESHOLD = new TypedPreference<>(
+			"certificate.expiry.warning.threshold", //$NON-NLS-1$
+			Messages.getString(Messages.Crypto_CERTIFICATE_EXPIRY_WARNING_THRESHOLD),
+			Messages.getString(Messages.Crypto_CERTIFICATE_EXPIRY_WARNING_THRESHOLD_LONG), NUMBER,
+			NUMBER_UNITY.quantity(90));
+
+	private static final List<TypedPreference<?>> CONFIG_ATTRIBUTES = Arrays
+			.<TypedPreference<?>> asList(CERTIFICATE_EXPIRY_WARNING_THRESHOLD);
+
 	private static final Collection<TypedResult<?>> RESULT_ATTRIBUTES = Arrays
 			.<TypedResult<?>> asList(TypedResult.SCORE);
 
@@ -99,6 +112,10 @@ public class CryptoSecurityRule implements IRule {
 
 	private IResult getResult(
 		IItemCollection items, IPreferenceValueProvider valueProvider, IResultValueProvider resultProvider) {
+
+		long certificateExpiryThreshold = valueProvider.getPreferenceValue(CERTIFICATE_EXPIRY_WARNING_THRESHOLD)
+				.longValue();
+		CryptoUtil.CERTIFICATE_EXPIRY_THRESHOLD = certificateExpiryThreshold;
 
 		boolean actionNeeded = (RulesToolkit.findMatches(JdkTypeIDs.X509_CERTIFICATE, items,
 				JdkAttributes.CRYPTO_REMARK, Messages.getString(Messages.Crypto_ACTION), false) != null); //$NON-NLS-1$
@@ -250,7 +267,7 @@ public class CryptoSecurityRule implements IRule {
 
 	@Override
 	public Collection<TypedPreference<?>> getConfigurationAttributes() {
-		return Collections.emptyList();
+		return CONFIG_ATTRIBUTES;
 	}
 
 	@Override

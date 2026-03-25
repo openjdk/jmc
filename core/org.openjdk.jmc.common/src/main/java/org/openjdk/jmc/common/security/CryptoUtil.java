@@ -57,6 +57,7 @@ public class CryptoUtil {
 	private static final int DSA_MINIMUM_KEY_SIZE = 1024;
 	private static final int DSA_RECOMMENDED_KEY_SIZE = 2048;
 	private static final int EC_MINIMUM_KEY_SIZE = 224;
+	public static long CERTIFICATE_EXPIRY_THRESHOLD = 90;
 
 	public static String getCryptoRemark(
 		String signatureAlgorithm, String keyType, Long keyLength, IQuantity expiryDate) {
@@ -110,8 +111,7 @@ public class CryptoUtil {
 
 			IQuantity duration = expiryDate.subtract(UnitLookup.EPOCH_MS.quantity(System.currentTimeMillis()));
 			long expiringInDays = TimeUnit.MILLISECONDS.toDays(duration.longValue());
-
-			if ((expiringInDays > 0) && (expiringInDays < 90)) {
+			if ((expiringInDays > 0) && (expiringInDays < CERTIFICATE_EXPIRY_THRESHOLD)) {
 				remark = remark.concat(ATTENTION).concat(
 						MessageFormat.format(Messages.getString(Messages.Crypto_Certificate_Expiring), expiringInDays));
 			} else if (expiringInDays < 0) {
@@ -169,8 +169,7 @@ public class CryptoUtil {
 
 			IQuantity duration = expiryDate.subtract(UnitLookup.EPOCH_MS.quantity(System.currentTimeMillis()));
 			long expiringInDays = TimeUnit.MILLISECONDS.toDays(duration.longValue());
-
-			if ((expiringInDays > 0) && (expiringInDays < 90)) {
+			if ((expiringInDays > 0) && (expiringInDays < CERTIFICATE_EXPIRY_THRESHOLD)) {
 				icon = icon.concat("ATTENTION");
 			} else if (expiringInDays < 0) {
 				icon = "ACTION".concat(icon);
@@ -242,8 +241,7 @@ public class CryptoUtil {
 
 			IQuantity duration = expiryDate.subtract(UnitLookup.EPOCH_MS.quantity(System.currentTimeMillis()));
 			long expiringInDays = TimeUnit.MILLISECONDS.toDays(duration.longValue());
-
-			if ((expiringInDays > 0) && (expiringInDays < 90)) {
+			if ((expiringInDays > 0) && (expiringInDays < CERTIFICATE_EXPIRY_THRESHOLD)) {
 				remarks.add(Map.entry(ATTENTION, strCertificateId.concat(MessageFormat
 						.format(Messages.getString(Messages.Crypto_Certificate_Expiring), expiringInDays))));
 			} else if (expiringInDays < 0) {

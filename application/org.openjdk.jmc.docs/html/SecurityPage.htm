@@ -53,13 +53,13 @@
 <div class="ind"><a id="SecurityPage" name="SecurityPage"></a><!-- End Header -->
 <h1 id="JMCOH-SecurityPage" class="sect1">Using the Security Page</h1>
 <div><p>The security page is designed to display information related to certificates used. It mainly displays the information derived from X509Certificate events. </p>
-<p>There is one table which shows information related to the cryptographic algorithm. For ex: Signature Algorithm, Key type, Key length, Certificate Valid from, Certificate expiring on, Certificate Id and Issuer details. </p>
+<p>There is one table which shows information related to the cryptographic algorithm. For example: Signature Algorithm, Key type, Key length, Certificate Valid from, Certificate expiring on, Certificate Id and Issuer details. </p>
 <p>We have also added a new column Crypto Remark which will help customer to identify the action/attention item. Action and attention items are decided based on the JDK guidelines for Crypto usages.</p>
 <div class="p">Examples of Action and attention items:<ul style="list-style-type: disc;" id="GUID-D63A7C7C-CFC4-4CCE-A23C-59D7907F7680__UL_RNG_14Z_P3C"><li>Action Required. The Certificate has expired before 1,822 days. It should be replaced.</li>
 <li>Attention Needed. SHA-1 signature. It should be updated to use SHA-256 or SHA-512.</li>
 </ul>
 </div>
-<p>If everything is fine we are displaying OK as crypto remark.</p>
+<p>Certificates with no issues are marked with an OK status in the Crypto Remark column.</p>
 <p>There is one chart where we are displaying the occurrences of X509Certificate events with respect to the timeline.</p>
 </div>
 
