@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,17 +33,17 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
-import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
+import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 public final class TypedValueImpl implements TypedValue {
 	private int hashcode = 0;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
@@ -421,6 +423,19 @@ public interface LEB128Writer {
 	 *            a {@linkplain ByteBuffer} callback
 	 */
 	void export(Consumer<ByteBuffer> consumer);
+
+	/**
+	 * Write the recorded data to an {@linkplain OutputStream}. Implementations should override this
+	 * for allocation-free streaming.
+	 *
+	 * @param out
+	 *            the output stream to write to
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	default void writeTo(OutputStream out) throws IOException {
+		out.write(export());
+	}
 
 	/** @return current writer position */
 	int position();
