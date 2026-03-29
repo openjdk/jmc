@@ -188,6 +188,45 @@
 								<artifact>
 									<id>org.jolokia:jolokia-client-kubernetes:jar:standalone:${jolokia.version}</id>
 									<transitive>false</transitive>
+									<override>true</override>
+							         <instructions>
+							            <Bundle-SymbolicName>org.jolokia.client.kubernetes</Bundle-SymbolicName>
+							            <Bundle-Description>Jolokia Kubernetes adapter</Bundle-Description>
+							            <_fixupmessages>
+      										"Classes found in the wrong directory";is:=warning
+    									</_fixupmessages>
+							            <Require-Bundle> org.jolokia.client.httpclient4;bundle-version="${jolokia.version}"</Require-Bundle>
+							            <Import-Package>
+							              <!-- jolokia-json -->
+							              org.jolokia.json,
+							              <!-- jolokia-core -->
+							              org.jolokia.core.util,
+							              <!-- jolokia-client-java -->
+							              org.jolokia.client,
+							              org.jolokia.client.spi,
+							              <!-- jolokia-client-jmx-adapter -->
+							              org.jolokia.client.jmxadapter,
+							              <!-- jolokia-server-core -->
+							              org.jolokia.server.core.util,
+							              <!-- httpcore -->
+							              org.apache.http,
+							              org.apache.http.entity,
+							              org.apache.http.message,
+							              org.apache.http.params,
+							              org.apache.http.protocol,
+							              <!-- httpclient -->
+							              org.apache.http.client,
+							              org.apache.http.client.methods,
+							              org.apache.http.conn
+							            </Import-Package>
+							            <Export-Package>
+							              org.jolokia.kubernetes.client,
+							              io.fabric8.kubernetes.api.model,
+							              io.fabric8.kubernetes.client,
+							              io.fabric8.kubernetes.client.http
+							            </Export-Package>
+							          </instructions>
+ 
 								</artifact>
 								<artifact>
 									<id>org.jolokia:jolokia-client-java-httpclient4:${jolokia.version}</id>
@@ -199,7 +238,7 @@
       											org.slf4j;version="[1.7,3)",
       											*
     										</Import-Package>
-    										<Export-Package>jolokia.client.java.httpclient4</Export-Package>
+    										<Export-Package>org.jolokia.client.httpclient4</Export-Package>
   										</instructions>
 								</artifact>
 								<artifact>
