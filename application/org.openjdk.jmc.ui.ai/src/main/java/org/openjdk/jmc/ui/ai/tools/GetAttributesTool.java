@@ -37,10 +37,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openjdk.jmc.common.item.IAttribute;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.ui.ai.IAITool;
 

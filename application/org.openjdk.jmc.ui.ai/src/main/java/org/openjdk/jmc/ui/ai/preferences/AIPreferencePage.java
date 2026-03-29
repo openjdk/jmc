@@ -33,8 +33,7 @@
  */
 package org.openjdk.jmc.ui.ai.preferences;
 
-import java.net.URL;
-
+import java.net.URI;
 import java.util.List;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -52,7 +51,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
-
 import org.openjdk.jmc.ui.ai.AIPlugin;
 import org.openjdk.jmc.ui.ai.AIProviderRegistry;
 import org.openjdk.jmc.ui.ai.IAIProvider;
@@ -162,7 +160,7 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 
 	private void openBrowser(String url) {
 		try {
-			PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(url));
+			PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URI(url).toURL());
 		} catch (Exception e) {
 			AIPlugin.getLogger().warning("Failed to open browser: " + e.getMessage()); //$NON-NLS-1$
 		}

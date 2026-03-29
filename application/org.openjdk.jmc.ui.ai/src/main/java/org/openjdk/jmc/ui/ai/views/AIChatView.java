@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -49,12 +51,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -65,9 +66,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
-
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.openjdk.jmc.ui.ai.AIPlugin;
 import org.openjdk.jmc.ui.ai.AIProviderRegistry;
 import org.openjdk.jmc.ui.ai.AIStreamHandler;
@@ -153,6 +151,7 @@ public class AIChatView extends ViewPart {
 	private Color toolColor;
 	private Color errorColor;
 	private IPropertyChangeListener colorChangeListener;
+	private MarkdownStyler markdownStyler;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -168,6 +167,7 @@ public class AIChatView extends ViewPart {
 		createInputArea(main);
 
 		initColors(parent.getDisplay());
+		markdownStyler = new MarkdownStyler(parent.getDisplay());
 		restoreProviderSelection();
 	}
 
@@ -358,6 +358,7 @@ public class AIChatView extends ViewPart {
 
 		List<IAITool> tools = AIToolRegistry.getInstance().getTools();
 		final StyledText targetDisplay = chatDisplay; // capture for this request
+		final int responseStartOffset = targetDisplay.getCharCount(); // where assistant response begins
 		Display display = targetDisplay.getDisplay();
 		setStatus("Sending..."); //$NON-NLS-1$
 
@@ -403,6 +404,7 @@ public class AIChatView extends ViewPart {
 			public void onComplete() {
 				display.asyncExec(() -> {
 					if (!targetDisplay.isDisposed()) {
+						markdownStyler.applyStyles(targetDisplay, responseStartOffset, assistantColor);
 						appendMessageTo(targetDisplay, "", null, true); //$NON-NLS-1$
 						setStatus(""); //$NON-NLS-1$
 						setInputEnabled(true);
@@ -592,6 +594,9 @@ public class AIChatView extends ViewPart {
 			AIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(colorChangeListener);
 		}
 		disposeColors();
+		if (markdownStyler != null) {
+			markdownStyler.dispose();
+		}
 		super.dispose();
 	}
 }

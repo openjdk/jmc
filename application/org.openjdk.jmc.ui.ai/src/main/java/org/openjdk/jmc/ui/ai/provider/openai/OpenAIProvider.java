@@ -40,7 +40,6 @@ import java.util.function.Function;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-
 import org.openjdk.jmc.ui.ai.AIPlugin;
 import org.openjdk.jmc.ui.ai.AIStreamHandler;
 import org.openjdk.jmc.ui.ai.ChatMessage;

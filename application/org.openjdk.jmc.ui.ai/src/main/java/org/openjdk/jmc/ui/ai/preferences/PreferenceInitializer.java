@@ -35,7 +35,6 @@ package org.openjdk.jmc.ui.ai.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.openjdk.jmc.ui.ai.AIPlugin;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {

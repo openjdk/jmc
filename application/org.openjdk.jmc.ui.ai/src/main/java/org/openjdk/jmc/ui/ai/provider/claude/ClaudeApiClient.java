@@ -182,9 +182,7 @@ public class ClaudeApiClient {
 				tc.name = extractJsonString("\"name\"", data); //$NON-NLS-1$
 				state.currentToolCall = tc;
 				state.toolCalls.add(tc);
-				state.currentBlockType = "tool_use"; //$NON-NLS-1$
 			} else if (data.contains("\"text\"")) { //$NON-NLS-1$
-				state.currentBlockType = "text"; //$NON-NLS-1$
 			}
 		} else if (data.contains("\"content_block_delta\"")) { //$NON-NLS-1$
 			if (data.contains("\"text_delta\"")) { //$NON-NLS-1$
@@ -200,7 +198,6 @@ public class ClaudeApiClient {
 				}
 			}
 		} else if (data.contains("\"content_block_stop\"")) { //$NON-NLS-1$
-			state.currentBlockType = null;
 			state.currentToolCall = null;
 		} else if (data.contains("\"message_delta\"")) { //$NON-NLS-1$
 			String stopReason = extractJsonString("\"stop_reason\"", data); //$NON-NLS-1$
@@ -360,7 +357,6 @@ public class ClaudeApiClient {
 
 	private static class StreamState {
 		String stopReason;
-		String currentBlockType;
 		ToolCallAccumulator currentToolCall;
 		final List<ToolCallAccumulator> toolCalls = new ArrayList<>();
 		final StringBuilder textContent = new StringBuilder();
