@@ -148,6 +148,15 @@ public class SelectionStore {
 	}
 
 	/**
+	 * Clears the current selection, resetting to the default "no selection" state. All pages will
+	 * show unfiltered data.
+	 */
+	public void clearSelection() {
+		current = NO_SELECTION_ENTRY;
+		setCurrentActive(true);
+	}
+
+	/**
 	 * Set the currently active selection. Adds the selection to the store if it is not already
 	 * present.
 	 *

@@ -155,6 +155,9 @@ public class JfrEditor extends EditorPart implements INavigationLocationProvider
 		if (adapter == IPropertySheetPage.class) {
 			return adapter.cast(new JfrPropertySheet(this));
 		}
+		if (adapter == IItemCollection.class && items != null) {
+			return adapter.cast(items.getItems());
+		}
 		return super.getAdapter(adapter);
 	}
 
