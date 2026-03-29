@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+	--bg: #ffffff;
+	--fg: #1a1a1a;
+	--user-color: ${userColor};
+	--assistant-color: ${assistantColor};
+	--tool-color: ${toolColor};
+	--error-color: ${errorColor};
+	--code-bg: #f0f0f0;
+	--code-border: #d0d0d0;
+	--hr-color: #d0d0d0;
+	--tool-bg: #f8f8f8;
+	--tool-border: #e0e0e0;
+}
+body.dark {
+	--bg: #1e1e1e;
+	--fg: #d4d4d4;
+	--code-bg: #2d2d2d;
+	--code-border: #404040;
+	--hr-color: #404040;
+	--tool-bg: #252525;
+	--tool-border: #383838;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--fg);
+	background: var(--bg);
+	padding: 8px 12px;
+	overflow-y: auto;
+	overscroll-behavior-y: contain;
+	scroll-snap-type: y proximity;
+}
+#chat > :last-child { scroll-snap-align: end; }
+
+.msg { margin-bottom: 8px; word-wrap: break-word; }
+.msg-user { color: var(--user-color); white-space: pre-wrap; }
+.msg-user .sender { font-weight: bold; }
+.msg-assistant { color: var(--assistant-color); }
+.msg-assistant .sender { font-weight: bold; }
+.msg-error { color: var(--error-color); }
+
+.msg-assistant h1, .msg-assistant h2, .msg-assistant h3, .msg-assistant h4 {
+	font-weight: bold; margin: 8px 0 4px 0;
+}
+.msg-assistant h1 { font-size: 1.3em; }
+.msg-assistant h2 { font-size: 1.2em; }
+.msg-assistant h3 { font-size: 1.1em; }
+.msg-assistant h4 { font-size: 1.0em; }
+
+.msg-assistant strong { font-weight: bold; }
+.msg-assistant em { font-style: italic; }
+
+.msg-assistant code {
+	font-family: "Consolas", "Courier New", monospace;
+	background: var(--code-bg);
+	border: 1px solid var(--code-border);
+	border-radius: 3px;
+	padding: 1px 4px;
+	font-size: 12px;
+}
+.msg-assistant pre {
+	background: var(--code-bg);
+	border: 1px solid var(--code-border);
+	border-radius: 4px;
+	padding: 8px;
+	margin: 6px 0;
+	overflow-x: auto;
+	white-space: pre;
+}
+.msg-assistant pre code {
+	background: none;
+	border: none;
+	padding: 0;
+}
+.msg-assistant table {
+	border-collapse: collapse;
+	margin: 6px 0;
+	font-size: 12px;
+}
+.msg-assistant th, .msg-assistant td {
+	border: 1px solid var(--code-border);
+	padding: 4px 8px;
+	text-align: left;
+}
+.msg-assistant th { background: var(--code-bg); font-weight: bold; }
+.msg-assistant hr { border: none; border-top: 1px solid var(--hr-color); margin: 8px 0; }
+.msg-assistant ul, .msg-assistant ol { margin: 4px 0 4px 20px; }
+.msg-assistant li { margin: 2px 0; }
+.msg-assistant p { margin: 4px 0; }
+
+/* Inline tool use - collapsible */
+.tool-use {
+	display: inline-block;
+	margin: 2px 0;
+	font-size: 11px;
+	color: var(--tool-color);
+	vertical-align: middle;
+}
+.tool-use summary {
+	cursor: pointer;
+	font-style: italic;
+	list-style: none;
+	display: inline;
+}
+.tool-use summary::-webkit-details-marker { display: none; }
+.tool-use summary::before {
+	content: '\25B6';
+	font-size: 8px;
+	margin-right: 3px;
+	display: inline-block;
+	transition: transform 0.15s;
+}
+.tool-use[open] summary::before {
+	transform: rotate(90deg);
+}
+.tool-use .tool-detail {
+	background: var(--tool-bg);
+	border: 1px solid var(--tool-border);
+	border-radius: 3px;
+	padding: 4px 8px;
+	margin: 2px 0 2px 16px;
+	font-family: "Consolas", "Courier New", monospace;
+	font-size: 11px;
+	white-space: pre-wrap;
+	max-height: 200px;
+	overflow-y: auto;
+}
+</style>
+<script>
+function md(text) {
+	if (!text) return '';
+	var html = escapeHtml(text);
+
+	// Code blocks
+	html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) {
+		return '<pre><code>' + code + '</code></pre>';
+	});
+
+	// Tables
+	html = html.replace(/^(\|.+\|)\n(\|[-| :]+\|)\n((?:\|.+\|\n?)*)/gm, function(m, header, sep, body) {
+		var ths = header.split('|').filter(function(c) { return c.trim(); })
+			.map(function(c) { return '<th>' + c.trim() + '</th>'; }).join('');
+		var rows = body.trim().split('\n').map(function(row) {
+			var tds = row.split('|').filter(function(c) { return c.trim(); })
+				.map(function(c) { return '<td>' + c.trim() + '</td>'; }).join('');
+			return '<tr>' + tds + '</tr>';
+		}).join('');
+		return '<table><thead><tr>' + ths + '</tr></thead><tbody>' + rows + '</tbody></table>';
+	});
+
+	// Headers (#### before ### before ## before #)
+	html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+	html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+	html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+	html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+	// Horizontal rules
+	html = html.replace(/^---+$/gm, '<hr>');
+
+	// Bold
+	html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+	// Italic
+	html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+
+	// Inline code
+	html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+	// Unordered lists
+	html = html.replace(/^[\-\*] (.+)$/gm, '<li>$1</li>');
+	html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+
+	// Ordered lists
+	html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+	// Paragraphs and line breaks
+	html = html.replace(/\n\n/g, '</p><p>');
+	html = html.replace(/\n/g, '<br>');
+	html = '<p>' + html + '</p>';
+
+	// Clean up
+	html = html.replace(/<p><\/p>/g, '');
+	html = html.replace(/<p>(<h[1-4]>)/g, '$1');
+	html = html.replace(/(<\/h[1-4]>)<\/p>/g, '$1');
+	html = html.replace(/<p>(<pre>)/g, '$1');
+	html = html.replace(/(<\/pre>)<\/p>/g, '$1');
+	html = html.replace(/<p>(<table>)/g, '$1');
+	html = html.replace(/(<\/table>)<\/p>/g, '$1');
+	html = html.replace(/<p>(<ul>)/g, '$1');
+	html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+	html = html.replace(/<p>(<hr>)<\/p>/g, '$1');
+	html = html.replace(/<p><br>/g, '<p>');
+
+	return html;
+}
+
+function escapeHtml(text) {
+	return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+var currentMsgDiv = null;
+var currentRawText = '';
+var currentContentSpan = null;
+var toolUseCount = 0;
+
+function addUserMessage(text) {
+	var div = document.createElement('div');
+	div.className = 'msg msg-user';
+	div.innerHTML = '<span class="sender">You:</span> ' + escapeHtml(text);
+	document.getElementById('chat').appendChild(div);
+	scrollToBottom();
+}
+
+function startAssistantMessage(senderName) {
+	currentRawText = '';
+	toolUseCount = 0;
+	var div = document.createElement('div');
+	div.className = 'msg msg-assistant';
+	div.innerHTML = '<span class="sender">' + escapeHtml(senderName) + ':</span> <span class="content"></span>';
+	document.getElementById('chat').appendChild(div);
+	currentMsgDiv = div;
+	currentContentSpan = div.querySelector('.content');
+	scrollToBottom();
+}
+
+function appendToken(token) {
+	currentRawText += token;
+	if (currentContentSpan) {
+		currentContentSpan.innerHTML = md(currentRawText);
+	}
+	scrollToBottom();
+}
+
+function finishAssistantMessage() {
+	if (currentContentSpan && currentRawText) {
+		currentContentSpan.innerHTML = md(currentRawText);
+	}
+	currentMsgDiv = null;
+	currentContentSpan = null;
+	currentRawText = '';
+	scrollToBottom();
+}
+
+function addToolUse(toolName, detail) {
+	if (!currentMsgDiv) return;
+	toolUseCount++;
+	// Insert tool use inline within the assistant message, after current content
+	var details = document.createElement('details');
+	details.className = 'tool-use';
+	var summary = document.createElement('summary');
+	summary.textContent = toolName;
+	details.appendChild(summary);
+	if (detail) {
+		var detailDiv = document.createElement('div');
+		detailDiv.className = 'tool-detail';
+		detailDiv.textContent = detail;
+		details.appendChild(detailDiv);
+	}
+	// Insert before the content span so text keeps flowing after
+	currentMsgDiv.insertBefore(details, currentContentSpan);
+	// Re-create content span after the tool use
+	var newContent = document.createElement('span');
+	newContent.className = 'content';
+	newContent.innerHTML = md(currentRawText);
+	currentMsgDiv.replaceChild(newContent, currentContentSpan);
+	currentContentSpan = newContent;
+	scrollToBottom();
+}
+
+function addErrorMessage(text) {
+	var div = document.createElement('div');
+	div.className = 'msg msg-error';
+	div.textContent = text;
+	document.getElementById('chat').appendChild(div);
+	scrollToBottom();
+}
+
+function scrollToBottom() {
+	window.scrollTo(0, document.body.scrollHeight);
+}
+
+function clearChat() {
+	document.getElementById('chat').innerHTML = '';
+	currentMsgDiv = null;
+	currentContentSpan = null;
+	currentRawText = '';
+	toolUseCount = 0;
+}
+</script>
+</head>
+<body class="${themeClass}">
+<div id="chat"></div>
+</body>
+</html>
