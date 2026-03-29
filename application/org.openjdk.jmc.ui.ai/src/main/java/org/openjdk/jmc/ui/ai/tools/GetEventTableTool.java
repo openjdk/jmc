@@ -84,7 +84,8 @@ public class GetEventTableTool implements IAITool {
 				+ "\"description\":\"Attribute IDs to include as columns (default: all)\"}," //$NON-NLS-1$
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Start of time range in seconds from recording start\"}," //$NON-NLS-1$
 				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start\"}," //$NON-NLS-1$
-				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max rows (default 50)\"}" //$NON-NLS-1$
+				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max rows (default 50)\"}," //$NON-NLS-1$
+				+ "\"storeAs\":{\"type\":\"string\",\"description\":\"Store the result set under this name for later reference by other tools\"}" //$NON-NLS-1$
 				+ "}}"; //$NON-NLS-1$
 	}
 
@@ -108,6 +109,12 @@ public class GetEventTableTool implements IAITool {
 		String from = JfrContext.extractString(FROM_PATTERN, parametersJson);
 		String to = JfrContext.extractString(TO_PATTERN, parametersJson);
 		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to);
+
+		// Store the filtered result if requested
+		String storeAs = JfrContext.extractString(JfrContext.STORE_AS_PATTERN, parametersJson);
+		if (storeAs != null) {
+			JfrContext.store(storeAs, filtered);
+		}
 
 		if (!filtered.hasItems()) {
 			return "No events found."; //$NON-NLS-1$

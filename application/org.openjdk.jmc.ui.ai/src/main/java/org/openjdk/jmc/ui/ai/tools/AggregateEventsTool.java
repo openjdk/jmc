@@ -34,8 +34,10 @@
 package org.openjdk.jmc.ui.ai.tools;
 
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
@@ -125,6 +127,10 @@ public class AggregateEventsTool implements IAITool {
 			sb.append("  Min(duration): ").append(format(min)).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			IItem minItem = filtered
 					.getAggregate((IAggregator<IItem, ?>) Aggregators.itemWithMin(JfrAttributes.DURATION));
+			if (minItem != null) {
+				JfrContext.store(eventType + ".min", ItemCollectionToolkit.build(Stream.of(minItem))); //$NON-NLS-1$
+				sb.append("  (stored as '").append(eventType).append(".min')\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			appendItemDetails(sb, minItem, "  Min event", filtered); //$NON-NLS-1$
 		}
 		if (all || "max".equals(function)) { //$NON-NLS-1$
@@ -132,6 +138,10 @@ public class AggregateEventsTool implements IAITool {
 			sb.append("  Max(duration): ").append(format(max)).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			IItem maxItem = filtered
 					.getAggregate((IAggregator<IItem, ?>) Aggregators.itemWithMax(JfrAttributes.DURATION));
+			if (maxItem != null) {
+				JfrContext.store(eventType + ".max", ItemCollectionToolkit.build(Stream.of(maxItem))); //$NON-NLS-1$
+				sb.append("  (stored as '").append(eventType).append(".max')\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			appendItemDetails(sb, maxItem, "  Max event", filtered); //$NON-NLS-1$
 		}
 		if (all || "stddev".equals(function)) { //$NON-NLS-1$

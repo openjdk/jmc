@@ -98,6 +98,7 @@ public class ManageSelectionTool implements IAITool {
 				+ "\"action\":{\"type\":\"string\",\"enum\":[\"create\",\"activate\",\"clear\",\"list\"]," //$NON-NLS-1$
 				+ "\"description\":\"The action to perform\"}," //$NON-NLS-1$
 				+ "\"name\":{\"type\":\"string\",\"description\":\"Selection name (for create/activate)\"}," //$NON-NLS-1$
+				+ "\"reference\":{\"type\":\"string\",\"description\":\"Use a stored result set by name (e.g. Servlet_Invocation.max) for create\"}," //$NON-NLS-1$
 				+ "\"eventType\":{\"type\":\"string\",\"description\":\"Event type filter (for create)\"}," //$NON-NLS-1$
 				+ "\"filterAttribute\":{\"type\":\"string\",\"description\":\"Attribute ID to filter on, e.g. gcId (for create)\"}," //$NON-NLS-1$
 				+ "\"filterValue\":{\"type\":\"string\",\"description\":\"Value the attribute must match, e.g. 57 (for create)\"}," //$NON-NLS-1$
@@ -128,29 +129,43 @@ public class ManageSelectionTool implements IAITool {
 	}
 
 	private String createSelection(String json) {
-		IItemCollection items = JfrContext.getActiveItems();
-		if (items == null) {
-			return "No flight recording is currently open."; //$NON-NLS-1$
-		}
-
 		SelectionStore store = JfrContext.getActiveSelectionStore();
 		if (store == null) {
 			return "No selection store available."; //$NON-NLS-1$
 		}
 
-		String eventType = JfrContext.extractString(TYPE_PATTERN, json);
-		String filterAttr = JfrContext.extractString(FILTER_ATTR_PATTERN, json);
-		String filterValue = JfrContext.extractString(FILTER_VALUE_PATTERN, json);
-		String from = JfrContext.extractString(FROM_PATTERN, json);
-		String to = JfrContext.extractString(TO_PATTERN, json);
+		// Check for stored reference first
+		String reference = JfrContext.extractString(JfrContext.REFERENCE_PATTERN, json);
+		IItemCollection filtered;
+		String eventType = null;
+		String filterAttr = null;
+		String filterValue = null;
+		String from = null;
+		String to = null;
+
+		if (reference != null) {
+			filtered = JfrContext.getStored(reference);
+			if (filtered == null) {
+				return "No stored result set named '" + reference //$NON-NLS-1$
+						+ "'. Available: " + JfrContext.getStoredNames(); //$NON-NLS-1$
+			}
+		} else {
+			IItemCollection items = JfrContext.getActiveItems();
+			if (items == null) {
+				return "No flight recording is currently open."; //$NON-NLS-1$
+			}
+			eventType = JfrContext.extractString(TYPE_PATTERN, json);
+			filterAttr = JfrContext.extractString(FILTER_ATTR_PATTERN, json);
+			filterValue = JfrContext.extractString(FILTER_VALUE_PATTERN, json);
+			from = JfrContext.extractString(FROM_PATTERN, json);
+			to = JfrContext.extractString(TO_PATTERN, json);
+			filtered = JfrContext.filterItems(items, eventType, from, to);
+		}
 
 		String name = JfrContext.extractString(NAME_PATTERN, json);
 		if (name == null) {
-			name = buildSelectionName(eventType, filterAttr, filterValue, from, to);
+			name = reference != null ? reference : buildSelectionName(eventType, filterAttr, filterValue, from, to);
 		}
-
-		// Apply type and time range filter first
-		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to);
 
 		// Apply attribute value filter if specified
 		if (filterAttr != null && filterValue != null) {
@@ -345,7 +360,11 @@ public class ManageSelectionTool implements IAITool {
 
 		NamedItemSelection(IItemCollection items, String name) {
 			super(items, name);
-			this.flavorName = name;
+			long count = 0;
+			for (IItemIterable iterable : items) {
+				count += iterable.getItemCount();
+			}
+			this.flavorName = count > 1 ? name + " (" + count + " events)" : name; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override

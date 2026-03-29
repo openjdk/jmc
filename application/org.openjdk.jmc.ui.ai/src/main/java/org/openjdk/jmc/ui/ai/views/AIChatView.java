@@ -41,7 +41,6 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -52,12 +51,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -74,8 +69,6 @@ import org.openjdk.jmc.ui.ai.ChatMessage;
 import org.openjdk.jmc.ui.ai.IAIProvider;
 import org.openjdk.jmc.ui.ai.IAITool;
 import org.openjdk.jmc.ui.ai.preferences.Messages;
-import org.openjdk.jmc.ui.ai.preferences.PreferenceConstants;
-import org.openjdk.jmc.ui.common.util.ThemeUtils;
 
 public class AIChatView extends ViewPart {
 
@@ -129,15 +122,22 @@ public class AIChatView extends ViewPart {
 			+ "\n- For a specific event/request: create a selection and navigate to the most relevant page." //$NON-NLS-1$
 			+ "\n- For recording-wide analysis: clear any previous selection (action=clear) and navigate to the relevant page." //$NON-NLS-1$
 			+ "\n- Always leave the UI showing the most relevant view for further exploration." //$NON-NLS-1$
-			+ "\n\nTypical workflow: aggregate to find the extreme -> get shared attributes -> filter by correlation ID" //$NON-NLS-1$
-			+ " -> find concurrent events -> create selection -> navigate to relevant page."; //$NON-NLS-1$
+			+ "\n\nStored references - tools can store and reuse result sets:" //$NON-NLS-1$
+			+ "\n- aggregate_events auto-stores min/max items as '<eventType>.min' and '<eventType>.max'" //$NON-NLS-1$
+			+ "\n- get_event_table with storeAs='name' stores the filtered results" //$NON-NLS-1$
+			+ "\n- find_related_events and manage_selection accept reference='name' to use stored results" //$NON-NLS-1$
+			+ "\n- This avoids re-filtering and ensures you work with the exact same events" //$NON-NLS-1$
+			+ "\n\nTypical workflow: aggregate_events (auto-stores .max)" //$NON-NLS-1$
+			+ " -> find_related_events(reference=Type.max, mode=concurrent, sameThreads=true, storeAs='context')" //$NON-NLS-1$
+			+ " -> manage_selection(reference='context') (includes reference + all concurrent events)" //$NON-NLS-1$
+			+ " -> navigate to Threads page."; //$NON-NLS-1$
 
 	private ComboViewer providerCombo;
 	private ComboViewer modelCombo;
 	private Composite chatCardContainer;
 	private StackLayout chatStackLayout;
-	private final Map<String, StyledText> providerChatDisplays = new HashMap<>();
-	private StyledText chatDisplay; // current active one
+	private final Map<String, ChatBrowser> providerBrowsers = new HashMap<>();
+	private ChatBrowser currentBrowser;
 	private Label statusLabel;
 	private Text inputField;
 	private Button sendButton;
@@ -145,13 +145,6 @@ public class AIChatView extends ViewPart {
 	private final Map<String, List<ChatMessage>> providerHistories = new HashMap<>();
 	private IAIProvider currentProvider;
 	private volatile CompletableFuture<Void> currentRequest;
-
-	private Color userColor;
-	private Color assistantColor;
-	private Color toolColor;
-	private Color errorColor;
-	private IPropertyChangeListener colorChangeListener;
-	private MarkdownStyler markdownStyler;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -166,8 +159,6 @@ public class AIChatView extends ViewPart {
 		createStatusBar(main);
 		createInputArea(main);
 
-		initColors(parent.getDisplay());
-		markdownStyler = new MarkdownStyler(parent.getDisplay());
 		restoreProviderSelection();
 	}
 
@@ -262,21 +253,16 @@ public class AIChatView extends ViewPart {
 		chatCardContainer.setLayout(chatStackLayout);
 	}
 
-	private StyledText getOrCreateChatDisplay(String providerId) {
-		return providerChatDisplays.computeIfAbsent(providerId, id -> {
-			StyledText st = new StyledText(chatCardContainer,
-					SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.READ_ONLY);
-			st.setEditable(false);
-			return st;
-		});
+	private ChatBrowser getOrCreateBrowser(String providerId) {
+		return providerBrowsers.computeIfAbsent(providerId, id -> new ChatBrowser(chatCardContainer));
 	}
 
 	private void switchChatDisplay() {
 		if (currentProvider == null) {
 			return;
 		}
-		chatDisplay = getOrCreateChatDisplay(currentProvider.getId());
-		chatStackLayout.topControl = chatDisplay;
+		currentBrowser = getOrCreateBrowser(currentProvider.getId());
+		chatStackLayout.topControl = currentBrowser.getControl();
 		chatCardContainer.layout();
 	}
 
@@ -336,8 +322,8 @@ public class AIChatView extends ViewPart {
 		}
 
 		if (!currentProvider.isConfigured()) {
-			appendMessage(NLS.bind(Messages.AIChatView_NOT_CONFIGURED, currentProvider.getDisplayName()), errorColor,
-					true);
+			currentBrowser
+					.addErrorMessage(NLS.bind(Messages.AIChatView_NOT_CONFIGURED, currentProvider.getDisplayName()));
 			return;
 		}
 
@@ -346,46 +332,42 @@ public class AIChatView extends ViewPart {
 		// Add user message
 		ChatMessage userMessage = new ChatMessage(ChatMessage.Role.USER, text);
 		chatHistory.add(userMessage);
-		appendMessage("You: " + text, userColor, true); //$NON-NLS-1$
+		currentBrowser.addUserMessage(text);
 		inputField.setText(""); //$NON-NLS-1$
 
 		// Add placeholder for assistant response
 		ChatMessage assistantMessage = new ChatMessage(ChatMessage.Role.ASSISTANT, ""); //$NON-NLS-1$
 		chatHistory.add(assistantMessage);
-		appendMessage(currentProvider.getDisplayName() + ": ", assistantColor, true); //$NON-NLS-1$
+		currentBrowser.startAssistantMessage(currentProvider.getDisplayName());
 
 		setInputEnabled(false);
 
 		List<IAITool> tools = AIToolRegistry.getInstance().getTools();
-		final StyledText targetDisplay = chatDisplay; // capture for this request
-		final int responseStartOffset = targetDisplay.getCharCount(); // where assistant response begins
-		Display display = targetDisplay.getDisplay();
+		final ChatBrowser targetBrowser = currentBrowser; // capture for this request
+		Display display = targetBrowser.getControl().getDisplay();
 		setStatus("Sending..."); //$NON-NLS-1$
 
 		AIStreamHandler handler = new AIStreamHandler() {
 			@Override
 			public void onToken(String text) {
 				display.asyncExec(() -> {
-					if (!targetDisplay.isDisposed()) {
+					if (!targetBrowser.isDisposed()) {
 						assistantMessage.appendContent(text);
-						appendTokenTo(targetDisplay, text);
+						targetBrowser.appendToken(text);
 					}
 				});
 			}
 
 			@Override
 			public void onToolCallStart(String toolName, String arguments) {
-				display.asyncExec(() -> {
-					if (!targetDisplay.isDisposed()) {
-						appendMessageTo(targetDisplay, "[" + toolName + "]", toolColor, true); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-				});
+				// Shown inline when tool completes with result info
 			}
 
 			@Override
 			public void onToolCallComplete(String toolName, int resultLength) {
 				display.asyncExec(() -> {
-					if (!targetDisplay.isDisposed()) {
+					if (!targetBrowser.isDisposed()) {
+						targetBrowser.addToolUse(toolName, resultLength + " chars returned"); //$NON-NLS-1$
 						setStatus(toolName + " returned " + resultLength + " chars"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				});
@@ -394,7 +376,7 @@ public class AIChatView extends ViewPart {
 			@Override
 			public void onStatus(String status) {
 				display.asyncExec(() -> {
-					if (!targetDisplay.isDisposed()) {
+					if (!targetBrowser.isDisposed()) {
 						setStatus(status);
 					}
 				});
@@ -403,9 +385,8 @@ public class AIChatView extends ViewPart {
 			@Override
 			public void onComplete() {
 				display.asyncExec(() -> {
-					if (!targetDisplay.isDisposed()) {
-						markdownStyler.applyStyles(targetDisplay, responseStartOffset, assistantColor);
-						appendMessageTo(targetDisplay, "", null, true); //$NON-NLS-1$
+					if (!targetBrowser.isDisposed()) {
+						targetBrowser.finishAssistantMessage();
 						setStatus(""); //$NON-NLS-1$
 						setInputEnabled(true);
 						currentRequest = null;
@@ -416,9 +397,8 @@ public class AIChatView extends ViewPart {
 			@Override
 			public void onError(Exception error) {
 				display.asyncExec(() -> {
-					if (!targetDisplay.isDisposed()) {
-						appendMessageTo(targetDisplay, "\n" //$NON-NLS-1$
-								+ NLS.bind(Messages.AIChatView_ERROR, error.getMessage()), errorColor, true);
+					if (!targetBrowser.isDisposed()) {
+						targetBrowser.addErrorMessage(NLS.bind(Messages.AIChatView_ERROR, error.getMessage()));
 						setStatus(""); //$NON-NLS-1$
 						setInputEnabled(true);
 						currentRequest = null;
@@ -436,35 +416,6 @@ public class AIChatView extends ViewPart {
 		}, handler);
 	}
 
-	private void appendMessage(String text, Color color, boolean newLine) {
-		appendMessageTo(chatDisplay, text, color, newLine);
-	}
-
-	private void appendMessageTo(StyledText target, String text, Color color, boolean newLine) {
-		int start = target.getCharCount();
-		String toAppend = (start > 0 && newLine ? "\n" : "") + text; //$NON-NLS-1$ //$NON-NLS-2$
-		target.append(toAppend);
-		if (color != null) {
-			StyleRange style = new StyleRange();
-			style.start = start;
-			style.length = toAppend.length();
-			style.foreground = color;
-			target.setStyleRange(style);
-		}
-		target.setTopIndex(target.getLineCount() - 1);
-	}
-
-	private void appendTokenTo(StyledText target, String token) {
-		int start = target.getCharCount();
-		target.append(token);
-		StyleRange style = new StyleRange();
-		style.start = start;
-		style.length = token.length();
-		style.foreground = assistantColor;
-		target.setStyleRange(style);
-		target.setTopIndex(target.getLineCount() - 1);
-	}
-
 	private void setStatus(String text) {
 		if (statusLabel != null && !statusLabel.isDisposed()) {
 			statusLabel.setText(text);
@@ -477,65 +428,6 @@ public class AIChatView extends ViewPart {
 		sendButton.setEnabled(enabled);
 		if (enabled) {
 			inputField.setFocus();
-		}
-	}
-
-	private void initColors(Display display) {
-		loadColors(display);
-		colorChangeListener = event -> {
-			String prop = event.getProperty();
-			if (prop.startsWith("color.light.") || prop.startsWith("color.dark.")) { //$NON-NLS-1$ //$NON-NLS-2$
-				display.asyncExec(() -> {
-					if (!chatDisplay.isDisposed()) {
-						disposeColors();
-						loadColors(display);
-					}
-				});
-			}
-		};
-		AIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(colorChangeListener);
-	}
-
-	private void loadColors(Display display) {
-		IPreferenceStore store = AIPlugin.getDefault().getPreferenceStore();
-		boolean dark = ThemeUtils.isDarkTheme();
-		userColor = new Color(display, parseRGB(store
-				.getString(dark ? PreferenceConstants.P_COLOR_USER_DARK : PreferenceConstants.P_COLOR_USER_LIGHT)));
-		assistantColor = new Color(display, parseRGB(store.getString(
-				dark ? PreferenceConstants.P_COLOR_ASSISTANT_DARK : PreferenceConstants.P_COLOR_ASSISTANT_LIGHT)));
-		toolColor = new Color(display, parseRGB(store
-				.getString(dark ? PreferenceConstants.P_COLOR_TOOL_DARK : PreferenceConstants.P_COLOR_TOOL_LIGHT)));
-		errorColor = new Color(display, parseRGB(store
-				.getString(dark ? PreferenceConstants.P_COLOR_ERROR_DARK : PreferenceConstants.P_COLOR_ERROR_LIGHT)));
-	}
-
-	private static RGB parseRGB(String value) {
-		if (value != null && !value.isEmpty()) {
-			String[] parts = value.split(","); //$NON-NLS-1$
-			if (parts.length == 3) {
-				try {
-					return new RGB(Integer.parseInt(parts[0].trim()), Integer.parseInt(parts[1].trim()),
-							Integer.parseInt(parts[2].trim()));
-				} catch (NumberFormatException e) {
-					// fall through to default
-				}
-			}
-		}
-		return new RGB(0, 0, 0);
-	}
-
-	private void disposeColors() {
-		if (userColor != null) {
-			userColor.dispose();
-		}
-		if (assistantColor != null) {
-			assistantColor.dispose();
-		}
-		if (toolColor != null) {
-			toolColor.dispose();
-		}
-		if (errorColor != null) {
-			errorColor.dispose();
 		}
 	}
 
@@ -589,13 +481,6 @@ public class AIChatView extends ViewPart {
 	public void dispose() {
 		if (currentRequest != null) {
 			currentRequest.cancel(true);
-		}
-		if (colorChangeListener != null) {
-			AIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(colorChangeListener);
-		}
-		disposeColors();
-		if (markdownStyler != null) {
-			markdownStyler.dispose();
 		}
 		super.dispose();
 	}

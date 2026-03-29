@@ -67,6 +67,12 @@ public class FindRelatedEventsTool implements IAITool {
 	private static final Pattern MODE_PATTERN = Pattern.compile("\"mode\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 	private static final Pattern SAME_THREADS_PATTERN = Pattern.compile("\"sameThreads\"\\s*:\\s*true"); //$NON-NLS-1$
 	private static final Pattern LIMIT_PATTERN = Pattern.compile("\"limit\"\\s*:\\s*(\\d+)"); //$NON-NLS-1$
+	private static final Pattern FROM_PATTERN = Pattern.compile("\"fromSeconds\"\\s*:\\s*([\\d.]+)"); //$NON-NLS-1$
+	private static final Pattern TO_PATTERN = Pattern.compile("\"toSeconds\"\\s*:\\s*([\\d.]+)"); //$NON-NLS-1$
+	private static final Pattern FILTER_ATTR_PATTERN = Pattern
+			.compile("\"filterAttribute\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
+	private static final Pattern FILTER_VALUE_PATTERN = Pattern
+			.compile("\"filterValue\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 
 	@Override
 	public String getName() {
@@ -76,21 +82,31 @@ public class FindRelatedEventsTool implements IAITool {
 	@Override
 	public String getDescription() {
 		return "Finds events concurrent with or contained within reference events, for root cause analysis." //$NON-NLS-1$
-				+ " 'concurrent' finds all events that overlapped in time with the reference events" //$NON-NLS-1$
-				+ " (what else was happening during a long GC pause?)." //$NON-NLS-1$
-				+ " 'contained' finds events fully within the time span of reference events." //$NON-NLS-1$
-				+ " Set sameThreads=true to restrict to same threads as reference events." //$NON-NLS-1$
-				+ " To find events by shared attribute (e.g. gcId=57), use get_event_table" //$NON-NLS-1$
-				+ " with filterAttribute/filterValue instead."; //$NON-NLS-1$
+				+ " IMPORTANT: Use filterAttribute/filterValue or fromSeconds/toSeconds to scope the reference" //$NON-NLS-1$
+				+ " events to a SPECIFIC instance. Without filters, ALL events of eventType are used as reference," //$NON-NLS-1$
+				+ " which gives useless results if the type has many events spanning the whole recording." //$NON-NLS-1$
+				+ " Example: to find what happened during a specific servlet request, use" //$NON-NLS-1$
+				+ " filterAttribute=ECID, filterValue=<the-ecid> to scope to that one request." //$NON-NLS-1$
+				+ " 'concurrent' finds all OTHER events that overlapped in time." //$NON-NLS-1$
+				+ " 'contained' finds events fully within the time span." //$NON-NLS-1$
+				+ " sameThreads=true restricts to same threads as reference events." //$NON-NLS-1$
+				+ " Alternatively, use 'reference' to specify a previously stored result set name" //$NON-NLS-1$
+				+ " (e.g. from aggregate_events or get_event_table with storeAs)."; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getParameterSchema() {
 		return "{\"type\":\"object\",\"properties\":{" //$NON-NLS-1$
-				+ "\"eventType\":{\"type\":\"string\",\"description\":\"Reference event type ID (e.g. jdk.GarbageCollection)\"}," //$NON-NLS-1$
+				+ "\"reference\":{\"type\":\"string\",\"description\":\"Name of a stored result set to use as reference events (e.g. Servlet_Invocation.max)\"}," //$NON-NLS-1$
+				+ "\"eventType\":{\"type\":\"string\",\"description\":\"Reference event type ID (alternative to reference)\"}," //$NON-NLS-1$
+				+ "\"filterAttribute\":{\"type\":\"string\",\"description\":\"Scope reference events by attribute (e.g. ECID, gcId)\"}," //$NON-NLS-1$
+				+ "\"filterValue\":{\"type\":\"string\",\"description\":\"Value the filter attribute must match\"}," //$NON-NLS-1$
+				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Scope reference events from this time (seconds from recording start)\"}," //$NON-NLS-1$
+				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"Scope reference events to this time\"}," //$NON-NLS-1$
 				+ "\"mode\":{\"type\":\"string\",\"description\":\"Search mode\"," //$NON-NLS-1$
 				+ "\"enum\":[\"concurrent\",\"contained\"]}," //$NON-NLS-1$
 				+ "\"sameThreads\":{\"type\":\"boolean\",\"description\":\"Restrict to same threads as reference events (default true)\"}," //$NON-NLS-1$
+				+ "\"storeAs\":{\"type\":\"string\",\"description\":\"Store the found concurrent/contained events under this name\"}," //$NON-NLS-1$
 				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max events to return (default 100)\"}" //$NON-NLS-1$
 				+ "},\"required\":[\"eventType\",\"mode\"]}"; //$NON-NLS-1$
 	}
@@ -102,9 +118,12 @@ public class FindRelatedEventsTool implements IAITool {
 			return "No flight recording is currently open."; //$NON-NLS-1$
 		}
 
+		// Check for stored reference first
+		String reference = JfrContext.extractString(JfrContext.REFERENCE_PATTERN, parametersJson);
+
 		String eventType = JfrContext.extractString(TYPE_PATTERN, parametersJson);
-		if (eventType == null) {
-			return "Missing required parameter: eventType"; //$NON-NLS-1$
+		if (reference == null && eventType == null) {
+			return "Missing parameter: either 'reference' or 'eventType' is required."; //$NON-NLS-1$
 		}
 
 		String mode = JfrContext.extractString(MODE_PATTERN, parametersJson);
@@ -133,9 +152,31 @@ public class FindRelatedEventsTool implements IAITool {
 		boolean sameThreads = SAME_THREADS_PATTERN.matcher(json).find() || !json.contains("\"sameThreads\""); //$NON-NLS-1$
 
 		// Get reference events
-		IItemCollection refEvents = items.apply(ItemFilters.type(eventType));
+		String reference = JfrContext.extractString(JfrContext.REFERENCE_PATTERN, json);
+		IItemCollection refEvents;
+		String refDescription;
+
+		if (reference != null) {
+			refEvents = JfrContext.getStored(reference);
+			if (refEvents == null) {
+				return "No stored result set named '" + reference + "'. Available: " + JfrContext.getStoredNames(); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			refDescription = reference;
+		} else {
+			String from = JfrContext.extractString(FROM_PATTERN, json);
+			String to = JfrContext.extractString(TO_PATTERN, json);
+			refEvents = JfrContext.filterItems(items, eventType, from, to);
+
+			String filterAttr = JfrContext.extractString(FILTER_ATTR_PATTERN, json);
+			String filterValue = JfrContext.extractString(FILTER_VALUE_PATTERN, json);
+			if (filterAttr != null && filterValue != null) {
+				refEvents = filterByAttribute(refEvents, filterAttr, filterValue);
+			}
+			refDescription = eventType;
+		}
+
 		if (!refEvents.hasItems()) {
-			return "No reference events found for type: " + eventType; //$NON-NLS-1$
+			return "No reference events found for: " + refDescription; //$NON-NLS-1$
 		}
 
 		// Collect time ranges and threads from reference events
@@ -187,10 +228,22 @@ public class FindRelatedEventsTool implements IAITool {
 			filter = ItemFilters.and(filter, ItemFilters.memberOf(JfrAttributes.EVENT_THREAD, threads));
 		}
 
-		// Exclude the reference event type itself
-		filter = ItemFilters.and(filter, ItemFilters.not(ItemFilters.type(eventType)));
+		// Exclude the reference event type if we filtered by type (not by stored reference)
+		if (eventType != null && reference == null) {
+			filter = ItemFilters.and(filter, ItemFilters.not(ItemFilters.type(eventType)));
+		}
 
 		IItemCollection result = items.apply(filter);
+
+		// Store the result if requested
+		String storeAs = JfrContext.extractString(JfrContext.STORE_AS_PATTERN, json);
+		if (storeAs != null) {
+			// Store reference events + concurrent/contained events together
+			final IItemCollection refForStore = refEvents;
+			IItemCollection combined = org.openjdk.jmc.common.item.ItemCollectionToolkit
+					.merge(() -> java.util.stream.Stream.of(refForStore, result));
+			JfrContext.store(storeAs, combined);
+		}
 
 		String modeLabel = contained ? "Contained" : "Concurrent"; //$NON-NLS-1$ //$NON-NLS-2$
 		StringBuilder sb = new StringBuilder();
@@ -198,7 +251,7 @@ public class FindRelatedEventsTool implements IAITool {
 		if (sameThreads) {
 			sb.append(" on same threads"); //$NON-NLS-1$
 		}
-		sb.append(" during ").append(eventType).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(" during ").append(refDescription).append(":\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		sb.append("Time range: ").append(earliest.displayUsing(IDisplayable.AUTO)); //$NON-NLS-1$
 		sb.append(" - ").append(latest.displayUsing(IDisplayable.AUTO)).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		sb.append("Threads: ").append(threads.size()).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -231,6 +284,37 @@ public class FindRelatedEventsTool implements IAITool {
 			sb.append("No matching events found.\n"); //$NON-NLS-1$
 		}
 		return sb.toString();
+	}
+
+	private IItemCollection filterByAttribute(IItemCollection items, String attrId, String value) {
+		java.util.List<IItem> matching = new java.util.ArrayList<>();
+		for (IItemIterable iterable : items) {
+			IType<IItem> type = iterable.getType();
+			IMemberAccessor<?, IItem> accessor = null;
+			for (org.openjdk.jmc.common.item.IAttribute<?> attr : type.getAttributes()) {
+				if (attr.getIdentifier().equals(attrId)) {
+					accessor = attr.getAccessor(type);
+					break;
+				}
+			}
+			if (accessor == null) {
+				continue;
+			}
+			for (IItem item : iterable) {
+				Object val = accessor.getMember(item);
+				if (val != null) {
+					String display = val instanceof IDisplayable ? ((IDisplayable) val).displayUsing(IDisplayable.AUTO)
+							: val.toString();
+					if (value.equals(display)) {
+						matching.add(item);
+					}
+				}
+			}
+		}
+		if (matching.isEmpty()) {
+			return org.openjdk.jmc.common.item.ItemCollectionToolkit.build(java.util.stream.Stream.empty());
+		}
+		return org.openjdk.jmc.common.item.ItemCollectionToolkit.build(matching.stream());
 	}
 
 	private void appendEventSummary(StringBuilder sb, IItem item, IType<IItem> type, int index) {

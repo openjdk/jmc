@@ -33,7 +33,9 @@
  */
 package org.openjdk.jmc.ui.ai.tools;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,8 +62,41 @@ import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore;
  */
 public final class JfrContext {
 
+	private static final Map<String, IItemCollection> storedCollections = new HashMap<>();
+
 	private JfrContext() {
 	}
+
+	/**
+	 * Stores a named IItemCollection that can be referenced by subsequent tool calls.
+	 */
+	public static void store(String name, IItemCollection items) {
+		storedCollections.put(name, items);
+	}
+
+	/**
+	 * Retrieves a previously stored IItemCollection by name.
+	 */
+	public static IItemCollection getStored(String name) {
+		return storedCollections.get(name);
+	}
+
+	/**
+	 * Lists all stored collection names.
+	 */
+	public static List<String> getStoredNames() {
+		return List.copyOf(storedCollections.keySet());
+	}
+
+	/**
+	 * Clears all stored collections (e.g. when recording changes).
+	 */
+	public static void clearStored() {
+		storedCollections.clear();
+	}
+
+	public static final Pattern STORE_AS_PATTERN = Pattern.compile("\"storeAs\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
+	public static final Pattern REFERENCE_PATTERN = Pattern.compile("\"reference\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 
 	public static IItemCollection getActiveItems() {
 		IEditorPart editor = getActiveEditor();
