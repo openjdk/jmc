@@ -251,6 +251,10 @@ function finishAssistantMessage() {
 function addToolUse(toolName, detail) {
 	if (!currentMsgDiv) return;
 	toolUseCount++;
+	// Ensure a space/newline separates text before and after tool use
+	if (currentRawText.length > 0 && !currentRawText.endsWith('\n') && !currentRawText.endsWith(' ')) {
+		currentRawText += ' ';
+	}
 	// Insert tool use inline within the assistant message, after current content
 	var details = document.createElement('details');
 	details.className = 'tool-use';
