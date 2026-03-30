@@ -41,7 +41,6 @@ import org.osgi.framework.BundleContext;
 public class AIPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.openjdk.jmc.ui.ai"; //$NON-NLS-1$
-	private static final Logger LOGGER = Logger.getLogger(PLUGIN_ID);
 
 	private static AIPlugin plugin;
 
@@ -53,7 +52,7 @@ public class AIPlugin extends AbstractUIPlugin {
 	}
 
 	public static Logger getLogger() {
-		return LOGGER;
+		return Logger.getLogger(PLUGIN_ID);
 	}
 
 	@Override

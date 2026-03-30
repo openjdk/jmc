@@ -228,7 +228,7 @@ public class ChatBrowser {
 
 	private String readTemplate() {
 		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(getClass().getResourceAsStream(TEMPLATE_PATH), StandardCharsets.UTF_8))) {
+				new InputStreamReader(ChatBrowser.class.getResourceAsStream(TEMPLATE_PATH), StandardCharsets.UTF_8))) {
 			StringBuilder sb = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {

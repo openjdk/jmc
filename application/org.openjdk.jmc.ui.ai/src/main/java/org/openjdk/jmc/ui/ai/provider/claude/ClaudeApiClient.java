@@ -182,7 +182,6 @@ public class ClaudeApiClient {
 				tc.name = extractJsonString("\"name\"", data); //$NON-NLS-1$
 				state.currentToolCall = tc;
 				state.toolCalls.add(tc);
-			} else if (data.contains("\"text\"")) { //$NON-NLS-1$
 			}
 		} else if (data.contains("\"content_block_delta\"")) { //$NON-NLS-1$
 			if (data.contains("\"text_delta\"")) { //$NON-NLS-1$
