@@ -33,9 +33,9 @@
  */
 package org.openjdk.jmc.ui.ai.tools;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +62,7 @@ import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore;
  */
 public final class JfrContext {
 
-	private static final Map<String, IItemCollection> storedCollections = new HashMap<>();
+	private static final Map<String, IItemCollection> storedCollections = new ConcurrentHashMap<>();
 
 	private JfrContext() {
 	}

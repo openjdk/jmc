@@ -61,12 +61,12 @@ public final class PreferenceConstants {
 	public static final String P_COLOR_ERROR_DARK = "color.dark.error"; //$NON-NLS-1$
 
 	public static final String DEFAULT_COLOR_USER_LIGHT = "0,0,0"; //$NON-NLS-1$
-	public static final String DEFAULT_COLOR_ASSISTANT_LIGHT = "0,128,0"; //$NON-NLS-1$
+	public static final String DEFAULT_COLOR_ASSISTANT_LIGHT = "128,0,255"; //$NON-NLS-1$
 	public static final String DEFAULT_COLOR_TOOL_LIGHT = "160,160,160"; //$NON-NLS-1$
 	public static final String DEFAULT_COLOR_ERROR_LIGHT = "200,0,0"; //$NON-NLS-1$
 
 	public static final String DEFAULT_COLOR_USER_DARK = "255,255,255"; //$NON-NLS-1$
-	public static final String DEFAULT_COLOR_ASSISTANT_DARK = "80,220,80"; //$NON-NLS-1$
+	public static final String DEFAULT_COLOR_ASSISTANT_DARK = "128,128,255"; //$NON-NLS-1$
 	public static final String DEFAULT_COLOR_TOOL_DARK = "120,120,120"; //$NON-NLS-1$
 	public static final String DEFAULT_COLOR_ERROR_DARK = "255,100,100"; //$NON-NLS-1$
 

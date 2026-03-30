@@ -127,10 +127,14 @@ public class AIChatView extends ViewPart {
 			+ "\n- get_event_table with storeAs='name' stores the filtered results" //$NON-NLS-1$
 			+ "\n- find_related_events and manage_selection accept reference='name' to use stored results" //$NON-NLS-1$
 			+ "\n- This avoids re-filtering and ensures you work with the exact same events" //$NON-NLS-1$
-			+ "\n\nTypical workflow: aggregate_events (auto-stores .max)" //$NON-NLS-1$
-			+ " -> find_related_events(reference=Type.max, mode=concurrent, sameThreads=true, storeAs='context')" //$NON-NLS-1$
-			+ " -> manage_selection(reference='context') (includes reference + all concurrent events)" //$NON-NLS-1$
-			+ " -> navigate to Threads page."; //$NON-NLS-1$
+			+ "\n\nTypical workflow for specific event analysis:" //$NON-NLS-1$
+			+ "\n 1. aggregate_events(eventType) - finds the extreme, auto-stores as eventType.max" //$NON-NLS-1$
+			+ "\n 2. get_event_table(filterAttribute=<shared attr>, filterValue=..., storeAs='my_events') - get all correlated events" //$NON-NLS-1$
+			+ "\n    Use get_shared_attributes to discover which attributes link event types (ECID, gcId, spanId, etc.)" //$NON-NLS-1$
+			+ "\n 3. manage_selection(reference='my_events', includeConcurrent=true) - create selection with full thread context" //$NON-NLS-1$
+			+ "\n    includeConcurrent=true expands the selection to include all events on the same threads" //$NON-NLS-1$
+			+ "\n    that overlap in time, like JMC's 'Show Concurrent' + 'Same Threads' feature." //$NON-NLS-1$
+			+ "\n 4. navigate_to_page(Threads) - show the thread timeline"; //$NON-NLS-1$
 
 	private ComboViewer providerCombo;
 	private ComboViewer modelCombo;
@@ -360,15 +364,18 @@ public class AIChatView extends ViewPart {
 
 			@Override
 			public void onToolCallStart(String toolName, String arguments) {
-				// Shown inline when tool completes with result info
+				display.asyncExec(() -> {
+					if (!targetBrowser.isDisposed()) {
+						targetBrowser.addToolUse(toolName, arguments);
+					}
+				});
 			}
 
 			@Override
-			public void onToolCallComplete(String toolName, int resultLength) {
+			public void onToolCallComplete(String toolName, String result) {
 				display.asyncExec(() -> {
 					if (!targetBrowser.isDisposed()) {
-						targetBrowser.addToolUse(toolName, resultLength + " chars returned"); //$NON-NLS-1$
-						setStatus(toolName + " returned " + resultLength + " chars"); //$NON-NLS-1$ //$NON-NLS-2$
+						setStatus(toolName + " returned " + result.length() + " chars"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				});
 			}

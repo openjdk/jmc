@@ -60,10 +60,10 @@ public interface AIStreamHandler {
 	 *
 	 * @param toolName
 	 *            the name of the tool
-	 * @param resultLength
-	 *            the character length of the tool result
+	 * @param result
+	 *            the full result text returned by the tool
 	 */
-	void onToolCallComplete(String toolName, int resultLength);
+	void onToolCallComplete(String toolName, String result);
 
 	/**
 	 * Called with status updates about the request lifecycle (estimated tokens, round number,

@@ -149,7 +149,7 @@ public class ClaudeApiClient {
 					String args = tc.inputJson.toString();
 					handler.onToolCallStart(tc.name, args);
 					String result = toolExecutor.apply(new ToolCall(tc.id, tc.name, args));
-					handler.onToolCallComplete(tc.name, result.length());
+					handler.onToolCallComplete(tc.name, result);
 					if (!first) {
 						toolResultMsg.append(","); //$NON-NLS-1$
 					}

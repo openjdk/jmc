@@ -145,7 +145,7 @@ public class OpenAIApiClient {
 					String args = tc.arguments.toString();
 					handler.onToolCallStart(tc.name, args);
 					String result = toolExecutor.apply(new ToolCall(tc.id, tc.name, args));
-					handler.onToolCallComplete(tc.name, result.length());
+					handler.onToolCallComplete(tc.name, result);
 					apiMessages.add("{\"role\":\"tool\",\"tool_call_id\":\"" + escapeJson(tc.id) //$NON-NLS-1$
 							+ "\",\"content\":\"" + escapeJson(result) + "\"}"); //$NON-NLS-1$ //$NON-NLS-2$
 				}

@@ -74,7 +74,7 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 	protected void createFieldEditors() {
 		Composite parent = getFieldEditorParent();
 
-		Group claudeGroup = createGroup(parent, Messages.AIPreferencePage_CLAUDE_GROUP);
+		Composite claudeGroup = createGroup(parent, Messages.AIPreferencePage_CLAUDE_GROUP);
 		addField(new StringFieldEditor(PreferenceConstants.P_CLAUDE_API_KEY, Messages.AIPreferencePage_API_KEY,
 				claudeGroup));
 		addField(new ComboFieldEditor(PreferenceConstants.P_CLAUDE_MODEL, Messages.AIPreferencePage_MODEL,
@@ -90,7 +90,7 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 			}
 		});
 
-		Group openaiGroup = createGroup(parent, Messages.AIPreferencePage_OPENAI_GROUP);
+		Composite openaiGroup = createGroup(parent, Messages.AIPreferencePage_OPENAI_GROUP);
 		addField(new StringFieldEditor(PreferenceConstants.P_OPENAI_API_KEY, Messages.AIPreferencePage_OPENAI_API_KEY,
 				openaiGroup));
 		addField(new ComboFieldEditor(PreferenceConstants.P_OPENAI_MODEL, Messages.AIPreferencePage_OPENAI_MODEL,
@@ -113,7 +113,7 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 		colorsRow.setLayout(colorsLayout);
 		colorsRow.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
 
-		Group lightGroup = createGroup(colorsRow, Messages.AIPreferencePage_COLORS_LIGHT_GROUP);
+		Composite lightGroup = createGroup(colorsRow, Messages.AIPreferencePage_COLORS_LIGHT_GROUP, 1);
 		addField(new ColorFieldEditor(PreferenceConstants.P_COLOR_USER_LIGHT, Messages.AIPreferencePage_COLOR_USER,
 				lightGroup));
 		addField(new ColorFieldEditor(PreferenceConstants.P_COLOR_ASSISTANT_LIGHT,
@@ -123,7 +123,7 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 		addField(new ColorFieldEditor(PreferenceConstants.P_COLOR_ERROR_LIGHT, Messages.AIPreferencePage_COLOR_ERROR,
 				lightGroup));
 
-		Group darkGroup = createGroup(colorsRow, Messages.AIPreferencePage_COLORS_DARK_GROUP);
+		Composite darkGroup = createGroup(colorsRow, Messages.AIPreferencePage_COLORS_DARK_GROUP, 1);
 		addField(new ColorFieldEditor(PreferenceConstants.P_COLOR_USER_DARK, Messages.AIPreferencePage_COLOR_USER,
 				darkGroup));
 		addField(new ColorFieldEditor(PreferenceConstants.P_COLOR_ASSISTANT_DARK,
@@ -134,14 +134,23 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 				darkGroup));
 	}
 
-	private Group createGroup(Composite parent, String title) {
+	private Composite createGroup(Composite parent, String title) {
+		return createGroup(parent, title, 3);
+	}
+
+	private Composite createGroup(Composite parent, String title, int columnSpan) {
 		Group group = new Group(parent, SWT.NONE);
 		group.setText(title);
-		GridLayout layout = new GridLayout(3, false);
-		layout.marginLeft = 2;
-		group.setLayout(layout);
-		group.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		return group;
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, columnSpan, 1));
+
+		Composite inner = new Composite(group, SWT.NONE);
+		GridLayout innerLayout = new GridLayout(3, false);
+		innerLayout.marginWidth = 4;
+		innerLayout.marginHeight = 4;
+		inner.setLayout(innerLayout);
+		inner.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		return inner;
 	}
 
 	private String[][] getModelEntries(String providerId) {

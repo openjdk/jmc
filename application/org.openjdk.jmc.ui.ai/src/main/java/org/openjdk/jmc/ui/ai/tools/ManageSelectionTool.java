@@ -34,13 +34,16 @@
 package org.openjdk.jmc.ui.ai.tools;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -49,6 +52,7 @@ import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.ui.selection.IItemStreamFlavor;
@@ -71,6 +75,7 @@ public class ManageSelectionTool implements IAITool {
 			.compile("\"filterAttribute\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 	private static final Pattern FILTER_VALUE_PATTERN = Pattern
 			.compile("\"filterValue\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
+	private static final Pattern INCLUDE_CONCURRENT_PATTERN = Pattern.compile("\"includeConcurrent\"\\s*:\\s*true"); //$NON-NLS-1$
 	private static final Pattern FROM_PATTERN = Pattern.compile("\"fromSeconds\"\\s*:\\s*([\\d.]+)"); //$NON-NLS-1$
 	private static final Pattern TO_PATTERN = Pattern.compile("\"toSeconds\"\\s*:\\s*([\\d.]+)"); //$NON-NLS-1$
 
@@ -86,6 +91,10 @@ public class ManageSelectionTool implements IAITool {
 				+ " Actions: 'create' creates a new selection from event type, time range," //$NON-NLS-1$
 				+ " and/or attribute value filter (e.g. filterAttribute=gcId, filterValue=57" //$NON-NLS-1$
 				+ " to select all events for a specific GC across all event types)." //$NON-NLS-1$
+				+ " Set includeConcurrent=true to expand the selection to include all events" //$NON-NLS-1$
+				+ " on the same threads that overlap in time with the reference events." //$NON-NLS-1$
+				+ " This is equivalent to enabling 'Show Concurrent' and 'Same Threads' in JMC's Aspect selector" //$NON-NLS-1$
+				+ " and shows the full thread activity context around the selected events." //$NON-NLS-1$
 				+ " 'activate' sets a selection as current (by name)." //$NON-NLS-1$
 				+ " 'clear' removes the current selection (resets to no filter)." //$NON-NLS-1$
 				+ " IMPORTANT: Always clear the selection before starting a new recording-wide analysis." //$NON-NLS-1$
@@ -102,6 +111,7 @@ public class ManageSelectionTool implements IAITool {
 				+ "\"eventType\":{\"type\":\"string\",\"description\":\"Event type filter (for create)\"}," //$NON-NLS-1$
 				+ "\"filterAttribute\":{\"type\":\"string\",\"description\":\"Attribute ID to filter on, e.g. gcId (for create)\"}," //$NON-NLS-1$
 				+ "\"filterValue\":{\"type\":\"string\",\"description\":\"Value the attribute must match, e.g. 57 (for create)\"}," //$NON-NLS-1$
+				+ "\"includeConcurrent\":{\"type\":\"boolean\",\"description\":\"Expand selection to include all events on the same threads that overlap in time (like Show Concurrent + Same Threads in JMC)\"}," //$NON-NLS-1$
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Start of time range in seconds from recording start (for create)\"}," //$NON-NLS-1$
 				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start (for create)\"}" //$NON-NLS-1$
 				+ "},\"required\":[\"action\"]}"; //$NON-NLS-1$
@@ -176,19 +186,92 @@ public class ManageSelectionTool implements IAITool {
 			return "No events match the specified criteria."; //$NON-NLS-1$
 		}
 
+		// Expand to include concurrent events on same threads if requested
+		boolean includeConcurrent = INCLUDE_CONCURRENT_PATTERN.matcher(json).find();
+		long baseCount = countItems(filtered);
+		if (includeConcurrent) {
+			filtered = expandWithConcurrent(filtered);
+		}
+		long totalCount = countItems(filtered);
+
 		NamedItemSelection selection = new NamedItemSelection(filtered, name);
 		runOnUIThread(() -> store.addAndSetAsCurrentSelection(selection));
 
-		// Auto-navigate: if events span a short time and no dedicated page, go to Java Application (thread timeline)
+		// Auto-navigate: if events span a short time, go to the Threads page
 		String navigatedTo = autoNavigate(filtered, eventType);
 		StringBuilder result = new StringBuilder();
-		result.append("Created and activated selection '").append(name).append("'."); //$NON-NLS-1$ //$NON-NLS-2$
+		result.append("Created and activated selection '").append(name).append("'"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (includeConcurrent) {
+			result.append(" (").append(baseCount).append(" reference events + ") //$NON-NLS-1$ //$NON-NLS-2$
+					.append(totalCount - baseCount).append(" concurrent on same threads = ") //$NON-NLS-1$
+					.append(totalCount).append(" total)"); //$NON-NLS-1$
+		}
+		result.append("."); //$NON-NLS-1$
 		if (navigatedTo != null) {
 			result.append(" Navigated to ").append(navigatedTo).append(" page."); //$NON-NLS-1$ //$NON-NLS-2$
-			result.append(" Tip: enable 'Show Concurrent' and 'Same Threads' in the Aspect selector,"); //$NON-NLS-1$
-			result.append(" then click 'Set' to zoom the time range to these events."); //$NON-NLS-1$
 		}
 		return result.toString();
+	}
+
+	/**
+	 * Expands an IItemCollection by finding all events in the recording that overlap in time with
+	 * the reference events AND are on the same threads. This is equivalent to JMC's "Show
+	 * Concurrent" + "Same Threads" checkboxes in the Aspect/Flavor selector.
+	 */
+	private IItemCollection expandWithConcurrent(IItemCollection refEvents) {
+		IItemCollection allItems = JfrContext.getActiveItems();
+		if (allItems == null) {
+			return refEvents;
+		}
+
+		// Collect time range and threads from reference events
+		IQuantity earliest = null;
+		IQuantity latest = null;
+		Set<IMCThread> threads = new HashSet<>();
+
+		for (IItemIterable iterable : refEvents) {
+			IType<IItem> type = iterable.getType();
+			IMemberAccessor<IQuantity, IItem> startAccessor = JfrAttributes.START_TIME.getAccessor(type);
+			IMemberAccessor<IQuantity, IItem> endAccessor = JfrAttributes.END_TIME.getAccessor(type);
+			IMemberAccessor<IMCThread, IItem> threadAccessor = JfrAttributes.EVENT_THREAD.getAccessor(type);
+
+			for (IItem item : iterable) {
+				IQuantity start = startAccessor != null ? startAccessor.getMember(item) : null;
+				IQuantity end = endAccessor != null ? endAccessor.getMember(item) : null;
+				IMCThread thread = threadAccessor != null ? threadAccessor.getMember(item) : null;
+
+				if (start != null && (earliest == null || start.compareTo(earliest) < 0)) {
+					earliest = start;
+				}
+				if (end != null && (latest == null || end.compareTo(latest) > 0)) {
+					latest = end;
+				}
+				if (thread != null) {
+					threads.add(thread);
+				}
+			}
+		}
+
+		if (earliest == null || latest == null || threads.isEmpty()) {
+			return refEvents;
+		}
+
+		// Find all events overlapping the time range on the same threads
+		IItemFilter timeFilter = ItemFilters.and(ItemFilters.lessOrEqual(JfrAttributes.START_TIME, latest),
+				ItemFilters.moreOrEqual(JfrAttributes.END_TIME, earliest));
+		IItemFilter threadFilter = ItemFilters.memberOf(JfrAttributes.EVENT_THREAD, threads);
+		IItemCollection concurrent = allItems.apply(ItemFilters.and(timeFilter, threadFilter));
+
+		// Merge reference events with concurrent events
+		return ItemCollectionToolkit.merge(() -> java.util.stream.Stream.of(refEvents, concurrent));
+	}
+
+	private static long countItems(IItemCollection items) {
+		long count = 0;
+		for (IItemIterable iterable : items) {
+			count += iterable.getItemCount();
+		}
+		return count;
 	}
 
 	private IItemCollection filterByAttribute(IItemCollection items, String attrId, String value) {

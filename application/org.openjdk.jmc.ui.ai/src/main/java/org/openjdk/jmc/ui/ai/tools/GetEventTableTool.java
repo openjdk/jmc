@@ -110,7 +110,12 @@ public class GetEventTableTool implements IAITool {
 		String to = JfrContext.extractString(TO_PATTERN, parametersJson);
 		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to);
 
-		// Store the filtered result if requested
+		// Apply attribute value filter before storing
+		if (filterAttr != null && filterValue != null) {
+			filtered = filterByAttribute(filtered, filterAttr, filterValue);
+		}
+
+		// Store the fully filtered result if requested
 		String storeAs = JfrContext.extractString(JfrContext.STORE_AS_PATTERN, parametersJson);
 		if (storeAs != null) {
 			JfrContext.store(storeAs, filtered);
@@ -128,15 +133,6 @@ public class GetEventTableTool implements IAITool {
 			IType<IItem> type = iterable.getType();
 			String typeId = type.getIdentifier();
 
-			// Find the filter attribute accessor for this type (if filtering)
-			IMemberAccessor<?, IItem> filterAccessor = null;
-			if (filterAttr != null) {
-				filterAccessor = findAccessor(type, filterAttr);
-				if (filterAccessor == null) {
-					continue; // This type doesn't have the filter attribute
-				}
-			}
-
 			List<IAttribute<?>> columns = selectColumns(type, requestedColumns);
 			List<IMemberAccessor<?, IItem>> accessors = new ArrayList<>();
 			for (IAttribute<?> col : columns) {
@@ -144,14 +140,6 @@ public class GetEventTableTool implements IAITool {
 			}
 
 			for (IItem item : iterable) {
-				// Apply attribute filter
-				if (filterAccessor != null && filterValue != null) {
-					Object val = filterAccessor.getMember(item);
-					if (!matchesValue(val, filterValue)) {
-						continue;
-					}
-				}
-
 				if (rowCount >= limit) {
 					sb.append("... (").append(limit).append(" rows shown)\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					return sb.toString();
@@ -201,6 +189,23 @@ public class GetEventTableTool implements IAITool {
 			return "No events match the specified criteria."; //$NON-NLS-1$
 		}
 		return sb.toString();
+	}
+
+	private IItemCollection filterByAttribute(IItemCollection items, String attrId, String value) {
+		java.util.List<IItem> matching = new java.util.ArrayList<>();
+		for (IItemIterable iterable : items) {
+			IType<IItem> type = iterable.getType();
+			IMemberAccessor<?, IItem> accessor = findAccessor(type, attrId);
+			if (accessor == null) {
+				continue;
+			}
+			for (IItem item : iterable) {
+				if (matchesValue(accessor.getMember(item), value)) {
+					matching.add(item);
+				}
+			}
+		}
+		return org.openjdk.jmc.common.item.ItemCollectionToolkit.build(matching.stream());
 	}
 
 	private IMemberAccessor<?, IItem> findAccessor(IType<IItem> type, String attrId) {

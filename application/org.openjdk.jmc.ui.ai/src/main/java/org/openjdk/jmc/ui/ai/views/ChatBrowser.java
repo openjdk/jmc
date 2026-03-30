@@ -39,6 +39,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressAdapter;
@@ -47,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import org.openjdk.jmc.ui.ai.AIPlugin;
+import org.openjdk.jmc.ui.ai.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.common.util.ThemeUtils;
 
 /**
@@ -61,6 +64,7 @@ public class ChatBrowser {
 	private boolean ready;
 	private final StringBuilder pendingTokens = new StringBuilder();
 	private boolean flushScheduled;
+	private IPropertyChangeListener colorListener;
 
 	public ChatBrowser(Composite parent) {
 		browser = new Browser(parent, SWT.EDGE);
@@ -71,6 +75,21 @@ public class ChatBrowser {
 			}
 		});
 		loadTemplate();
+
+		colorListener = event -> {
+			String prop = event.getProperty();
+			if (prop.startsWith("color.light.") || prop.startsWith("color.dark.")) { //$NON-NLS-1$ //$NON-NLS-2$
+				browser.getDisplay().asyncExec(() -> {
+					if (!browser.isDisposed()) {
+						pushColors();
+					}
+				});
+			}
+		};
+		AIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(colorListener);
+		browser.addDisposeListener(e -> {
+			AIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(colorListener);
+		});
 	}
 
 	public Browser getControl() {
@@ -146,11 +165,65 @@ public class ChatBrowser {
 		String html = readTemplate();
 		boolean dark = ThemeUtils.isDarkTheme();
 		html = html.replace("${themeClass}", dark ? "dark" : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		html = html.replace("${userColor}", dark ? "#ffffff" : "#000000"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		html = html.replace("${assistantColor}", dark ? "#50dc50" : "#008000"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		html = html.replace("${toolColor}", dark ? "#787878" : "#a0a0a0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		html = html.replace("${errorColor}", dark ? "#ff6464" : "#c80000"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		html = html.replace("${userColor}", getColorHex(dark, PreferenceConstants.P_COLOR_USER_DARK, //$NON-NLS-1$
+				PreferenceConstants.P_COLOR_USER_LIGHT));
+		html = html.replace("${assistantColor}", getColorHex(dark, PreferenceConstants.P_COLOR_ASSISTANT_DARK, //$NON-NLS-1$
+				PreferenceConstants.P_COLOR_ASSISTANT_LIGHT));
+		html = html.replace("${toolColor}", getColorHex(dark, PreferenceConstants.P_COLOR_TOOL_DARK, //$NON-NLS-1$
+				PreferenceConstants.P_COLOR_TOOL_LIGHT));
+		html = html.replace("${errorColor}", getColorHex(dark, PreferenceConstants.P_COLOR_ERROR_DARK, //$NON-NLS-1$
+				PreferenceConstants.P_COLOR_ERROR_LIGHT));
 		browser.setText(html, true);
+	}
+
+	private void pushColors() {
+		if (!ready || browser.isDisposed()) {
+			return;
+		}
+		boolean dark = ThemeUtils.isDarkTheme();
+		String js = "var s=document.documentElement.style;" //$NON-NLS-1$
+				+ "s.setProperty('--user-color','" //$NON-NLS-1$
+				+ getColorHex(dark, PreferenceConstants.P_COLOR_USER_DARK, PreferenceConstants.P_COLOR_USER_LIGHT)
+				+ "');" //$NON-NLS-1$
+				+ "s.setProperty('--assistant-color','" //$NON-NLS-1$
+				+ getColorHex(dark, PreferenceConstants.P_COLOR_ASSISTANT_DARK,
+						PreferenceConstants.P_COLOR_ASSISTANT_LIGHT)
+				+ "');" //$NON-NLS-1$
+				+ "s.setProperty('--tool-color','" //$NON-NLS-1$
+				+ getColorHex(dark, PreferenceConstants.P_COLOR_TOOL_DARK, PreferenceConstants.P_COLOR_TOOL_LIGHT)
+				+ "');" //$NON-NLS-1$
+				+ "s.setProperty('--error-color','" //$NON-NLS-1$
+				+ getColorHex(dark, PreferenceConstants.P_COLOR_ERROR_DARK, PreferenceConstants.P_COLOR_ERROR_LIGHT)
+				+ "');"; //$NON-NLS-1$
+		browser.execute(js);
+	}
+
+	private static String getColorHex(boolean dark, String darkKey, String lightKey) {
+		IPreferenceStore store = AIPlugin.getDefault().getPreferenceStore();
+		String key = dark ? darkKey : lightKey;
+		String rgb = store.getString(key);
+		if (rgb == null || rgb.isEmpty()) {
+			// Fall back to default value
+			rgb = store.getDefaultString(key);
+		}
+		return rgbToHex(rgb);
+	}
+
+	static String rgbToHex(String rgb) {
+		if (rgb != null && !rgb.isEmpty()) {
+			String[] parts = rgb.split(","); //$NON-NLS-1$
+			if (parts.length == 3) {
+				try {
+					int r = Integer.parseInt(parts[0].trim());
+					int g = Integer.parseInt(parts[1].trim());
+					int b = Integer.parseInt(parts[2].trim());
+					return String.format("#%02x%02x%02x", r, g, b); //$NON-NLS-1$
+				} catch (NumberFormatException e) {
+					// fall through
+				}
+			}
+		}
+		return "#000000"; //$NON-NLS-1$
 	}
 
 	private String readTemplate() {
