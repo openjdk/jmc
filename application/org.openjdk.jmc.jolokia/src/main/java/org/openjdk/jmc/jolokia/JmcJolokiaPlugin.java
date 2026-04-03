@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2025, Kantega AS. All rights reserved.
+ * Copyright (c) 2025, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, 2026, Kantega AS. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,17 +33,7 @@
  */
 package org.openjdk.jmc.jolokia;
 
-import java.util.Arrays;
-import java.util.TreeSet;
-
-import org.jolokia.server.core.config.ConfigKey;
-import org.jolokia.server.core.config.StaticConfiguration;
-import org.jolokia.server.core.detector.ServerDetector;
-import org.jolokia.server.core.restrictor.AllowAllRestrictor;
-import org.jolokia.server.core.service.JolokiaServiceManagerFactory;
 import org.jolokia.server.core.service.api.JolokiaContext;
-import org.jolokia.server.core.service.api.JolokiaServiceManager;
-import org.jolokia.server.core.service.impl.JulLogHandler;
 import org.openjdk.jmc.jolokia.preferences.PreferenceConstants;
 import org.openjdk.jmc.ui.MCAbstractUIPlugin;
 
@@ -72,11 +62,7 @@ public class JmcJolokiaPlugin extends MCAbstractUIPlugin implements JolokiaDisco
 	 */
 	@Override
 	public JolokiaContext getJolokiaContext() {
-		StaticConfiguration configuration = new StaticConfiguration(ConfigKey.AGENT_ID, "jmc");//$NON-NLS-1$
-		JolokiaServiceManager serviceManager = JolokiaServiceManagerFactory.createJolokiaServiceManager(configuration,
-				new JulLogHandler(PLUGIN_ID), new AllowAllRestrictor(),
-				logHandler -> new TreeSet<ServerDetector>(Arrays.asList(ServerDetector.FALLBACK)));
-		return serviceManager.start();
+		return JmcJolokiaContext.proxyJolokiaContext();
 	}
 
 	@Override

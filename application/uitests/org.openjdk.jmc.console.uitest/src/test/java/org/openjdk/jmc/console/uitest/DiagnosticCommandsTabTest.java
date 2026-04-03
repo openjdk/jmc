@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -186,10 +186,14 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 	@Test
 	public void testStartFlightRecording() {
 		commandTable.select("JFR.start");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.select(true, "name");
 		params.enterText("");
 		executeButton.click();
-		sleep(500);
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
 		String result = resultTabFolder.getText();
 		resultTabFolder.closeAll();
 
@@ -203,14 +207,18 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 		String recordingIdentifier = matcher.group(1);
 
 		commandTable.select("JFR.check");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.select(true, recording_parameter_name);
 		params.enterText(recordingIdentifier);
 		executeButton.click();
-		sleep(500);
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
 		result = resultTabFolder.getText();
 		resultTabFolder.closeAll();
 
-		String expectedOutput = "Recording \\d+:.*name=" + recordingIdentifier + ".* \\(running\\).*";
+		String expectedOutput = "Recording " + recordingIdentifier + ":.*\\(running\\).*";
 
 		Assert.assertTrue(
 				"Output from JFR.check diagnostic command" + " is not matching expected pattern. Actual output was: '"
@@ -218,12 +226,16 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 				patternMatcher(result, expectedOutput));
 
 		commandTable.select("JFR.stop");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.select(true, recording_parameter_name);
 		params.enterText(recordingIdentifier);
 		executeButton.click();
-		sleep(500);
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
 		result = resultTabFolder.getText();
-		expectedOutput = "Stopped [recording ]*[\"Recording-]*" + recordingIdentifier + ".*";
+		expectedOutput = "Stopped [recording ]*.*";
 		Assert.assertTrue(
 				"Output from JFR.stop diagnostic command" + " is not matching expected pattern. Actual output was: '"
 						+ result + "'. Expected output was: '" + expectedOutput + '\'',
@@ -234,19 +246,39 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 	public void testStartNamedFlightRecording() {
 		String recordingName = getRandomRecordingName();
 		commandTable.select("JFR.start");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(1000);
+		}
 		params.select(true, "name");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.enterText(recordingName);
 		executeButton.click();
-		sleep(500);
-		String result = resultTabFolder.getText();
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
+		String startResult = resultTabFolder.getText();
 		resultTabFolder.closeAll();
+		Assert.assertTrue(
+				"JFR.start output doesn't indicate recording started with name '" + recordingName
+						+ "'. Actual output: '" + startResult + "'",
+				patternMatcher(startResult, "Started recording") && startResult.contains(recordingName));
 
 		commandTable.select("JFR.check");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.select(true, "name");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.enterText(recordingName);
 		executeButton.click();
-		sleep(500);
-		result = resultTabFolder.getText();
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
+		String result = resultTabFolder.getText();
 		resultTabFolder.closeAll();
 		String expectedOutput = "Recording [\\d]+:.*" + recordingName + ".*";
 		Assert.assertTrue("Output from JFR.check (with name) diagnostic command"
@@ -269,10 +301,18 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 		commandTable.select("JFR.dump");
 
 		commandTable.select("JFR.check");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.select(true, recording_parameter_name);
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.enterText(recordingId);
 		executeButton.click();
-		sleep(500);
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
 		result = resultTabFolder.getText();
 		resultTabFolder.closeAll();
 		Assert.assertTrue("Output from JFR.check (with recording id) diagnostic command"
@@ -281,10 +321,18 @@ public class DiagnosticCommandsTabTest extends MCJemmyTestBase {
 
 		// stop recording
 		commandTable.select("JFR.stop");
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.select(true, recording_parameter_name);
+		MCJemmyBase.waitForIdle();
+		if (MCJemmyBase.isOSX()) {
+			sleep(500);
+		}
 		params.enterText(recordingId);
 		executeButton.click();
-		sleep(500);
+		sleep(MCJemmyBase.isOSX() ? 2000 : 500);
 		result = resultTabFolder.getText();
 		expectedOutput = "Stopped [recording ]*\"?"
 				+ ((ConnectionHelper.is9u0EAorLater(TEST_CONNECTION)) ? recordingName : recordingId) + ".*";

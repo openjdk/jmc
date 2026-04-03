@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -121,6 +121,26 @@ public final class Node {
 
 	public boolean isLeaf() {
 		return children.isEmpty();
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public void setCumulativeWeight(double cumulativeWeight) {
+		this.cumulativeWeight = cumulativeWeight;
+	}
+
+	public void addWeight(double delta) {
+		this.weight += delta;
+	}
+
+	public void addCumulativeWeight(double delta) {
+		this.cumulativeWeight += delta;
+	}
+
+	public void addChild(Node child) {
+		this.children.add(child);
 	}
 
 	@Override

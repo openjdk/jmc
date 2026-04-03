@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -92,7 +92,10 @@ import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.RangeContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.TypeHandling;
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
+import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -101,6 +104,7 @@ import org.openjdk.jmc.flightrecorder.ui.selection.FlavoredSelectionBase;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFilterFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.IItemStreamFlavor;
+import org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.IPropertyFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.ItemBackedSelection;
 import org.openjdk.jmc.ui.TypeAppearance;
@@ -443,7 +447,7 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 	private final IPageContainer controller;
 	private CompletableFuture<Void> viewerUpdater;
 
-	JfrPropertySheet(IPageContainer controller) {
+	public JfrPropertySheet(IPageContainer controller) {
 		this.controller = controller;
 	}
 
@@ -504,6 +508,15 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (selection instanceof InViewMethodSelection) {
+			InViewMethodSelection ms = (InViewMethodSelection) selection;
+			IMCMethod method = ms.getMethod();
+			if (method != null) {
+				var methodFilter = new JdkFilters.MethodFilter(method.getType().getFullName(), method.getMethodName());
+				show(method, ms.getItems().apply(methodFilter));
+			}
+			return;
+		}
 		if (selection instanceof IStructuredSelection) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
 			IItemCollection items = AdapterUtil.getAdapter(first, IItemCollection.class);
@@ -514,10 +527,24 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 	}
 
 	private void show(IItemCollection items) {
+		showAsync(CompletableFuture.supplyAsync(() -> buildRows(items)));
+	}
+
+	private void show(IMCMethod method, IItemCollection items) {
+		var methodRow = new PropertySheetRow(JdkAttributes.STACK_TRACE_TOP_METHOD, method);
+		showAsync(CompletableFuture.supplyAsync(() -> {
+			PropertySheetRow[] rows = buildRows(items);
+			PropertySheetRow[] result = new PropertySheetRow[rows.length + 1];
+			result[0] = methodRow;
+			System.arraycopy(rows, 0, result, 1, rows.length);
+			return result;
+		}));
+	}
+
+	private void showAsync(CompletableFuture<PropertySheetRow[]> modelBuilder) {
 		if (viewerUpdater != null) {
 			viewerUpdater.complete(null);
 		}
-		CompletableFuture<PropertySheetRow[]> modelBuilder = CompletableFuture.supplyAsync(() -> buildRows(items));
 		viewerUpdater = modelBuilder.thenAcceptAsync(this::setViewerInput, DisplayToolkit.inDisplayThread());
 		viewerUpdater.exceptionally(JfrPropertySheet::handleModelBuildException);
 		DisplayToolkit.safeTimerExec(Display.getCurrent(), 300, this::showCalculationFeedback);

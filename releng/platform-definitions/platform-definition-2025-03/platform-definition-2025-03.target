@@ -38,16 +38,21 @@
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.angus.jakarta.mail" version="2.0.5"/>
             <unit id="angus-activation" version="2.0.3"/>
-            <unit id="org.owasp.encoder" version="1.2.3"/>
-            <unit id="lz4-java" version="1.10.2"/>
+            <unit id="org.owasp.encoder" version="1.4.0"/>
+            <unit id="lz4-java" version="1.10.4"/>
             <unit id="org.hdrhistogram.HdrHistogram" version="2.2.2"/>
             <unit id="org.adoptopenjdk.jemmy-awt-input" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-browser" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="2.0.0"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="2.0.0"/>
-            <unit id="org.jolokia.client-jmx-adapter.standalone" version="2.4.2"/>
-            <unit id="org.jolokia.service.discovery" version="2.4.2"/>
-            <unit id="org.jolokia.server.core" version="2.4.2"/>
+            <unit id="org.osgi.service.servlet" version="2.0.0.202212101352"/>
+            <unit id="org.jolokia.core" version="2.5.1"/>
+            <unit id="org.jolokia.client.jmx-adapter" version="2.5.1"/>
+            <unit id="org.jolokia.core" version="2.5.1"/>
+            <unit id="org.jolokia.service.discovery" version="2.5.1"/>
+            <unit id="org.jolokia.service.serializer" version="2.5.1"/>
+            <unit id="org.jolokia.client.java" version="2.5.1"/>
+            <unit id="org.jolokia.server.core" version="2.5.1"/>
             <unit id="com.github.tomakehurst.wiremock-standalone" version="2.27.2"/>
             <unit id="org.eclipse.jetty.websocket.api" version="12.1.0"/>
             <unit id="org.eclipse.jetty.ee9.websocket.api" version="12.1.0"/>
@@ -64,7 +69,7 @@
             <unit id="fireplace-swing" version="0.0.1.rc9"/>
             <unit id="fireplace-swt-awt-bridge" version="0.0.1.rc9"/>
             <unit id="fireplace-swing-animation" version="0.0.1.rc9"/>
-            <unit id="radiance-animation" version="7.5.0"/>
+            <unit id="radiance-animation" version="8.5.0"/>
             <unit id="org.awaitility" version="4.0.0"/>
             <repository location="http://localhost:8080/site"/>
         </location>

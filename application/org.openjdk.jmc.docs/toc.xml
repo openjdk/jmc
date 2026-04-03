@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -165,6 +165,8 @@
                       href="html/GUID-343C6885-3367-4DDE-9BE5-1A7421CE00A1.htm"/>
                <topic label="Using the Exceptions and Errors Page"
                       href="html/GUID-0352E76D-96F5-4EDA-A8DE-88B9E18635B9.htm"/>
+               <topic label="Using the Security Page"
+                      href="html/SecurityPage.htm"/>
                <topic label="Using the Thread Dumps Page"
                       href="html/GUID-63742D06-CF58-47F2-9CF2-08C0DB9F09F1.htm"/>
             </topic>
