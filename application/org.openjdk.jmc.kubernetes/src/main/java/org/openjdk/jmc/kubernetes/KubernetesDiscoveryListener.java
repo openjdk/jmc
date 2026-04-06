@@ -54,6 +54,7 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
 import org.jolokia.client.JolokiaClient;
+import org.jolokia.client.httpclient4.Http4Client;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
@@ -69,8 +70,6 @@ import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.AnyNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.PodResource;
-import io.fabric8.kubernetes.client.internal.KubeConfigUtils;
-import io.fabric8.kubernetes.client.utils.Utils;
 
 /**
  * This class attempts to connect to JVMs in pods running in kubernetes in a background thread.
@@ -83,6 +82,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 	private final static Pattern ATTRIBUTE_PATTERN = Pattern
 			.compile("\\$\\{kubernetes/annotation/(?<annotationName>[^/]+)}"); //$NON-NLS-1$
 	private final static Set<String> VALID_JOLOKIA_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https")); //$NON-NLS-1$ //$NON-NLS-2$
+
+	private final static Http4Client triggerClassLoad = null;
 
 	KubernetesScanningParameters settings;
 
@@ -112,15 +113,14 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 	private long contextsCached = 0L;
 
 	private List<String> allContexts() throws IOException {
-		final String path = Utils.getSystemPropertyOrEnvVar(Config.KUBERNETES_KUBECONFIG_FILE,
-				new File(System.getProperty("user.home"), ".kube" + File.separator + "config").toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final String path = new File(System.getProperty("user.home"), ".kube" + File.separator + "config").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		File configPath = new File(path);
 		// the YAML parsing is soo incredibly sloow, hence cache context names for later runs
 		if (contexts != null && contextsCached > configPath.lastModified()) {
 			return contexts;
 		}
 		// reload config if kubeconfig has been modified since we cached the config
-		io.fabric8.kubernetes.api.model.Config config = KubeConfigUtils.parseConfig(configPath);
+		Config config = Config.fromKubeconfig(configPath);
 		this.contextsCached = System.currentTimeMillis();
 		KubernetesJmxConnector.resetKubernetesConfig();
 		return contexts = config.getContexts().stream().map(NamedContext::getName).collect(Collectors.toList());
