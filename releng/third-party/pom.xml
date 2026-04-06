@@ -183,8 +183,43 @@
 								<artifact>
 									<id>org.osgi:org.osgi.service.servlet:2.0.0</id>
 								</artifact>
-								<artifact><id>org.apache.httpcomponents:httpcore:4.4.16</id></artifact>
-								<artifact><id>org.apache.httpcomponents:httpclient:4.5.14</id></artifact>
+								<artifact><id>org.apache.httpcomponents:httpcore:4.4.16</id>
+									<override>true</override>
+									<instructions>
+										<Export-Package>org.apache.http.*;version="4.4.16"</Export-Package>
+									</instructions>
+								</artifact>
+								<artifact><id>org.apache.httpcomponents:httpclient:4.5.14</id>
+									<override>true</override>
+									<instructions>
+								    <Export-Package>
+										org.apache.http.auth;version="4.5.14",
+										org.apache.http.auth.params;version="4.5.14",
+										org.apache.http.client;version="4.5.14",
+										org.apache.http.client.config;version="4.5.14",
+										org.apache.http.client.entity;version="4.5.14",
+										org.apache.http.client.methods;version="4.5.14",
+										org.apache.http.client.params;version="4.5.14",
+										org.apache.http.client.protocol;version="4.5.14",
+										org.apache.http.client.utils;version="4.5.14",
+										org.apache.http.conn;version="4.5.14",
+										org.apache.http.conn.params;version="4.5.14",
+										org.apache.http.conn.routing;version="4.5.14",
+										org.apache.http.conn.scheme;version="4.5.14",
+										org.apache.http.conn.socket;version="4.5.14",
+										org.apache.http.conn.ssl;version="4.5.14",
+										org.apache.http.conn.util;version="4.5.14",
+										org.apache.http.cookie;version="4.5.14",
+										org.apache.http.cookie.params;version="4.5.14",
+										org.apache.http.impl.auth;version="4.5.14",
+										org.apache.http.impl.client;version="4.5.14",
+										org.apache.http.impl.conn;version="4.5.14",
+										org.apache.http.impl.conn.tsccm;version="4.5.14",
+										org.apache.http.impl.cookie;version="4.5.14",
+										org.apache.http.impl.execchain;version="4.5.14"
+								    </Export-Package>
+								</instructions>
+								</artifact>
 								<artifact>
 									<id>org.jolokia:jolokia-client-kubernetes:jar:standalone:${jolokia.version}</id>
 									<transitive>false</transitive>
@@ -198,35 +233,32 @@
 							            <Require-Bundle> org.jolokia.client.httpclient4;bundle-version="${jolokia.version}"</Require-Bundle>
 							            <Import-Package>
 							              <!-- jolokia-json -->
-							              org.jolokia.json,
+							              org.jolokia.json;version="[2.5,3)",
 							              <!-- jolokia-core -->
-							              org.jolokia.core.util,
+							              org.jolokia.core.util;version="[2.5,3)",
 							              <!-- jolokia-client-java -->
-							              org.jolokia.client,
-							              org.jolokia.client.spi,
+							              org.jolokia.client;version="[2.5,3)",
+							              org.jolokia.client.spi;version="[2.5,3)",
 							              <!-- jolokia-client-jmx-adapter -->
-							              org.jolokia.client.jmxadapter,
+							              org.jolokia.client.jmxadapter;version="[2.5,3)",
 							              <!-- jolokia-server-core -->
-							              org.jolokia.server.core.util,
-							              <!-- httpclient4 -->
-							              org.jolokia.client.httpclient4,
+							              org.jolokia.server.core.util;version="[2.5,3)",
 							              <!-- httpcore -->
-							              org.apache.http,
-							              org.apache.http.entity,
-							              org.apache.http.message,
-							              org.apache.http.params,
-							              org.apache.http.protocol,
+							              org.apache.http;version="[4.4,5)",
+							              org.apache.http.entity;version="[4.4,5)",
+							              org.apache.http.message;version="[4.4,5)",
+							              org.apache.http.params;version="[4.4,5)",
+							              org.apache.http.protocol;version="[4.4,5)",
 							              <!-- httpclient -->
-							              org.apache.http.client,
-							              org.apache.http.client.methods,
-							              org.apache.http.conn
+							              org.apache.http.client;version="[4.5,5)",
+							              org.apache.http.client.methods;version="[4.5,5)",
+							              org.apache.http.conn;version="[4.5,5)"
 							            </Import-Package>
 							            <Export-Package>
 							              org.jolokia.kubernetes.client,
 							              io.fabric8.kubernetes.api.model,
 							              io.fabric8.kubernetes.client,
 							              io.fabric8.kubernetes.client.http,
-							              io.fabric8.kubernetes.client.utils,
 							              io.fabric8.kubernetes.client.dsl
 							            </Export-Package>
 							          </instructions>
@@ -275,7 +307,7 @@
 								              org.apache.http.impl.client;version="[4.5,5)",
 								              org.apache.http.impl.conn;version="[4.5,5)"
 								            </Import-Package>
-    										<Export-Package>org.jolokia.client.httpclient4"</Export-Package>
+											<Export-Package>org.jolokia.client.httpclient4;version="2.5.1"</Export-Package>
   										</instructions>
 								</artifact>
 								<artifact>
