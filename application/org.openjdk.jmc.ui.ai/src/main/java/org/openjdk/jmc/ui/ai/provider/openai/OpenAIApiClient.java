@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +65,7 @@ public class OpenAIApiClient {
 			.compile("\"message\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 
 	private final HttpClient httpClient;
+	private final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
 
 	public OpenAIApiClient() {
 		httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).build();
@@ -102,7 +105,7 @@ public class OpenAIApiClient {
 			} catch (Exception e) {
 				handler.onError(e);
 			}
-		});
+		}, executor);
 	}
 
 	private void runStreamingToolLoop(

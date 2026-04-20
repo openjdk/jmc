@@ -41,6 +41,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +64,7 @@ public class ClaudeApiClient {
 			.compile("\"message\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 
 	private final HttpClient httpClient;
+	private final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
 
 	public ClaudeApiClient() {
 		httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).build();
@@ -101,7 +104,7 @@ public class ClaudeApiClient {
 			} catch (Exception e) {
 				handler.onError(e);
 			}
-		});
+		}, executor);
 	}
 
 	private void runStreamingToolLoop(
@@ -341,11 +344,39 @@ public class ClaudeApiClient {
 	}
 
 	static String unescapeJson(String text) {
-		return text.replace("\\n", "\n") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\\r", "\r") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\\t", "\t") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\\\"", "\"") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\\\\", "\\"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (text == null || text.indexOf('\\') < 0) {
+			return text;
+		}
+		StringBuilder sb = new StringBuilder(text.length());
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			if (c == '\\' && i + 1 < text.length()) {
+				char next = text.charAt(++i);
+				switch (next) {
+				case '"':
+					sb.append('"');
+					break;
+				case '\\':
+					sb.append('\\');
+					break;
+				case 'n':
+					sb.append('\n');
+					break;
+				case 'r':
+					sb.append('\r');
+					break;
+				case 't':
+					sb.append('\t');
+					break;
+				default:
+					sb.append('\\').append(next);
+					break;
+				}
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	private static class ToolCallAccumulator {
