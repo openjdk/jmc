@@ -271,6 +271,10 @@ public class RuleManager {
 		return config;
 	}
 
+	public Collection<IResult> getAllResults() {
+		return resultsByTopicByRuleId.values().stream().flatMap(m -> m.values().stream()).collect(Collectors.toList());
+	}
+
 	public Collection<IResult> getResults(String ... topics) {
 		return getResults(Arrays.asList(topics));
 	}

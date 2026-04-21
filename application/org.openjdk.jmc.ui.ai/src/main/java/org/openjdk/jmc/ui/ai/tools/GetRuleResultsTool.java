@@ -42,21 +42,22 @@ import org.openjdk.jmc.flightrecorder.rules.Severity;
 import org.openjdk.jmc.flightrecorder.ui.RuleManager;
 import org.openjdk.jmc.ui.ai.IAITool;
 
-public class RunRulesTool implements IAITool {
+public class GetRuleResultsTool implements IAITool {
 
 	private static final Pattern SEVERITY_PATTERN = Pattern
 			.compile("\"minSeverity\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 
 	@Override
 	public String getName() {
-		return "run_rules"; //$NON-NLS-1$
+		return "get_rule_results"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getDescription() {
-		return "Gets the automated analysis rule results for the open flight recording." //$NON-NLS-1$
-				+ " Rules detect common performance issues like GC pressure, lock contention, I/O bottlenecks etc." //$NON-NLS-1$
-				+ " Returns rule name, severity, summary, explanation, and suggested solution."; //$NON-NLS-1$
+		return "Retrieves the automated analysis rule results for the open flight recording." //$NON-NLS-1$
+				+ " Results are computed when the recording is opened and cover common performance issues" //$NON-NLS-1$
+				+ " such as GC pressure, lock contention, and I/O bottlenecks." //$NON-NLS-1$
+				+ " Returns rule name, severity, summary, explanation, and suggested solution for each result."; //$NON-NLS-1$
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class RunRulesTool implements IAITool {
 		}
 
 		Severity minSeverity = parseMinSeverity(parametersJson);
-		Collection<IResult> results = ruleManager.getResults();
+		Collection<IResult> results = ruleManager.getAllResults();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Automated Analysis Results:\n\n"); //$NON-NLS-1$
