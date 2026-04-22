@@ -34,17 +34,13 @@
 package org.openjdk.jmc.ui.ai.provider.openai;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,21 +51,13 @@ import org.openjdk.jmc.ui.ai.AIStreamHandler;
 import org.openjdk.jmc.ui.ai.ChatMessage;
 import org.openjdk.jmc.ui.ai.IAITool;
 import org.openjdk.jmc.ui.ai.ToolCall;
+import org.openjdk.jmc.ui.ai.provider.AbstractApiClient;
 
-public class OpenAIApiClient {
+public class OpenAIApiClient extends AbstractApiClient {
 
 	private static final Logger LOGGER = Logger.getLogger(OpenAIApiClient.class.getName());
-	private static final int MAX_TOOL_ROUNDS = 25;
 	private static final Pattern MODEL_ID_PATTERN = Pattern.compile("\"id\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
-	private static final Pattern ERROR_MESSAGE_PATTERN = Pattern
-			.compile("\"message\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
-
-	private final HttpClient httpClient;
-	private final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
-
-	public OpenAIApiClient() {
-		httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).build();
-	}
+	private static final Pattern TOOL_CALL_INDEX_PATTERN = Pattern.compile("\"index\"\\s*:\\s*(\\d+)"); //$NON-NLS-1$
 
 	public List<String> fetchModels(String apiUrl, String apiKey) {
 		List<String> models = new ArrayList<>();
@@ -77,7 +65,7 @@ public class OpenAIApiClient {
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiUrl + "/v1/models")) //$NON-NLS-1$
 					.header("Authorization", "Bearer " + apiKey) //$NON-NLS-1$ //$NON-NLS-2$
 					.GET().build();
-			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = httpClient().send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() == 200) {
 				Matcher matcher = MODEL_ID_PATTERN.matcher(response.body());
 				while (matcher.find()) {
@@ -105,7 +93,7 @@ public class OpenAIApiClient {
 			} catch (Exception e) {
 				handler.onError(e);
 			}
-		}, executor);
+		}, executor());
 	}
 
 	private void runStreamingToolLoop(
@@ -126,7 +114,7 @@ public class OpenAIApiClient {
 					.header("Authorization", "Bearer " + apiKey) //$NON-NLS-1$ //$NON-NLS-2$
 					.POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
 
-			HttpResponse<java.util.stream.Stream<String>> response = httpClient.send(request,
+			HttpResponse<java.util.stream.Stream<String>> response = httpClient().send(request,
 					HttpResponse.BodyHandlers.ofLines());
 
 			StreamState state = new StreamState();
@@ -168,22 +156,18 @@ public class OpenAIApiClient {
 			return;
 		}
 
-		// Check for text content delta
 		if (data.contains("\"delta\"") && data.contains("\"content\"")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String content = extractJsonString("\"content\"", data); //$NON-NLS-1$
-			// Only accept content from within delta (not from role field)
 			if (content != null && data.indexOf("\"delta\"") < data.indexOf("\"content\"")) { //$NON-NLS-1$ //$NON-NLS-2$
 				handler.onToken(content);
 				state.textContent.append(content);
 			}
 		}
 
-		// Check for tool call deltas
 		if (data.contains("\"tool_calls\"")) { //$NON-NLS-1$
 			parseToolCallDelta(data, state);
 		}
 
-		// Check for finish reason
 		if (data.contains("\"finish_reason\"")) { //$NON-NLS-1$
 			String reason = extractJsonString("\"finish_reason\"", data); //$NON-NLS-1$
 			if (reason != null) {
@@ -193,9 +177,7 @@ public class OpenAIApiClient {
 	}
 
 	private void parseToolCallDelta(String data, StreamState state) {
-		// Extract tool call index
-		Pattern indexPattern = Pattern.compile("\"index\"\\s*:\\s*(\\d+)"); //$NON-NLS-1$
-		Matcher indexMatcher = indexPattern.matcher(data);
+		Matcher indexMatcher = TOOL_CALL_INDEX_PATTERN.matcher(data);
 		if (!indexMatcher.find()) {
 			return;
 		}
@@ -203,13 +185,11 @@ public class OpenAIApiClient {
 
 		ToolCallAccumulator tc = state.toolCalls.computeIfAbsent(index, k -> new ToolCallAccumulator());
 
-		// Extract tool call ID (only present in first chunk)
 		String id = extractJsonString("\"id\"", data); //$NON-NLS-1$
 		if (id != null && id.startsWith("call_")) { //$NON-NLS-1$
 			tc.id = id;
 		}
 
-		// Extract function name (only present in first chunk)
 		if (data.contains("\"function\"") && data.contains("\"name\"")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String name = extractJsonString("\"name\"", data); //$NON-NLS-1$
 			if (name != null) {
@@ -217,72 +197,12 @@ public class OpenAIApiClient {
 			}
 		}
 
-		// Extract arguments delta
 		if (data.contains("\"arguments\"")) { //$NON-NLS-1$
 			String args = extractJsonString("\"arguments\"", data); //$NON-NLS-1$
 			if (args != null) {
 				tc.arguments.append(args);
 			}
 		}
-	}
-
-	private String extractJsonString(String key, String json) {
-		int keyIdx = json.indexOf(key);
-		if (keyIdx < 0) {
-			return null;
-		}
-		int colonIdx = json.indexOf(':', keyIdx + key.length());
-		if (colonIdx < 0) {
-			return null;
-		}
-		// Skip whitespace and find value
-		int i = colonIdx + 1;
-		while (i < json.length() && json.charAt(i) == ' ') {
-			i++;
-		}
-		if (i >= json.length()) {
-			return null;
-		}
-		// Check for null
-		if (json.charAt(i) == 'n') {
-			return null;
-		}
-		if (json.charAt(i) != '"') {
-			return null;
-		}
-		i++; // skip opening quote
-		StringBuilder result = new StringBuilder();
-		for (; i < json.length(); i++) {
-			char c = json.charAt(i);
-			if (c == '\\' && i + 1 < json.length()) {
-				char next = json.charAt(i + 1);
-				switch (next) {
-				case '"':
-					result.append('"');
-					break;
-				case '\\':
-					result.append('\\');
-					break;
-				case 'n':
-					result.append('\n');
-					break;
-				case 'r':
-					result.append('\r');
-					break;
-				case 't':
-					result.append('\t');
-					break;
-				default:
-					result.append('\\').append(next);
-				}
-				i++;
-			} else if (c == '"') {
-				return result.toString();
-			} else {
-				result.append(c);
-			}
-		}
-		return result.toString();
 	}
 
 	private String buildToolsJson(List<IAITool> tools) {
@@ -350,25 +270,6 @@ public class OpenAIApiClient {
 		return sb.toString();
 	}
 
-	private String extractErrorMessage(String body) {
-		Matcher matcher = ERROR_MESSAGE_PATTERN.matcher(body);
-		if (matcher.find()) {
-			return matcher.group(1);
-		}
-		return body.length() > 200 ? body.substring(0, 200) : body;
-	}
-
-	static String escapeJson(String text) {
-		if (text == null) {
-			return ""; //$NON-NLS-1$
-		}
-		return text.replace("\\", "\\\\") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\"", "\\\"") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\n", "\\n") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\r", "\\r") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\t", "\\t"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
 	private static class ToolCallAccumulator {
 		String id;
 		String name;
@@ -390,9 +291,10 @@ public class OpenAIApiClient {
 				}
 				first = false;
 				ToolCallAccumulator tc = entry.getValue();
-				sb.append("{\"id\":\"").append(escapeJson(tc.id)); //$NON-NLS-1$
-				sb.append("\",\"type\":\"function\",\"function\":{\"name\":\"").append(escapeJson(tc.name)); //$NON-NLS-1$
-				sb.append("\",\"arguments\":\"").append(escapeJson(tc.arguments.toString())); //$NON-NLS-1$
+				sb.append("{\"id\":\"").append(AbstractApiClient.escapeJson(tc.id)); //$NON-NLS-1$
+				sb.append("\",\"type\":\"function\",\"function\":{\"name\":\"") //$NON-NLS-1$
+						.append(AbstractApiClient.escapeJson(tc.name));
+				sb.append("\",\"arguments\":\"").append(AbstractApiClient.escapeJson(tc.arguments.toString())); //$NON-NLS-1$
 				sb.append("\"}}"); //$NON-NLS-1$
 			}
 			sb.append("]}"); //$NON-NLS-1$

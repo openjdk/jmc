@@ -35,15 +35,22 @@ package org.openjdk.jmc.ui.ai;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
  * Extension point interface for AI providers. Implementations are registered via the
  * {@code org.openjdk.jmc.ui.ai.aiProvider} extension point.
  */
 public interface IAIProvider {
+
+	String AI_PREFERENCE_PAGE_ID = "org.openjdk.jmc.ui.ai.preferences.AIPreferencePage"; //$NON-NLS-1$
 
 	/**
 	 * @return unique identifier for this provider
@@ -61,12 +68,14 @@ public interface IAIProvider {
 	boolean isConfigured();
 
 	/**
-	 * Opens configuration UI for this provider (e.g. API key dialog, browser login).
+	 * Opens the AI preferences page so the user can configure this provider.
 	 *
 	 * @param shell
 	 *            the parent shell for any dialogs
 	 */
-	void configure(Shell shell);
+	default void configure(Shell shell) {
+		PreferencesUtil.createPreferenceDialogOn(shell, AI_PREFERENCE_PAGE_ID, null, null).open();
+	}
 
 	/**
 	 * Returns the list of known model identifiers for this provider. If the provider is configured,
@@ -75,6 +84,43 @@ public interface IAIProvider {
 	 * @return list of available model identifiers
 	 */
 	List<String> getAvailableModels();
+
+	/**
+	 * Creates provider-specific preference field editors in the AI preferences page. The
+	 * {@code fieldAdder} consumer must be called for each {@link FieldEditor} so that the
+	 * preference page can manage their lifecycle. Additional SWT widgets (e.g. buttons) may be
+	 * added directly to {@code parent}.
+	 *
+	 * @param parent
+	 *            the composite to add controls to (uses a 3-column GridLayout)
+	 * @param fieldAdder
+	 *            consumer that registers a field editor with the preference page
+	 */
+	default void createPreferenceFields(Composite parent, Consumer<FieldEditor> fieldAdder) {
+	}
+
+	/**
+	 * Initializes default preference values for this provider in the shared preference store.
+	 *
+	 * @param store
+	 *            the preference store to initialize
+	 */
+	default void initializeDefaultPreferences(IPreferenceStore store) {
+	}
+
+	/**
+	 * Converts {@link #getAvailableModels()} into the two-column array required by
+	 * {@link org.eclipse.jface.preference.ComboFieldEditor}.
+	 */
+	default String[][] buildModelEntries() {
+		List<String> models = getAvailableModels();
+		String[][] entries = new String[models.size()][2];
+		for (int i = 0; i < models.size(); i++) {
+			entries[i][0] = models.get(i);
+			entries[i][1] = models.get(i);
+		}
+		return entries;
+	}
 
 	/**
 	 * @return the preference key used to store the selected model for this provider
@@ -99,4 +145,11 @@ public interface IAIProvider {
 	CompletableFuture<Void> sendMessageStreaming(
 		List<ChatMessage> history, List<IAITool> tools, Function<ToolCall, String> toolExecutor,
 		AIStreamHandler handler);
+
+	/**
+	 * Releases resources held by this provider (e.g. HTTP client, thread pool). Called once when
+	 * the plugin is stopped.
+	 */
+	default void dispose() {
+	}
 }

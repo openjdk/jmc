@@ -99,8 +99,8 @@
             class="org.openjdk.jmc.ui.ai.tools.GetAttributesTool"
             id="org.openjdk.jmc.ui.ai.tools.getAttributes"/>
       <tool
-            class="org.openjdk.jmc.ui.ai.tools.RunRulesTool"
-            id="org.openjdk.jmc.ui.ai.tools.runRules"/>
+            class="org.openjdk.jmc.ui.ai.tools.GetRuleResultsTool"
+            id="org.openjdk.jmc.ui.ai.tools.getRuleResults"/>
       <tool
             class="org.openjdk.jmc.ui.ai.tools.AggregateEventsTool"
             id="org.openjdk.jmc.ui.ai.tools.aggregateEvents"/>

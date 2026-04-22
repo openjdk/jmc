@@ -34,15 +34,11 @@
 package org.openjdk.jmc.ui.ai.provider.claude;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,22 +49,13 @@ import org.openjdk.jmc.ui.ai.AIStreamHandler;
 import org.openjdk.jmc.ui.ai.ChatMessage;
 import org.openjdk.jmc.ui.ai.IAITool;
 import org.openjdk.jmc.ui.ai.ToolCall;
+import org.openjdk.jmc.ui.ai.provider.AbstractApiClient;
 
-public class ClaudeApiClient {
+public class ClaudeApiClient extends AbstractApiClient {
 
 	private static final Logger LOGGER = Logger.getLogger(ClaudeApiClient.class.getName());
 	private static final String ANTHROPIC_VERSION = "2023-06-01"; //$NON-NLS-1$
-	private static final int MAX_TOOL_ROUNDS = 25;
 	private static final Pattern MODEL_ID_PATTERN = Pattern.compile("\"id\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
-	private static final Pattern ERROR_MESSAGE_PATTERN = Pattern
-			.compile("\"message\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
-
-	private final HttpClient httpClient;
-	private final Executor executor = Executors.newVirtualThreadPerTaskExecutor();
-
-	public ClaudeApiClient() {
-		httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).build();
-	}
 
 	public List<String> fetchModels(String apiUrl, String apiKey) {
 		List<String> models = new ArrayList<>();
@@ -77,7 +64,7 @@ public class ClaudeApiClient {
 					.header("x-api-key", apiKey) //$NON-NLS-1$
 					.header("anthropic-version", ANTHROPIC_VERSION) //$NON-NLS-1$
 					.GET().build();
-			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = httpClient().send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() == 200) {
 				Matcher matcher = MODEL_ID_PATTERN.matcher(response.body());
 				while (matcher.find()) {
@@ -104,7 +91,7 @@ public class ClaudeApiClient {
 			} catch (Exception e) {
 				handler.onError(e);
 			}
-		}, executor);
+		}, executor());
 	}
 
 	private void runStreamingToolLoop(
@@ -126,7 +113,7 @@ public class ClaudeApiClient {
 					.header("anthropic-version", ANTHROPIC_VERSION) //$NON-NLS-1$
 					.POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
 
-			HttpResponse<java.util.stream.Stream<String>> response = httpClient.send(request,
+			HttpResponse<java.util.stream.Stream<String>> response = httpClient().send(request,
 					HttpResponse.BodyHandlers.ofLines());
 
 			StreamState state = new StreamState();
@@ -141,10 +128,8 @@ public class ClaudeApiClient {
 			}
 
 			if (state.stopReason != null && state.stopReason.equals("tool_use")) { //$NON-NLS-1$
-				// Build assistant message with all content blocks for the API history
 				apiMessages.add(state.buildAssistantMessage());
 
-				// Execute tool calls
 				StringBuilder toolResultMsg = new StringBuilder();
 				toolResultMsg.append("{\"role\":\"user\",\"content\":["); //$NON-NLS-1$
 				boolean first = true;
@@ -164,7 +149,6 @@ public class ClaudeApiClient {
 				toolResultMsg.append("]}"); //$NON-NLS-1$
 				apiMessages.add(toolResultMsg.toString());
 			} else {
-				// Final response - text was already streamed via onToken
 				return;
 			}
 		}
@@ -179,7 +163,6 @@ public class ClaudeApiClient {
 
 		if (data.contains("\"content_block_start\"")) { //$NON-NLS-1$
 			if (data.contains("\"tool_use\"")) { //$NON-NLS-1$
-				// Tool use block starting
 				ToolCallAccumulator tc = new ToolCallAccumulator();
 				tc.id = extractJsonString("\"id\"", data); //$NON-NLS-1$
 				tc.name = extractJsonString("\"name\"", data); //$NON-NLS-1$
@@ -207,57 +190,6 @@ public class ClaudeApiClient {
 				state.stopReason = stopReason;
 			}
 		}
-	}
-
-	private String extractJsonString(String key, String json) {
-		// Find key:"value" pattern
-		int keyIdx = json.indexOf(key);
-		if (keyIdx < 0) {
-			return null;
-		}
-		int colonIdx = json.indexOf(':', keyIdx + key.length());
-		if (colonIdx < 0) {
-			return null;
-		}
-		// Find the opening quote
-		int start = json.indexOf('"', colonIdx + 1);
-		if (start < 0) {
-			return null;
-		}
-		start++; // skip the quote
-		// Find closing quote, handling escapes
-		StringBuilder result = new StringBuilder();
-		for (int i = start; i < json.length(); i++) {
-			char c = json.charAt(i);
-			if (c == '\\' && i + 1 < json.length()) {
-				char next = json.charAt(i + 1);
-				switch (next) {
-				case '"':
-					result.append('"');
-					break;
-				case '\\':
-					result.append('\\');
-					break;
-				case 'n':
-					result.append('\n');
-					break;
-				case 'r':
-					result.append('\r');
-					break;
-				case 't':
-					result.append('\t');
-					break;
-				default:
-					result.append('\\').append(next);
-				}
-				i++;
-			} else if (c == '"') {
-				return result.toString();
-			} else {
-				result.append(c);
-			}
-		}
-		return result.toString();
 	}
 
 	private String buildToolsJson(List<IAITool> tools) {
@@ -324,61 +256,6 @@ public class ClaudeApiClient {
 		return sb.toString();
 	}
 
-	private String extractErrorMessage(String body) {
-		Matcher matcher = ERROR_MESSAGE_PATTERN.matcher(body);
-		if (matcher.find()) {
-			return unescapeJson(matcher.group(1));
-		}
-		return body.length() > 200 ? body.substring(0, 200) : body;
-	}
-
-	static String escapeJson(String text) {
-		if (text == null) {
-			return ""; //$NON-NLS-1$
-		}
-		return text.replace("\\", "\\\\") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\"", "\\\"") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\n", "\\n") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\r", "\\r") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace("\t", "\\t"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	static String unescapeJson(String text) {
-		if (text == null || text.indexOf('\\') < 0) {
-			return text;
-		}
-		StringBuilder sb = new StringBuilder(text.length());
-		for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);
-			if (c == '\\' && i + 1 < text.length()) {
-				char next = text.charAt(++i);
-				switch (next) {
-				case '"':
-					sb.append('"');
-					break;
-				case '\\':
-					sb.append('\\');
-					break;
-				case 'n':
-					sb.append('\n');
-					break;
-				case 'r':
-					sb.append('\r');
-					break;
-				case 't':
-					sb.append('\t');
-					break;
-				default:
-					sb.append('\\').append(next);
-					break;
-				}
-			} else {
-				sb.append(c);
-			}
-		}
-		return sb.toString();
-	}
-
 	private static class ToolCallAccumulator {
 		String id;
 		String name;
@@ -396,7 +273,8 @@ public class ClaudeApiClient {
 			sb.append("{\"role\":\"assistant\",\"content\":["); //$NON-NLS-1$
 			boolean first = true;
 			if (textContent.length() > 0) {
-				sb.append("{\"type\":\"text\",\"text\":\"").append(escapeJson(textContent.toString())).append("\"}"); //$NON-NLS-1$ //$NON-NLS-2$
+				sb.append("{\"type\":\"text\",\"text\":\"").append(AbstractApiClient.escapeJson(textContent.toString())) //$NON-NLS-1$
+						.append("\"}"); //$NON-NLS-1$
 				first = false;
 			}
 			for (ToolCallAccumulator tc : toolCalls) {
@@ -404,8 +282,8 @@ public class ClaudeApiClient {
 					sb.append(","); //$NON-NLS-1$
 				}
 				first = false;
-				sb.append("{\"type\":\"tool_use\",\"id\":\"").append(escapeJson(tc.id)); //$NON-NLS-1$
-				sb.append("\",\"name\":\"").append(escapeJson(tc.name)); //$NON-NLS-1$
+				sb.append("{\"type\":\"tool_use\",\"id\":\"").append(AbstractApiClient.escapeJson(tc.id)); //$NON-NLS-1$
+				sb.append("\",\"name\":\"").append(AbstractApiClient.escapeJson(tc.name)); //$NON-NLS-1$
 				sb.append("\",\"input\":").append(tc.inputJson.length() > 0 ? tc.inputJson.toString() : "{}"); //$NON-NLS-1$ //$NON-NLS-2$
 				sb.append("}"); //$NON-NLS-1$
 			}

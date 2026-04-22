@@ -36,18 +36,19 @@ package org.openjdk.jmc.ui.ai.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.openjdk.jmc.ui.ai.AIPlugin;
+import org.openjdk.jmc.ui.ai.AIProviderRegistry;
+import org.openjdk.jmc.ui.ai.IAIProvider;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = AIPlugin.getDefault().getPreferenceStore();
-		store.setDefault(PreferenceConstants.P_CLAUDE_MODEL, PreferenceConstants.DEFAULT_CLAUDE_MODEL);
-		store.setDefault(PreferenceConstants.P_CLAUDE_API_URL, PreferenceConstants.DEFAULT_CLAUDE_API_URL);
-		store.setDefault(PreferenceConstants.P_CLAUDE_API_KEY, ""); //$NON-NLS-1$
-		store.setDefault(PreferenceConstants.P_OPENAI_MODEL, PreferenceConstants.DEFAULT_OPENAI_MODEL);
-		store.setDefault(PreferenceConstants.P_OPENAI_API_URL, PreferenceConstants.DEFAULT_OPENAI_API_URL);
-		store.setDefault(PreferenceConstants.P_OPENAI_API_KEY, ""); //$NON-NLS-1$
+
+		for (IAIProvider provider : AIProviderRegistry.getInstance().getProviders()) {
+			provider.initializeDefaultPreferences(store);
+		}
+
 		store.setDefault(PreferenceConstants.P_SELECTED_PROVIDER, "org.openjdk.jmc.ui.ai.provider.claude"); //$NON-NLS-1$
 
 		store.setDefault(PreferenceConstants.P_COLOR_USER_LIGHT, PreferenceConstants.DEFAULT_COLOR_USER_LIGHT);

@@ -33,26 +33,46 @@
  */
 package org.openjdk.jmc.ui.ai.provider.claude;
 
+import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
 
+import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.openjdk.jmc.common.security.ISecurityManager;
+import org.openjdk.jmc.common.security.SecurityException;
+import org.openjdk.jmc.common.security.SecurityManagerFactory;
 import org.openjdk.jmc.ui.ai.AIPlugin;
 import org.openjdk.jmc.ui.ai.AIStreamHandler;
 import org.openjdk.jmc.ui.ai.ChatMessage;
 import org.openjdk.jmc.ui.ai.IAIProvider;
 import org.openjdk.jmc.ui.ai.IAITool;
 import org.openjdk.jmc.ui.ai.ToolCall;
-import org.openjdk.jmc.ui.ai.preferences.PreferenceConstants;
+import org.openjdk.jmc.ui.ai.preferences.Messages;
+import org.openjdk.jmc.ui.ai.preferences.SecureApiKeyFieldEditor;
 
 public class ClaudeProvider implements IAIProvider {
 
+	static final String P_API_KEY = "claude.apiKey"; //$NON-NLS-1$
+	static final String P_MODEL = "claude.model"; //$NON-NLS-1$
+	static final String P_API_URL = "claude.apiUrl"; //$NON-NLS-1$
+	static final String DEFAULT_MODEL = "claude-sonnet-4-20250514"; //$NON-NLS-1$
+	static final String DEFAULT_API_URL = "https://api.anthropic.com"; //$NON-NLS-1$
+
 	private static final String ID = "org.openjdk.jmc.ui.ai.provider.claude"; //$NON-NLS-1$
 	private static final String DISPLAY_NAME = "Claude (Anthropic)"; //$NON-NLS-1$
-	private static final String PREFERENCE_PAGE_ID = "org.openjdk.jmc.ui.ai.preferences.AIPreferencePage"; //$NON-NLS-1$
+	private static final String CONSOLE_URL = "https://console.anthropic.com/settings/keys"; //$NON-NLS-1$
 	private static final List<String> MODELS = List.of( //
 			"claude-sonnet-4-20250514", //$NON-NLS-1$
 			"claude-opus-4-20250514", //$NON-NLS-1$
@@ -77,15 +97,16 @@ public class ClaudeProvider implements IAIProvider {
 
 	@Override
 	public String getModelPreferenceKey() {
-		return PreferenceConstants.P_CLAUDE_MODEL;
+		return P_MODEL;
 	}
 
 	@Override
 	public List<String> getAvailableModels() {
-		if (isConfigured()) {
+		String apiKey = getApiKey();
+		if (!apiKey.isEmpty()) {
 			IPreferenceStore store = AIPlugin.getDefault().getPreferenceStore();
-			String apiUrl = store.getString(PreferenceConstants.P_CLAUDE_API_URL);
-			List<String> fetched = apiClient.fetchModels(apiUrl, getApiKey());
+			String apiUrl = store.getString(P_API_URL);
+			List<String> fetched = apiClient.fetchModels(apiUrl, apiKey);
 			if (!fetched.isEmpty()) {
 				return fetched;
 			}
@@ -94,8 +115,30 @@ public class ClaudeProvider implements IAIProvider {
 	}
 
 	@Override
-	public void configure(Shell shell) {
-		PreferencesUtil.createPreferenceDialogOn(shell, PREFERENCE_PAGE_ID, null, null).open();
+	public void createPreferenceFields(Composite parent, Consumer<FieldEditor> fieldAdder) {
+		fieldAdder.accept(new SecureApiKeyFieldEditor(P_API_KEY, Messages.AIPreferencePage_API_KEY, parent));
+		fieldAdder.accept(new ComboFieldEditor(P_MODEL, Messages.AIPreferencePage_MODEL,
+				MODELS.stream().map(m -> new String[] {m, m}).toArray(String[][]::new), parent));
+		fieldAdder.accept(new StringFieldEditor(P_API_URL, Messages.AIPreferencePage_API_URL, parent));
+		Button button = new Button(parent, SWT.PUSH);
+		button.setText(Messages.AIPreferencePage_GET_API_KEY);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
+							.openURL(new URI(CONSOLE_URL).toURL());
+				} catch (Exception ex) {
+					AIPlugin.getLogger().warning("Failed to open browser: " + ex.getMessage()); //$NON-NLS-1$
+				}
+			}
+		});
+	}
+
+	@Override
+	public void initializeDefaultPreferences(IPreferenceStore store) {
+		store.setDefault(P_MODEL, DEFAULT_MODEL);
+		store.setDefault(P_API_URL, DEFAULT_API_URL);
 	}
 
 	@Override
@@ -110,14 +153,30 @@ public class ClaudeProvider implements IAIProvider {
 		}
 
 		IPreferenceStore store = AIPlugin.getDefault().getPreferenceStore();
-		String model = store.getString(PreferenceConstants.P_CLAUDE_MODEL);
-		String apiUrl = store.getString(PreferenceConstants.P_CLAUDE_API_URL);
+		String model = store.getString(P_MODEL);
+		String apiUrl = store.getString(P_API_URL);
 
 		return apiClient.sendStreaming(apiUrl, apiKey, model, history, tools, toolExecutor, handler);
 	}
 
+	@Override
+	public void dispose() {
+		apiClient.close();
+	}
+
 	private String getApiKey() {
-		IPreferenceStore store = AIPlugin.getDefault().getPreferenceStore();
-		return store.getString(PreferenceConstants.P_CLAUDE_API_KEY);
+		try {
+			ISecurityManager sm = SecurityManagerFactory.getSecurityManager();
+			if (sm != null && sm.hasKey(P_API_KEY)) {
+				Object val = sm.get(P_API_KEY);
+				if (val instanceof String[]) {
+					String[] arr = (String[]) val;
+					return arr.length > 0 && arr[0] != null ? arr[0] : ""; //$NON-NLS-1$
+				}
+			}
+		} catch (SecurityException e) {
+			AIPlugin.getLogger().log(Level.WARNING, "Failed to load Claude API key from secure store", e); //$NON-NLS-1$
+		}
+		return ""; //$NON-NLS-1$
 	}
 }

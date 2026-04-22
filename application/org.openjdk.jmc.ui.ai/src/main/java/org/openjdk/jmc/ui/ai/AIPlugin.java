@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.ui.ai;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -63,6 +64,13 @@ public class AIPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
+		for (IAIProvider provider : AIProviderRegistry.getInstance().getProviders()) {
+			try {
+				provider.dispose();
+			} catch (Exception e) {
+				getLogger().log(Level.WARNING, "Failed to dispose AI provider: " + provider.getId(), e); //$NON-NLS-1$
+			}
+		}
 		plugin = null;
 		super.stop(bundleContext);
 	}

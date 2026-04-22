@@ -33,32 +33,20 @@
  */
 package org.openjdk.jmc.ui.ai.preferences;
 
-import java.net.URI;
-import java.util.List;
-
 import org.eclipse.jface.preference.ColorFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.PlatformUI;
 import org.openjdk.jmc.ui.ai.AIPlugin;
 import org.openjdk.jmc.ui.ai.AIProviderRegistry;
 import org.openjdk.jmc.ui.ai.IAIProvider;
 
 public class AIPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-
-	private static final String ANTHROPIC_CONSOLE_URL = "https://console.anthropic.com/settings/keys"; //$NON-NLS-1$
-	private static final String OPENAI_CONSOLE_URL = "https://platform.openai.com/api-keys"; //$NON-NLS-1$
 
 	public AIPreferencePage() {
 		super(GRID);
@@ -74,37 +62,10 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 	protected void createFieldEditors() {
 		Composite parent = getFieldEditorParent();
 
-		Composite claudeGroup = createGroup(parent, Messages.AIPreferencePage_CLAUDE_GROUP);
-		addField(new StringFieldEditor(PreferenceConstants.P_CLAUDE_API_KEY, Messages.AIPreferencePage_API_KEY,
-				claudeGroup));
-		addField(new ComboFieldEditor(PreferenceConstants.P_CLAUDE_MODEL, Messages.AIPreferencePage_MODEL,
-				getModelEntries("org.openjdk.jmc.ui.ai.provider.claude"), claudeGroup)); //$NON-NLS-1$
-		addField(new StringFieldEditor(PreferenceConstants.P_CLAUDE_API_URL, Messages.AIPreferencePage_API_URL,
-				claudeGroup));
-		Button getApiKeyButton = new Button(claudeGroup, SWT.PUSH);
-		getApiKeyButton.setText(Messages.AIPreferencePage_GET_API_KEY);
-		getApiKeyButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openBrowser(ANTHROPIC_CONSOLE_URL);
-			}
-		});
-
-		Composite openaiGroup = createGroup(parent, Messages.AIPreferencePage_OPENAI_GROUP);
-		addField(new StringFieldEditor(PreferenceConstants.P_OPENAI_API_KEY, Messages.AIPreferencePage_OPENAI_API_KEY,
-				openaiGroup));
-		addField(new ComboFieldEditor(PreferenceConstants.P_OPENAI_MODEL, Messages.AIPreferencePage_OPENAI_MODEL,
-				getModelEntries("org.openjdk.jmc.ui.ai.provider.openai"), openaiGroup)); //$NON-NLS-1$
-		addField(new StringFieldEditor(PreferenceConstants.P_OPENAI_API_URL, Messages.AIPreferencePage_OPENAI_API_URL,
-				openaiGroup));
-		Button openaiKeyButton = new Button(openaiGroup, SWT.PUSH);
-		openaiKeyButton.setText(Messages.AIPreferencePage_OPENAI_GET_API_KEY);
-		openaiKeyButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openBrowser(OPENAI_CONSOLE_URL);
-			}
-		});
+		for (IAIProvider provider : AIProviderRegistry.getInstance().getProviders()) {
+			Composite group = createGroup(parent, provider.getDisplayName());
+			provider.createPreferenceFields(group, this::addField);
+		}
 
 		Composite colorsRow = new Composite(parent, SWT.NONE);
 		GridLayout colorsLayout = new GridLayout(2, true);
@@ -151,27 +112,5 @@ public class AIPreferencePage extends FieldEditorPreferencePage implements IWork
 		inner.setLayout(innerLayout);
 		inner.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		return inner;
-	}
-
-	private String[][] getModelEntries(String providerId) {
-		IAIProvider provider = AIProviderRegistry.getInstance().getProvider(providerId);
-		if (provider != null) {
-			List<String> models = provider.getAvailableModels();
-			String[][] entries = new String[models.size()][2];
-			for (int i = 0; i < models.size(); i++) {
-				entries[i][0] = models.get(i);
-				entries[i][1] = models.get(i);
-			}
-			return entries;
-		}
-		return new String[][] {{PreferenceConstants.DEFAULT_CLAUDE_MODEL, PreferenceConstants.DEFAULT_CLAUDE_MODEL}};
-	}
-
-	private void openBrowser(String url) {
-		try {
-			PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URI(url).toURL());
-		} catch (Exception e) {
-			AIPlugin.getLogger().warning("Failed to open browser: " + e.getMessage()); //$NON-NLS-1$
-		}
 	}
 }

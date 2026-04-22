@@ -35,20 +35,7 @@ package org.openjdk.jmc.ui.ai.preferences;
 
 public final class PreferenceConstants {
 
-	public static final String P_CLAUDE_API_KEY = "claude.apiKey"; //$NON-NLS-1$
-	public static final String P_CLAUDE_MODEL = "claude.model"; //$NON-NLS-1$
-	public static final String P_CLAUDE_API_URL = "claude.apiUrl"; //$NON-NLS-1$
 	public static final String P_SELECTED_PROVIDER = "selectedProvider"; //$NON-NLS-1$
-
-	public static final String DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-20250514"; //$NON-NLS-1$
-	public static final String DEFAULT_CLAUDE_API_URL = "https://api.anthropic.com"; //$NON-NLS-1$
-
-	public static final String P_OPENAI_API_KEY = "openai.apiKey"; //$NON-NLS-1$
-	public static final String P_OPENAI_MODEL = "openai.model"; //$NON-NLS-1$
-	public static final String P_OPENAI_API_URL = "openai.apiUrl"; //$NON-NLS-1$
-
-	public static final String DEFAULT_OPENAI_MODEL = "o3-mini"; //$NON-NLS-1$
-	public static final String DEFAULT_OPENAI_API_URL = "https://api.openai.com"; //$NON-NLS-1$
 
 	public static final String P_COLOR_USER_LIGHT = "color.light.user"; //$NON-NLS-1$
 	public static final String P_COLOR_ASSISTANT_LIGHT = "color.light.assistant"; //$NON-NLS-1$

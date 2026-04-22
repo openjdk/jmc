@@ -40,17 +40,10 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.ui.ai.preferences.messages"; //$NON-NLS-1$
 
 	public static String AIPreferencePage_DESCRIPTION;
-	public static String AIPreferencePage_CLAUDE_GROUP;
 	public static String AIPreferencePage_API_KEY;
 	public static String AIPreferencePage_MODEL;
 	public static String AIPreferencePage_API_URL;
 	public static String AIPreferencePage_GET_API_KEY;
-
-	public static String AIPreferencePage_OPENAI_GROUP;
-	public static String AIPreferencePage_OPENAI_API_KEY;
-	public static String AIPreferencePage_OPENAI_MODEL;
-	public static String AIPreferencePage_OPENAI_API_URL;
-	public static String AIPreferencePage_OPENAI_GET_API_KEY;
 
 	public static String AIPreferencePage_COLORS_LIGHT_GROUP;
 	public static String AIPreferencePage_COLORS_DARK_GROUP;
