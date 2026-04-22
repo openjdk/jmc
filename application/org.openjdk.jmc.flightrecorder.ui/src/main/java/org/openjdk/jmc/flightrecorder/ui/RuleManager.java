@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -269,6 +269,10 @@ public class RuleManager {
 
 	BasicConfig getConfig() {
 		return config;
+	}
+
+	public Collection<IResult> getAllResults() {
+		return resultsByTopicByRuleId.values().stream().flatMap(m -> m.values().stream()).collect(Collectors.toList());
 	}
 
 	public Collection<IResult> getResults(String ... topics) {
