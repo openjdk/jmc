@@ -60,6 +60,7 @@ public class CreatePlatform {
 
 	private static final String POM_TEMPLATE_RESOURCE = "templates/pom.xml.template";
 	private static final String TARGET_TEMPLATE_RESOURCE = "templates/platform-definition.target.template";
+	private static final String PROJECT_TEMPLATE_RESOURCE = "templates/.project.template";
 
 	private static final Pattern VERSION_PATTERN = Pattern.compile("\\d{4}-\\d{2}");
 	private static final Pattern PLATFORM_DIR_PATTERN = Pattern.compile("platform-definition-(\\d{4}-\\d{2})");
@@ -92,6 +93,7 @@ public class CreatePlatform {
 		Path platformDir = root.resolve("platform-definition-" + eclipseVersion);
 		Path pomFile = platformDir.resolve("pom.xml");
 		Path targetFile = platformDir.resolve("platform-definition-" + eclipseVersion + ".target");
+		Path projectFile = platformDir.resolve(".project");
 		Path parentPom = root.resolve("pom.xml");
 
 		if (Files.exists(platformDir) && Files.isDirectory(platformDir) && hasContent(platformDir)) {
@@ -130,6 +132,7 @@ public class CreatePlatform {
 		String year = String.valueOf(LocalDate.now().getYear());
 		String pomContent = applyTopLevelPlaceholders(loadTemplate(POM_TEMPLATE_RESOURCE), eclipseVersion, year);
 		String targetContent = applyTopLevelPlaceholders(loadTemplate(TARGET_TEMPLATE_RESOURCE), eclipseVersion, year);
+		String projectContent = applyTopLevelPlaceholders(loadTemplate(PROJECT_TEMPLATE_RESOURCE), eclipseVersion, year);
 		targetContent = substituteUnitVersions(targetContent, resolved);
 
 		List<String> unresolved = findUnresolvedPlaceholders(targetContent);
@@ -146,6 +149,7 @@ public class CreatePlatform {
 
 		List<String> plan = new ArrayList<>();
 		plan.add("Create directory: " + platformDir);
+		plan.add("Create file:      " + projectFile);
 		plan.add("Create file:      " + pomFile);
 		plan.add("Create file:      " + targetFile);
 		if (parentNeedsModule) {
@@ -166,8 +170,10 @@ public class CreatePlatform {
 		}
 
 		Files.createDirectories(platformDir);
+		Files.write(projectFile, projectContent.getBytes(StandardCharsets.UTF_8));
 		Files.write(pomFile, pomContent.getBytes(StandardCharsets.UTF_8));
 		Files.write(targetFile, targetContent.getBytes(StandardCharsets.UTF_8));
+		System.out.println("Wrote " + projectFile);
 		System.out.println("Wrote " + pomFile);
 		System.out.println("Wrote " + targetFile);
 

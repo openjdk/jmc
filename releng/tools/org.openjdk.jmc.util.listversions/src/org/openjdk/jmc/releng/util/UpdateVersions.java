@@ -51,6 +51,11 @@ public class UpdateVersions {
 	private static final Pattern TARGET_NAME_PATTERN = Pattern.compile("<target\\s+name=\"jmc-target-(\\d{4}-\\d{2})\"");
 	private static final Pattern REPOSITORY_PATTERN = Pattern
 			.compile("<repository\\s+location=\"https://download.eclipse.org/releases/(\\d{4}-\\d{2})/\"\\s*/>");
+	private static final Pattern LOCATION_PATTERN = Pattern.compile("<location\\b[^>]*>(.*?)</location>", Pattern.DOTALL);
+	private static final Pattern LOCATION_REPOSITORY_PATTERN = Pattern
+			.compile("<repository\\s+location=\"([^\"]+)\"\\s*/?>");
+	private static final Pattern ECLIPSE_RELEASE_REPO_PATTERN = Pattern
+			.compile("https://download\\.eclipse\\.org/releases/\\d{4}-\\d{2}/?");
 
 	private static final class Change {
 		final String label;
@@ -134,8 +139,32 @@ public class UpdateVersions {
 	}
 
 	private static String collectUnitChanges(String content, Map<String, String> newVersions, List<Change> changes) {
+		// Only update units that live inside a <location> block whose repository points at the Eclipse
+		// releases update site. Units in other blocks (the local p2 site, the Babel archive) come from
+		// repositories that don't host the same versions, so blindly applying the Eclipse fetch there
+		// would propose bogus and often unresolvable downgrades.
 		StringBuffer sb = new StringBuffer();
-		Matcher matcher = UNIT_PATTERN.matcher(content);
+		Matcher locationMatcher = LOCATION_PATTERN.matcher(content);
+		int lastEnd = 0;
+		while (locationMatcher.find()) {
+			sb.append(content, lastEnd, locationMatcher.start());
+			String block = locationMatcher.group();
+			boolean isEclipse = isEclipseReleaseLocation(block);
+			sb.append(isEclipse ? rewriteUnitsInBlock(block, newVersions, changes) : block);
+			lastEnd = locationMatcher.end();
+		}
+		sb.append(content, lastEnd, content.length());
+		return sb.toString();
+	}
+
+	private static boolean isEclipseReleaseLocation(String block) {
+		Matcher repo = LOCATION_REPOSITORY_PATTERN.matcher(block);
+		return repo.find() && ECLIPSE_RELEASE_REPO_PATTERN.matcher(repo.group(1)).matches();
+	}
+
+	private static String rewriteUnitsInBlock(String block, Map<String, String> newVersions, List<Change> changes) {
+		StringBuffer sb = new StringBuffer();
+		Matcher matcher = UNIT_PATTERN.matcher(block);
 		while (matcher.find()) {
 			String id = matcher.group(1);
 			String currentVersion = matcher.group(2);
