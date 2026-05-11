@@ -19,17 +19,7 @@ Require-Bundle: org.openjdk.jmc.rjmx,
  org.openjdk.jmc.commands,
  org.openjdk.jmc.browser,
  org.openjdk.jmc.ui.websocket,
- org.hdrhistogram.HdrHistogram,
- org.eclipse.jetty.io,
- org.eclipse.jetty.websocket.server,
- org.eclipse.jetty.util,
- org.eclipse.jetty.ee9.websocket.api,
- org.eclipse.jetty.ee9.servlet,
- org.eclipse.jetty.ee9.websocket.servlet,
- org.eclipse.jetty.ee9.server,
- org.eclipse.jetty.server,
- org.eclipse.jetty.ee9.websocket.server,
- org.eclipse.jetty.servlet-api
+ org.hdrhistogram.HdrHistogram
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI
 Export-Package: org.openjdk.jmc.flightrecorder.ui,

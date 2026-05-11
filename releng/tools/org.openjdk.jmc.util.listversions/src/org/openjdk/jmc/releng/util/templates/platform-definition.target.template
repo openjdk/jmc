@@ -54,15 +54,7 @@
             <unit id="org.jolokia.server.core" version="${org.jolokia.server.core.version}"/>
             <unit id="com.github.tomakehurst.wiremock-standalone" version="${com.github.tomakehurst.wiremock-standalone.version}"/>
             <unit id="org.eclipse.jetty.websocket.api" version="${org.eclipse.jetty.websocket.api.version}"/>
-            <unit id="org.eclipse.jetty.ee9.websocket.api" version="${org.eclipse.jetty.ee9.websocket.api.version}"/>
-            <unit id="org.eclipse.jetty.ee9.websocket.server" version="${org.eclipse.jetty.ee9.websocket.server.version}"/>
             <unit id="org.eclipse.jetty.websocket.server" version="${org.eclipse.jetty.websocket.server.version}"/>
-            <unit id="org.eclipse.jetty.ee9.servlet" version="${org.eclipse.jetty.ee9.servlet.version}"/>
-            <unit id="org.eclipse.jetty.ee9.server" version="${org.eclipse.jetty.ee9.server.version}"/>
-            <unit id="org.eclipse.jetty.ee9.websocket.servlet" version="${org.eclipse.jetty.ee9.websocket.servlet.version}"/>
-            <unit id="org.eclipse.jetty.alpn.client" version="${org.eclipse.jetty.alpn.client.version}"/>
-            <unit id="org.eclipse.jetty.websocket.core.client" version="${org.eclipse.jetty.websocket.core.client.version}"/>
-            <unit id="org.eclipse.jetty.servlet-api" version="${org.eclipse.jetty.servlet-api.version}"/>
             <unit id="jakarta.annotation-api" version="${jakarta.annotation-api.version}"/>
             <unit id="org.apache.aries.spifly.dynamic.bundle" version="${org.apache.aries.spifly.dynamic.bundle.version}"/>
             <unit id="fireplace-swing" version="${fireplace-swing.version}"/>
