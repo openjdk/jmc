@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2026, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2026, Datadog, Inc. All rights reserved.
+
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+   The contents of this file are subject to the terms of either the Universal Permissive License
+   v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+   or the following license:
+
+   Redistribution and use in source and binary forms, with or without modification, are permitted
+   provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions
+   and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of
+   conditions and the following disclaimer in the documentation and/or other materials provided with
+   the distribution.
+
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+   FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point
+         id="aiProvider"
+         name="%EXTENSION_POINT_NAME"
+         schema="schema/aiProvider.exsd"/>
+
+   <extension-point
+         id="aiTool"
+         name="%EXTENSION_POINT_TOOL_NAME"
+         schema="schema/aiTool.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.openjdk.jmc.ui.main"
+            class="org.openjdk.jmc.ui.ai.views.AIChatView"
+            icon="icons/ai-chat.png"
+            id="org.openjdk.jmc.ui.ai.views.AIChatView"
+            name="%VIEW_NAME">
+      </view>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.openjdk.jmc.ui.preferences.MissionControlPage"
+            class="org.openjdk.jmc.ui.ai.preferences.AIPreferencePage"
+            id="org.openjdk.jmc.ui.ai.preferences.AIPreferencePage"
+            name="%PAGE_NAME">
+      </page>
+   </extension>
+
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.openjdk.jmc.ui.ai.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+   <extension
+         point="org.openjdk.jmc.ui.ai.aiProvider">
+      <provider
+            class="org.openjdk.jmc.ui.ai.provider.claude.ClaudeProvider"
+            id="org.openjdk.jmc.ui.ai.provider.claude"
+            name="Claude (Anthropic)">
+      </provider>
+      <provider
+            class="org.openjdk.jmc.ui.ai.provider.openai.OpenAIProvider"
+            id="org.openjdk.jmc.ui.ai.provider.openai"
+            name="OpenAI (Codex)">
+      </provider>
+   </extension>
+
+   <extension
+         point="org.openjdk.jmc.ui.ai.aiTool">
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetEventTypesTool"
+            id="org.openjdk.jmc.ui.ai.tools.getEventTypes"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetJfrEventsTool"
+            id="org.openjdk.jmc.ui.ai.tools.getJfrEvents"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetAttributesTool"
+            id="org.openjdk.jmc.ui.ai.tools.getAttributes"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetRuleResultsTool"
+            id="org.openjdk.jmc.ui.ai.tools.getRuleResults"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.AggregateEventsTool"
+            id="org.openjdk.jmc.ui.ai.tools.aggregateEvents"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetStackTraceTool"
+            id="org.openjdk.jmc.ui.ai.tools.getStackTrace"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetTimeSeriesTool"
+            id="org.openjdk.jmc.ui.ai.tools.getTimeSeries"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetEventTableTool"
+            id="org.openjdk.jmc.ui.ai.tools.getEventTable"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.FindRelatedEventsTool"
+            id="org.openjdk.jmc.ui.ai.tools.findRelatedEvents"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.GetSharedAttributesTool"
+            id="org.openjdk.jmc.ui.ai.tools.getSharedAttributes"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.NavigateToPageTool"
+            id="org.openjdk.jmc.ui.ai.tools.navigateToPage"/>
+      <tool
+            class="org.openjdk.jmc.ui.ai.tools.ManageSelectionTool"
+            id="org.openjdk.jmc.ui.ai.tools.manageSelection"/>
+   </extension>
+</plugin>

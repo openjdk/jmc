@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JMC AI Plug-in Tests
+Bundle-SymbolicName: org.openjdk.jmc.ui.ai.test;singleton:=true
+Bundle-Version: 10.0.0.qualifier
+Bundle-Vendor: Oracle Corporation
+Fragment-Host: org.openjdk.jmc.ui.ai
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.junit
+Automatic-Module-Name: org.openjdk.jmc.ui.ai.test

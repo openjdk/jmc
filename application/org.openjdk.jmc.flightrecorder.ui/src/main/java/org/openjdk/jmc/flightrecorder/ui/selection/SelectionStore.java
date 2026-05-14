@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -145,6 +145,15 @@ public class SelectionStore {
 	public void setCurrentActive(boolean currentActive) {
 		this.currentActive = currentActive;
 		fireSelectionActive(currentActive);
+	}
+
+	/**
+	 * Clears the current selection, resetting to the default "no selection" state. All pages will
+	 * show unfiltered data.
+	 */
+	public void clearSelection() {
+		current = NO_SELECTION_ENTRY;
+		setCurrentActive(true);
 	}
 
 	/**

@@ -137,6 +137,7 @@
 		<Class name="~org\.openjdk\.jmc\..*Plugin" />
 		<Or>
 			<Method name="getDefault" />
+			<Method name="getLogger" />
 		</Or>
 		<Bug pattern="MS_EXPOSE_REP" />
 	</Match>
@@ -1358,5 +1359,22 @@
 		<Class name="org.openjdk.jmc.console.agent.editor.AgentEditorInput"/>
 		<Method name="equals"/>
 		<Bug pattern="EQ_UNUSUAL"/>
+	</Match>
+
+	<!-- False positive: contains() return values are used in if-conditions -->
+	<Match>
+		<Or>
+			<Class name="org.openjdk.jmc.ui.ai.provider.claude.ClaudeApiClient"/>
+			<Class name="org.openjdk.jmc.ui.ai.provider.openai.OpenAIApiClient"/>
+		</Or>
+		<Method name="processSSELine"/>
+		<Bug pattern="RV_RETURN_VALUE_IGNORED"/>
+	</Match>
+
+	<!-- False positive: already uses ChatBrowser.class.getResourceAsStream(), not getClass() -->
+	<Match>
+		<Class name="org.openjdk.jmc.ui.ai.views.ChatBrowser"/>
+		<Method name="readTemplate"/>
+		<Bug pattern="UI_INHERITANCE_UNSAFE_GETRESOURCE"/>
 	</Match>
 </FindBugsFilter>
