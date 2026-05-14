@@ -87,14 +87,19 @@ public class ManageSelectionTool implements IAITool {
 	@Override
 	public String getDescription() {
 		return "Manages stored selections in the Flight Recorder editor." //$NON-NLS-1$
-				+ " Selections highlight and filter events across all pages." //$NON-NLS-1$
-				+ " Actions: 'create' creates a new selection from event type, time range," //$NON-NLS-1$
-				+ " and/or attribute value filter (e.g. filterAttribute=gcId, filterValue=57" //$NON-NLS-1$
+				+ " A selection scopes every JMC page to a focused subset of the recording, so the user's UI" //$NON-NLS-1$
+				+ " view tracks the analysis you just performed." //$NON-NLS-1$
+				+ " Actions: 'create' builds a selection that accepts the same scoping dimensions as the" //$NON-NLS-1$
+				+ " data-query tools (eventType, fromSeconds/toSeconds, includeFrames/excludeFrames) plus an" //$NON-NLS-1$
+				+ " attribute value filter (filterAttribute/filterValue, e.g. filterAttribute=gcId, filterValue=57" //$NON-NLS-1$
 				+ " to select all events for a specific GC across all event types)." //$NON-NLS-1$
-				+ " Set includeConcurrent=true to expand the selection to include all events" //$NON-NLS-1$
-				+ " on the same threads that overlap in time with the reference events." //$NON-NLS-1$
-				+ " This is equivalent to enabling 'Show Concurrent' and 'Same Threads' in JMC's Aspect selector" //$NON-NLS-1$
-				+ " and shows the full thread activity context around the selected events." //$NON-NLS-1$
+				+ " Pass the same scope you used to investigate — including the same frame filters" //$NON-NLS-1$
+				+ " (includeFrames if you focused on specific code, excludeFrames if you filtered noise out)" //$NON-NLS-1$
+				+ " — so the UI shows the events your answer is about; don't drop the scope at the UI boundary." //$NON-NLS-1$
+				+ " Set includeConcurrent=true to expand the selection to include all events on the same" //$NON-NLS-1$
+				+ " threads that overlap in time with the reference events. This is equivalent to enabling" //$NON-NLS-1$
+				+ " 'Show Concurrent' and 'Same Threads' in JMC's Aspect selector and shows the full thread" //$NON-NLS-1$
+				+ " activity context around the selected events." //$NON-NLS-1$
 				+ " 'activate' sets a selection as current (by name)." //$NON-NLS-1$
 				+ " 'clear' removes the current selection (resets to no filter)." //$NON-NLS-1$
 				+ " IMPORTANT: Always clear the selection before starting a new recording-wide analysis." //$NON-NLS-1$
@@ -113,7 +118,9 @@ public class ManageSelectionTool implements IAITool {
 				+ "\"filterValue\":{\"type\":\"string\",\"description\":\"Value the attribute must match, e.g. 57 (for create)\"}," //$NON-NLS-1$
 				+ "\"includeConcurrent\":{\"type\":\"boolean\",\"description\":\"Expand selection to include all events on the same threads that overlap in time (like Show Concurrent + Same Threads in JMC)\"}," //$NON-NLS-1$
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Start of time range in seconds from recording start (for create)\"}," //$NON-NLS-1$
-				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start (for create)\"}" //$NON-NLS-1$
+				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start (for create)\"}," //$NON-NLS-1$
+				+ "\"includeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; restrict the selection to events whose stack contains a frame matching at least one entry (for create).\"}," //$NON-NLS-1$
+				+ "\"excludeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; drop events whose stack contains a frame matching any entry (for create).\"}" //$NON-NLS-1$
 				+ "},\"required\":[\"action\"]}"; //$NON-NLS-1$
 	}
 
@@ -152,6 +159,8 @@ public class ManageSelectionTool implements IAITool {
 		String filterValue = null;
 		String from = null;
 		String to = null;
+		String includeFrames = null;
+		String excludeFrames = null;
 
 		if (reference != null) {
 			filtered = JfrContext.getStored(reference);
@@ -169,7 +178,9 @@ public class ManageSelectionTool implements IAITool {
 			filterValue = JfrContext.extractString(FILTER_VALUE_PATTERN, json);
 			from = JfrContext.extractString(FROM_PATTERN, json);
 			to = JfrContext.extractString(TO_PATTERN, json);
-			filtered = JfrContext.filterItems(items, eventType, from, to);
+			includeFrames = JfrContext.extractString(JfrContext.INCLUDE_FRAMES_PATTERN, json);
+			excludeFrames = JfrContext.extractString(JfrContext.EXCLUDE_FRAMES_PATTERN, json);
+			filtered = JfrContext.filterItems(items, eventType, from, to, includeFrames, excludeFrames);
 		}
 
 		String name = JfrContext.extractString(NAME_PATTERN, json);
@@ -201,6 +212,16 @@ public class ManageSelectionTool implements IAITool {
 		String navigatedTo = autoNavigate(filtered, eventType);
 		StringBuilder result = new StringBuilder();
 		result.append("Created and activated selection '").append(name).append("'"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (includeFrames != null || excludeFrames != null) {
+			result.append(" [frame scope:"); //$NON-NLS-1$
+			if (includeFrames != null) {
+				result.append(" includeFrames='").append(includeFrames).append("'"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if (excludeFrames != null) {
+				result.append(" excludeFrames='").append(excludeFrames).append("'"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			result.append("]"); //$NON-NLS-1$
+		}
 		if (includeConcurrent) {
 			result.append(" (").append(baseCount).append(" reference events + ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append(totalCount - baseCount).append(" concurrent on same threads = ") //$NON-NLS-1$

@@ -82,10 +82,30 @@ public class AIChatView extends ViewPart {
 			+ "\n- Use aggregate_events to find extremes (max/min duration) - it returns full event details for the extreme event." //$NON-NLS-1$
 			+ "\n- Use get_shared_attributes to discover correlation attributes (gcId, ECID, spanId, etc.)." //$NON-NLS-1$
 			+ "\n- Use get_event_table with filterAttribute/filterValue to get ALL related events in one call" //$NON-NLS-1$
-			+ " (e.g. filterAttribute=ECID, filterValue=xxx finds all events for a request across all types)." //$NON-NLS-1$
+			+ " (e.g. filterAttribute=ECID (or spanId), filterValue=xxx finds all events for a request across all types)." //$NON-NLS-1$
 			+ "\n- Use find_related_events with mode=concurrent to find what else was happening during those events on the same threads." //$NON-NLS-1$
 			+ "\n- Minimize tool calls: fetch all related events with one filterAttribute query rather than multiple separate queries." //$NON-NLS-1$
 			+ "\n- You can query ANY event type directly with get_event_table - you do NOT need to navigate to a UI page to read data." //$NON-NLS-1$
+			+ "\n- Frame filtering (includeFrames / excludeFrames) is event-level: it picks which EVENTS to keep based" //$NON-NLS-1$
+			+ " on whether their stack trace contains a matching frame — it does NOT trim individual frames from a" //$NON-NLS-1$
+			+ " stack, the whole event is kept or dropped. Broad excludes like \"java,jdk,sun\" drop nearly every" //$NON-NLS-1$
+			+ " stacktraced event (every Java stack ends in java.lang.Thread.run); to focus a flame graph on app" //$NON-NLS-1$
+			+ " code, use includeFrames=<your-package> instead of trying to subtract the JDK." //$NON-NLS-1$
+			+ "\n- Reach for includeFrames whenever the question is scoped to specific code — a class, package," //$NON-NLS-1$
+			+ " framework, library, or component — phrased as \"in X\", \"from X\", \"through X\", \"involving X\"," //$NON-NLS-1$
+			+ " \"related to X\", \"caused by X\", \"in our app\", etc. Reach for excludeFrames to suppress a known" //$NON-NLS-1$
+			+ " noisy code path from a specific event type (e.g. drop a particular package from socket reads)." //$NON-NLS-1$
+			+ " Each token is a fully qualified class name OR a package prefix (matched at name boundaries," //$NON-NLS-1$
+			+ " includes sub-packages); commas separate alternatives. Available on get_stacktrace, get_jfr_events," //$NON-NLS-1$
+			+ " aggregate_events, get_event_table, get_time_series, find_related_events, AND manage_selection." //$NON-NLS-1$
+			+ "\n- Scope continuity: when an investigation is scoped (by event type, time range, code, or noise" //$NON-NLS-1$
+			+ " filter), carry the SAME scope through every step — data tool → manage_selection → navigate." //$NON-NLS-1$
+			+ " Both directions matter: if you set includeFrames to focus on specific code, set the same" //$NON-NLS-1$
+			+ " includeFrames on the selection; if you set excludeFrames to drop noise, set the same" //$NON-NLS-1$
+			+ " excludeFrames on the selection. The UI view should mirror the events your answer is about —" //$NON-NLS-1$
+			+ " dropping the scope at the selection step leaves the user looking at the full recording while" //$NON-NLS-1$
+			+ " you describe a focused subset. Pair manage_selection's frame filters with includeConcurrent=true" //$NON-NLS-1$
+			+ " to also surface surrounding thread activity for context." //$NON-NLS-1$
 			+ "\n\nKey JFR event types reference:" //$NON-NLS-1$
 			+ "\n Configuration: jdk.GCHeapConfiguration (Xms/Xmx/heap sizes), jdk.GCConfiguration (collector/pause target)," //$NON-NLS-1$
 			+ " jdk.YoungGenerationConfiguration, jdk.GCSurvivorConfiguration, jdk.GCTLABConfiguration," //$NON-NLS-1$
@@ -118,9 +138,16 @@ public class AIChatView extends ViewPart {
 			+ "\n Class Loading - class loading activity" //$NON-NLS-1$
 			+ "\n TLAB Allocations - allocation site details" //$NON-NLS-1$
 			+ "\n Environment - OS/JVM/system properties" //$NON-NLS-1$
-			+ "\n\nUI guidance - always finish your analysis by setting up the UI:" //$NON-NLS-1$
-			+ "\n- For a specific event/request: create a selection and navigate to the most relevant page." //$NON-NLS-1$
+			+ "\n\nUI guidance - finish your analysis by setting up the UI so the page and the current" //$NON-NLS-1$
+			+ " selection together reflect what your answer is about:" //$NON-NLS-1$
+			+ "\n- For a specific event/request: create a focused selection (e.g. via reference='<stored-name>')" //$NON-NLS-1$
+			+ " and navigate to the most relevant page." //$NON-NLS-1$
+			+ "\n- For a code-scoped investigation (events involving a specific framework, package, or class):" //$NON-NLS-1$
+			+ " create a selection that re-applies the same frame filters you used in your data queries" //$NON-NLS-1$
+			+ " (includeFrames, and excludeFrames if you filtered noise out), then navigate." //$NON-NLS-1$
 			+ "\n- For recording-wide analysis: clear any previous selection (action=clear) and navigate to the relevant page." //$NON-NLS-1$
+			+ "\n- For overview / exploratory questions where the user just wants to see the page, navigating" //$NON-NLS-1$
+			+ " without changing the selection is fine — the default view IS the answer." //$NON-NLS-1$
 			+ "\n- Always leave the UI showing the most relevant view for further exploration." //$NON-NLS-1$
 			+ "\n\nStored references - tools can store and reuse result sets:" //$NON-NLS-1$
 			+ "\n- aggregate_events auto-stores min/max items as '<eventType>.min' and '<eventType>.max'" //$NON-NLS-1$

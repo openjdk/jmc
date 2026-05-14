@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.ui.ai.tools;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,12 +46,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.openjdk.jmc.common.IMCMethod;
+import org.openjdk.jmc.common.IMCPackage;
+import org.openjdk.jmc.common.IMCType;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
+import org.openjdk.jmc.flightrecorder.stacktrace.StackTraceFrameFilter;
+import org.openjdk.jmc.flightrecorder.stacktrace.StackTraceFrameFilter.MatchMode;
 import org.openjdk.jmc.flightrecorder.ui.DataPageDescriptor;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.JfrEditor;
@@ -97,6 +104,10 @@ public final class JfrContext {
 
 	public static final Pattern STORE_AS_PATTERN = Pattern.compile("\"storeAs\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 	public static final Pattern REFERENCE_PATTERN = Pattern.compile("\"reference\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
+	public static final Pattern INCLUDE_FRAMES_PATTERN = Pattern //
+			.compile("\"includeFrames\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
+	public static final Pattern EXCLUDE_FRAMES_PATTERN = Pattern //
+			.compile("\"excludeFrames\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\""); //$NON-NLS-1$
 
 	public static IItemCollection getActiveItems() {
 		IEditorPart editor = getActiveEditor();
@@ -122,17 +133,118 @@ public final class JfrContext {
 	 */
 	public static IItemCollection filterItems(
 		IItemCollection items, String eventType, String fromSeconds, String toSeconds) {
+		return filterItems(items, eventType, fromSeconds, toSeconds, null, null);
+	}
+
+	/**
+	 * Builds a combined filter from event type, time range, and stack trace frame inclusion /
+	 * exclusion lists. Frame lists are comma-separated strings; each token is interpreted as a
+	 * fully qualified class name <em>or</em> a package prefix (matched at name boundary). An event
+	 * is kept when its stack trace contains a frame matching any include token <em>and</em>
+	 * contains no frame matching any exclude token. Events without a stack trace are excluded by
+	 * any non-empty include list and are unaffected by exclude lists.
+	 */
+	public static IItemCollection filterItems(
+		IItemCollection items, String eventType, String fromSeconds, String toSeconds, String includeFrames,
+		String excludeFrames) {
 		IItemFilter typeFilter = eventType != null ? ItemFilters.type(eventType) : null;
 		IItemFilter timeFilter = buildTimeFilter(fromSeconds, toSeconds);
+		IItemFilter frameFilter = buildFrameFilter(includeFrames, excludeFrames);
 
-		if (typeFilter != null && timeFilter != null) {
-			return items.apply(ItemFilters.and(typeFilter, timeFilter));
-		} else if (typeFilter != null) {
-			return items.apply(typeFilter);
-		} else if (timeFilter != null) {
-			return items.apply(timeFilter);
+		List<IItemFilter> filters = new ArrayList<>(3);
+		if (typeFilter != null) {
+			filters.add(typeFilter);
 		}
-		return items;
+		if (timeFilter != null) {
+			filters.add(timeFilter);
+		}
+		if (frameFilter != null) {
+			filters.add(frameFilter);
+		}
+		if (filters.isEmpty()) {
+			return items;
+		}
+		if (filters.size() == 1) {
+			return items.apply(filters.get(0));
+		}
+		return items.apply(ItemFilters.and(filters.toArray(new IItemFilter[0])));
+	}
+
+	/**
+	 * Builds a stack trace frame filter from comma-separated include/exclude lists. Each token may
+	 * be either a fully qualified class name or a package prefix; both are tested against each
+	 * frame and OR-combined within a list. Returns {@code null} if both lists are empty.
+	 */
+	static IItemFilter buildFrameFilter(String includeFrames, String excludeFrames) {
+		IItemFilter inc = framePredicateOf(includeFrames, MatchMode.ANY);
+		IItemFilter exc = framePredicateOf(excludeFrames, MatchMode.NONE);
+		if (inc == null) {
+			return exc;
+		}
+		if (exc == null) {
+			return inc;
+		}
+		return ItemFilters.and(inc, exc);
+	}
+
+	private static IItemFilter framePredicateOf(String csv, MatchMode mode) {
+		if (csv == null || csv.trim().isEmpty()) {
+			return null;
+		}
+		List<FrameFilter> tokens = new ArrayList<>();
+		for (String raw : csv.split(",")) { //$NON-NLS-1$
+			String token = raw.trim();
+			if (!token.isEmpty()) {
+				tokens.add(classOrPackagePredicate(token));
+			}
+		}
+		if (tokens.isEmpty()) {
+			return null;
+		}
+		FrameFilter combined = tokens.size() == 1 ? tokens.get(0) : anyOf(tokens);
+		return new StackTraceFrameFilter(mode, combined);
+	}
+
+	/**
+	 * Matches a frame whose declaring class has the given fully qualified name, or whose declaring
+	 * package equals the name (or a sub-package, matched at a name boundary). This is the
+	 * "class-or-package" token grammar used by the AI tools' comma-separated frame filters.
+	 */
+	private static FrameFilter classOrPackagePredicate(String name) {
+		String packagePrefix = name + "."; //$NON-NLS-1$
+		return frame -> {
+			if (frame == null) {
+				return false;
+			}
+			IMCMethod method = frame.getMethod();
+			if (method == null) {
+				return false;
+			}
+			IMCType type = method.getType();
+			if (type == null) {
+				return false;
+			}
+			if (name.equals(type.getFullName())) {
+				return true;
+			}
+			IMCPackage pkg = type.getPackage();
+			if (pkg == null) {
+				return false;
+			}
+			String pname = pkg.getName();
+			return pname != null && (name.equals(pname) || pname.startsWith(packagePrefix));
+		};
+	}
+
+	private static FrameFilter anyOf(List<FrameFilter> predicates) {
+		return frame -> {
+			for (FrameFilter p : predicates) {
+				if (p.shouldInclude(frame)) {
+					return true;
+				}
+			}
+			return false;
+		};
 	}
 
 	private static IItemFilter buildTimeFilter(String fromSeconds, String toSeconds) {

@@ -53,8 +53,12 @@ public class NavigateToPageTool implements IAITool {
 		return "Navigates the Flight Recorder editor to a specific analysis page." //$NON-NLS-1$
 				+ " Can match by page ID or name (case-insensitive)." //$NON-NLS-1$
 				+ " If page is omitted, lists all available pages." //$NON-NLS-1$
-				+ " Useful for directing the user's attention to the relevant view" //$NON-NLS-1$
-				+ " after identifying an issue."; //$NON-NLS-1$
+				+ " Useful for directing the user's attention to the relevant view after identifying an issue." //$NON-NLS-1$
+				+ " Consider the selection state when navigating: if your analysis was scoped to specific" //$NON-NLS-1$
+				+ " code/events, set a matching selection first (manage_selection with the same scope you used" //$NON-NLS-1$
+				+ " in your data queries — including any includeFrames/excludeFrames); if you've moved on to a" //$NON-NLS-1$
+				+ " recording-wide question, clear any prior selection (manage_selection action=clear). For pure" //$NON-NLS-1$
+				+ " overview or exploratory navigation, the existing selection state is usually fine."; //$NON-NLS-1$
 	}
 
 	@Override

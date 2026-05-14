@@ -77,7 +77,9 @@ public class AggregateEventsTool implements IAITool {
 				+ "\"function\":{\"type\":\"string\",\"description\":\"Aggregation function: count, sum, avg, min, max, stddev, or all\"," //$NON-NLS-1$
 				+ "\"enum\":[\"count\",\"sum\",\"avg\",\"min\",\"max\",\"stddev\",\"all\"]}," //$NON-NLS-1$
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Start of time range in seconds from recording start\"}," //$NON-NLS-1$
-				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start\"}" //$NON-NLS-1$
+				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start\"}," //$NON-NLS-1$
+				+ "\"includeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; keep only events whose stack contains a frame matching at least one entry.\"}," //$NON-NLS-1$
+				+ "\"excludeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; drop events whose stack contains a frame matching any entry.\"}" //$NON-NLS-1$
 				+ "},\"required\":[\"eventType\"]}"; //$NON-NLS-1$
 	}
 
@@ -100,7 +102,9 @@ public class AggregateEventsTool implements IAITool {
 
 		String from = JfrContext.extractString(FROM_PATTERN, parametersJson);
 		String to = JfrContext.extractString(TO_PATTERN, parametersJson);
-		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to);
+		String includeFrames = JfrContext.extractString(JfrContext.INCLUDE_FRAMES_PATTERN, parametersJson);
+		String excludeFrames = JfrContext.extractString(JfrContext.EXCLUDE_FRAMES_PATTERN, parametersJson);
+		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to, includeFrames, excludeFrames);
 		if (!filtered.hasItems()) {
 			return "No events found for type: " + eventType; //$NON-NLS-1$
 		}
@@ -151,7 +155,6 @@ public class AggregateEventsTool implements IAITool {
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void appendItemDetails(StringBuilder sb, IItem item, String label, IItemCollection filtered) {
 		if (item == null) {
 			return;

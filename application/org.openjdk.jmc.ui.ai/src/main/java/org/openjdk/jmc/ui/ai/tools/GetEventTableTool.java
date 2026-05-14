@@ -85,7 +85,9 @@ public class GetEventTableTool implements IAITool {
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Start of time range in seconds from recording start\"}," //$NON-NLS-1$
 				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start\"}," //$NON-NLS-1$
 				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max rows (default 50)\"}," //$NON-NLS-1$
-				+ "\"storeAs\":{\"type\":\"string\",\"description\":\"Store the result set under this name for later reference by other tools\"}" //$NON-NLS-1$
+				+ "\"storeAs\":{\"type\":\"string\",\"description\":\"Store the result set under this name for later reference by other tools\"}," //$NON-NLS-1$
+				+ "\"includeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; keep only events whose stack contains a frame matching at least one entry.\"}," //$NON-NLS-1$
+				+ "\"excludeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; drop events whose stack contains a frame matching any entry.\"}" //$NON-NLS-1$
 				+ "}}"; //$NON-NLS-1$
 	}
 
@@ -108,7 +110,9 @@ public class GetEventTableTool implements IAITool {
 		List<String> requestedColumns = parseColumns(parametersJson);
 		String from = JfrContext.extractString(FROM_PATTERN, parametersJson);
 		String to = JfrContext.extractString(TO_PATTERN, parametersJson);
-		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to);
+		String includeFrames = JfrContext.extractString(JfrContext.INCLUDE_FRAMES_PATTERN, parametersJson);
+		String excludeFrames = JfrContext.extractString(JfrContext.EXCLUDE_FRAMES_PATTERN, parametersJson);
+		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to, includeFrames, excludeFrames);
 
 		// Apply attribute value filter before storing
 		if (filterAttr != null && filterValue != null) {

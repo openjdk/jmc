@@ -34,16 +34,11 @@ package org.openjdk.jmc.flightrecorder.jdk;
 
 import java.util.function.Predicate;
 
-import org.openjdk.jmc.common.IMCFrame;
-import org.openjdk.jmc.common.IMCMethod;
-import org.openjdk.jmc.common.IMCStackTrace;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.util.PredicateToolkit;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.stacktrace.StackTraceFrameFilter;
 
 /**
  * Various filters based on JDK flight recorder data. Mostly filters that gives one or more event
@@ -55,11 +50,12 @@ public final class JdkFilters {
 	public static final IItemFilter SOCKET_WRITE = ItemFilters.type(JdkTypeIDs.SOCKET_WRITE);
 	public static final IItemFilter SOCKET_READ_OR_WRITE = ItemFilters.or(SOCKET_READ, SOCKET_WRITE);
 	public static final IItemFilter NO_RMI_SOCKET_READ = ItemFilters.and(SOCKET_READ,
-			ItemFilters.not(new MethodFilter("sun.rmi.transport.tcp.TCPTransport", "handleMessages")), ItemFilters //$NON-NLS-1$ //$NON-NLS-2$
-					.not(new MethodFilter("javax.management.remote.rmi.RMIConnector$RMINotifClient", "fetchNotifs"))); //$NON-NLS-1$ //$NON-NLS-2$
+			StackTraceFrameFilter.excludesMethod("sun.rmi.transport.tcp.TCPTransport", "handleMessages"), //$NON-NLS-1$ //$NON-NLS-2$
+			StackTraceFrameFilter.excludesMethod("javax.management.remote.rmi.RMIConnector$RMINotifClient", //$NON-NLS-1$
+					"fetchNotifs")); //$NON-NLS-1$
 	public static final IItemFilter NO_RMI_SOCKET_WRITE = ItemFilters.and(SOCKET_WRITE,
-			ItemFilters.not(new MethodFilter("sun.rmi.transport.tcp.TCPTransport$ConnectionHandler", "run")), //$NON-NLS-1$ //$NON-NLS-2$
-			ItemFilters.not(new MethodFilter("sun.rmi.transport.tcp.TCPTransport$ConnectionHandler", "run0"))); //$NON-NLS-1$ //$NON-NLS-2$
+			StackTraceFrameFilter.excludesMethod("sun.rmi.transport.tcp.TCPTransport$ConnectionHandler", "run"), //$NON-NLS-1$ //$NON-NLS-2$
+			StackTraceFrameFilter.excludesMethod("sun.rmi.transport.tcp.TCPTransport$ConnectionHandler", "run0")); //$NON-NLS-1$ //$NON-NLS-2$
 	public static final IItemFilter ENVIRONMENT_VARIABLE = ItemFilters.type(JdkTypeIDs.ENVIRONMENT_VARIABLE);
 	public static final IItemFilter FILE_READ = ItemFilters.type(JdkTypeIDs.FILE_READ);
 	public static final IItemFilter FILE_WRITE = ItemFilters.type(JdkTypeIDs.FILE_WRITE);
@@ -162,14 +158,19 @@ public final class JdkFilters {
 	public static final IItemFilter AGENTS = ItemFilters.type(JdkTypeIDs.JAVA_AGENT, JdkTypeIDs.NATIVE_AGENT);
 	public static final IItemFilter RSS = ItemFilters.type(JdkTypeIDs.RSS);
 
-	public static class MethodFilter implements IItemFilter {
+	/**
+	 * @deprecated Use {@link StackTraceFrameFilter#containsMethod(String, String)} instead. Wrap
+	 *             with {@link ItemFilters#not(IItemFilter)} for exclusion, or use
+	 *             {@link StackTraceFrameFilter#excludesMethod(String, String)}.
+	 */
+	@Deprecated
+	public static final class MethodFilter implements IItemFilter {
 
-		private final String typeName;
-		private final String methodName;
+		private final IItemFilter delegate;
 
 		/**
-		 * Constructs a filter that accepts stack trace frames matching the provided type and method
-		 * name.
+		 * Constructs a filter that accepts events whose stack trace contains a frame matching the
+		 * provided type and method name.
 		 *
 		 * @param typeName
 		 *            Type (class) name to match
@@ -177,34 +178,12 @@ public final class JdkFilters {
 		 *            Method name to match
 		 */
 		public MethodFilter(String typeName, String methodName) {
-			this.typeName = typeName;
-			this.methodName = methodName;
+			this.delegate = StackTraceFrameFilter.containsMethod(typeName, methodName);
 		}
 
 		@Override
 		public Predicate<IItem> getPredicate(IType<IItem> type) {
-			final IMemberAccessor<?, IItem> accessor = JfrAttributes.EVENT_STACKTRACE.getAccessor(type);
-			if (accessor == null) {
-				return PredicateToolkit.falsePredicate();
-			}
-
-			return new Predicate<IItem>() {
-
-				@Override
-				public boolean test(IItem o) {
-					IMCStackTrace st = (IMCStackTrace) accessor.getMember(o);
-					if (st != null) {
-						for (IMCFrame frame : st.getFrames()) {
-							IMCMethod method = frame.getMethod();
-							if (typeName.equals(method.getType().getFullName())
-									&& methodName.equals(method.getMethodName())) {
-								return true;
-							}
-						}
-					}
-					return false;
-				}
-			};
+			return delegate.getPredicate(type);
 		}
 	}
 }

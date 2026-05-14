@@ -86,7 +86,8 @@ public class FindRelatedEventsTool implements IAITool {
 				+ " events to a SPECIFIC instance. Without filters, ALL events of eventType are used as reference," //$NON-NLS-1$
 				+ " which gives useless results if the type has many events spanning the whole recording." //$NON-NLS-1$
 				+ " Example: to find what happened during a specific servlet request, use" //$NON-NLS-1$
-				+ " filterAttribute=ECID, filterValue=<the-ecid> to scope to that one request." //$NON-NLS-1$
+				+ " filterAttribute=ECID, filterValue=<the-ecid> (or spanId, localRootSpanId and similar," //$NON-NLS-1$
+				+ " depending on what attributes are available) to scope to that one request." //$NON-NLS-1$
 				+ " 'concurrent' finds all OTHER events that overlapped in time." //$NON-NLS-1$
 				+ " 'contained' finds events fully within the time span." //$NON-NLS-1$
 				+ " sameThreads=true restricts to same threads as reference events." //$NON-NLS-1$
@@ -99,7 +100,7 @@ public class FindRelatedEventsTool implements IAITool {
 		return "{\"type\":\"object\",\"properties\":{" //$NON-NLS-1$
 				+ "\"reference\":{\"type\":\"string\",\"description\":\"Name of a stored result set to use as reference events (e.g. Servlet_Invocation.max)\"}," //$NON-NLS-1$
 				+ "\"eventType\":{\"type\":\"string\",\"description\":\"Reference event type ID (alternative to reference)\"}," //$NON-NLS-1$
-				+ "\"filterAttribute\":{\"type\":\"string\",\"description\":\"Scope reference events by attribute (e.g. ECID, gcId)\"}," //$NON-NLS-1$
+				+ "\"filterAttribute\":{\"type\":\"string\",\"description\":\"Scope reference events by attribute (e.g. ECID, gcId, spanId, localRootSpanId)\"}," //$NON-NLS-1$
 				+ "\"filterValue\":{\"type\":\"string\",\"description\":\"Value the filter attribute must match\"}," //$NON-NLS-1$
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Scope reference events from this time (seconds from recording start)\"}," //$NON-NLS-1$
 				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"Scope reference events to this time\"}," //$NON-NLS-1$
@@ -107,7 +108,9 @@ public class FindRelatedEventsTool implements IAITool {
 				+ "\"enum\":[\"concurrent\",\"contained\"]}," //$NON-NLS-1$
 				+ "\"sameThreads\":{\"type\":\"boolean\",\"description\":\"Restrict to same threads as reference events (default true)\"}," //$NON-NLS-1$
 				+ "\"storeAs\":{\"type\":\"string\",\"description\":\"Store the found concurrent/contained events under this name\"}," //$NON-NLS-1$
-				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max events to return (default 100)\"}" //$NON-NLS-1$
+				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max events to return (default 100)\"}," //$NON-NLS-1$
+				+ "\"includeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; restrict reference events to those whose stack contains a frame matching at least one entry.\"}," //$NON-NLS-1$
+				+ "\"excludeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; drop reference events whose stack contains a frame matching any entry.\"}" //$NON-NLS-1$
 				+ "},\"required\":[\"eventType\",\"mode\"]}"; //$NON-NLS-1$
 	}
 
@@ -165,7 +168,9 @@ public class FindRelatedEventsTool implements IAITool {
 		} else {
 			String from = JfrContext.extractString(FROM_PATTERN, json);
 			String to = JfrContext.extractString(TO_PATTERN, json);
-			refEvents = JfrContext.filterItems(items, eventType, from, to);
+			String includeFrames = JfrContext.extractString(JfrContext.INCLUDE_FRAMES_PATTERN, json);
+			String excludeFrames = JfrContext.extractString(JfrContext.EXCLUDE_FRAMES_PATTERN, json);
+			refEvents = JfrContext.filterItems(items, eventType, from, to, includeFrames, excludeFrames);
 
 			String filterAttr = JfrContext.extractString(FILTER_ATTR_PATTERN, json);
 			String filterValue = JfrContext.extractString(FILTER_VALUE_PATTERN, json);

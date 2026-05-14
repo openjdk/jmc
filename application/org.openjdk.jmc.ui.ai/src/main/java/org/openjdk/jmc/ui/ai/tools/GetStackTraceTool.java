@@ -73,7 +73,13 @@ public class GetStackTraceTool implements IAITool {
 				+ " count (sample count), duration (total time), allocationSize (bytes allocated)," //$NON-NLS-1$
 				+ " or size (I/O bytes). Defaults to execution samples weighted by count." //$NON-NLS-1$
 				+ " For allocation profiling, prefer jdk.ObjectAllocationSample (JDK 16+)." //$NON-NLS-1$
-				+ " Only fall back to jdk.ObjectAllocationInNewTLAB/OutsideTLAB for older JDKs."; //$NON-NLS-1$
+				+ " Only fall back to jdk.ObjectAllocationInNewTLAB/OutsideTLAB for older JDKs." //$NON-NLS-1$
+				+ " Use includeFrames to focus on stacks that contain a specific package or class" //$NON-NLS-1$
+				+ " (e.g. includeFrames=\"org.apache.log4j\" to see only stacks that hit Log4j;" //$NON-NLS-1$
+				+ " includeFrames=\"com.acme\" for an application-only view)." //$NON-NLS-1$
+				+ " Note: includeFrames/excludeFrames pick which EVENTS to keep — they do NOT trim frames out of" //$NON-NLS-1$
+				+ " a stack trace. excludeFrames=\"java,jdk,sun\" would drop nearly every event (every Java stack" //$NON-NLS-1$
+				+ " ends in java.lang.Thread.run); use it only to remove a specific noisy code path."; //$NON-NLS-1$
 	}
 
 	@Override
@@ -85,7 +91,9 @@ public class GetStackTraceTool implements IAITool {
 				+ "\"enum\":[\"count\",\"duration\",\"allocationSize\",\"size\"]}," //$NON-NLS-1$
 				+ "\"fromSeconds\":{\"type\":\"number\",\"description\":\"Start of time range in seconds from recording start\"}," //$NON-NLS-1$
 				+ "\"toSeconds\":{\"type\":\"number\",\"description\":\"End of time range in seconds from recording start\"}," //$NON-NLS-1$
-				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max nodes to return (default 20)\"}" //$NON-NLS-1$
+				+ "\"limit\":{\"type\":\"integer\",\"description\":\"Max nodes to return (default 20)\"}," //$NON-NLS-1$
+				+ "\"includeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; keep only events whose stack contains a frame matching at least one entry.\"}," //$NON-NLS-1$
+				+ "\"excludeFrames\":{\"type\":\"string\",\"description\":\"Comma-separated FQ class names or package prefixes; drop events whose stack contains a frame matching any entry.\"}" //$NON-NLS-1$
 				+ "}}"; //$NON-NLS-1$
 	}
 
@@ -112,7 +120,9 @@ public class GetStackTraceTool implements IAITool {
 
 		String from = JfrContext.extractString(FROM_PATTERN, parametersJson);
 		String to = JfrContext.extractString(TO_PATTERN, parametersJson);
-		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to);
+		String includeFrames = JfrContext.extractString(JfrContext.INCLUDE_FRAMES_PATTERN, parametersJson);
+		String excludeFrames = JfrContext.extractString(JfrContext.EXCLUDE_FRAMES_PATTERN, parametersJson);
+		IItemCollection filtered = JfrContext.filterItems(items, eventType, from, to, includeFrames, excludeFrames);
 		if (!filtered.hasItems()) {
 			return "No events found for type: " + eventType; //$NON-NLS-1$
 		}
