@@ -494,7 +494,7 @@ final public class UnitLookup {
 			}
 
 			@Override
-			public Long parsePersisted(String persistedValue) {
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
 				checkNull(persistedValue);
 				try {
 					return Long.parseLong(persistedValue);
@@ -510,7 +510,7 @@ final public class UnitLookup {
 			}
 
 			@Override
-			public Long parseInteractive(String interactiveValue) {
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
 				checkNull(interactiveValue);
 				try {
 					return Long.parseLong(interactiveValue);
