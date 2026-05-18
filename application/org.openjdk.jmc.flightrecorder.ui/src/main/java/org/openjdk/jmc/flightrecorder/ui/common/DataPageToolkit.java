@@ -1007,17 +1007,16 @@ public class DataPageToolkit {
 						? JdkAttributes.CLASS_INITIATING_CLASSLOADER_STRING : a)
 				.map(a -> a.equals(JdkAttributes.PARENT_CLASSLOADER) ? JdkAttributes.PARENT_CLASSLOADER_STRING : a)
 				.map(a -> a.equals(JdkAttributes.CLASSLOADER) ? JdkAttributes.CLASSLOADER_STRING : a)
-                .filter(a -> a.equals(JfrAttributes.EVENT_TYPE) || (a.getContentType() instanceof RangeContentType)
-                        || (a.getContentType().getPersister() != null) || isFilterableNumericType(a))
+				.filter(a -> a.equals(JfrAttributes.EVENT_TYPE) || (a.getContentType() instanceof RangeContentType)
+						|| (a.getContentType().getPersister() != null) || isFilterableNumericType(a))
 				.distinct();
 	}
 
-    private static boolean isFilterableNumericType(IAttribute<?> attribute) {
-        org.openjdk.jmc.common.unit.ContentType<?> ct = attribute.getContentType();
-        return ct.equals(UnitLookup.RAW_NUMBER) || ct.equals(UnitLookup.RAW_LONG)
-                || ct.equals(UnitLookup.COUNT) || ct.equals(UnitLookup.INDEX)
-                || ct.equals(UnitLookup.IDENTIFIER);
-    }
+	private static boolean isFilterableNumericType(IAttribute<?> attribute) {
+		org.openjdk.jmc.common.unit.ContentType<?> ct = attribute.getContentType();
+		return ct.equals(UnitLookup.RAW_NUMBER) || ct.equals(UnitLookup.RAW_LONG) || ct.equals(UnitLookup.COUNT)
+				|| ct.equals(UnitLookup.INDEX) || ct.equals(UnitLookup.IDENTIFIER);
+	}
 
 	/**
 	 * Returns a value for attribute, firstly by trying to find one in the items, secondly by
