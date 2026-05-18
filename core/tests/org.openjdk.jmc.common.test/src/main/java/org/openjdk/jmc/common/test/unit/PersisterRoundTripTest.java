@@ -44,8 +44,7 @@ import static org.junit.Assert.assertNotNull;
 @SuppressWarnings("nls")
 public class PersisterRoundTripTest extends MCTestCase {
 
-	private void assertNumberRoundTrip(IPersister<Number> persister, Number value)
-			throws QuantityConversionException {
+	private void assertNumberRoundTrip(IPersister<Number> persister, Number value) throws QuantityConversionException {
 		String persisted = persister.persistableString(value);
 		assertNotNull(persisted);
 		Number restored = persister.parsePersisted(persisted);

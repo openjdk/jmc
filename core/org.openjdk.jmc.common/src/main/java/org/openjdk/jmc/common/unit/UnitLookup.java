@@ -426,102 +426,102 @@ final public class UnitLookup {
 		return String.format("0x%08X", quantity.longValue());
 	}
 
-    private static Number parseNumber(String numberStr) {
-        try {
-            return Long.parseLong(numberStr);
-        } catch (NumberFormatException eLong) {
-            return Double.parseDouble(numberStr);
-        }
-    }
+	private static Number parseNumber(String numberStr) {
+		try {
+			return Long.parseLong(numberStr);
+		} catch (NumberFormatException eLong) {
+			return Double.parseDouble(numberStr);
+		}
+	}
 
 	// FIXME: Rename to createPrimitiveNumber? Remove?
 	private static ContentType<Number> createRawNumber() {
-        ContentType<Number> contentType = new LeafContentType<Number>("raw number") {
-            @Override
-            public boolean validate(Number value) {
-                checkNull(value);
-                return false;
-            }
+		ContentType<Number> contentType = new LeafContentType<Number>("raw number") {
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
 
-            @Override
-            public String persistableString(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parsePersisted(String persistedValue) {
-                checkNull(persistedValue);
-                try {
-                    return parseNumber(persistedValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
-                }
-            }
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
+			}
 
-            @Override
-            public String interactiveFormat(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parseInteractive(String interactiveValue) {
-                checkNull(interactiveValue);
-                try {
-                    return parseNumber(interactiveValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
-                }
-            }
-        };
-        contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
-        return contentType;
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
+			}
+		};
+		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
+		return contentType;
 	}
 
 	private static ContentType<Long> createRawLong() {
-        ContentType<Long> contentType = new LeafContentType<Long>("raw long") {
-            @Override
-            public boolean validate(Long value) {
-                checkNull(value);
-                return false;
-            }
+		ContentType<Long> contentType = new LeafContentType<Long>("raw long") {
+			@Override
+			public boolean validate(Long value) {
+				checkNull(value);
+				return false;
+			}
 
-            @Override
-            public String persistableString(Long value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String persistableString(Long value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Long parsePersisted(String persistedValue) {
-                checkNull(persistedValue);
-                try {
-                    return Long.parseLong(persistedValue);
-                } catch (NumberFormatException e) {
-                    throw QuantityConversionException.unparsable(persistedValue, 0L, this);
-                }
-            }
+			@Override
+			public Long parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				try {
+					return Long.parseLong(persistedValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
+				}
+			}
 
-            @Override
-            public String interactiveFormat(Long value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String interactiveFormat(Long value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Long parseInteractive(String interactiveValue) {
-                checkNull(interactiveValue);
-                try {
-                    return Long.parseLong(interactiveValue);
-                } catch (NumberFormatException e) {
-                    throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
-                }
-            }
-        };
-        contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
-        return contentType;
-    }
+			@Override
+			public Long parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				try {
+					return Long.parseLong(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
+				}
+			}
+		};
+		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
+		return contentType;
+	}
 
 	private static LinearKindOfQuantity createMemory() {
 		LinearKindOfQuantity memory = new LinearKindOfQuantity("memory", "B", EnumSet.range(NOBI, PEBI),
@@ -653,137 +653,137 @@ final public class UnitLookup {
 	}
 
 	private static ContentType<Number> createCount() {
-        ContentType<Number> contentType = new LeafContentType<Number>("count") {
-            @Override
-            public boolean validate(Number value) {
-                checkNull(value);
-                return false;
-            }
+		ContentType<Number> contentType = new LeafContentType<Number>("count") {
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
 
-            @Override
-            public String persistableString(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parsePersisted(String persistedValue) {
-                checkNull(persistedValue);
-                try {
-                    return parseNumber(persistedValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
-                }
-            }
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
+			}
 
-            @Override
-            public String interactiveFormat(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parseInteractive(String interactiveValue) {
-                checkNull(interactiveValue);
-                try {
-                    return parseNumber(interactiveValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
-                }
-            }
-        };
-        contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
-        return contentType;
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
+			}
+		};
+		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
+		return contentType;
 	}
 
 	private static ContentType<Number> createIdentifier() {
-        ContentType<Number> contentType = new LeafContentType<Number>("identifier") {
-            @Override
-            public boolean validate(Number value) {
-                checkNull(value);
-                return false;
-            }
+		ContentType<Number> contentType = new LeafContentType<Number>("identifier") {
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
 
-            @Override
-            public String persistableString(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parsePersisted(String persistedValue) {
-                checkNull(persistedValue);
-                try {
-                    return parseNumber(persistedValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
-                }
-            }
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
+			}
 
-            @Override
-            public String interactiveFormat(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parseInteractive(String interactiveValue) {
-                checkNull(interactiveValue);
-                try {
-                    return parseNumber(interactiveValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
-                }
-            }
-        };
-        contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
-        return contentType;
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
+			}
+		};
+		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
+		return contentType;
 	}
 
 	private static ContentType<Number> createIndex() {
-        ContentType<Number> contentType = new LeafContentType<Number>("index") {
-            @Override
-            public boolean validate(Number value) {
-                checkNull(value);
-                return false;
-            }
+		ContentType<Number> contentType = new LeafContentType<Number>("index") {
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
 
-            @Override
-            public String persistableString(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parsePersisted(String persistedValue) {
-                checkNull(persistedValue);
-                try {
-                    return parseNumber(persistedValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
-                }
-            }
+			@Override
+			public Number parsePersisted(String persistedValue) {
+				checkNull(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+				}
+			}
 
-            @Override
-            public String interactiveFormat(Number value) {
-                validate(value);
-                return value.toString();
-            }
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
 
-            @Override
-            public Number parseInteractive(String interactiveValue) {
-                checkNull(interactiveValue);
-                try {
-                    return parseNumber(interactiveValue);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
-                }
-            }
-        };
-        contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
-        return contentType;
+			@Override
+			public Number parseInteractive(String interactiveValue) {
+				checkNull(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+				}
+			}
+		};
+		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
+		return contentType;
 
-    }
+	}
 
 	public static String getUnitIdentifier(IUnit unit) {
 		if (unit.getIdentifier() == null) {

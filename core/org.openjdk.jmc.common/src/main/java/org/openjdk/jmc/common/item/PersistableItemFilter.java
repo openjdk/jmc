@@ -252,11 +252,11 @@ public abstract class PersistableItemFilter implements IItemFilter, IStateful {
 		if (persistedValue != null) {
 			try {
 				return persister.parsePersisted(persistedValue);
-            } catch (QuantityConversionException e) {
-                LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
-            } catch (IllegalArgumentException e) {
-                LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
-            }
+			} catch (QuantityConversionException e) {
+				LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
+			} catch (IllegalArgumentException e) {
+				LOGGER.log(Level.SEVERE, "Failed to parse value from attibute " + key, e);
+			}
 		}
 		return null;
 	}
