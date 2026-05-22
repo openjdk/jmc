@@ -91,14 +91,9 @@ final public class UnitLookup {
 	private static final String UNIT_ID_SEPARATOR = ":";
 	public static final LinearKindOfQuantity MEMORY = createMemory();
 	public static final LinearKindOfQuantity TIMESPAN = createTimespan();
-	/*
-	 * NOTE: These 3 (count, index, and identifier) cannot be persisted/restored due to Long(1) and
-	 * Integer(1) not being equal or comparable. We either need to split into concrete wrappers,
-	 * support a custom Comparator, or wrap into a (simple) IQuantity.
-	 */
-	public static final ContentType<Number> COUNT = createCount();
-	public static final ContentType<Number> INDEX = createIndex();
-	public static final ContentType<Number> IDENTIFIER = createIdentifier();
+	public static final ContentType<Long> COUNT = createCount();
+	public static final ContentType<Long> INDEX = createIndex();
+	public static final ContentType<Long> IDENTIFIER = createIdentifier();
 	public static final KindOfQuantity<TimestampUnit> TIMESTAMP = createTimestamp(TIMESPAN);
 	public static final LinearKindOfQuantity PERCENTAGE = createPercentage();
 	public static final LinearKindOfQuantity NUMBER = createNumber();
@@ -450,12 +445,12 @@ final public class UnitLookup {
 			}
 
 			@Override
-			public Number parsePersisted(String persistedValue) {
+			public Number parsePersisted(String persistedValue) throws QuantityConversionException {
 				checkNull(persistedValue);
 				try {
 					return parseNumber(persistedValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+					throw QuantityConversionException.unparsable(persistedValue, 0, this);
 				}
 			}
 
@@ -466,12 +461,12 @@ final public class UnitLookup {
 			}
 
 			@Override
-			public Number parseInteractive(String interactiveValue) {
+			public Number parseInteractive(String interactiveValue) throws QuantityConversionException {
 				checkNull(interactiveValue);
 				try {
 					return parseNumber(interactiveValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+					throw QuantityConversionException.unparsable(interactiveValue, 0, this);
 				}
 			}
 		};
@@ -652,43 +647,43 @@ final public class UnitLookup {
 		return percentage;
 	}
 
-	private static ContentType<Number> createCount() {
-		ContentType<Number> contentType = new LeafContentType<Number>("count") {
+	private static ContentType<Long> createCount() {
+		ContentType<Long> contentType = new LeafContentType<Long>("count") {
 			@Override
-			public boolean validate(Number value) {
+			public boolean validate(Long value) {
 				checkNull(value);
 				return false;
 			}
 
 			@Override
-			public String persistableString(Number value) {
+			public String persistableString(Long value) {
 				validate(value);
 				return value.toString();
 			}
 
 			@Override
-			public Number parsePersisted(String persistedValue) {
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
 				checkNull(persistedValue);
 				try {
-					return parseNumber(persistedValue);
+					return Long.parseLong(persistedValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
 				}
 			}
 
 			@Override
-			public String interactiveFormat(Number value) {
+			public String interactiveFormat(Long value) {
 				validate(value);
 				return value.toString();
 			}
 
 			@Override
-			public Number parseInteractive(String interactiveValue) {
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
 				checkNull(interactiveValue);
 				try {
-					return parseNumber(interactiveValue);
+					return Long.parseLong(interactiveValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
 				}
 			}
 		};
@@ -696,43 +691,43 @@ final public class UnitLookup {
 		return contentType;
 	}
 
-	private static ContentType<Number> createIdentifier() {
-		ContentType<Number> contentType = new LeafContentType<Number>("identifier") {
+	private static ContentType<Long> createIdentifier() {
+		ContentType<Long> contentType = new LeafContentType<Long>("identifier") {
 			@Override
-			public boolean validate(Number value) {
+			public boolean validate(Long value) {
 				checkNull(value);
 				return false;
 			}
 
 			@Override
-			public String persistableString(Number value) {
+			public String persistableString(Long value) {
 				validate(value);
 				return value.toString();
 			}
 
 			@Override
-			public Number parsePersisted(String persistedValue) {
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
 				checkNull(persistedValue);
 				try {
-					return parseNumber(persistedValue);
+					return Long.parseLong(persistedValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
 				}
 			}
 
 			@Override
-			public String interactiveFormat(Number value) {
+			public String interactiveFormat(Long value) {
 				validate(value);
 				return value.toString();
 			}
 
 			@Override
-			public Number parseInteractive(String interactiveValue) {
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
 				checkNull(interactiveValue);
 				try {
-					return parseNumber(interactiveValue);
+					return Long.parseLong(interactiveValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
 				}
 			}
 		};
@@ -740,49 +735,48 @@ final public class UnitLookup {
 		return contentType;
 	}
 
-	private static ContentType<Number> createIndex() {
-		ContentType<Number> contentType = new LeafContentType<Number>("index") {
+	private static ContentType<Long> createIndex() {
+		ContentType<Long> contentType = new LeafContentType<Long>("index") {
 			@Override
-			public boolean validate(Number value) {
+			public boolean validate(Long value) {
 				checkNull(value);
 				return false;
 			}
 
 			@Override
-			public String persistableString(Number value) {
+			public String persistableString(Long value) {
 				validate(value);
 				return value.toString();
 			}
 
 			@Override
-			public Number parsePersisted(String persistedValue) {
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
 				checkNull(persistedValue);
 				try {
-					return parseNumber(persistedValue);
+					return Long.parseLong(persistedValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + persistedValue + "' as a number");
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
 				}
 			}
 
 			@Override
-			public String interactiveFormat(Number value) {
+			public String interactiveFormat(Long value) {
 				validate(value);
 				return value.toString();
 			}
 
 			@Override
-			public Number parseInteractive(String interactiveValue) {
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
 				checkNull(interactiveValue);
 				try {
-					return parseNumber(interactiveValue);
+					return Long.parseLong(interactiveValue);
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Could not parse '" + interactiveValue + "' as a number");
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
 				}
 			}
 		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
-
 	}
 
 	public static String getUnitIdentifier(IUnit unit) {

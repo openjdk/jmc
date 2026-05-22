@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -213,33 +213,23 @@ public abstract class QuantityConversionException extends Exception {
 		}
 	}
 
-	/*
-	 * NOTE: The type parameter T doesn't strictly need to extend Comparable<T>, particularly not
-	 * for UNPARSEABLE. For the other cases, it seemed possible that they could be used where being
-	 * Comparable would be beneficial.
-	 */
-	public static <T extends Comparable<T>> QuantityConversionException unparsable(
-		String badString, T prototype, IPersister<T> persister) {
+	public static <T> QuantityConversionException unparsable(String badString, T prototype, IPersister<T> persister) {
 		return new Persisted(Problem.UNPARSEABLE, badString, prototype, persister);
 	}
 
-	public static <T extends Comparable<T>> QuantityConversionException noUnit(
-		String badString, T prototype, IPersister<T> persister) {
+	public static <T> QuantityConversionException noUnit(String badString, T prototype, IPersister<T> persister) {
 		return new Persisted(Problem.NO_UNIT, badString, prototype, persister);
 	}
 
-	public static <T extends Comparable<T>> QuantityConversionException unknownUnit(
-		String badString, T prototype, IPersister<T> persister) {
+	public static <T> QuantityConversionException unknownUnit(String badString, T prototype, IPersister<T> persister) {
 		return new Persisted(Problem.UNKNOWN_UNIT, badString, prototype, persister);
 	}
 
-	public static <T extends Comparable<T>> QuantityConversionException tooLow(
-		T badValue, T min, IPersister<T> persister) {
+	public static <T> QuantityConversionException tooLow(T badValue, T min, IPersister<T> persister) {
 		return new Persisted(Problem.TOO_LOW, badValue, min, persister);
 	}
 
-	public static <T extends Comparable<T>> QuantityConversionException tooHigh(
-		T badValue, T max, IPersister<T> persister) {
+	public static <T> QuantityConversionException tooHigh(T badValue, T max, IPersister<T> persister) {
 		return new Persisted(Problem.TOO_HIGH, badValue, max, persister);
 	}
 
@@ -247,7 +237,7 @@ public abstract class QuantityConversionException extends Exception {
 	 * FIXME: This currently reports that the value is "below precision". Replace precisionLimit
 	 * with a closest valid quantity (and change the problem message)?
 	 */
-	public static <T extends Comparable<T>> QuantityConversionException belowPrecision(
+	public static <T> QuantityConversionException belowPrecision(
 		T badValue, T precisionLimit, IPersister<T> persister) {
 		return new Persisted(Problem.TOO_SMALL_MAGNITUDE, badValue, precisionLimit, persister);
 	}

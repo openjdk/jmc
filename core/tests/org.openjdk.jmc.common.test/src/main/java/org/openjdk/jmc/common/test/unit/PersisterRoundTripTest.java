@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -26,7 +26,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED ON ANY THEORY OF LIABILITY,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -40,15 +40,22 @@ import org.openjdk.jmc.test.MCTestCase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 @SuppressWarnings("nls")
 public class PersisterRoundTripTest extends MCTestCase {
+
+	private static final String MALFORMED = "not_a_number";
 
 	private void assertNumberRoundTrip(IPersister<Number> persister, Number value) throws QuantityConversionException {
 		String persisted = persister.persistableString(value);
 		assertNotNull(persisted);
 		Number restored = persister.parsePersisted(persisted);
-		assertEquals(value.doubleValue(), restored.doubleValue(), 0.0001);
+		if (value instanceof Long || value instanceof Integer) {
+			assertEquals(value.longValue(), restored.longValue());
+		} else {
+			assertEquals(value.doubleValue(), restored.doubleValue(), 0.0001);
+		}
 	}
 
 	private void assertLongRoundTrip(IPersister<Long> persister, Long value) throws QuantityConversionException {
@@ -70,6 +77,14 @@ public class PersisterRoundTripTest extends MCTestCase {
 	}
 
 	@Test
+	public void testRawNumberParseError() {
+		IPersister<Number> persister = UnitLookup.RAW_NUMBER.getPersister();
+		assertNotNull(persister);
+		assertThrows(QuantityConversionException.class, () -> persister.parsePersisted(MALFORMED));
+		assertThrows(QuantityConversionException.class, () -> persister.parseInteractive(MALFORMED));
+	}
+
+	@Test
 	public void testRawLong() throws QuantityConversionException {
 		IPersister<Long> persister = UnitLookup.RAW_LONG.getPersister();
 		assertNotNull(persister);
@@ -81,31 +96,63 @@ public class PersisterRoundTripTest extends MCTestCase {
 	}
 
 	@Test
-	public void testCount() throws QuantityConversionException {
-		IPersister<Number> persister = UnitLookup.COUNT.getPersister();
+	public void testRawLongParseError() {
+		IPersister<Long> persister = UnitLookup.RAW_LONG.getPersister();
 		assertNotNull(persister);
-		assertNumberRoundTrip(persister, 0);
-		assertNumberRoundTrip(persister, 1);
-		assertNumberRoundTrip(persister, 1000);
-		assertNumberRoundTrip(persister, 1000000L);
+		assertThrows(QuantityConversionException.class, () -> persister.parsePersisted(MALFORMED));
+		assertThrows(QuantityConversionException.class, () -> persister.parseInteractive(MALFORMED));
+	}
+
+	@Test
+	public void testCount() throws QuantityConversionException {
+		IPersister<Long> persister = UnitLookup.COUNT.getPersister();
+		assertNotNull(persister);
+		assertLongRoundTrip(persister, 0L);
+		assertLongRoundTrip(persister, 1L);
+		assertLongRoundTrip(persister, 1000L);
+		assertLongRoundTrip(persister, 1000000L);
+	}
+
+	@Test
+	public void testCountParseError() {
+		IPersister<Long> persister = UnitLookup.COUNT.getPersister();
+		assertNotNull(persister);
+		assertThrows(QuantityConversionException.class, () -> persister.parsePersisted(MALFORMED));
+		assertThrows(QuantityConversionException.class, () -> persister.parseInteractive(MALFORMED));
 	}
 
 	@Test
 	public void testIndex() throws QuantityConversionException {
-		IPersister<Number> persister = UnitLookup.INDEX.getPersister();
+		IPersister<Long> persister = UnitLookup.INDEX.getPersister();
 		assertNotNull(persister);
-		assertNumberRoundTrip(persister, 0);
-		assertNumberRoundTrip(persister, 1);
-		assertNumberRoundTrip(persister, 100);
-		assertNumberRoundTrip(persister, 999999L);
+		assertLongRoundTrip(persister, 0L);
+		assertLongRoundTrip(persister, 1L);
+		assertLongRoundTrip(persister, 100L);
+		assertLongRoundTrip(persister, 999999L);
+	}
+
+	@Test
+	public void testIndexParseError() {
+		IPersister<Long> persister = UnitLookup.INDEX.getPersister();
+		assertNotNull(persister);
+		assertThrows(QuantityConversionException.class, () -> persister.parsePersisted(MALFORMED));
+		assertThrows(QuantityConversionException.class, () -> persister.parseInteractive(MALFORMED));
 	}
 
 	@Test
 	public void testIdentifier() throws QuantityConversionException {
-		IPersister<Number> persister = UnitLookup.IDENTIFIER.getPersister();
+		IPersister<Long> persister = UnitLookup.IDENTIFIER.getPersister();
 		assertNotNull(persister);
-		assertNumberRoundTrip(persister, 1);
-		assertNumberRoundTrip(persister, 12345);
-		assertNumberRoundTrip(persister, 987654321L);
+		assertLongRoundTrip(persister, 1L);
+		assertLongRoundTrip(persister, 12345L);
+		assertLongRoundTrip(persister, 987654321L);
+	}
+
+	@Test
+	public void testIdentifierParseError() {
+		IPersister<Long> persister = UnitLookup.IDENTIFIER.getPersister();
+		assertNotNull(persister);
+		assertThrows(QuantityConversionException.class, () -> persister.parsePersisted(MALFORMED));
+		assertThrows(QuantityConversionException.class, () -> persister.parseInteractive(MALFORMED));
 	}
 }
