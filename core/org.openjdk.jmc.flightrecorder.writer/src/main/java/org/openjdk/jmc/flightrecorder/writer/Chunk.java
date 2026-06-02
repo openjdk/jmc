@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,17 +33,28 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 /** A representation of JFR chunk - self contained set of JFR data. */
 final class Chunk {
-	private final LEB128Writer writer = LEB128Writer.getInstance();
+	private final LEB128Writer writer;
+	private final ThreadMmapManager mmapManager;
+	private final long threadId;
 	private final long startTicks;
 	private final long startNanos;
 
 	Chunk() {
+		this(LEB128Writer.getInstance(), null);
+	}
+
+	Chunk(LEB128Writer writer, ThreadMmapManager mmapManager) {
+		this.writer = writer;
+		this.mmapManager = mmapManager;
+		this.threadId = Thread.currentThread().getId();
 		this.startTicks = System.nanoTime();
 		this.startNanos = System.currentTimeMillis() * 1_000_000L;
 	}
@@ -152,13 +163,47 @@ final class Chunk {
 			throw new IllegalArgumentException();
 		}
 
+		// Serialize event to temporary heap-based buffer
 		LEB128Writer eventWriter = LEB128Writer.getInstance();
 		eventWriter.writeLong(event.getType().getId());
 		for (TypedFieldValueImpl fieldValue : event.getFieldValues()) {
 			writeTypedValue(eventWriter, fieldValue.getValue());
 		}
 
-		writer.writeInt(eventWriter.length()) // write event size
+		int eventSize = eventWriter.length();
+
+		// Check if active buffer has space (size prefix + event data)
+		// LEB128 encoding uses at most 5 bytes for int32
+		int requiredSpace = 5 + eventSize;
+
+		// Get current active writer (may change after rotation)
+		LEB128Writer activeWriter;
+		if (mmapManager != null) {
+			try {
+				// Always get the current active writer in mmap mode
+				activeWriter = mmapManager.getActiveWriter(threadId);
+				if (activeWriter instanceof LEB128MappedWriter mmapWriter) {
+					if (!mmapWriter.canFit(requiredSpace)) {
+						// Trigger rotation - swap buffers and flush inactive in background
+						mmapManager.rotateChunk(threadId);
+						// Get the NEW active writer after rotation
+						activeWriter = mmapManager.getActiveWriter(threadId);
+					}
+				} else {
+					throw new IllegalStateException(
+							"Expected LEB128MappedWriter from mmap manager, got "
+									+ (activeWriter == null ? "null" : activeWriter.getClass().getName()));
+				}
+			} catch (IOException e) {
+				throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
+			}
+		} else {
+			// Heap mode - use the fixed writer
+			activeWriter = writer;
+		}
+
+		// Write event to active writer (might be rotated)
+		activeWriter.writeInt(eventSize) // write event size
 				.writeBytes(eventWriter.export());
 	}
 
