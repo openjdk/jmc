@@ -57,7 +57,7 @@
       <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.help.webapp"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.apache.commons.codec"/>
+      <import plugin="org.apache.commons.commons-codec"/>
       <import plugin="org.eclipse.e4.core.di"/>
       <import plugin="org.eclipse.e4.core.contexts"/>
    </requires>

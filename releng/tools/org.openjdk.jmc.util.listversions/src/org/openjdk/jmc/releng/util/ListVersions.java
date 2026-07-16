@@ -71,7 +71,7 @@ public class ListVersions {
 			case "org.eclipse.update.configurator":
 			case "org.eclipse.equinox.p2.reconciler.dropins":
 			case "org.eclipse.help.webapp":
-			case "org.apache.commons.codec":
+			case "org.apache.commons.commons-codec":
 			case "org.eclipse.rcp.feature.group":
 			case "org.eclipse.help.feature.group":
 			case "org.eclipse.equinox.p2.rcp.feature.feature.group":
