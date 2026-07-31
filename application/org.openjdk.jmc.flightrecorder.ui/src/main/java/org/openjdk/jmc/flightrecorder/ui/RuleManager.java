@@ -304,8 +304,8 @@ public class RuleManager {
 	}
 
 	public Severity getMaxSeverity(String ... topics) {
-		return getResults(topics).parallelStream().map(IResult::getSeverity).max(Comparator.naturalOrder())
-				.orElse(Severity.NA);
+		return getResults(topics).parallelStream().map(IResult::getSeverity)
+				.max(Comparator.comparingDouble(Severity::getLimit)).orElse(Severity.NA);
 	}
 
 	public Collection<IResult> getUnmappedResults() {
