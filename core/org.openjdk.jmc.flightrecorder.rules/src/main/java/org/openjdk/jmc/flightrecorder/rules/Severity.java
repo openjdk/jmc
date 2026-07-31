@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,8 +34,22 @@ package org.openjdk.jmc.flightrecorder.rules;
 
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
 
+/**
+ * The severity of a rule result.
+ * <p>
+ * The constants are declared in ascending order of severity, so that the natural ordering of this
+ * enum agrees with the ordering of the severity scores returned by {@link #getLimit()}. Keep it
+ * that way when adding constants: code that compares severities relies on it. Prefer
+ * {@link #isAtLeast(Severity)} over {@link #compareTo(Object)} when filtering, since it states the
+ * intent and compares the scores directly.
+ */
 public enum Severity {
 
+	/**
+	 * Results with this severity score should not be presented at all, because the rule does not
+	 * apply in a way that is worth reporting.
+	 */
+	IGNORE(-3, Messages.getString(Messages.Severity_IGNORE)),
 	/**
 	 * Results with this severity score are not applicable to the recording, but it should be
 	 * possible to view them so the user can see which results have not been possible to evaluate.
@@ -52,9 +66,7 @@ public enum Severity {
 	/**
 	 * Results with this severity score should be presented as warnings.
 	 */
-	WARNING(75, Messages.getString(Messages.Severity_WARNING)),
-
-	IGNORE(-3, Messages.getString(Messages.Severity_IGNORE));
+	WARNING(75, Messages.getString(Messages.Severity_WARNING));
 
 	private final double score;
 	private final String localizedName;
@@ -72,6 +84,22 @@ public enum Severity {
 		return score;
 	}
 
+	/**
+	 * Checks whether this severity is at least as severe as the given one, comparing the severity
+	 * scores. Use this rather than comparing severities directly when applying a minimum severity
+	 * threshold.
+	 *
+	 * @param other
+	 *            the severity to compare against
+	 * @return true if this severity's score is greater than or equal to the other's
+	 */
+	public boolean isAtLeast(Severity other) {
+		return score >= other.score;
+	}
+
+	/**
+	 * The constants in descending order of severity score, as required by {@link #get(double)}.
+	 */
 	private static final Severity[] VALUES = {WARNING, INFO, OK, NA, IGNORE};
 
 	public static Severity get(double score) {
