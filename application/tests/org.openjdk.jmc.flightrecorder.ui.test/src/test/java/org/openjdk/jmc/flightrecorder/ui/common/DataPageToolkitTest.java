@@ -41,8 +41,9 @@ import org.junit.Test;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 
 /**
- * Regression tests for {@link DataPageToolkit#nextMaxSeverity(Severity, Severity, java.util.function.Supplier)},
- * which drives the icon shown by {@link DataPageToolkit.ShowResultAction}. A prior version of that
+ * Regression tests for
+ * {@link DataPageToolkit#nextMaxSeverity(Severity, Severity, java.util.function.Supplier)}, which
+ * drives the icon shown by {@link DataPageToolkit.ShowResultAction}. A prior version of that
  * listener recomputed the max severity when a result dropped below the current max, but never
  * refreshed the icon to reflect it, leaving a stale (too severe) icon displayed.
  */
@@ -71,9 +72,9 @@ public class DataPageToolkitTest {
 	}
 
 	/**
-	 * Pins the bug: when severity drops, the caller must be told the max changed (by getting back
-	 * a different reference) so it knows to refresh the icon, even if the recomputed max happens
-	 * to differ from the reported result's own severity.
+	 * Pins the bug: when severity drops, the caller must be told the max changed (by getting back a
+	 * different reference) so it knows to refresh the icon, even if the recomputed max happens to
+	 * differ from the reported result's own severity.
 	 */
 	@Test
 	public void recomputedMaxCanDifferFromTheReportedResult() {

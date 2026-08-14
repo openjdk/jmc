@@ -847,9 +847,9 @@ public class DataPageToolkit {
 	}
 
 	/**
-	 * Determines the new max severity for a {@link ShowResultAction} after a rule result arrives.
-	 * A result more severe than the current max simply becomes the new max. A result less severe
-	 * than the current max means the previous max may no longer be in effect (e.g. its rule was
+	 * Determines the new max severity for a {@link ShowResultAction} after a rule result arrives. A
+	 * result more severe than the current max simply becomes the new max. A result less severe than
+	 * the current max means the previous max may no longer be in effect (e.g. its rule was
 	 * re-evaluated with a lower severity), so the true max is recomputed from scratch.
 	 */
 	public static Severity nextMaxSeverity(Severity currentMax, Severity resultSeverity, Supplier<Severity> recompute) {
