@@ -111,7 +111,7 @@ public class RuleManager {
 				if (dependencyType != null) {
 					while (true) {
 						if (evaluatedRules.containsKey(dependencyType)) {
-							if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
+							if (!evaluatedRules.get(dependencyType).isAtLeast(dependency.severity())) {
 								return false;
 							}
 							return true;
