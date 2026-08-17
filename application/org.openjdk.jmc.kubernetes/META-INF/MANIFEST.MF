@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.openjdk.jmc.kubernetes;singleton:=true
 Bundle-Version: 10.0.0.qualifier
 Automatic-Module-Name: org.openjdk.jmc.kubernetes
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: org.openjdk.jmc.jolokia,
+Require-Bundle: org.openjdk.jmc.jolokia;bundle-version="10.0.0",
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.openjdk.jmc.ui,
@@ -15,13 +15,13 @@ Require-Bundle: org.openjdk.jmc.jolokia,
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences
 Import-Package: org.apache.commons.logging;version="1.2.0",
- org.jolokia.client;version="2.6.1",
- org.jolokia.client.exception;version="2.6.1",
- org.jolokia.client.jdkclient;version="2.6.1",
- org.jolokia.client.request;version="[2.6.1,3.0.0)",
- org.jolokia.client.response;version="2.6.1",
- org.jolokia.client.spi;version="[2.6.1,3.0.0)",
- org.jolokia.json;version="[2.6.1,3.0.0)",
- org.jolokia.json.parser;version="[2.6.1,3.0.0)"
+ org.jolokia.client,
+ org.jolokia.client.exception,
+ org.jolokia.client.jdkclient,
+ org.jolokia.client.request,
+ org.jolokia.client.response,
+ org.jolokia.client.spi,
+ org.jolokia.json,
+ org.jolokia.json.parser
 Bundle-Activator: org.openjdk.jmc.kubernetes.JmcKubernetesPlugin
 Bundle-ActivationPolicy: lazy
