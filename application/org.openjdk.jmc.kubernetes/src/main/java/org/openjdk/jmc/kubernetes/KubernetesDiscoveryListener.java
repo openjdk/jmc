@@ -54,7 +54,6 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
 import org.jolokia.client.JolokiaClient;
-import org.jolokia.client.httpclient4.Http4Client;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
@@ -82,8 +81,6 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 	private final static Pattern ATTRIBUTE_PATTERN = Pattern
 			.compile("\\$\\{kubernetes/annotation/(?<annotationName>[^/]+)}"); //$NON-NLS-1$
 	private final static Set<String> VALID_JOLOKIA_PROTOCOLS = new HashSet<>(Arrays.asList("http", "https")); //$NON-NLS-1$ //$NON-NLS-2$
-
-	private final static Http4Client triggerClassLoad = null;
 
 	KubernetesScanningParameters settings;
 
@@ -242,7 +239,7 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		if (context != null) {
 			env.put(KubernetesJmxConnector.KUBERNETES_CLIENT_CONTEXT, context);
 		}
-		JolokiaClient jvmClient = KubernetesJmxConnector.probeProxyPath(env, client, url, headers);
+		JolokiaClient jvmClient = JmcKubernetesJmxConnector.probeProxyPath(env, client, url, headers);
 		if (jvmClient != null) {
 			try {
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());

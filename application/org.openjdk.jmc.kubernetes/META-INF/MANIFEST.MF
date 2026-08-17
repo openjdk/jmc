@@ -10,17 +10,18 @@ Require-Bundle: org.openjdk.jmc.jolokia,
  org.eclipse.ui,
  org.openjdk.jmc.ui,
  org.eclipse.swt,
- org.jolokia.client.kubernetes.standalone;bundle-version="2.5.1";visibility:=reexport,
- org.jolokia.client.httpclient4;bundle-version="2.5.1",
- org.openjdk.jmc.rjmx,
- org.apache.httpcomponents.httpcore;bundle-version="4.4.0",
- org.apache.httpcomponents.httpclient;bundle-version="4.5.0"
+ org.jolokia.client-kubernetes.standalone;bundle-version="2.6.1";visibility:=reexport,
+ org.openjdk.jmc.rjmx
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences
 Import-Package: org.apache.commons.logging;version="1.2.0",
- org.jolokia.client;version="2.5.1",
- org.jolokia.client.exception;version="2.5.1",
- org.jolokia.client.response;version="2.5.1",
- org.jolokia.client.spi;version="[2.5.0,3.0.0)"
+ org.jolokia.client;version="2.6.1",
+ org.jolokia.client.exception;version="2.6.1",
+ org.jolokia.client.jdkclient;version="2.6.1",
+ org.jolokia.client.request;version="[2.6.1,3.0.0)",
+ org.jolokia.client.response;version="2.6.1",
+ org.jolokia.client.spi;version="[2.6.1,3.0.0)",
+ org.jolokia.json;version="[2.6.1,3.0.0)",
+ org.jolokia.json.parser;version="[2.6.1,3.0.0)"
 Bundle-Activator: org.openjdk.jmc.kubernetes.JmcKubernetesPlugin
 Bundle-ActivationPolicy: lazy
