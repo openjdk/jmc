@@ -34,32 +34,16 @@
 package org.openjdk.jmc.kubernetes;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.management.MBeanServerConnection;
-import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 import javax.security.auth.Subject;
 
-import org.jolokia.client.JolokiaClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
-
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.fabric8.kubernetes.client.http.HttpResponse;
+import org.openjdk.jmc.jolokia.JmcJolokiaJmxConnection;
 
 public class JmcKubernetesJmxConnector extends KubernetesJmxConnector {
-
-	private static final Pattern POD_PATTERN = Pattern
-			.compile("/?(?<namespace>[^/]+)/(?<protocol>https?:)?(?<podPattern>[^/^:]+)(?<port>:[^/]+)?/(?<path>.+)");
 
 	public JmcKubernetesJmxConnector(JMXServiceURL serviceURL, Map<String, ?> environment) throws IOException {
 		super(serviceURL, environment);
@@ -67,12 +51,13 @@ public class JmcKubernetesJmxConnector extends KubernetesJmxConnector {
 
 	@Override
 	public MBeanServerConnection getMBeanServerConnection() {
-		return new JmcKubernetesJmxConnection(super.getMBeanServerConnection());
+		return new JmcKubernetesJmxConnection(new JmcJolokiaJmxConnection(super.getMBeanServerConnection()));
 	}
 
 	@Override
 	public MBeanServerConnection getMBeanServerConnection(Subject delegationSubject) {
-		return new JmcKubernetesJmxConnection(super.getMBeanServerConnection(delegationSubject));
+		return new JmcKubernetesJmxConnection(
+				new JmcJolokiaJmxConnection(super.getMBeanServerConnection(delegationSubject)));
 	}
 
 }

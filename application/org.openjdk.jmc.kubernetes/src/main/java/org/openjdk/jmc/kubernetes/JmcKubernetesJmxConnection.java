@@ -33,13 +33,24 @@
  */
 package org.openjdk.jmc.kubernetes;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMRuntimeException;
+import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 
+import org.jolokia.client.exception.JolokiaException;
+import org.jolokia.client.exception.JolokiaRemoteException;
 import org.openjdk.jmc.rjmx.common.ConnectionDecorator;
+import org.openjdk.jmc.rjmx.common.ConnectionException;
 
 /**
  * Jolokia based MBeanServerConnector tailored for JMC needs
@@ -52,26 +63,35 @@ public class JmcKubernetesJmxConnection extends ConnectionDecorator {
 		super(delegate);
 	}
 
-//	@SuppressWarnings("rawtypes")
-//	@Override
-//	protected JolokiaResponse unwrapException(JolokiaException e) throws IOException, InstanceNotFoundException {
-//		// recognize signs of disconnect and signal to the application for better handling
-//		if (isKnownDisconnectException(e)) {
-//			throw new ConnectionException(e.getMessage());
-//		} else {
-//			return super.unwrapException(e);
-//		}
-//	}
+	private IOException detectAndSimulateDisconnectException(JMRuntimeException e) {
+		if (isKnownDisconnectException(e.getCause())) {
+			// If we detect that the kubernetes connection appears lost
+			// simulate a "regular JMX disconnect"
+			return new ConnectionException(e.getMessage());
+		} else {
+			throw e;
+		}
+	}
 
-//	private boolean isKnownDisconnectException(JolokiaException e) {
-//		if (!(e instanceof JolokiaRemoteException)) {
-//			return false;
-//		}
-//		if (!"io.fabric8.kubernetes.client.KubernetesClientException" //$NON-NLS-1$
-//				.equals(((JolokiaRemoteException) e).getErrorType())) {
-//			return false;
-//		}
-//		return DISCONNECT_SIGNS.stream().anyMatch(pattern -> pattern.matcher(e.getMessage()).matches());
-//	}
+	@Override
+	public Object getAttribute(ObjectName name, String attribute) throws MBeanException, AttributeNotFoundException,
+			InstanceNotFoundException, ReflectionException, IOException {
+		try {
+			return super.getAttribute(name, attribute);
+		} catch (JMRuntimeException e) {
+			throw detectAndSimulateDisconnectException(e);
+		}
+	}
+
+	private boolean isKnownDisconnectException(Throwable t) {
+		if (!(t instanceof JolokiaRemoteException)) {
+			return false;
+		}
+		if (!"io.fabric8.kubernetes.client.KubernetesClientException" //$NON-NLS-1$
+				.equals(((JolokiaRemoteException) t).getErrorType())) {
+			return false;
+		}
+		return DISCONNECT_SIGNS.stream().anyMatch(pattern -> pattern.matcher(t.getMessage()).matches());
+	}
 
 }
