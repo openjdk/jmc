@@ -36,7 +36,6 @@ package org.openjdk.jmc.kubernetes;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import javax.management.AttributeNotFoundException;
@@ -47,7 +46,6 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
-import org.jolokia.client.exception.JolokiaException;
 import org.jolokia.client.exception.JolokiaRemoteException;
 import org.openjdk.jmc.rjmx.common.ConnectionDecorator;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
