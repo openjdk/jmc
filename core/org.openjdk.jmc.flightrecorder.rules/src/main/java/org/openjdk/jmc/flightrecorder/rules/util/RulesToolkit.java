@@ -1423,7 +1423,7 @@ public class RulesToolkit {
 	private static boolean shouldEvaluate(IRule rule, IResult depResult) {
 		DependsOn dependency = rule.getClass().getAnnotation(DependsOn.class);
 		if (dependency != null) {
-			if (depResult.getSeverity().compareTo(dependency.severity()) < 0) {
+			if (!depResult.getSeverity().isAtLeast(dependency.severity())) {
 				return false;
 			}
 		}
