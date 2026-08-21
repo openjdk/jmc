@@ -32,6 +32,8 @@
  */
 package org.openjdk.jmc.flightrecorder.rules;
 
+import java.util.function.Supplier;
+
 import org.openjdk.jmc.flightrecorder.rules.messages.internal.Messages;
 
 /**
@@ -95,6 +97,31 @@ public enum Severity {
 	 */
 	public boolean isAtLeast(Severity other) {
 		return score >= other.score;
+	}
+
+	/**
+	 * Determines the new maximum severity after a result with {@code resultSeverity} arrives, given
+	 * the {@code currentMax} tracked so far. A result more severe than the current max simply
+	 * becomes the new max. A result less severe than the current max means the previous max may no
+	 * longer be in effect (e.g. its rule was re-evaluated with a lower severity), so the true max
+	 * is recomputed from scratch via {@code recompute}.
+	 *
+	 * @param currentMax
+	 *            the maximum severity tracked so far
+	 * @param resultSeverity
+	 *            the severity of the result that just arrived
+	 * @param recompute
+	 *            supplies the true maximum severity across all results, used when
+	 *            {@code resultSeverity} is less severe than {@code currentMax}
+	 * @return the new maximum severity
+	 */
+	public static Severity nextMax(Severity currentMax, Severity resultSeverity, Supplier<Severity> recompute) {
+		if (resultSeverity.getLimit() > currentMax.getLimit()) {
+			return resultSeverity;
+		} else if (resultSeverity.getLimit() < currentMax.getLimit()) {
+			return recompute.get();
+		}
+		return currentMax;
 	}
 
 	/**

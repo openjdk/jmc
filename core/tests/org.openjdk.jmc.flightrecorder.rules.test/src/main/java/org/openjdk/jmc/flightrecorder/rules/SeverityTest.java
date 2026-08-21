@@ -113,4 +113,45 @@ public class SeverityTest {
 					Severity.get(severity.getLimit()));
 		}
 	}
+
+	/**
+	 * Regression tests for
+	 * {@link Severity#nextMax(Severity, Severity, java.util.function.Supplier)}, which drives the
+	 * icon shown by rule result actions in the UI. A prior version of that logic recomputed the max
+	 * severity when a result dropped below the current max, but never told the caller to refresh
+	 * the icon, leaving a stale (too severe) icon displayed.
+	 */
+	@Test
+	public void moreSevereResultBecomesTheNewMax() {
+		Severity result = Severity.nextMax(Severity.OK, Severity.WARNING, () -> {
+			throw new AssertionError("recompute should not be needed when severity increases");
+		});
+		Assert.assertEquals(Severity.WARNING, result);
+	}
+
+	@Test
+	public void lessSevereResultTriggersRecompute() {
+		Severity result = Severity.nextMax(Severity.WARNING, Severity.OK, () -> Severity.INFO);
+		Assert.assertEquals("the recomputed value must be used so the icon can be refreshed", Severity.INFO, result);
+	}
+
+	@Test
+	public void sameSeverityKeepsCurrentMaxWithoutRecomputing() {
+		Severity result = Severity.nextMax(Severity.INFO, Severity.INFO, () -> {
+			throw new AssertionError("recompute should not be needed when severity is unchanged");
+		});
+		Assert.assertEquals(Severity.INFO, result);
+	}
+
+	/**
+	 * Pins the bug: when severity drops, the caller must be told the max changed (by getting back a
+	 * different reference) so it knows to refresh the icon, even if the recomputed max happens to
+	 * differ from the reported result's own severity.
+	 */
+	@Test
+	public void recomputedMaxCanDifferFromTheReportedResult() {
+		Severity result = Severity.nextMax(Severity.WARNING, Severity.IGNORE, () -> Severity.OK);
+		Assert.assertNotSame(Severity.IGNORE, result);
+		Assert.assertSame(Severity.OK, result);
+	}
 }

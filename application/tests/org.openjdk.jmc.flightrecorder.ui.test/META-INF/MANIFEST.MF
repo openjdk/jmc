@@ -8,6 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.junit,
  org.openjdk.jmc.flightrecorder.ui,
- org.openjdk.jmc.flightrecorder.rules,
  org.openjdk.jmc.commands
 Automatic-Module-Name: org.openjdk.jmc.flightrecorder.ui.test

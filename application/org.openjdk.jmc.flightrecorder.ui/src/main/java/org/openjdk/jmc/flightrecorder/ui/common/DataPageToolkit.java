@@ -823,7 +823,7 @@ public class DataPageToolkit {
 			maxSeverity = pageContainer.getRuleManager().getMaxSeverity(topics);
 			for (String topic : topics) {
 				Consumer<IResult> listener = result -> {
-					Severity updatedMaxSeverity = nextMaxSeverity(maxSeverity, result.getSeverity(),
+					Severity updatedMaxSeverity = Severity.nextMax(maxSeverity, result.getSeverity(),
 							() -> pageContainer.getRuleManager().getMaxSeverity(topics));
 					if (updatedMaxSeverity != maxSeverity) {
 						maxSeverity = updatedMaxSeverity;
@@ -844,21 +844,6 @@ public class DataPageToolkit {
 		public void run() {
 			pageContainer.showResults(topics);
 		}
-	}
-
-	/**
-	 * Determines the new max severity for a {@link ShowResultAction} after a rule result arrives. A
-	 * result more severe than the current max simply becomes the new max. A result less severe than
-	 * the current max means the previous max may no longer be in effect (e.g. its rule was
-	 * re-evaluated with a lower severity), so the true max is recomputed from scratch.
-	 */
-	public static Severity nextMaxSeverity(Severity currentMax, Severity resultSeverity, Supplier<Severity> recompute) {
-		if (resultSeverity.getLimit() > currentMax.getLimit()) {
-			return resultSeverity;
-		} else if (resultSeverity.getLimit() < currentMax.getLimit()) {
-			return recompute.get();
-		}
-		return currentMax;
 	}
 
 	public static void addRuleResultAction(
