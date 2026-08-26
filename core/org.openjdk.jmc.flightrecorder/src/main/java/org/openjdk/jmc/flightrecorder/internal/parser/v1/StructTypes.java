@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -75,6 +75,7 @@ class StructTypes {
 		public Object javaThreadId;
 		public Object javaName;
 		public Object group;
+		public Object virtual;
 
 		@Override
 		public Long getThreadId() {
@@ -100,12 +101,13 @@ class StructTypes {
 
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(osThreadId);
+			return Objects.hashCode(javaThreadId);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			return this == obj || obj instanceof JfrThread && Objects.equals(osThreadId, ((JfrThread) obj).osThreadId);
+			return this == obj
+					|| obj instanceof JfrThread && Objects.equals(javaThreadId, ((JfrThread) obj).javaThreadId);
 		}
 	}
 
