@@ -117,7 +117,8 @@ public class QueryTools {
 		@ToolArg(description = "JFR event type ID. Omit to search across all event types.", required = false) String eventType,
 		@ToolArg(description = "Attribute identifier to filter on, e.g. gcId", required = false) String filterAttribute,
 		@ToolArg(description = "Value the filter attribute must match (compared against the displayed value)", required = false) String filterValue,
-		@ToolArg(description = "Comma-separated attribute identifiers to use as columns. Omit for all attributes.", required = false) String columns,
+		@ToolArg(description = "Comma-separated attribute identifiers to use as columns. Omit for all attributes. "
+				+ "Event types carrying none of the requested columns are skipped with a note.", required = false) String columns,
 		@ToolArg(description = "Start of time range in seconds from recording start", required = false) Double fromSeconds,
 		@ToolArg(description = "End of time range in seconds from recording start", required = false) Double toSeconds,
 		@ToolArg(description = "Max rows (default 50, hard cap 200)", required = false) Integer limit,
@@ -128,9 +129,14 @@ public class QueryTools {
 			int max = JfrToolkit.clamp(limit, 50, MAX_ROWS);
 			List<String> requestedColumns = parseColumns(columns);
 
+			String filterError = JfrToolkit.validateFilterPair(filterAttribute, filterValue);
+			if (filterError != null) {
+				return filterError;
+			}
+
 			IItemCollection filtered = JfrToolkit.filterItems(recording.getItems(), recording.getStart(), eventType,
 					fromSeconds, toSeconds);
-			if (filterAttribute != null && !filterAttribute.isBlank() && filterValue != null) {
+			if (filterAttribute != null && !filterAttribute.isBlank()) {
 				filtered = JfrToolkit.filterByAttribute(filtered, filterAttribute, filterValue);
 			}
 
@@ -161,6 +167,8 @@ public class QueryTools {
 			// look like they never matched. Lead with the breakdown so nothing is silently invisible.
 			appendTypeSummary(sb, filtered);
 
+			appendSkippedTypes(sb, filtered, requestedColumns);
+
 			int rowCount = 0;
 			String lastTypeId = null;
 			for (IItemIterable iterable : filtered) {
@@ -168,6 +176,9 @@ public class QueryTools {
 				String typeId = type.getIdentifier();
 
 				List<IAttribute<?>> selected = selectColumns(type, requestedColumns);
+				if (selected.isEmpty()) {
+					continue;
+				}
 				List<IMemberAccessor<?, IItem>> accessors = new ArrayList<>();
 				for (IAttribute<?> col : selected) {
 					accessors.add(col.getAccessor(type));
@@ -282,9 +293,27 @@ public class QueryTools {
 				}
 			}
 		}
-		// Falling back to all attributes beats returning an empty table when the requested
-		// columns do not exist on this particular type.
-		return selected.isEmpty() ? allAttrs : selected;
+		// May be empty: types carrying none of the requested columns get a skip note instead of
+		// rows, so a cross-type query never dumps columns the caller did not ask for.
+		return selected;
+	}
+
+	/**
+	 * Names the event types whose rows are omitted because they carry none of the requested
+	 * columns, with their event counts, so the caller can tell skipped data from absent data.
+	 */
+	private static void appendSkippedTypes(StringBuilder sb, IItemCollection items, List<String> requestedColumns) {
+		if (requestedColumns == null || requestedColumns.isEmpty()) {
+			return;
+		}
+		for (IItemIterable iterable : items) {
+			long count = iterable.getItemCount();
+			if (count > 0 && selectColumns(iterable.getType(), requestedColumns).isEmpty()) {
+				sb.append("(").append(iterable.getType().getIdentifier())
+						.append(": none of the requested columns exist on this type, ").append(count)
+						.append(" events not shown - use getAttributes to list its identifiers)\n");
+			}
+		}
 	}
 
 	private static void appendTypeSummary(StringBuilder sb, IItemCollection items) {

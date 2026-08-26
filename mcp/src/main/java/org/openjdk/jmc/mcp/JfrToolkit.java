@@ -47,6 +47,7 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
 
@@ -142,6 +143,38 @@ public final class JfrToolkit {
 			if (attr.getIdentifier().equals(attributeId)) {
 				return attr.getAccessor(type);
 			}
+		}
+		return null;
+	}
+
+	/**
+	 * Finds a numeric (quantity) attribute by identifier on any of the event types in the
+	 * collection, so callers can weight or aggregate by an attribute discovered through
+	 * getAttributes rather than a hardcoded list.
+	 */
+	@SuppressWarnings("unchecked")
+	public static IAttribute<IQuantity> findQuantityAttribute(IItemCollection items, String attributeId) {
+		for (IItemIterable iterable : items) {
+			for (IAttribute<?> attr : iterable.getType().getAttributes()) {
+				if (attr.getIdentifier().equals(attributeId) && attr.getContentType() instanceof KindOfQuantity) {
+					return (IAttribute<IQuantity>) attr;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Filtering by attribute needs both the attribute identifier and the value to match. Returns an
+	 * error message when only one of the pair is supplied, null when the combination is usable.
+	 */
+	public static String validateFilterPair(String filterAttribute, String filterValue) {
+		boolean hasAttribute = filterAttribute != null && !filterAttribute.isBlank();
+		if (hasAttribute && filterValue == null) {
+			return "Error: filterAttribute was given without filterValue - both are required to filter by attribute.";
+		}
+		if (!hasAttribute && filterValue != null) {
+			return "Error: filterValue was given without filterAttribute - both are required to filter by attribute.";
 		}
 		return null;
 	}

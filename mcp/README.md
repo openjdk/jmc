@@ -42,7 +42,7 @@ running it.
 | **Analysis**          |                                                                                                  |
 | `getRuleResults`      | Run JMC's automated analysis rules. **A cheap, low token way, to find ideas on where to look.**  |
 | `aggregateEvents`     | count/sum/avg/min/max/stddev over event durations; stores the min/max events.                    |
-| `getStackTrace`       | Aggregated stack trace tree (flame graph data), weighted by count, duration, allocation, or I/O. |
+| `getStackTrace`       | Aggregated stack trace tree (flame graph data), weighted by count, duration, or any numeric attribute. |
 | **Correlation**       |                                                                                                  |
 | `findRelatedEvents`   | Events concurrent with, or contained within, a set of reference events.                          |
 | `combineResultSets`   | `intersect` / `union` / `subtract` two stored result sets.                                       |
@@ -73,10 +73,10 @@ A suggested route through the tools:
 
 | Requirement                     | Notes                                                                                                                                                         |
 |---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| JDK 21+                         | Needed for the uber-jar. [Adoptium](https://adoptium.net/) builds work fine.                                                                                  |
+| JDK 25+                         | Needed for the uber-jar. [Adoptium](https://adoptium.net/) builds work fine.                                                                                  |
 | JDK 17 and JDK 21 toolchains    | The JMC core build needs both. See "Java Version & Toolchains" in the [AGENTS.md](../AGENTS.md) at the repository root for the `~/.m2/toolchains.xml` layout. |
 | Maven 3.9+                      |                                                                                                                                                               |
-| GraalVM 21+ with `native-image` | Only for the native binary. [Download](https://www.graalvm.org/downloads/); check with `native-image --version`.                                              |
+| GraalVM for JDK 25+ with `native-image` | Only for the native binary. [Download](https://www.graalvm.org/downloads/); check with `native-image --version`.                                      |
 
 ### 2. Get the sources
 

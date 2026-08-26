@@ -201,7 +201,7 @@ class JfrToolsTest {
 	@Test
 	void findRelatedEventsRequiresScoping() {
 		String result = correlationTools.findRelatedEvents("concurrent", null, null, null, null, null, null, null, null,
-				null, recordingId);
+				null, null, recordingId);
 		assertTrue(result.contains("either 'reference'"), result);
 	}
 
@@ -209,7 +209,7 @@ class JfrToolsTest {
 	void findRelatedEventsUsesStoredReference() {
 		analysisTools.aggregateEvents("jdk.GCPhasePause", "max", null, null, recordingId);
 		String related = correlationTools.findRelatedEvents("concurrent", "jdk.GCPhasePause.max", null, null, null,
-				null, null, Boolean.FALSE, "around-pause", 20, recordingId);
+				null, null, Boolean.FALSE, null, "around-pause", 20, recordingId);
 		assertTrue(related.contains("Concurrent events"), related);
 		assertTrue(related.contains("Reference time range"), related);
 		assertNotNull(correlationTools.listResultSets(recordingId));
@@ -283,10 +283,43 @@ class JfrToolsTest {
 	}
 
 	@Test
-	void findRelatedEventsSupportsContainedModeAndExcludesTheReferenceType() {
-		String related = correlationTools.findRelatedEvents("contained", null, "jdk.GarbageCollection", null, null,
-				null, null, Boolean.FALSE, null, 50, recordingId);
-		assertTrue(related.contains("Contained events"), related);
-		assertFalse(related.contains("  jdk.GarbageCollection: "), related);
+	void findRelatedEventsIncludesReferenceByDefaultAndCanExcludeIt() {
+		String included = correlationTools.findRelatedEvents("contained", null, "jdk.GarbageCollection", null, null,
+				null, null, Boolean.FALSE, null, null, 50, recordingId);
+		assertTrue(included.contains("Contained events"), included);
+		assertTrue(included.contains("  jdk.GarbageCollection: "), included);
+
+		String excluded = correlationTools.findRelatedEvents("contained", null, "jdk.GarbageCollection", null, null,
+				null, null, Boolean.FALSE, Boolean.FALSE, null, 50, recordingId);
+		assertTrue(excluded.contains("Contained events"), excluded);
+		assertFalse(excluded.contains("  jdk.GarbageCollection: "), excluded);
+	}
+
+	@Test
+	void eventTableRejectsHalfSpecifiedAttributeFilter() {
+		String missingValue = queryTools.getEventTable(null, "gcId", null, null, null, null, 10, null, recordingId);
+		assertTrue(missingValue.contains("without filterValue"), missingValue);
+
+		String missingAttribute = queryTools.getEventTable(null, null, "8", null, null, null, 10, null, recordingId);
+		assertTrue(missingAttribute.contains("without filterAttribute"), missingAttribute);
+	}
+
+	@Test
+	void eventTableSkipsTypesWithoutTheRequestedColumns() {
+		String table = queryTools.getEventTable(null, "gcId", "8", "longestPause", null, null, 50, null, recordingId);
+		// GCPhasePause events share gcId but carry no longestPause column, so their rows are
+		// skipped with a note instead of falling back to all attributes.
+		assertTrue(table.contains("jdk.GCPhasePause: none of the requested columns exist on this type"), table);
+		assertTrue(table.contains("Longest Pause"), table);
+	}
+
+	@Test
+	void stackTraceResolvesWeightAttributeFromEventMetadata() {
+		String memoryWeighted = analysisTools.getStackTrace("jdk.GCHeapSummary", "heapUsed", null, null, 5,
+				recordingId);
+		assertTrue(memoryWeighted.contains("weighted by heapUsed (KiB)"), memoryWeighted);
+
+		String unknown = analysisTools.getStackTrace(null, "bogusWeight", null, null, 5, recordingId);
+		assertTrue(unknown.contains("No numeric attribute 'bogusWeight'"), unknown);
 	}
 }
