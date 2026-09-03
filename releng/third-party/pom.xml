@@ -63,7 +63,7 @@
 		<spifly.version>1.3.7</spifly.version>
 		<jolokia.version>2.5.1</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
-		<fireplace.version>0.0.1-rc.9</fireplace.version>
+		<fireplace.version>0.0.1-rc.10</fireplace.version>
 		<radiance.version>8.5.0</radiance.version>
 		<jakarta.inject.version>2.0.1</jakarta.inject.version>
 		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
