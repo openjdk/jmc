@@ -69,6 +69,7 @@ import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.AnyNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.PodResource;
+import io.fabric8.kubernetes.client.http.HttpResponse;
 
 /**
  * This class attempts to connect to JVMs in pods running in kubernetes in a background thread.
@@ -88,7 +89,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		this(JmcKubernetesPlugin.getDefault());
 	}
 
-	//Public constructor in order for test plugin to be able to rig tests in an easier manner
+	// Public constructor in order for test plugin to be able to rig tests in an
+	// easier manner
 	public KubernetesDiscoveryListener(KubernetesScanningParameters parameters) {
 		this.settings = parameters;
 	}
@@ -112,7 +114,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 	private List<String> allContexts() throws IOException {
 		final String path = new File(System.getProperty("user.home"), ".kube" + File.separator + "config").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		File configPath = new File(path);
-		// the YAML parsing is soo incredibly sloow, hence cache context names for later runs
+		// the YAML parsing is soo incredibly sloow, hence cache context names for later
+		// runs
 		if (contexts != null && contextsCached > configPath.lastModified()) {
 			return contexts;
 		}
@@ -180,9 +183,8 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		return found;
 	}
 
-	private void scanPod(
-		Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters, String context,
-		KubernetesClient client, Pod pod) {
+	private void scanPod(Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters,
+			String context, KubernetesClient client, Pod pod) {
 
 		final ObjectMeta metadata = pod.getMetadata();
 		HashMap<String, String> headers = new HashMap<>();
@@ -239,16 +241,24 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		if (context != null) {
 			env.put(KubernetesJmxConnector.KUBERNETES_CLIENT_CONTEXT, context);
 		}
-		JolokiaClient jvmClient = JmcKubernetesJmxConnector.probeProxyPath(env, client, url, headers);
-		if (jvmClient != null) {
-			try {
+
+		try {
+			java.net.http.HttpResponse<byte[]> response = JmcKubernetesJmxConnector.performSimpleVersionRequest(env, client, url, headers)
+			if (response.isSuccessful()) {
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());
 				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jmxServiceURL, env);
 				found.put(descriptor.getGUID(), descriptor);
-			} catch (IOException e) {
-				parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
-
+			} else {
+				parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm,
+						new RuntimeException(
+								String.format("Unsuccessful attempt to get version of agent. Context: %s Response code: %s body: %s", //$NON-NLS-1$
+										context,
+										response.statusCode(),
+										new String(response.body()))));
 			}
+		} catch (IOException e) {
+			parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
+
 		}
 	}
 
