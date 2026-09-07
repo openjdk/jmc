@@ -5,16 +5,10 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<!-- Convenience: Regarding access rules. It appears that these packages are exported from jolokia standalone. Wondering whether eclipse caps at 36 access rules or something. Setting access rules on that specific plugin dependency does not seem to be persisted to the .classpath file, hence setting access policy globally for all plugin dependencies-->
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/jolokia/**"/>
-			<accessrule kind="accessible" pattern="org/json/simple/*"/>
-		</accessrules>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
-		        <attribute name="optional" value="true"/>
+			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>

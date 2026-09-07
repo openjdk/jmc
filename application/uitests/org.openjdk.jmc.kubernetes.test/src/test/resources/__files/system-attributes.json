@@ -1,0 +1,101 @@
+[
+   {
+      "request" : {
+         "attribute" : "Pid",
+         "mbean" : "java.lang:type=Runtime",
+         "type" : "read"
+      },
+      "status" : 200,
+      "timestamp" : 1658586915,
+      "value" : 88774
+   },
+   {
+      "request" : {
+         "attribute" : "Name",
+         "mbean" : "java.lang:type=Runtime",
+         "type" : "read"
+      },
+      "status" : 200,
+      "timestamp" : 1658586915,
+      "value" : "88774@Martins-MacBook-Pro-2.local"
+   },
+   {
+      "request" : {
+         "attribute" : "InputArguments",
+         "mbean" : "java.lang:type=Runtime",
+         "type" : "read"
+      },
+      "status" : 200,
+      "timestamp" : 1658586915,
+      "value" : []
+   },
+   {
+      "request" : {
+         "attribute" : "SystemProperties",
+         "mbean" : "java.lang:type=Runtime",
+         "type" : "read"
+      },
+      "status" : 200,
+      "timestamp" : 1658586915,
+      "value" : {
+         "apple.awt.application.name" : "App",
+         "file.encoding" : "UTF-8",
+         "file.separator" : "/",
+         "ftp.nonProxyHosts" : "local|*.local|169.254/16|*.169.254/16",
+         "hawtio.authenticationEnabled" : "false",
+         "hawtio.redirect.scheme" : "http",
+         "hawtio.url" : "http://localhost:9090/hawtio",
+         "http.nonProxyHosts" : "local|*.local|169.254/16|*.169.254/16",
+         "java.class.path" : "/Users/marska/Downloads/hawtio-app-2.9.1.jar",
+         "java.class.version" : "62.0",
+         "java.home" : "/Library/Java/JavaVirtualMachines/temurin-18.jdk/Contents/Home",
+         "java.io.tmpdir" : "/var/folders/1f/cdm0073x1mj1swnhtw181_4m0000gn/T/",
+         "java.library.path" : "/Users/marska/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.",
+         "java.runtime.name" : "OpenJDK Runtime Environment",
+         "java.runtime.version" : "18.0.1+10",
+         "java.specification.name" : "Java Platform API Specification",
+         "java.specification.vendor" : "Oracle Corporation",
+         "java.specification.version" : "18",
+         "java.vendor" : "Eclipse Adoptium",
+         "java.vendor.url" : "https://adoptium.net/",
+         "java.vendor.url.bug" : "https://github.com/adoptium/adoptium-support/issues",
+         "java.vendor.version" : "Temurin-18.0.1+10",
+         "java.version" : "18.0.1",
+         "java.version.date" : "2022-04-19",
+         "java.vm.compressedOopsMode" : "Zero based",
+         "java.vm.info" : "mixed mode, sharing",
+         "java.vm.name" : "OpenJDK 64-Bit Server VM",
+         "java.vm.specification.name" : "Java Virtual Machine Specification",
+         "java.vm.specification.vendor" : "Oracle Corporation",
+         "java.vm.specification.version" : "18",
+         "java.vm.vendor" : "Eclipse Adoptium",
+         "java.vm.version" : "18.0.1+10",
+         "jdk.debug" : "release",
+         "line.separator" : "\n",
+         "native.encoding" : "UTF-8",
+         "org.eclipse.jetty.util.log.class" : "org.eclipse.jetty.util.log.Slf4jLog",
+         "os.arch" : "x86_64",
+         "os.name" : "Mac OS X",
+         "os.version" : "11.6.6",
+         "path.separator" : ":",
+         "socksNonProxyHosts" : "local|*.local|169.254/16|*.169.254/16",
+         "sun.arch.data.model" : "64",
+         "sun.awt.enableExtraMouseButtons" : "true",
+         "sun.boot.library.path" : "/Library/Java/JavaVirtualMachines/temurin-18.jdk/Contents/Home/lib",
+         "sun.cpu.endian" : "little",
+         "sun.io.unicode.encoding" : "UnicodeBig",
+         "sun.java.command" : "/Users/marska/Downloads/hawtio-app-2.9.1.jar --port 9090",
+         "sun.java.launcher" : "SUN_STANDARD",
+         "sun.jnu.encoding" : "UTF-8",
+         "sun.management.compiler" : "HotSpot 64-Bit Tiered Compilers",
+         "sun.stderr.encoding" : "UTF-8",
+         "sun.stdout.encoding" : "UTF-8",
+         "user.country" : "NO",
+         "user.dir" : "/Users/marska/Documents/dev/jmc/jmc8/releng/third-party",
+         "user.home" : "/Users/marska",
+         "user.language" : "nb",
+         "user.name" : "marska",
+         "user.timezone" : "Asia/Taipei"
+      }
+   }
+]
