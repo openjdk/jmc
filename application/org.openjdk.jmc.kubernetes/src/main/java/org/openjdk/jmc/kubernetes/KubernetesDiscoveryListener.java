@@ -46,6 +46,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -53,7 +54,6 @@ import java.util.stream.Collectors;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
-import org.jolokia.client.JolokiaClient;
 import org.jolokia.kubernetes.client.KubernetesJmxConnector;
 import org.openjdk.jmc.common.security.SecurityException;
 import org.openjdk.jmc.jolokia.AbstractCachedDescriptorProvider;
@@ -183,8 +183,9 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		return found;
 	}
 
-	private void scanPod(Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters,
-			String context, KubernetesClient client, Pod pod) {
+	private void scanPod(
+		Map<String, ServerConnectionDescriptor> found, KubernetesScanningParameters parameters, String context,
+		KubernetesClient client, Pod pod) {
 
 		final ObjectMeta metadata = pod.getMetadata();
 		HashMap<String, String> headers = new HashMap<>();
@@ -243,22 +244,23 @@ public class KubernetesDiscoveryListener extends AbstractCachedDescriptorProvide
 		}
 
 		try {
-			java.net.http.HttpResponse<byte[]> response = JmcKubernetesJmxConnector.performSimpleVersionRequest(env, client, url, headers)
+			HttpResponse<byte[]> response = JmcKubernetesJmxConnector.performSimpleVersionRequest(client, url, headers);
 			if (response.isSuccessful()) {
 				JMXServiceURL jmxServiceURL = new JMXServiceURL(jmxUrl.toString());
 				KubernetesJvmDescriptor descriptor = new KubernetesJvmDescriptor(metadata, jmxServiceURL, env);
 				found.put(descriptor.getGUID(), descriptor);
 			} else {
 				parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm,
-						new RuntimeException(
-								String.format("Unsuccessful attempt to get version of agent. Context: %s Response code: %s body: %s", //$NON-NLS-1$
-										context,
-										response.statusCode(),
-										new String(response.body()))));
+						new RuntimeException(String.format(
+								"Unsuccessful attempt to get version of agent. Context: %s Response code: %d body: %s", //$NON-NLS-1$
+								context, response.code(), new String(response.body()))));
 			}
-		} catch (IOException e) {
+		} catch (IOException | ExecutionException e) {
 			parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
 
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			parameters.logError(Messages.KubernetesDiscoveryListener_ErrConnectingToJvm, e);
 		}
 	}
 
