@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -257,7 +257,7 @@ public class TestRulesWithJfr {
 			if (dependencyType != null) {
 				while (true) {
 					if (evaluatedRules.containsKey(dependencyType)) {
-						if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
+						if (!evaluatedRules.get(dependencyType).isAtLeast(dependency.severity())) {
 							return false;
 						}
 						return true;
@@ -289,7 +289,7 @@ public class TestRulesWithJfr {
 						}
 						evaluatedRules.put(rule.getClass(), result.getSeverity());
 						rp.addResults(result);
-						if (minSeverity == null || result.getSeverity().compareTo(minSeverity) >= 0) {
+						if (minSeverity == null || result.getSeverity().isAtLeast(minSeverity)) {
 							ItemSet itemSet = null;
 							IItemQuery itemQuery = result.getResult(TypedResult.ITEM_QUERY);
 							if (verbose && itemQuery != null && !itemQuery.getAttributes().isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -144,7 +144,7 @@ public abstract class AbstractDataPage implements IDisplayablePage {
 
 	private long getNumberOfInterestingResults() {
 		return editor.getRuleManager().getResults(definition.getTopics()).parallelStream()
-				.filter(r -> r.getSeverity().compareTo(Severity.INFO) >= 0).count();
+				.filter(r -> r.getSeverity().isAtLeast(Severity.INFO)).count();
 	}
 
 	private String getRulesStatistics() {

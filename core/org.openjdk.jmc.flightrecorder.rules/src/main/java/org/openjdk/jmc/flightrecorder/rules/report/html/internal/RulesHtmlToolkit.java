@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -278,7 +278,7 @@ public class RulesHtmlToolkit {
 
 		@Override
 		public int compare(IResult r1, IResult r2) {
-			return r1.getSeverity().compareTo(r2.getSeverity());
+			return Double.compare(r1.getSeverity().getLimit(), r2.getSeverity().getLimit());
 		}
 	};
 
@@ -302,7 +302,7 @@ public class RulesHtmlToolkit {
 			html.append("</p>"); //$NON-NLS-1$
 		} else {
 			for (IResult result : resultList) {
-				boolean expand = result.getSeverity().compareTo(Severity.INFO) >= 0;
+				boolean expand = result.getSeverity().isAtLeast(Severity.INFO);
 				html.append(createRuleHtml(result, expand, 0));
 			}
 		}

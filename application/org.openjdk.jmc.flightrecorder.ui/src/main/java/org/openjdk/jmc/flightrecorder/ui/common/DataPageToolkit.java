@@ -823,12 +823,11 @@ public class DataPageToolkit {
 			maxSeverity = pageContainer.getRuleManager().getMaxSeverity(topics);
 			for (String topic : topics) {
 				Consumer<IResult> listener = result -> {
-					Severity severity = result.getSeverity();
-					if (severity.compareTo(maxSeverity) > 0) {
-						maxSeverity = severity;
+					Severity updatedMaxSeverity = Severity.nextMax(maxSeverity, result.getSeverity(),
+							() -> pageContainer.getRuleManager().getMaxSeverity(topics));
+					if (updatedMaxSeverity != maxSeverity) {
+						maxSeverity = updatedMaxSeverity;
 						setImageDescriptor(getResultIcon(maxSeverity));
-					} else if (severity.compareTo(maxSeverity) < 0) { // severity could be less than previous max
-						maxSeverity = pageContainer.getRuleManager().getMaxSeverity(topics);
 					}
 					setToolTipText(tooltip.get());
 				};
