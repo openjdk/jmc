@@ -114,6 +114,7 @@ import org.openjdk.jmc.ui.misc.PatternFly.Palette;
 
 import io.github.bric3.fireplace.core.ui.Colors;
 import io.github.bric3.fireplace.flamegraph.ColorMapper;
+import io.github.bric3.fireplace.flamegraph.DefaultFrameRenderer;
 import io.github.bric3.fireplace.flamegraph.DimmingFrameColorProvider;
 import io.github.bric3.fireplace.flamegraph.FlamegraphView;
 import io.github.bric3.fireplace.flamegraph.FlamegraphView.HoverListener;
@@ -438,16 +439,18 @@ public class ButterflyView extends ViewPart implements ISelectionListener {
 		fg.putClientProperty(FlamegraphView.SHOW_STATS, false);
 		fg.setShowMinimap(false);
 
-		fg.setRenderConfiguration(
+		fg.setFrameRender(new DefaultFrameRenderer<>(
 				FrameTextsProvider.of(
 						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getHumanReadableShortString(),
 						frame -> frame.isRoot() ? ""
 								: FormatToolkit.getHumanReadable(frame.actualNode.getFrame().getMethod(), false, false,
 										false, false, true, false),
 						frame -> frame.isRoot() ? "" : frame.actualNode.getFrame().getMethod().getMethodName()),
-				new DimmingFrameColorProvider<>(frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
-						.apply(frame.actualNode.getFrame().getMethod().getType().getPackage())),
-				FrameFontProvider.defaultFontProvider());
+				new DimmingFrameColorProvider<Node>(
+						frame -> ColorMapper.ofObjectHashUsing(Colors.Palette.DATADOG.colors())
+								.apply(frame.actualNode.getFrame().getMethod().getType().getPackage()))
+										.withDimNonFocusedFlame(true),
+				FrameFontProvider.defaultFontProvider()));
 
 		fg.setHoverListener(new HoverListener<Node>() {
 			@Override
