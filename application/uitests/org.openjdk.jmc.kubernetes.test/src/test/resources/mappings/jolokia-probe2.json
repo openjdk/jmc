@@ -1,0 +1,15 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPathPattern": "/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*",
+		"bodyPatterns": [
+			{
+				"equalToJson": "{\"type\":\"VERSION\"}"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "jolokia-version.json"
+	}
+}

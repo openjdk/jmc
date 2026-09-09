@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPathPattern": "/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*",
+		"bodyPatterns": [
+			{
+				"equalToJson": "{\"attribute\":\"Disconnected\",\"mbean\":\"java.lang:type=Disconnected\",\"type\":\"READ\"}"
+			}
+		]
+	},
+	"response": {
+		"status": 404,
+	}
+}

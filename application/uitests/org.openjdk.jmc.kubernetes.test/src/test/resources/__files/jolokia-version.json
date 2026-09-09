@@ -1,0 +1,41 @@
+{
+	"request": {
+		"type": "version"
+	},
+	"value": {
+		"agent": "1.7.1",
+		"protocol": "7.2",
+		"config": {
+			"listenForHttpService": "true",
+			"authIgnoreCerts": "false",
+			"agentId": "192.168.1.104-28660-5bd82fed-servlet",
+			"debug": "false",
+			"agentType": "servlet",
+			"policyLocation": "classpath:\/jolokia-access.xml",
+			"agentContext": "\/jolokia",
+			"serializeException": "false",
+			"mimeType": "text\/plain",
+			"dispatcherClasses": "org.jolokia.http.Jsr160ProxyNotEnabledByDefaultAnymoreDispatcher",
+			"authMode": "basic",
+			"authMatch": "any",
+			"streaming": "true",
+			"canonicalNaming": "true",
+			"historyMaxEntries": "10",
+			"allowErrorDetails": "false",
+			"allowDnsReverseLookup": "true",
+			"realm": "jolokia",
+			"includeStackTrace": "false",
+			"restrictorClass": "io.hawt.system.RBACRestrictor",
+			"mbeanQualifier": "qualifier=hawtio",
+			"useRestrictorService": "false",
+			"debugMaxEntries": "100"
+		},
+		"info": {
+			"product": "jetty",
+			"vendor": "Eclipse",
+			"version": "9.4.z-SNAPSHOT"
+		}
+	},
+	"timestamp": 1658556959,
+	"status": 200
+}

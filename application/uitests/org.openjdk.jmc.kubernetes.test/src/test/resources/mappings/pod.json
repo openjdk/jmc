@@ -1,0 +1,10 @@
+{
+	"request": {
+		"method": "GET",
+		"url": "/api/v1/namespaces/ns1/pods/pod-abcdef"
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "pod.json"
+	}
+}
