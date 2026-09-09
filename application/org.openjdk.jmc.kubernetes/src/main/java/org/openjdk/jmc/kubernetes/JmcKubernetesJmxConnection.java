@@ -47,6 +47,7 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
 import org.jolokia.client.exception.JolokiaRemoteException;
+import org.jolokia.client.exception.JolokiaHttpException;
 import org.openjdk.jmc.rjmx.common.ConnectionDecorator;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 
@@ -61,8 +62,8 @@ public class JmcKubernetesJmxConnection extends ConnectionDecorator {
 		super(delegate);
 	}
 
-	private IOException detectAndSimulateDisconnectException(JMRuntimeException e) {
-		if (isKnownDisconnectException(e.getCause())) {
+	private IOException detectAndSimulateDisconnectException(RuntimeException e) {
+		if (isKnownDisconnectException(e) || isKnownDisconnectException(e.getCause())) {
 			// If we detect that the kubernetes connection appears lost
 			// simulate a "regular JMX disconnect"
 			return new ConnectionException(e.getMessage());
@@ -82,6 +83,11 @@ public class JmcKubernetesJmxConnection extends ConnectionDecorator {
 	}
 
 	private boolean isKnownDisconnectException(Throwable t) {
+		if (t instanceof JolokiaHttpException) {
+			// Assume a 404 for an attribute through the proxy API in most likelihood
+			// signals a disconnected resource
+			return ((JolokiaHttpException) t).getHttpStatus() == 404;
+		}
 		if (!(t instanceof JolokiaRemoteException)) {
 			return false;
 		}

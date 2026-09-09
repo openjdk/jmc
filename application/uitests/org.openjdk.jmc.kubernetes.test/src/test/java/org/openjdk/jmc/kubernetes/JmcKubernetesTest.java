@@ -37,6 +37,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Collections;
@@ -54,9 +58,6 @@ import javax.management.ReflectionException;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
 import org.awaitility.Awaitility;
 import org.junit.Assert;
 import org.junit.Before;
@@ -79,8 +80,9 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 /**
- * Test that JMX connections done with JmcKubernetesJmxConnectionProvider are functional. In order
- * to be able to test this in a contained environment, the kubernetes API is mocked with wiremock.
+ * Test that JMX connections done with JmcKubernetesJmxConnectionProvider are
+ * functional. In order to be able to test this in a contained environment, the
+ * kubernetes API is mocked with wiremock.
  */
 @SuppressWarnings("restriction")
 public class JmcKubernetesTest {
@@ -152,13 +154,24 @@ public class JmcKubernetesTest {
 
 	@BeforeClass
 	public static void connect() throws Exception {
-		CloseableHttpResponse configResponse = HttpClients.createDefault()
-				.execute(new HttpGet(wiremock.baseUrl() + "/mock-kube-config.yml"));
-		Assert.assertEquals(configResponse.getStatusLine().getStatusCode(), 200);
+		// So we basically rely on wiremock to give us a dynamic config that we intern write to file
+		// and feed to the fabric8 client
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+		        .uri(URI.create(wiremock.baseUrl() + "/mock-kube-config.yml"))
+		        .GET()
+		        .build();
 		File configFile = File.createTempFile("mock-kube-config", ".yml");
-		configResponse.getEntity().writeTo(new FileOutputStream(configFile));
+		HttpResponse<Path> response = client.send(
+		        request,
+		        HttpResponse.BodyHandlers.ofFile(configFile.toPath())
+		);
+
+		Assert.assertEquals(200, response.statusCode());
 		// we set this so the KubernetesDiscoveryListener will work
-		//Setting taken from: https://github.com/fabric8io/kubernetes-client/blob/77a65f7d40f31a5dc37492cd9de3c317c2702fb4/kubernetes-client-api/src/main/java/io/fabric8/kubernetes/client/Config.java#L120, unlikely to change
+		// Setting taken from:
+		// https://github.com/fabric8io/kubernetes-client/blob/77a65f7d40f31a5dc37492cd9de3c317c2702fb4/kubernetes-client-api/src/main/java/io/fabric8/kubernetes/client/Config.java#L120,
+		// unlikely to change
 		System.setProperty("kubeconfig", configFile.getAbsolutePath());
 		jolokiaConnection = getKubernetesMBeanConnector();
 	}
@@ -175,6 +188,15 @@ public class JmcKubernetesTest {
 			MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
 		MBeanServerConnection jmxConnection = jolokiaConnection;
 		assertOneSingleAttribute(jmxConnection);
+
+	}
+
+	@Test
+	public void testSimulateDisconnect()
+			throws InstanceNotFoundException, AttributeNotFoundException, InvalidAttributeValueException,
+			MalformedObjectNameException, MBeanException, ReflectionException, MalformedURLException, IOException {
+		MBeanServerConnection jmxConnection = jolokiaConnection;
+		jmxConnection.getAttribute(new ObjectName("java.lang:type=Disconnected"), "Disconnected");
 
 	}
 
@@ -275,9 +297,8 @@ public class JmcKubernetesTest {
 		final KubernetesDiscoveryListener scanner = new KubernetesDiscoveryListener(parameters);
 		final Map<String, IServerDescriptor> foundVms = new HashMap<>();
 		IDescriptorListener descriptorListener = new IDescriptorListener() {
-			public void onDescriptorDetected(
-				IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
-				IConnectionDescriptor connectionDescriptor, IDescribable provider) {
+			public void onDescriptorDetected(IServerDescriptor serverDescriptor, String path, JMXServiceURL url,
+					IConnectionDescriptor connectionDescriptor, IDescribable provider) {
 				foundVms.put(serverDescriptor.getGUID(), serverDescriptor);
 			}
 
