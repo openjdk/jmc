@@ -77,7 +77,7 @@ public class JmcKubernetesJmxConnection extends ConnectionDecorator {
 			InstanceNotFoundException, ReflectionException, IOException {
 		try {
 			return super.getAttribute(name, attribute);
-		} catch (JMRuntimeException e) {
+		} catch (RuntimeException e) {
 			throw detectAndSimulateDisconnectException(e);
 		}
 	}
