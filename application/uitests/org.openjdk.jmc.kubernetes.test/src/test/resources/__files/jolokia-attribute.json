@@ -1,0 +1,10 @@
+{
+   "request" : {
+      "attribute" : "Verbose",
+      "mbean" : "java.lang:type=Memory",
+      "type" : "read"
+   },
+   "status" : 200,
+   "timestamp" : 1658563869,
+   "value" : false
+}
