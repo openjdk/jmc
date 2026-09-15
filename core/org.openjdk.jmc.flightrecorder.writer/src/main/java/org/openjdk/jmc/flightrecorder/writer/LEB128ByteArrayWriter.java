@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -66,7 +68,7 @@ final class LEB128ByteArrayWriter extends AbstractLEB128Writer {
 	public long writeByte(long offset, byte data) {
 		int newOffset = (int) (offset + 1);
 		if (newOffset >= array.length) {
-			array = Arrays.copyOf(array, newOffset * 2);
+			array = Arrays.copyOf(array, newCapacity(newOffset));
 		}
 		array[(int) offset] = data;
 		pointer = Math.max(newOffset, pointer);
@@ -80,11 +82,20 @@ final class LEB128ByteArrayWriter extends AbstractLEB128Writer {
 		}
 		int newOffset = (int) (offset + data.length);
 		if (newOffset >= array.length) {
-			array = Arrays.copyOf(array, newOffset * 2);
+			array = Arrays.copyOf(array, newCapacity(newOffset));
 		}
 		System.arraycopy(data, 0, array, (int) offset, data.length);
 		pointer = Math.max(newOffset, pointer);
 		return newOffset;
+	}
+
+	private static int newCapacity(int required) {
+		if (required < 0) {
+			throw new OutOfMemoryError("LEB128ByteArrayWriter capacity exceeds Integer.MAX_VALUE");
+		}
+		int doubled = required * 2;
+		// Doubling overflowed — cap at MAX_VALUE; the next write will catch the required<0 case
+		return doubled > 0 ? doubled : Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -110,6 +121,11 @@ final class LEB128ByteArrayWriter extends AbstractLEB128Writer {
 		ByteBuffer bb = ByteBuffer.wrap(array, 0, pointer);
 		bb.position(pointer);
 		consumer.accept(bb);
+	}
+
+	@Override
+	public void writeTo(OutputStream out) throws IOException {
+		out.write(array, 0, pointer);
 	}
 
 	@Override

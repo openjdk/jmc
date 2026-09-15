@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,17 +33,28 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Types;
 
 /** A representation of JFR chunk - self contained set of JFR data. */
 final class Chunk {
-	private final LEB128Writer writer = LEB128Writer.getInstance();
+	private final LEB128Writer writer;
+	private final ThreadMmapManager mmapManager;
+	private final long threadId;
 	private final long startTicks;
 	private final long startNanos;
 
 	Chunk() {
+		this(LEB128Writer.getInstance(), null);
+	}
+
+	Chunk(LEB128Writer writer, ThreadMmapManager mmapManager) {
+		this.writer = writer;
+		this.mmapManager = mmapManager;
+		this.threadId = Thread.currentThread().getId();
 		this.startTicks = System.nanoTime();
 		this.startNanos = System.currentTimeMillis() * 1_000_000L;
 	}
@@ -158,7 +169,33 @@ final class Chunk {
 			writeTypedValue(eventWriter, fieldValue.getValue());
 		}
 
-		writer.writeInt(eventWriter.length()) // write event size
+		int eventSize = eventWriter.length();
+		// size prefix takes at most 5 bytes as LEB128-encoded int32
+		int requiredSpace = 5 + eventSize;
+
+		LEB128Writer activeWriter;
+		if (mmapManager != null) {
+			try {
+				activeWriter = mmapManager.getActiveWriter(threadId);
+				if (activeWriter instanceof LEB128MappedWriter mmapWriter) {
+					if (!mmapWriter.canFit(requiredSpace)) {
+						// swap in a fresh buffer, flush the full one in the background
+						mmapManager.rotateChunk(threadId);
+						activeWriter = mmapManager.getActiveWriter(threadId);
+					}
+				} else {
+					throw new IllegalStateException(
+							"Expected LEB128MappedWriter from mmap manager, got "
+									+ (activeWriter == null ? "null" : activeWriter.getClass().getName()));
+				}
+			} catch (IOException e) {
+				throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
+			}
+		} else {
+			activeWriter = writer;
+		}
+
+		activeWriter.writeInt(eventSize) // write event size
 				.writeBytes(eventWriter.export());
 	}
 

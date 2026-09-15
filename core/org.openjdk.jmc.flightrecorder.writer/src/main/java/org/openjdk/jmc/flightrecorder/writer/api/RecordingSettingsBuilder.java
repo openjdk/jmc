@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,6 +32,8 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.openjdk.jmc.flightrecorder.writer.api;
+
+import java.nio.file.Path;
 
 /**
  * A builder type for {@linkplain RecordingSettings}
@@ -73,14 +75,52 @@ public interface RecordingSettingsBuilder {
 	/**
 	 * The recording will automatically initialize
 	 * {@linkplain org.openjdk.jmc.flightrecorder.writer.api.Types.JDK} types.
-	 * 
+	 *
 	 * @return this instance for chaining
 	 */
 	RecordingSettingsBuilder withJdkTypeInitialization();
 
 	/**
+	 * Enable memory-mapped files for off-heap event storage. This reduces heap pressure by storing
+	 * event data in memory-mapped files instead of on-heap byte arrays.
+	 *
+	 * @return this instance for chaining
+	 * @since 10.0.0
+	 */
+	default RecordingSettingsBuilder withMmap() {
+		return this;
+	}
+
+	/**
+	 * Enable memory-mapped files with a custom chunk size. Each thread gets double-buffered chunks
+	 * of this size for lock-free writes with automatic rotation.
+	 *
+	 * @param chunkSize
+	 *            size of each memory-mapped buffer chunk in bytes (default: 4MB)
+	 * @return this instance for chaining
+	 * @since 10.0.0
+	 */
+	default RecordingSettingsBuilder withMmap(int chunkSize) {
+		return this;
+	}
+
+	/**
+	 * Set the base directory for memory-mapped temporary files. A unique subdirectory will be
+	 * created under this path for each recording. If not set, the system default temporary
+	 * directory is used.
+	 *
+	 * @param baseDir
+	 *            the base directory for mmap temp files
+	 * @return this instance for chaining
+	 * @since 10.0.0
+	 */
+	default RecordingSettingsBuilder withMmapTempDir(Path baseDir) {
+		return this;
+	}
+
+	/**
 	 * Build the settings instance.
-	 * 
+	 *
 	 * @return the settings instance
 	 */
 	RecordingSettings build();
