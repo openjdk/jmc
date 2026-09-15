@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,17 +33,17 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
-import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
-import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
-import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValueBuilder;
+import org.openjdk.jmc.flightrecorder.writer.util.NonZeroHashCode;
 
 public final class TypedValueImpl implements TypedValue {
 	private int hashcode = 0;
@@ -151,51 +151,20 @@ public final class TypedValueImpl implements TypedValue {
 	}
 
 	/**
-	 * Gets the default value for a field when not explicitly provided by the user.
-	 * <p>
-	 * For event types (jdk.jfr.Event):
-	 * <ul>
-	 * <li>Fields annotated with {@code @Timestamp} receive {@link System#nanoTime()} as default,
-	 * providing a monotonic timestamp that will be >= the chunk's startTicks</li>
-	 * <li>Other fields receive null values</li>
-	 * </ul>
-	 * <p>
-	 * Note: JFR timestamps are stored as ticks relative to the chunk start, so the parser will
-	 * convert this absolute tick value to chunk-relative during reading.
-	 * <p>
-	 * <strong>Tick Frequency Assumption:</strong> This implementation assumes a 1:1 tick frequency
-	 * (1 tick = 1 nanosecond) as currently hardcoded in {@code RecordingImpl}. If the tick
-	 * frequency becomes configurable in the future, {@link System#nanoTime()} values will need to
-	 * be converted to ticks using: {@code nanoTime * ticksPerSecond / 1_000_000_000L}.
-	 *
-	 * @param field
-	 *            the field to get default value for
-	 * @return the default value for the field
+	 * Default value for a field the caller left unset. {@code @Timestamp} fields on an event get
+	 * {@link System#nanoTime()} so they stay monotonic and >= the chunk's startTicks (assumes a 1:1
+	 * tick frequency, same as {@code RecordingImpl}); everything else gets the type's null value.
 	 */
 	private TypedValueImpl getDefaultImplicitFieldValue(TypedFieldImpl field) {
 		if (!"jdk.jfr.Event".equals(type.getSupertype())) {
 			return field.getType().nullValue();
 		}
-
-		// Check if field is annotated with @Timestamp (any value means it's chunk-relative)
 		if (hasTimestampAnnotation(field)) {
-			// Use current nanoTime as default - will be valid and >= chunk startTicks
-			// NOTE: Assumes 1:1 tick frequency (1 tick = 1 ns) as per RecordingImpl line 280
 			return field.getType().asValue(System.nanoTime());
 		}
-
-		// For all other fields, return null value
-		// Null builtin values are handled properly by Chunk.writeBuiltinType()
 		return field.getType().nullValue();
 	}
 
-	/**
-	 * Checks if a field has the {@code @Timestamp} annotation.
-	 *
-	 * @param field
-	 *            the field to check
-	 * @return true if the field is annotated with @Timestamp
-	 */
 	private boolean hasTimestampAnnotation(TypedFieldImpl field) {
 		for (Annotation annotation : field.getAnnotations()) {
 			if ("jdk.jfr.Timestamp".equals(annotation.getType().getTypeName())) {
