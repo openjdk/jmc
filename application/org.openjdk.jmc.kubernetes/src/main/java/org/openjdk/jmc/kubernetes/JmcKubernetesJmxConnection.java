@@ -38,12 +38,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
+import javax.management.*;
 
 import org.jolokia.client.exception.JolokiaRemoteException;
 import org.jolokia.client.exception.JolokiaHttpException;
@@ -76,6 +71,15 @@ public class JmcKubernetesJmxConnection extends ConnectionDecorator {
 			InstanceNotFoundException, ReflectionException, IOException {
 		try {
 			return super.getAttribute(name, attribute);
+		} catch (RuntimeException e) {
+			throw detectAndSimulateDisconnectException(e);
+		}
+	}
+
+	@Override
+	public AttributeList getAttributes(ObjectName name, String[] attributes) throws InstanceNotFoundException, ReflectionException, IOException {
+		try {
+			return super.getAttributes(name, attributes);
 		} catch (RuntimeException e) {
 			throw detectAndSimulateDisconnectException(e);
 		}
