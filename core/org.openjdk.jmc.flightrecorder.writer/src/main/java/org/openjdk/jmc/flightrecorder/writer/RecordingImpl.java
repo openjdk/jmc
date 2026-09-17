@@ -141,10 +141,10 @@ public final class RecordingImpl extends Recording {
 
 	// a cache to hold already computed stack frames
 	private final Map<StackTraceElement, TypedValue> frameCache = new ConcurrentHashMap<>(16000);
-	// a cache to hold already resolved class loaders
-	private final Map<String, TypedValue> classLoaderCache = new ConcurrentHashMap<>(128);
-	// a cache to hold already resolved modules
-	private final Map<String, TypedValue> moduleCache = new ConcurrentHashMap<>(4096);
+	// caches to hold already resolved class loaders and modules; keyed by Object so that the null
+	// entry uses a dedicated sentinel that cannot collide with a real name
+	private final Map<Object, TypedValue> classLoaderCache = new ConcurrentHashMap<>(128);
+	private final Map<Object, TypedValue> moduleCache = new ConcurrentHashMap<>(4096);
 
 	public RecordingImpl(OutputStream output, RecordingSettings settings) {
 		this.startTicks = settings.getStartTicks() != -1 ? settings.getStartTicks() : System.nanoTime();
@@ -647,10 +647,12 @@ public final class RecordingImpl extends Recording {
 		});
 	}
 
-	private static final String NULL_SENTINEL = "\0__null__";
+	// dedicated null-entry key; cannot collide with a real class loader or module name the way a
+	// String sentinel would
+	private static final Object NULL_KEY = new Object();
 
 	private TypedValue classLoaderValue(Types types, String classLoaderName) {
-		String key = classLoaderName != null ? classLoaderName : NULL_SENTINEL;
+		Object key = classLoaderName != null ? classLoaderName : NULL_KEY;
 		return classLoaderCache.computeIfAbsent(key, k -> types.getType(Types.JDK.CLASS_LOADER).asValue(p -> {
 			p.putField("name", classLoaderName);
 		}));
@@ -663,7 +665,7 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private TypedValue moduleValue(Types types, String module) {
-		String key = module != null ? module : NULL_SENTINEL;
+		Object key = module != null ? module : NULL_KEY;
 		return moduleCache.computeIfAbsent(key, k -> types.getType(Types.JDK.MODULE).asValue(p -> {
 			p.putField("name", module);
 		}));
