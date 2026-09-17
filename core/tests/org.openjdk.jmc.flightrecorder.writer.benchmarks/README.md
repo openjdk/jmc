@@ -1,10 +1,14 @@
 # JFR Writer Performance Benchmarks
 
-This module contains JMH (Java Microbenchmark Harness) benchmarks for measuring the performance of the JFR Writer API.
+This module holds JMH (Java Microbenchmark Harness) benchmarks that measure performance of the JFR Writer API.
 
 ## Building
 
-Build the benchmark JAR from the benchmark module directory:
+The build includes this module only when the `benchmarks` Maven profile is active (for example,
+`mvn -Pbenchmarks package`). The default build excludes it. The build catches API drift only when
+it runs with the profile enabled.
+
+Build the benchmark JAR from the benchmark module directory (under `core/`):
 
 ```bash
 cd tests/org.openjdk.jmc.flightrecorder.writer.benchmarks
@@ -17,7 +21,7 @@ Or from the core root directory:
 mvn clean package -DskipTests -f tests/org.openjdk.jmc.flightrecorder.writer.benchmarks/pom.xml
 ```
 
-This creates an executable uber-JAR: `target/benchmarks.jar` (~4.7MB)
+The build produces an executable JAR at `target/benchmarks.jar` (about 4.7 MB).
 
 ## Running Benchmarks
 
@@ -29,7 +33,7 @@ java -jar target/benchmarks.jar -l
 
 ### Run All Benchmarks
 
-Warning: This will take several hours as each benchmark runs multiple iterations with warmup.
+Warning: Running all benchmarks takes several hours, because each benchmark runs multiple iterations with warmup.
 
 ```bash
 java -jar target/benchmarks.jar
@@ -80,10 +84,10 @@ java -jar target/benchmarks.jar -lprof
 
 ### Run with GC Profiler
 
-Raw throughput (ops/s) numbers are similar between heap and mmap modes because the dominant
-cost is event construction, not byte storage. The meaningful difference between modes is in
-**GC behaviour**: mmap keeps serialised bytes off-heap, reducing allocation rate and GC pauses.
-Use `-prof gc` to see this:
+Raw throughput (ops/s) is similar between heap and mmap modes, because building the event costs
+more than storing its bytes. The two modes differ in **GC behavior**: mmap keeps serialized bytes
+off-heap, which reduces the allocation rate and the number of GC pauses. Use `-prof gc` to see the
+GC difference:
 
 ```bash
 # Compare GC pressure between modes
@@ -92,10 +96,10 @@ java -jar target/benchmarks.jar -wi 3 -i 5 -f 2 -p mode=mmap -prof gc
 ```
 
 Key metrics in the output:
-- `·gc.alloc.rate` (MB/s) — allocation rate per second
-- `·gc.alloc.rate.norm` (B/op) — allocations per operation
-- `·gc.count` — number of GC collections
-- `·gc.time` (ms) — total GC pause time
+- `gc.alloc.rate` (MB/s) - allocation rate per second
+- `gc.alloc.rate.norm` (B/op) - allocations per operation
+- `gc.count` - number of GC collections
+- `gc.time` (ms) - total GC pause time
 
 ### Run with Stack Profiler
 
@@ -107,7 +111,7 @@ java -jar target/benchmarks.jar EventWriteThroughputBenchmark -prof stack
 
 ### Run with Async Profiler (if available)
 
-Requires async-profiler to be installed:
+You must have async-profiler installed:
 
 ```bash
 java -jar target/benchmarks.jar EventWriteThroughputBenchmark -prof async:libPath=/path/to/libasyncProfiler.so
@@ -135,7 +139,7 @@ java -jar target/benchmarks.jar EventWriteThroughputBenchmark -rf json -rff resu
 
 ## Common Options
 
-Run `java -jar target/benchmarks.jar -h` for all options. Most commonly used:
+Run `java -jar target/benchmarks.jar -h` for all options. The most common options are:
 
 | Option | Description | Example |
 |--------|-------------|---------|
@@ -213,7 +217,8 @@ java -jar target/benchmarks.jar ConstantPoolBenchmark -p poolSize=1000
 
 ## Comparing Results
 
-Use the included `compare.py` Python script to compare two benchmark runs and see performance differences:
+`Compare.java` is a dependency-free, single-file program that compares two benchmark runs and
+reports the performance difference. It requires JDK 17 or later:
 
 ```bash
 # Run baseline
@@ -223,7 +228,7 @@ java -jar target/benchmarks.jar EventWriteThroughputBenchmark -rf json -rff base
 java -jar target/benchmarks.jar EventWriteThroughputBenchmark -rf json -rff optimized.json
 
 # Compare with custom title
-python3 compare.py baseline.json optimized.json "My Optimization"
+java Compare.java baseline.json optimized.json "My Optimization"
 ```
 
 **Example Output:**
@@ -243,13 +248,14 @@ writeMultiFieldEvent
   Change:    ↑  11.88%
 ```
 
-The script automatically detects benchmark mode and calculates improvements correctly:
+`Compare.java` detects the benchmark mode automatically and reports the correct direction of
+improvement:
 - **Throughput modes** (ops/s): Higher is better, shows ↑ for improvements
 - **Average time modes** (ms/op): Lower is better, shows ↓ for improvements
 
 **Usage:**
 ```bash
-python3 compare.py <baseline.json> <optimized.json> [optional_title]
+java Compare.java <baseline.json> <optimized.json> [optional_title]
 ```
 
 ## Configuration
@@ -260,7 +266,7 @@ Benchmarks use the following JVM settings by default (configured in `@Fork` anno
 - Threads: 1 (single-threaded by default)
 - Forks: 1
 
-Override these with command-line options:
+Override these default settings with command-line options:
 
 ```bash
 # Custom heap size
@@ -278,25 +284,27 @@ JMH reports several metrics:
 - **Error**: Margin of error (99.9% confidence interval)
 - **Units**: ops/s (operations per second), ms/op (milliseconds per operation), etc.
 
-Higher ops/s = better performance
-Lower ms/op = better performance
+A higher ops/s score means better performance. A lower ms/op score means better performance.
 
 Always:
-1. Run with multiple forks (`-f 3`) for statistical reliability
-2. Ensure adequate warmup iterations (`-wi 5`)
-3. Use profilers to understand *why* performance changes
-4. Compare against baselines, not absolute numbers
-5. Be aware of JVM optimizations (see JMH warnings about Blackholes)
+1. Run with multiple forks (`-f 3`) for statistical reliability.
+2. Use enough warmup iterations (`-wi 5`).
+3. Use profilers to understand *why* performance changes.
+4. Compare against baselines, not absolute numbers.
+5. Check the JMH warnings about Blackholes. The JVM can optimize away code whose result nothing
+   uses.
 
 ## Troubleshooting
 
 ### Build Fails
 
-If `mvn clean package` fails with MANIFEST.MF errors, ensure you're using the latest pom.xml which correctly configures the maven-jar-plugin to read the manifest from resources.
+If `mvn clean package` fails with MANIFEST.MF errors, use the latest `pom.xml`. It configures the
+maven-jar-plugin to read the manifest from resources.
 
 ### Benchmark Hangs
 
-Some benchmarks create temporary JFR files. If interrupted, clean up:
+Some benchmarks create temporary JFR files. If a benchmark run stops early, delete the leftover
+files:
 
 ```bash
 rm -rf /tmp/jfr-writer-mmap-*
@@ -315,7 +323,7 @@ java -Xms4G -Xmx4G -jar target/benchmarks.jar ...
 - Ensure stable system load (close other applications)
 - Increase forks: `-f 5`
 - Increase iterations: `-i 10 -wi 5`
-- Disable dynamic frequency scaling if possible
+- If possible, disable dynamic frequency scaling
 
 ## References
 
