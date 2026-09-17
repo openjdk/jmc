@@ -56,10 +56,9 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 /**
- * Benchmark for UTF-8 string encoding performance.
- *
- * Measures the impact of repeated string encoding, which is a hotspot identified in the analysis.
- * This benchmark validates the effectiveness of UTF-8 caching optimizations.
+ * Benchmark for UTF-8 string encoding performance. Measures the impact of repeated string encoding,
+ * which is a hotspot identified in the analysis. This benchmark validates the effectiveness of
+ * UTF-8 caching optimizations.
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)

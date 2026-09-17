@@ -56,10 +56,8 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 /**
- * Benchmark for event write throughput.
- *
- * Measures events per second for different event types to establish baseline performance and
- * identify improvements from allocation reduction optimizations.
+ * Benchmark for event write throughput. Measures events per second for different event types to
+ * establish baseline performance and identify improvements from allocation reduction optimizations.
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)

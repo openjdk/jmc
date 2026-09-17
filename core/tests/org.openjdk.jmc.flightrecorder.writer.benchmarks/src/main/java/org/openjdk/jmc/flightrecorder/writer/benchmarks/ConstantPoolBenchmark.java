@@ -56,11 +56,9 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 /**
- * Benchmark for constant pool buildup performance.
- *
- * Measures the performance of constant pool operations, including HashMap growth, value
- * deduplication, and lookup performance. This validates optimizations around HashMap initial
- * capacity and hash computation.
+ * Benchmark for constant pool buildup performance. Measures the performance of constant pool
+ * operations, including HashMap growth, value deduplication, and lookup performance. This validates
+ * optimizations around HashMap initial capacity and hash computation.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)

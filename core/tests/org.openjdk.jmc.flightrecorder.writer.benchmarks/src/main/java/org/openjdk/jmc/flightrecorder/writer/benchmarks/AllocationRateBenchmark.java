@@ -56,12 +56,10 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 /**
- * Benchmark for measuring allocation rate during event writing.
- *
- * Uses JMH's gc.alloc.rate profiler to measure MB/sec of allocations. This is critical for
- * identifying allocation hotspots and validating optimization efforts.
- *
- * Run with: {@code java -jar target/benchmarks.jar AllocationRate -prof gc}
+ * Benchmark for measuring allocation rate during event writing. Uses JMH's gc.alloc.rate profiler
+ * to measure MB/sec of allocations. This is critical for identifying allocation hotspots and
+ * validating optimization efforts. Run with:
+ * {@code java -jar target/benchmarks.jar AllocationRate -prof gc}
  */
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)

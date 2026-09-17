@@ -59,11 +59,9 @@ import java.util.stream.Collectors;
  * two fixed-size mmap buffers (active and inactive). Normal event writes go to the per-thread
  * active buffer without cross-thread locking; only buffer rotation (swap) is synchronized per
  * thread state. When the active buffer fills, buffers are swapped and the inactive buffer is
- * flushed to disk in the background.
- *
- * Temp files are only removed by {@linkplain #cleanup()}; a recording abandoned without a close()
- * leaves its temp files behind. There is no stale-file sweep because another live recording may own
- * adjacent {@code jfr-writer-mmap-*} directories.
+ * flushed to disk in the background. Temp files are only removed by {@linkplain #cleanup()}; a
+ * recording abandoned without a close() leaves its temp files behind. There is no stale-file sweep
+ * because another live recording may own adjacent {@code jfr-writer-mmap-*} directories.
  */
 final class ThreadMmapManager {
 	private static final Logger LOGGER = Logger.getLogger(ThreadMmapManager.class.getName());
