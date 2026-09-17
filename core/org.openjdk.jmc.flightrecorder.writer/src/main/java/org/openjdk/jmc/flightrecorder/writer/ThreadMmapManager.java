@@ -39,6 +39,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,6 +50,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -57,14 +60,20 @@ import java.util.stream.Collectors;
  * active buffer without cross-thread locking; only buffer rotation (swap) is synchronized per
  * thread state. When the active buffer fills, buffers are swapped and the inactive buffer is
  * flushed to disk in the background.
+ *
+ * Temp files are only removed by {@linkplain #cleanup()}; a recording abandoned without a close()
+ * leaves its temp files behind. There is no stale-file sweep because another live recording may own
+ * adjacent {@code jfr-writer-mmap-*} directories.
  */
 final class ThreadMmapManager {
+	private static final Logger LOGGER = Logger.getLogger(ThreadMmapManager.class.getName());
+
 	private final Path tempDir;
 	private final int chunkSize;
 	private final ConcurrentHashMap<Long, ThreadBufferState> threadStates;
 	private final ExecutorService flushExecutor;
 	private final ConcurrentLinkedQueue<Future<?>> flushFutures;
-	private final ConcurrentLinkedQueue<Path> flushedChunks;
+	private final ConcurrentLinkedQueue<ChunkRef> flushedChunks;
 
 	ThreadMmapManager(Path tempDir, int chunkSize) throws IOException {
 		this.tempDir = tempDir;
@@ -74,8 +83,10 @@ final class ThreadMmapManager {
 		}
 
 		this.threadStates = new ConcurrentHashMap<>();
-		// Fixed pool for I/O-bound flush tasks. Thread count is intentionally decoupled from CPU
-		// cores — concurrent disk writes have diminishing returns beyond a small number of threads.
+		// fixed pool for I/O-bound flush tasks, decoupled from CPU cores since concurrent disk
+		// writes have diminishing returns beyond a small number of threads. Also bounds flush
+		// throughput: writer threads block in swapBuffers() on the pending flush when rotating
+		// faster than the pool can drain.
 		this.flushExecutor = Executors.newFixedThreadPool(2, r -> {
 			Thread t = new Thread(r);
 			t.setDaemon(true);
@@ -111,11 +122,13 @@ final class ThreadMmapManager {
 		}
 
 		LEB128MappedWriter oldActive = state.swapBuffers();
-		Path chunkFile = nextChunkFile(threadId, state);
+		ChunkRef chunkRef = nextChunkRef(threadId, state);
+
+		flushFutures.removeIf(Future::isDone);
 
 		Future<?> flushFuture = flushExecutor.submit(() -> {
 			try {
-				flushToFile(oldActive, chunkFile);
+				flushToFile(oldActive, chunkRef);
 				oldActive.reset();
 			} catch (IOException e) {
 				throw new UncheckedIOException("Failed to flush chunk for thread " + threadId, e);
@@ -125,32 +138,41 @@ final class ThreadMmapManager {
 		state.setPendingFlush(flushFuture);
 	}
 
-	private Path nextChunkFile(long threadId, ThreadBufferState state) {
+	private ChunkRef nextChunkRef(long threadId, ThreadBufferState state) {
 		int sequence = state.nextSequence();
-		return tempDir.resolve("chunk-" + threadId + "-" + sequence + ".dat");
+		return new ChunkRef(threadId, sequence, tempDir.resolve("chunk-" + threadId + "-" + sequence + ".dat"));
 	}
 
-	private void flushToFile(LEB128MappedWriter writer, Path chunkFile) throws IOException {
+	private void flushToFile(LEB128MappedWriter writer, ChunkRef chunk) throws IOException {
 		writer.force();
-		try (FileOutputStream fos = new FileOutputStream(chunkFile.toFile())) {
+		try (FileOutputStream fos = new FileOutputStream(chunk.file().toFile())) {
 			writer.copyTo(fos);
 		}
-		flushedChunks.add(chunkFile);
+		flushedChunks.add(chunk);
 	}
 
+	/**
+	 * @return the flushed chunk files ordered by (threadId, sequence), i.e. the per-thread order in
+	 *         which the chunks were filled, not the order in which background flushes completed
+	 */
 	List<Path> getFlushedChunks() {
-		return new ArrayList<>(flushedChunks);
+		List<ChunkRef> refs = new ArrayList<>(flushedChunks);
+		refs.sort(Comparator.naturalOrder());
+		List<Path> paths = new ArrayList<>(refs.size());
+		for (ChunkRef ref : refs) {
+			paths.add(ref.file());
+		}
+		return paths;
+	}
+
+	Path getTempDir() {
+		return tempDir;
 	}
 
 	/** Force-flushes any active buffers still holding data before close. */
 	void finalFlush() throws IOException {
-		for (ThreadBufferState state : threadStates.values()) {
-			LEB128MappedWriter active = state.getActiveWriter();
-			if (active.getDataSize() > 0) {
-				flushToFile(active, nextChunkFile(state.threadId, state));
-			}
-		}
-
+		// wait for outstanding background flushes first: chunks flushed from the active buffers
+		// below must be appended to flushedChunks AFTER any earlier rotation of the same thread
 		flushExecutor.shutdown();
 		try {
 			if (!flushExecutor.awaitTermination(10, TimeUnit.SECONDS)) {
@@ -192,6 +214,15 @@ final class ThreadMmapManager {
 		if (first != null) {
 			throw new IOException(failureCount + " background chunk flush(es) failed", first);
 		}
+
+		// with the background flushes drained, the active buffers hold the last data of their
+		// threads; flush them synchronously so their chunks land at the tail of the sequence
+		for (ThreadBufferState state : threadStates.values()) {
+			LEB128MappedWriter active = state.getActiveWriter();
+			if (active.getDataSize() > 0) {
+				flushToFile(active, nextChunkRef(state.threadId, state));
+			}
+		}
 	}
 
 	void cleanup() throws IOException {
@@ -199,28 +230,36 @@ final class ThreadMmapManager {
 			state.close();
 		}
 
-		for (Path chunk : flushedChunks) {
-			Files.deleteIfExists(chunk);
+		// best-effort: on Windows a live mapping keeps the file locked until the buffer is GC-ed,
+		// so a delete can fail even though the recording was written successfully
+		for (ChunkRef chunk : flushedChunks) {
+			try {
+				Files.deleteIfExists(chunk.file());
+			} catch (IOException e) {
+				LOGGER.log(Level.FINE, "Failed to delete mmap chunk file " + chunk.file(), e);
+			}
 		}
 
-		if (Files.exists(tempDir)) {
-			IOException first = null;
+		deleteRecursively(tempDir);
+	}
+
+	/** Deletes the directory tree rooted at {@code dir}, best-effort. */
+	static void deleteRecursively(Path dir) {
+		if (!Files.exists(dir)) {
+			return;
+		}
+		try {
 			// reverse order so directory entries are deleted after their contents
-			List<Path> paths = Files.walk(tempDir).sorted((a, b) -> b.compareTo(a)).collect(Collectors.toList());
+			List<Path> paths = Files.walk(dir).sorted((a, b) -> b.compareTo(a)).collect(Collectors.toList());
 			for (Path path : paths) {
 				try {
 					Files.deleteIfExists(path);
 				} catch (IOException e) {
-					if (first == null) {
-						first = e;
-					} else {
-						first.addSuppressed(e);
-					}
+					LOGGER.log(Level.FINE, "Failed to delete mmap file " + path, e);
 				}
 			}
-			if (first != null) {
-				throw first;
-			}
+		} catch (IOException e) {
+			LOGGER.log(Level.FINE, "Failed to walk mmap directory " + dir, e);
 		}
 	}
 
@@ -238,65 +277,73 @@ final class ThreadMmapManager {
 	}
 
 	/**
-	 * Per-thread state managing double-buffered mmap files.
+	 * Identifies a flushed chunk file; ordering by (threadId, sequence) reproduces the per-thread
+	 * write order regardless of the order in which background flushes completed.
 	 */
-	static final class ThreadBufferState {
-		final long threadId;
-		private final LEB128MappedWriter buffer0;
-		private final LEB128MappedWriter buffer1;
-		private volatile boolean activeIsBuffer0 = true;
-		private final AtomicInteger sequence = new AtomicInteger(0);
-		private volatile Future<?> pendingFlush;
+	private static record ChunkRef(long threadId, int sequence, Path file) implements Comparable<ChunkRef> {
 
-		ThreadBufferState(long threadId, LEB128MappedWriter buffer0, LEB128MappedWriter buffer1) {
-			this.threadId = threadId;
-			this.buffer0 = buffer0;
-			this.buffer1 = buffer1;
-		}
-
-		LEB128MappedWriter getActiveWriter() {
-			return activeIsBuffer0 ? buffer0 : buffer1;
-		}
-
-		LEB128MappedWriter getInactiveWriter() {
-			return activeIsBuffer0 ? buffer1 : buffer0;
-		}
-
-		/**
-		 * Swaps active/inactive buffers and returns the old active buffer for flushing. Waits for
-		 * any pending flush on the inactive buffer first, since that buffer is about to become
-		 * active and must not still be written to by the flush task.
-		 */
-		synchronized LEB128MappedWriter swapBuffers() throws IOException {
-			Future<?> pending = pendingFlush;
-			if (pending != null) {
-				try {
-					pending.get();
-				} catch (ExecutionException e) {
-					Throwable cause = e.getCause();
-					throw cause instanceof IOException ? (IOException) cause
-							: new IOException("Pending buffer flush failed", cause);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-					throw new IOException("Interrupted while waiting for pending buffer flush", e);
-				}
-			}
-			LEB128MappedWriter oldActive = getActiveWriter();
-			activeIsBuffer0 = !activeIsBuffer0;
-			return oldActive;
-		}
-
-		void setPendingFlush(Future<?> future) {
-			this.pendingFlush = future;
-		}
-
-		int nextSequence() {
-			return sequence.getAndIncrement();
-		}
-
-		void close() throws IOException {
-			buffer0.close();
-			buffer1.close();
-		}
+	@Override
+	public int compareTo(ChunkRef other) {
+		int cmp = Long.compare(threadId, other.threadId);
+		return cmp != 0 ? cmp : Integer.compare(sequence, other.sequence);
 	}
 }
+
+/**
+ * Per-thread state managing double-buffered mmap files.
+ */
+static final class ThreadBufferState {
+	final long threadId;
+	private final LEB128MappedWriter buffer0;
+	private final LEB128MappedWriter buffer1;
+	private volatile boolean activeIsBuffer0 = true;
+	private final AtomicInteger sequence = new AtomicInteger(0);
+	private volatile Future<?> pendingFlush;
+
+	ThreadBufferState(long threadId, LEB128MappedWriter buffer0, LEB128MappedWriter buffer1) {
+		this.threadId = threadId;
+		this.buffer0 = buffer0;
+		this.buffer1 = buffer1;
+	}
+
+	LEB128MappedWriter getActiveWriter() {
+		return activeIsBuffer0 ? buffer0 : buffer1;
+	}
+
+	/**
+	 * Swaps active/inactive buffers and returns the old active buffer for flushing. Waits for any
+	 * pending flush on the inactive buffer first, since that buffer is about to become active and
+	 * must not still be written to by the flush task.
+	 */
+	synchronized LEB128MappedWriter swapBuffers() throws IOException {
+		Future<?> pending = pendingFlush;
+		if (pending != null) {
+			try {
+				pending.get();
+			} catch (ExecutionException e) {
+				Throwable cause = e.getCause();
+				throw cause instanceof IOException ? (IOException) cause
+						: new IOException("Pending buffer flush failed", cause);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new IOException("Interrupted while waiting for pending buffer flush", e);
+			}
+		}
+		LEB128MappedWriter oldActive = getActiveWriter();
+		activeIsBuffer0 = !activeIsBuffer0;
+		return oldActive;
+	}
+
+	void setPendingFlush(Future<?> future) {
+		this.pendingFlush = future;
+	}
+
+	int nextSequence() {
+		return sequence.getAndIncrement();
+	}
+
+	void close() throws IOException {
+		buffer0.close();
+		buffer1.close();
+	}
+}}

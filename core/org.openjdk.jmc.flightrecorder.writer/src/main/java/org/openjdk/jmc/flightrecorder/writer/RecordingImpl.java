@@ -157,7 +157,13 @@ public final class RecordingImpl extends Recording {
 				Path baseDir = settings.getMmapTempDir();
 				Path tempDir = baseDir != null ? Files.createTempDirectory(baseDir, "jfr-writer-mmap-")
 						: Files.createTempDirectory("jfr-writer-mmap-");
-				this.mmapManager = new ThreadMmapManager(tempDir, settings.getMmapChunkSize());
+				try {
+					this.mmapManager = new ThreadMmapManager(tempDir, settings.getMmapChunkSize());
+				} catch (IOException | RuntimeException e) {
+					// the freshly created temp dir would otherwise be orphaned
+					ThreadMmapManager.deleteRecursively(tempDir);
+					throw e;
+				}
 			} catch (IOException e) {
 				throw new UncheckedIOException("Failed to initialize mmap manager", e);
 			}
@@ -210,18 +216,31 @@ public final class RecordingImpl extends Recording {
 		return this;
 	}
 
+	/**
+	 * Closes the recording and writes the assembled JFR stream. The caller must ensure that no
+	 * thread is still writing events: neither mode synchronizes close() against concurrent writers.
+	 * On failure in mmap mode the temp files are preserved so the data can be salvaged.
+	 */
 	@Override
 	public void close() throws IOException {
 		if (closed.compareAndSet(false, true)) {
+			boolean finalized = false;
 			try {
 				if (useMmap && mmapManager != null) {
 					closeMmapRecording();
 				} else {
 					closeHeapRecording();
 				}
+				finalized = true;
+			} catch (IOException e) {
+				if (mmapManager != null) {
+					// keep the mmap files so the recorded data can be salvaged
+					e.addSuppressed(new IOException("Mmap files preserved in " + mmapManager.getTempDir()));
+				}
+				throw e;
 			} finally {
 				outputStream.close();
-				if (mmapManager != null) {
+				if (finalized && mmapManager != null) {
 					mmapManager.cleanup();
 				}
 			}
