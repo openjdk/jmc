@@ -47,6 +47,6 @@ final class BenchmarkRecordings {
 		if ("mmap".equals(mode)) {
 			return Recordings.newRecording(out, settings -> settings.withMmap().withJdkTypeInitialization());
 		}
-		return Recordings.newRecording(out);
+		return Recordings.newRecording(out, settings -> settings.withJdkTypeInitialization());
 	}
 }
