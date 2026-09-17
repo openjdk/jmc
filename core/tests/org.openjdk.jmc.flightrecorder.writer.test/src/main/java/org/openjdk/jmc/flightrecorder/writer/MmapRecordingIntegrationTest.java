@@ -70,6 +70,7 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.CouldNotLoadRecordingException;
 import org.openjdk.jmc.flightrecorder.JfrLoaderToolkit;
+import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 import org.openjdk.jmc.flightrecorder.writer.api.Recordings;
 
 @SuppressWarnings("restriction")
@@ -270,7 +271,6 @@ class MmapRecordingIntegrationTest {
 				String p = payloadAccessor.getMember(item);
 				assertNotNull(p, "payload should not be null");
 				assertTrue(p.startsWith("Large payload data segment 0."), "payload should start with expected prefix");
-				// Extract the " Event N" suffix
 				int idx = p.lastIndexOf(" Event ");
 				assertTrue(idx > 0, "payload should contain ' Event ' suffix");
 				seenSuffixes.add(p.substring(idx));
@@ -281,6 +281,28 @@ class MmapRecordingIntegrationTest {
 		for (int i = 0; i < eventCount; i++) {
 			assertTrue(seenSuffixes.contains(" Event " + i), "Missing large event " + i);
 		}
+	}
+
+	@Test
+	void testOversizedEventRejected() throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(64).withJdkTypeInitialization());
+
+		TypeImpl eventType = recording.registerEventType("OversizedEvent", builder -> {
+			for (int i = 0; i < 20; i++) {
+				builder.addField("field" + i, TypesImpl.Builtin.LONG);
+			}
+		});
+		TypedValue event = eventType.asValue(access -> {
+			for (int i = 0; i < 20; i++) {
+				access.putField("field" + i, Long.MAX_VALUE);
+			}
+		});
+
+		assertThrows(IllegalStateException.class, () -> recording.writeEvent(event));
+
+		recording.close();
 	}
 
 	@Test
@@ -359,7 +381,6 @@ class MmapRecordingIntegrationTest {
 		IAttribute<String> messageAttr = Attribute.attr("message", "message", UnitLookup.PLAIN_TEXT);
 		IAttribute<IQuantity> valueAttr = Attribute.attr("value", "value", UnitLookup.NUMBER);
 
-		// Verify both recordings have the same event content
 		int mmapCount = countAndVerifyEvents(mmapBaos.toByteArray(), messageAttr, valueAttr, numEvents);
 		int heapCount = countAndVerifyEvents(heapBaos.toByteArray(), messageAttr, valueAttr, numEvents);
 		assertEquals(numEvents, mmapCount, "Mmap recording should have all events");
