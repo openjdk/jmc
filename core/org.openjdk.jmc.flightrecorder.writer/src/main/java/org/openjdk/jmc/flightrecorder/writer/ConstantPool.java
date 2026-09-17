@@ -45,7 +45,10 @@ import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 /** An in-memory map of distinct values of a certain {@linkplain Type} */
 final class ConstantPool {
 	private final TypeImpl type;
-	private final AtomicLong indexCounter = new AtomicLong(1); // index 0 is reserved for NULL
+	// Index 0 is reserved for NULL. Indices are explicitly serialized by writeTo(), so a gap left
+	// behind by a failed value construction (the index is consumed before the value is built) is
+	// harmless for encoding.
+	private final AtomicLong indexCounter = new AtomicLong(1);
 	private final Map<Object, TypedValueImpl> constantMap = new ConcurrentHashMap<>();
 	private final Map<Long, TypedValueImpl> reverseMap = new ConcurrentSkipListMap<>();
 
