@@ -89,12 +89,13 @@ final class LEB128ByteArrayWriter extends AbstractLEB128Writer {
 		return newOffset;
 	}
 
-	private static int newCapacity(int required) {
+	// package-private for testability
+	static int newCapacity(int required) {
 		if (required < 0) {
 			throw new OutOfMemoryError("LEB128ByteArrayWriter capacity exceeds Integer.MAX_VALUE");
 		}
 		int doubled = required * 2;
-		// Doubling overflowed — cap at MAX_VALUE; the next write will catch the required<0 case
+		// overflow from doubling, cap at MAX_VALUE
 		return doubled > 0 ? doubled : Integer.MAX_VALUE;
 	}
 
