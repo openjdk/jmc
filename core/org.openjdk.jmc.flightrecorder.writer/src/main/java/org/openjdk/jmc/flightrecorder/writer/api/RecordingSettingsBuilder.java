@@ -81,8 +81,9 @@ public interface RecordingSettingsBuilder {
 	RecordingSettingsBuilder withJdkTypeInitialization();
 
 	/**
-	 * Enable memory-mapped files for off-heap event storage. This reduces heap pressure by storing
-	 * event data in memory-mapped files instead of on-heap byte arrays.
+	 * Enable memory-mapped files for off-heap event storage instead of on-heap byte arrays. I/O
+	 * failures while creating or flushing mmap buffers surface as
+	 * {@linkplain java.io.UncheckedIOException} from writeEvent. Default implementation is a no-op.
 	 *
 	 * @return this instance for chaining
 	 * @since 10.0.0
@@ -93,7 +94,9 @@ public interface RecordingSettingsBuilder {
 
 	/**
 	 * Enable memory-mapped files with a custom chunk size. Each thread gets double-buffered chunks
-	 * of this size for lock-free writes with automatic rotation.
+	 * of this size for lock-free writes with automatic rotation. The size must be larger than the
+	 * largest serialized event including its 5-byte size prefix, otherwise the event is rejected
+	 * when written. Default implementation is a no-op.
 	 *
 	 * @param chunkSize
 	 *            size of each memory-mapped buffer chunk in bytes (default: 4MB)
@@ -105,9 +108,9 @@ public interface RecordingSettingsBuilder {
 	}
 
 	/**
-	 * Set the base directory for memory-mapped temporary files. A unique subdirectory will be
-	 * created under this path for each recording. If not set, the system default temporary
-	 * directory is used.
+	 * Set the base directory for memory-mapped temporary files. A unique subdirectory with
+	 * owner-only permissions is created under this path for each recording and removed on a
+	 * successful close. Does not by itself enable mmap. Default implementation is a no-op.
 	 *
 	 * @param baseDir
 	 *            the base directory for mmap temp files

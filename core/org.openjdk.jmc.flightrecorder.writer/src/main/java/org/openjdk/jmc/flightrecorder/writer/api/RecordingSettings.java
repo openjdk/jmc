@@ -65,13 +65,19 @@ public final class RecordingSettings {
 	 * @param useMmap
 	 *            use memory-mapped files for off-heap event storage
 	 * @param mmapChunkSize
-	 *            size of each memory-mapped buffer chunk in bytes (only used if useMmap is true)
+	 *            size of each memory-mapped buffer chunk in bytes (only used if useMmap is true);
+	 *            must be larger than the largest serialized event including its 5-byte size prefix.
+	 *            Prefer {@linkplain RecordingSettingsBuilder} for constructing settings.
 	 * @param mmapTempDir
 	 *            base directory for mmap temp files, or {@literal null} for the system default
 	 * @since 10.0.0
 	 */
 	public RecordingSettings(long startTimestamp, long startTicks, long duration, boolean initializeJDKTypes,
 			boolean useMmap, int mmapChunkSize, Path mmapTempDir) {
+		if (useMmap && mmapChunkSize <= 0) {
+			throw new IllegalArgumentException(
+					"mmapChunkSize must be positive when useMmap is true, got: " + mmapChunkSize);
+		}
 		this.startTimestamp = startTimestamp;
 		this.startTicks = startTicks;
 		this.duration = duration;
@@ -96,7 +102,8 @@ public final class RecordingSettings {
 	 * @param useMmap
 	 *            use memory-mapped files for off-heap event storage
 	 * @param mmapChunkSize
-	 *            size of each memory-mapped buffer chunk in bytes (only used if useMmap is true)
+	 *            size of each memory-mapped buffer chunk in bytes (only used if useMmap is true).
+	 *            Prefer {@linkplain RecordingSettingsBuilder} for constructing settings.
 	 * @since 10.0.0
 	 */
 	public RecordingSettings(long startTimestamp, long startTicks, long duration, boolean initializeJDKTypes,

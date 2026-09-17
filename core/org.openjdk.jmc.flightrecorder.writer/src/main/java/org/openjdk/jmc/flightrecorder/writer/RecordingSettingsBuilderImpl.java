@@ -33,6 +33,7 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.openjdk.jmc.flightrecorder.writer.api.RecordingSettings;
@@ -89,6 +90,9 @@ public final class RecordingSettingsBuilderImpl implements RecordingSettingsBuil
 
 	@Override
 	public RecordingSettingsBuilder withMmapTempDir(Path baseDir) {
+		if (baseDir != null && !Files.isDirectory(baseDir)) {
+			throw new IllegalArgumentException("baseDir must be an existing directory: " + baseDir);
+		}
 		this.mmapTempDir = baseDir;
 		return this;
 	}
