@@ -89,6 +89,9 @@ public final class RecordingImpl extends Recording {
 	private static final long CONSTANT_OFFSET_OFFSET = 16;
 	private static final long METADATA_OFFSET_OFFSET = 24;
 	private static final long DURATION_NANOS_OFFSET = 40;
+	// JFR file header: magic(4) + major(2) + minor(2) + size(8) + CP offset(8) + metadata offset(8)
+	// + start nanos(8) + duration(8) + start ticks(8) + ticks per second(8) + compressed flag(4)
+	private static final int JFR_HEADER_SIZE = 68;
 
 	private final Set<Chunk> activeChunks = new CopyOnWriteArraySet<>();
 	private final LEB128Writer globalWriter = LEB128Writer.getInstance();
@@ -184,7 +187,10 @@ public final class RecordingImpl extends Recording {
 			});
 		}
 
-		writeFileHeader();
+		// in mmap mode the header is written by finalizeRecordingMmap() from the actual offsets
+		if (!useMmap) {
+			writeFileHeader();
+		}
 	}
 
 	private void processChunkDataQueue(long pollTimeout, TimeUnit timeUnit) throws InterruptedException {
@@ -723,11 +729,17 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private void writeFileHeader() {
-		globalWriter.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(0L) // size placeholder
-				.writeLongRaw(0L) // CP event offset
-				.writeLongRaw(0L) // meta event offset
+		// the size/CP/metadata/duration placeholders are patched in finalizeRecording()
+		writeJfrHeader(globalWriter, 0L, 0L, 0L, 0L);
+	}
+
+	private void writeJfrHeader(
+		LEB128Writer writer, long size, long checkpointOffset, long metadataOffset, long duration) {
+		writer.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(size) // total file size
+				.writeLongRaw(checkpointOffset) // CP event offset
+				.writeLongRaw(metadataOffset) // meta event offset
 				.writeLongRaw(startNanos) // start time in nanoseconds
-				.writeLongRaw(0L) // duration placeholder
+				.writeLongRaw(duration) // duration
 				.writeLongRaw(startTicks) // start time in ticks
 				.writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
 				.writeIntRaw(1); // use compressed integers
@@ -752,6 +764,38 @@ public final class RecordingImpl extends Recording {
 		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
 		types.resolveAll();
 
+		LEB128Writer cpWriter = checkpointPayload(recDuration);
+
+		LEB128Writer cpEventWriter = LEB128Writer.getInstance();
+		cpEventWriter.writeInt(cpWriter.length()); // event size prefix
+		cpEventWriter.writeBytes(cpWriter.export());
+
+		LEB128Writer mdWriter = LEB128Writer.getInstance();
+		metadata.writeMetaEvent(mdWriter, startTicks, recDuration);
+
+		// events are already written to the flushed chunk files; only the offsets are left to fill in
+		List<Path> flushedChunks = mmapManager.getFlushedChunks();
+		long chunksSize = 0;
+		for (Path chunk : flushedChunks) {
+			chunksSize += Files.size(chunk);
+		}
+
+		long checkpointOffset = JFR_HEADER_SIZE + chunksSize;
+		long metadataOffset = checkpointOffset + cpEventWriter.position();
+		long totalSize = metadataOffset + mdWriter.position();
+
+		LEB128Writer headerWriter = LEB128Writer.getInstance();
+		writeJfrHeader(headerWriter, totalSize, checkpointOffset, metadataOffset, recDuration);
+
+		outputStream.write(headerWriter.export());
+		for (Path chunkFile : flushedChunks) {
+			Files.copy(chunkFile, outputStream);
+		}
+		outputStream.write(cpEventWriter.export());
+		outputStream.write(mdWriter.export());
+	}
+
+	private LEB128Writer checkpointPayload(long recDuration) {
 		LEB128Writer cpWriter = LEB128Writer.getInstance();
 		cpWriter.writeLong(1L) // checkpoint event ID
 				.writeLong(startNanos) // start timestamp
@@ -763,57 +807,11 @@ public final class RecordingImpl extends Recording {
 		for (ConstantPool cp : metadata.getConstantPools()) {
 			cp.writeTo(cpWriter);
 		}
-
-		LEB128Writer cpEventWriter = LEB128Writer.getInstance();
-		cpEventWriter.writeInt(cpWriter.length()); // event size prefix
-		cpEventWriter.writeBytes(cpWriter.export());
-
-		LEB128Writer mdWriter = LEB128Writer.getInstance();
-		metadata.writeMetaEvent(mdWriter, startTicks, recDuration);
-
-		// events are already written to the flushed chunk files; only the offsets are left to fill in
-		long headerSize = 68;
-		List<Path> flushedChunks = mmapManager.getFlushedChunks();
-		long chunksSize = 0;
-		for (Path chunk : flushedChunks) {
-			chunksSize += Files.size(chunk);
-		}
-
-		long checkpointOffset = headerSize + chunksSize;
-		long metadataOffset = checkpointOffset + cpEventWriter.position();
-		long totalSize = metadataOffset + mdWriter.position();
-
-		LEB128Writer headerWriter = LEB128Writer.getInstance();
-		headerWriter.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(totalSize) // total file size
-				.writeLongRaw(checkpointOffset) // CP event offset
-				.writeLongRaw(metadataOffset) // meta event offset
-				.writeLongRaw(startNanos) // start time in nanoseconds
-				.writeLongRaw(recDuration) // duration
-				.writeLongRaw(startTicks) // start time in ticks
-				.writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
-				.writeIntRaw(1); // use compressed integers
-
-		outputStream.write(headerWriter.export());
-		for (Path chunkFile : flushedChunks) {
-			Files.copy(chunkFile, outputStream);
-		}
-		outputStream.write(cpEventWriter.export());
-		outputStream.write(mdWriter.export());
+		return cpWriter;
 	}
 
 	private void writeCheckpointEvent(long duration) {
-		LEB128Writer cpWriter = LEB128Writer.getInstance();
-
-		cpWriter.writeLong(1L) // checkpoint event ID
-				.writeLong(startNanos) // start timestamp
-				.writeLong(duration) // duration till now
-				.writeLong(0L) // fake delta-to-next
-				.writeInt(1) // all checkpoints are flush for now
-				.writeInt(metadata.getConstantPools().size()); // start writing constant pools array
-
-		for (ConstantPool cp : metadata.getConstantPools()) {
-			cp.writeTo(cpWriter);
-		}
+		LEB128Writer cpWriter = checkpointPayload(duration);
 
 		globalWriter.writeInt(cpWriter.length()); // write event size
 		globalWriter.writeBytes(cpWriter.export());
