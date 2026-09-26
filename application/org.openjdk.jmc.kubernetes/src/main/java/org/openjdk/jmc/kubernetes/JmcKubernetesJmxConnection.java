@@ -43,6 +43,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.AttributeList;
 import javax.management.ReflectionException;
 
 import org.jolokia.client.exception.JolokiaRemoteException;
