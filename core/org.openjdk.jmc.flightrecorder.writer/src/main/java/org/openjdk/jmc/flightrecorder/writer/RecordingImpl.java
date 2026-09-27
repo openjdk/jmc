@@ -96,21 +96,14 @@ public final class RecordingImpl extends Recording {
 	private final Set<Chunk> activeChunks = new CopyOnWriteArraySet<>();
 	private final LEB128Writer globalWriter = LEB128Writer.getInstance();
 	private final ThreadMmapManager mmapManager;
-	private final boolean useMmap;
 
 	private final ThreadLocal<WeakReference<Chunk>> threadChunk = new ThreadLocal<WeakReference<Chunk>>() {
 		@Override
 		protected WeakReference<Chunk> initialValue() {
 			Chunk chunk;
-			if (useMmap && mmapManager != null) {
-				try {
-					long threadId = Thread.currentThread().getId();
-					LEB128MappedWriter mmapWriter = mmapManager.getActiveWriter(threadId);
-					chunk = new Chunk(mmapWriter, mmapManager);
-				} catch (IOException e) {
-					throw new UncheckedIOException(
-							"Failed to create mmap writer for thread " + Thread.currentThread().getId(), e);
-				}
+			if (mmapManager != null) {
+				LEB128MappedWriter mmapWriter = mmapManager.getActiveWriter(Thread.currentThread().getId());
+				chunk = new Chunk(mmapWriter, mmapManager);
 			} else {
 				chunk = new Chunk();
 			}
@@ -154,8 +147,7 @@ public final class RecordingImpl extends Recording {
 		this.outputStream = output;
 		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
 
-		this.useMmap = settings.useMmap();
-		if (useMmap) {
+		if (settings.useMmap()) {
 			try {
 				Path baseDir = settings.getMmapTempDir();
 				Path tempDir = baseDir != null ? Files.createTempDirectory(baseDir, "jfr-writer-mmap-")
@@ -188,7 +180,7 @@ public final class RecordingImpl extends Recording {
 		}
 
 		// in mmap mode the header is written by finalizeRecordingMmap() from the actual offsets
-		if (!useMmap) {
+		if (mmapManager == null) {
 			writeFileHeader();
 		}
 	}
@@ -212,13 +204,22 @@ public final class RecordingImpl extends Recording {
 		activeChunks.remove(chunk);
 		threadChunk.remove();
 
-		chunk.finish(writer -> {
+		if (mmapManager != null) {
+			long threadId = Thread.currentThread().getId();
 			try {
-				chunkDataQueue.put(writer);
-			} catch (InterruptedException ignored) {
-				Thread.currentThread().interrupt();
+				mmapManager.rotateChunk(threadId);
+			} catch (IOException e) {
+				throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
 			}
-		});
+		} else {
+			chunk.finish(writer -> {
+				try {
+					chunkDataQueue.put(writer);
+				} catch (InterruptedException ignored) {
+					Thread.currentThread().interrupt();
+				}
+			});
+		}
 		return this;
 	}
 
@@ -232,7 +233,7 @@ public final class RecordingImpl extends Recording {
 		if (closed.compareAndSet(false, true)) {
 			boolean finalized = false;
 			try {
-				if (useMmap && mmapManager != null) {
+				if (mmapManager != null) {
 					closeMmapRecording();
 				} else {
 					closeHeapRecording();
@@ -270,14 +271,7 @@ public final class RecordingImpl extends Recording {
 		activeChunks.clear();
 
 		if (chunkDataMergingService != null) {
-			chunkDataMergingService.shutdown();
-			boolean flushed = false;
-			try {
-				flushed = chunkDataMergingService.awaitTermination(5, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			if (!flushed) {
+			if (!ThreadMmapManager.shutdownAndAwaitTermination(chunkDataMergingService, 5, TimeUnit.SECONDS)) {
 				throw new IllegalStateException("Unable to flush dangling JFR chunks");
 			}
 		}
@@ -737,7 +731,8 @@ public final class RecordingImpl extends Recording {
 
 	private void writeJfrHeader(
 		LEB128Writer writer, long size, long checkpointOffset, long metadataOffset, long duration) {
-		writer.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(size) // total file size
+		// size is the total file size
+		writer.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(size)
 				.writeLongRaw(checkpointOffset) // CP event offset
 				.writeLongRaw(metadataOffset) // meta event offset
 				.writeLongRaw(startNanos) // start time in nanoseconds
@@ -748,13 +743,13 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private void finalizeRecording() {
-		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
+		long recDuration = recordingDuration();
 		types.resolveAll();
 
 		long checkpointOffset = globalWriter.position();
-		writeCheckpointEvent(recDuration);
+		writeCheckpointEvent(globalWriter, recDuration);
 		long metadataOffset = globalWriter.position();
-		writeMetadataEvent(recDuration);
+		writeMetadataEvent(globalWriter, recDuration);
 
 		globalWriter.writeLongRaw(DURATION_NANOS_OFFSET, recDuration);
 		globalWriter.writeLongRaw(SIZE_OFFSET, globalWriter.position());
@@ -763,17 +758,14 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private void finalizeRecordingMmap() throws IOException {
-		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
+		long recDuration = recordingDuration();
 		types.resolveAll();
 
-		LEB128Writer cpWriter = checkpointPayload(recDuration);
-
 		LEB128Writer cpEventWriter = LEB128Writer.getInstance();
-		cpEventWriter.writeInt(cpWriter.length()); // event size prefix
-		cpEventWriter.writeBytes(cpWriter.export());
+		writeCheckpointEvent(cpEventWriter, recDuration);
 
 		LEB128Writer mdWriter = LEB128Writer.getInstance();
-		metadata.writeMetaEvent(mdWriter, startTicks, recDuration);
+		writeMetadataEvent(mdWriter, recDuration);
 
 		// events are already written to the flushed chunk files; only the offsets are left to fill in
 		List<Path> flushedChunks = mmapManager.getFlushedChunks();
@@ -812,14 +804,18 @@ public final class RecordingImpl extends Recording {
 		return cpWriter;
 	}
 
-	private void writeCheckpointEvent(long duration) {
+	private void writeCheckpointEvent(LEB128Writer sink, long duration) {
 		LEB128Writer cpWriter = checkpointPayload(duration);
 
-		globalWriter.writeInt(cpWriter.length()); // write event size
-		globalWriter.writeBytes(cpWriter.export());
+		sink.writeInt(cpWriter.length()); // write event size
+		sink.writeBytes(cpWriter.export());
 	}
 
-	private void writeMetadataEvent(long duration) {
-		metadata.writeMetaEvent(globalWriter, startTicks, duration);
+	private void writeMetadataEvent(LEB128Writer sink, long duration) {
+		metadata.writeMetaEvent(sink, startTicks, duration);
+	}
+
+	private long recordingDuration() {
+		return duration > 0 ? duration : System.nanoTime() - startTicks;
 	}
 }

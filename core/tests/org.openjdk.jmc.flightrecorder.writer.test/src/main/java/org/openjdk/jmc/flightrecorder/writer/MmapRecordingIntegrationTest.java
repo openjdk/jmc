@@ -117,6 +117,7 @@ class MmapRecordingIntegrationTest {
 
 		TestEvent event = new TestEvent();
 		assertThrows(IllegalStateException.class, () -> recording.writeEvent(event));
+		assertThrows(IllegalStateException.class, recording::rotateChunk);
 	}
 
 	@Test
@@ -391,6 +392,58 @@ class MmapRecordingIntegrationTest {
 		double ratio = (double) mmapBaos.size() / heapBaos.size();
 		assertTrue(ratio > 0.5 && ratio < 2.0,
 				"Mmap and heap recordings should have similar sizes, got ratio: " + ratio);
+	}
+
+	@Test
+	void testExplicitChunkRotationMmap() throws IOException, CouldNotLoadRecordingException, InterruptedException {
+		int numEvents = 200;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		RecordingImpl recording = (RecordingImpl) Recordings.newRecording(baos,
+				settings -> settings.withMmap(512 * 1024).withMmapTempDir(tempDir).withJdkTypeInitialization());
+
+		// rotating a buffer that has not received any events must not flush an empty chunk
+		recording.rotateChunk();
+
+		for (int i = 0; i < numEvents; i++) {
+			TestEvent event = new TestEvent();
+			event.message = "Compare test";
+			event.value = i;
+			if (i % 50 == 25) {
+				recording.rotateChunk();
+			}
+			recording.writeEvent(event);
+		}
+
+		// explicit rotations flush in the background; wait for all four chunk files to land
+		long deadline = System.currentTimeMillis() + 5_000;
+		List<Path> chunkFiles = flushedChunkFiles(tempDir);
+		while (chunkFiles.size() < 4 && System.currentTimeMillis() < deadline) {
+			Thread.sleep(10);
+			chunkFiles = flushedChunkFiles(tempDir);
+		}
+		assertEquals(4, chunkFiles.size(), "Each explicit rotation of a filled buffer should flush one chunk");
+		for (Path chunkFile : chunkFiles) {
+			assertTrue(Files.size(chunkFile) > 0, "Empty buffers must not be flushed to chunk files");
+		}
+
+		recording.close();
+
+		IAttribute<String> messageAttr = Attribute.attr("message", "message", UnitLookup.PLAIN_TEXT);
+		IAttribute<IQuantity> valueAttr = Attribute.attr("value", "value", UnitLookup.NUMBER);
+		int count = countAndVerifyEvents(baos.toByteArray(), messageAttr, valueAttr, numEvents);
+		assertEquals(numEvents, count, "All events should be present after explicit chunk rotations");
+	}
+
+	private static List<Path> flushedChunkFiles(Path baseDir) throws IOException {
+		List<Path> chunkFiles = new ArrayList<>();
+		try (var entries = Files.walk(baseDir)) {
+			entries.forEach(entry -> {
+				if (entry.getFileName().toString().startsWith("chunk-")) {
+					chunkFiles.add(entry);
+				}
+			});
+		}
+		return chunkFiles;
 	}
 
 	private int countAndVerifyEvents(

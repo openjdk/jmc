@@ -260,26 +260,18 @@ class ThreadMmapManagerTest {
 	@Test
 	void testConcurrentAccess() throws Exception {
 		Thread thread1 = new Thread(() -> {
-			try {
-				long threadId = Thread.currentThread().getId();
-				LEB128MappedWriter writer = manager.getActiveWriter(threadId);
-				for (int i = 0; i < 10; i++) {
-					writer.writeByte((byte) i);
-				}
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			long threadId = Thread.currentThread().getId();
+			LEB128MappedWriter writer = manager.getActiveWriter(threadId);
+			for (int i = 0; i < 10; i++) {
+				writer.writeByte((byte) i);
 			}
 		});
 
 		Thread thread2 = new Thread(() -> {
-			try {
-				long threadId = Thread.currentThread().getId();
-				LEB128MappedWriter writer = manager.getActiveWriter(threadId);
-				for (int i = 0; i < 10; i++) {
-					writer.writeByte((byte) (i + 10));
-				}
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			long threadId = Thread.currentThread().getId();
+			LEB128MappedWriter writer = manager.getActiveWriter(threadId);
+			for (int i = 0; i < 10; i++) {
+				writer.writeByte((byte) (i + 10));
 			}
 		});
 

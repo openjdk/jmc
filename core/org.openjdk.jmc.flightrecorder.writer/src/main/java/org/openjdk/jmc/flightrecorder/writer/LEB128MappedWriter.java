@@ -221,7 +221,7 @@ final class LEB128MappedWriter extends AbstractLEB128Writer {
 	public void export(Consumer<ByteBuffer> consumer) {
 		ensureOpen();
 		ByteBuffer view = buffer.asReadOnlyBuffer();
-		view.position(0);
+		view.position(position);
 		view.limit(position);
 		consumer.accept(view);
 	}

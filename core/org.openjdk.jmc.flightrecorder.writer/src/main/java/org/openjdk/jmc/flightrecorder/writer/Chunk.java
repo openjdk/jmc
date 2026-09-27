@@ -175,27 +175,21 @@ final class Chunk {
 
 		LEB128Writer activeWriter;
 		if (mmapManager != null) {
-			try {
-				activeWriter = mmapManager.getActiveWriter(threadId);
-				if (activeWriter instanceof LEB128MappedWriter mmapWriter) {
-					if (requiredSpace > mmapWriter.capacity()) {
-						throw new IllegalStateException("Event size " + requiredSpace
-								+ " bytes exceeds the mmap chunk size " + mmapWriter.capacity()
-								+ " bytes; use withMmap(int) with a larger chunk size");
-					}
-					if (!mmapWriter.canFit(requiredSpace)) {
-						// swap in a fresh buffer, flush the full one in the background
-						mmapManager.rotateChunk(threadId);
-						activeWriter = mmapManager.getActiveWriter(threadId);
-					}
-				} else {
-					throw new IllegalStateException(
-							"Expected LEB128MappedWriter from mmap manager, got "
-									+ (activeWriter == null ? "null" : activeWriter.getClass().getName()));
-				}
-			} catch (IOException e) {
-				throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
+			LEB128MappedWriter mmapWriter = mmapManager.getActiveWriter(threadId);
+			if (requiredSpace > mmapWriter.capacity()) {
+				throw new IllegalStateException("Event size " + requiredSpace + " bytes exceeds the mmap chunk size "
+						+ mmapWriter.capacity() + " bytes; use withMmap(int) with a larger chunk size");
 			}
+			if (!mmapWriter.canFit(requiredSpace)) {
+				// swap in a fresh buffer, flush the full one in the background
+				try {
+					mmapManager.rotateChunk(threadId);
+				} catch (IOException e) {
+					throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
+				}
+				mmapWriter = mmapManager.getActiveWriter(threadId);
+			}
+			activeWriter = mmapWriter;
 		} else {
 			activeWriter = writer;
 		}

@@ -98,7 +98,7 @@ final class ThreadMmapManager {
 	 * Get the active writer for the specified thread, creating the double-buffered mmap files on
 	 * first access.
 	 */
-	LEB128MappedWriter getActiveWriter(long threadId) throws IOException {
+	LEB128MappedWriter getActiveWriter(long threadId) {
 		ThreadBufferState state = threadStates.computeIfAbsent(threadId, id -> {
 			try {
 				return createThreadBuffers(id);
@@ -117,6 +117,11 @@ final class ThreadMmapManager {
 		ThreadBufferState state = threadStates.get(threadId);
 		if (state == null) {
 			throw new IllegalStateException("No buffer state for thread " + threadId);
+		}
+
+		if (state.getActiveWriter().getDataSize() == 0) {
+			// nothing written since the last flush; keep the same buffer active
+			return;
 		}
 
 		LEB128MappedWriter oldActive = state.swapBuffers();
@@ -171,15 +176,7 @@ final class ThreadMmapManager {
 	void finalFlush() throws IOException {
 		// wait for outstanding background flushes first: chunks flushed from the active buffers
 		// below must be appended to flushedChunks AFTER any earlier rotation of the same thread
-		flushExecutor.shutdown();
-		try {
-			if (!flushExecutor.awaitTermination(10, TimeUnit.SECONDS)) {
-				flushExecutor.shutdownNow();
-			}
-		} catch (InterruptedException e) {
-			flushExecutor.shutdownNow();
-			Thread.currentThread().interrupt();
-		}
+		shutdownAndAwaitTermination(flushExecutor, 10, TimeUnit.SECONDS);
 
 		// collect all background flush failures before throwing, rather than losing all but the first
 		IOException first = null;
@@ -259,6 +256,26 @@ final class ThreadMmapManager {
 		} catch (IOException e) {
 			LOGGER.log(Level.FINE, "Failed to walk mmap directory " + dir, e);
 		}
+	}
+
+	/**
+	 * Shuts an executor down and waits up to the given timeout for its tasks to finish. Tasks still
+	 * running on timeout or interrupt are cancelled.
+	 *
+	 * @return true if the executor terminated within the timeout
+	 */
+	static boolean shutdownAndAwaitTermination(ExecutorService executor, long timeout, TimeUnit unit) {
+		executor.shutdown();
+		boolean terminated = false;
+		try {
+			terminated = executor.awaitTermination(timeout, unit);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		if (!terminated) {
+			executor.shutdownNow();
+		}
+		return terminated;
 	}
 
 	private ThreadBufferState createThreadBuffers(long threadId) throws IOException {

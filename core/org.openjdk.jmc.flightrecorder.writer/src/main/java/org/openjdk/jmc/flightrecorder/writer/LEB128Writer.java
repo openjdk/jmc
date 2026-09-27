@@ -420,7 +420,8 @@ public interface LEB128Writer {
 	 * Transfer the written data as a {@linkplain ByteBuffer}
 	 *
 	 * @param consumer
-	 *            a {@linkplain ByteBuffer} callback
+	 *            a {@linkplain ByteBuffer} callback, handed a buffer with its position at the end
+	 *            of the written data, ready to be flipped for reading
 	 */
 	void export(Consumer<ByteBuffer> consumer);
 

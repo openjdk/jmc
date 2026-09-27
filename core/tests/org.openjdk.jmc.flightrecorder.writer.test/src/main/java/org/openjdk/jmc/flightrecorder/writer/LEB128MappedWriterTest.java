@@ -206,6 +206,14 @@ class LEB128MappedWriterTest {
 	}
 
 	@Test
+	void testExportInterfaceDefaults() {
+		byte[] testData = {1, 2, 3, 4, 5};
+		writer.writeBytes(testData);
+
+		assertArrayEquals(testData, writer.export());
+	}
+
+	@Test
 	void testFileExists() {
 		assertTrue(Files.exists(testFile));
 	}
