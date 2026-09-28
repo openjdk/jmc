@@ -85,7 +85,6 @@
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.core.filesystem"/>
-      <import plugin="org.eclipse.osgi.services"/>
       <import plugin="org.eclipse.text"/>
       <import plugin="org.eclipse.core.net"/>
       <import plugin="org.eclipse.equinox.security"/>
