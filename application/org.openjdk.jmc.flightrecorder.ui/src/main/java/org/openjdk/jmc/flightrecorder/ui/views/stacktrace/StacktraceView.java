@@ -842,6 +842,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private void rebuildModel() {
 		// Release old model before building the new
 		setViewerInput(null);
+		durationCache.clear();
 		modelRebuildFuture = getModelPreparer(createStacktraceModel(), !treeLayout, perDuration);
 		modelRebuildFuture.thenAcceptAsync(model -> {
 			if (modelRebuildFuture != null && !modelRebuildFuture.isCancelled() && model != null
