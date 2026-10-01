@@ -245,6 +245,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private ViewerAction[] viewerActions;
 	private int[] columnWidths;
 	private Map<IItemCollection, Object[]> treeViewerExpandedItems = new WeakHashMap<>();
+	// Summed durations per item array (identity based), filled from the model preparer and the UI thread
+	private final Map<SimpleArray<IItem>, IQuantity> durationCache = Collections.synchronizedMap(new WeakHashMap<>());
 	private AttributeSelection attributeSelection;
 	private IAttribute<IQuantity> currentAttribute;
 	private IToolBarManager toolBar;
@@ -457,7 +459,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 
 		IAction perByDurationAction = ActionToolkit.checkAction(this::setPerDuration, Messages.STACKTRACE_VIEW_DURATION,
 				CoreImages.TIMESPAN);
-		treeAction.setChecked(perDuration);
+		perByDurationAction.setChecked(perDuration);
 
 		NavigateAction forwardAction = new NavigateAction(true);
 		NavigateAction backwardAction = new NavigateAction(false);
@@ -840,7 +842,7 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	private void rebuildModel() {
 		// Release old model before building the new
 		setViewerInput(null);
-		modelRebuildFuture = getModelPreparer(createStacktraceModel(), !treeLayout);
+		modelRebuildFuture = getModelPreparer(createStacktraceModel(), !treeLayout, perDuration);
 		modelRebuildFuture.thenAcceptAsync(model -> {
 			if (modelRebuildFuture != null && !modelRebuildFuture.isCancelled() && model != null
 					&& model.getRootFork() != null) {
@@ -849,8 +851,8 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 		}, DisplayToolkit.inDisplayThread()).exceptionally(StacktraceView::handleModelBuildException);
 	}
 
-	private static CompletableFuture<StacktraceModel> getModelPreparer(
-		StacktraceModel model, boolean materializeSelectedBranches) {
+	private CompletableFuture<StacktraceModel> getModelPreparer(
+		StacktraceModel model, boolean materializeSelectedBranches, boolean computeDurations) {
 		return CompletableFuture.supplyAsync(() -> {
 			Fork root = model.getRootFork();
 			if (materializeSelectedBranches) {
@@ -859,8 +861,30 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 					selectedBranch.getEndFork();
 				}
 			}
+			if (computeDurations) {
+				precomputeDurations(root, materializeSelectedBranches);
+			}
 			return model;
 		});
+	}
+
+	/**
+	 * Sum the durations for the initially visible frames, so that the label providers don't have to
+	 * do it in the UI thread.
+	 */
+	private void precomputeDurations(Fork root, boolean selectedBranches) {
+		getDurationCount(root.getAllItemsInFork());
+		if (selectedBranches) {
+			SimpleArray<StacktraceFrame> trace = new SimpleArray<>(new StacktraceFrame[100]);
+			addSelectedBranches(root, trace, false);
+			for (StacktraceFrame frame : trace) {
+				getDurationCount(frame.getItems());
+			}
+		} else {
+			for (StacktraceFrame frame : root.getFirstFrames()) {
+				getDurationCount(frame.getItems());
+			}
+		}
 	}
 
 	private static Void handleModelBuildException(Throwable ex) {
@@ -1027,21 +1051,33 @@ public class StacktraceView extends ViewPart implements ISelectionListener {
 	};
 
 	private IQuantity getDurationCount(SimpleArray<IItem> simpleArray) {
+		IQuantity q = durationCache.get(simpleArray);
+		if (q == null) {
+			q = sumDurations(simpleArray);
+			durationCache.put(simpleArray, q);
+		}
+		return q;
+	}
+
+	private static IQuantity sumDurations(SimpleArray<IItem> simpleArray) {
 		IQuantity q = null;
-		for (IItem item : simpleArray.elements()) {
-			@SuppressWarnings("unchecked")
-			IType<IItem> type = (IType<IItem>) item.getType();
-			IMemberAccessor<IQuantity, IItem> durationAccessor = JfrAttributes.DURATION.getAccessor(type);
+		IType<?> lastType = null;
+		IMemberAccessor<IQuantity, IItem> durationAccessor = null;
+		for (IItem item : simpleArray) {
+			if (item.getType() != lastType) {
+				lastType = item.getType();
+				@SuppressWarnings("unchecked")
+				IType<IItem> type = (IType<IItem>) lastType;
+				durationAccessor = JfrAttributes.DURATION.getAccessor(type);
+			}
 			if (durationAccessor != null) {
-				if (q != null) {
-					q = q.add(durationAccessor.getMember(item));
-				} else {
-					q = durationAccessor.getMember(item);
+				IQuantity duration = durationAccessor.getMember(item);
+				if (duration != null) {
+					q = q != null ? q.add(duration) : duration;
 				}
 			}
 		}
-
-		return q;
+		return q != null ? q : UnitLookup.NANOSECOND.quantity(0);
 	}
 
 	private final ColumnLabelProvider countLabelProvider = new ColumnLabelProvider() {
