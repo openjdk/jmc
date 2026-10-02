@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,18 +33,24 @@
  */
 package org.openjdk.jmc.flightrecorder.writer;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.openjdk.jmc.flightrecorder.writer.api.Type;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedField;
 import org.openjdk.jmc.flightrecorder.writer.api.TypedValue;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /** An in-memory map of distinct values of a certain {@linkplain Type} */
 final class ConstantPool {
 	private final TypeImpl type;
-	private final Map<Object, TypedValueImpl> constantMap = new HashMap<>();
-	private final Map<Long, TypedValueImpl> reverseMap = new HashMap<>();
+	// Index 0 is reserved for NULL. Indices are explicitly serialized by writeTo(), so a gap left
+	// behind by a failed value construction (the index is consumed before the value is built) is
+	// harmless for encoding.
+	private final AtomicLong indexCounter = new AtomicLong(1);
+	private final Map<Object, TypedValueImpl> constantMap = new ConcurrentHashMap<>();
+	private final Map<Long, TypedValueImpl> reverseMap = new ConcurrentSkipListMap<>();
 
 	ConstantPool(TypeImpl type) {
 		this.type = type;
@@ -62,7 +68,7 @@ final class ConstantPool {
 			return type.nullValue();
 		}
 		return constantMap.computeIfAbsent(value, v -> {
-			long index = constantMap.size() + 1; // index 0 is reserved for NULL encoding
+			long index = indexCounter.getAndIncrement();
 			TypedValueImpl tValue;
 			if (v instanceof TypedValue) {
 				tValue = new TypedValueImpl((TypedValueImpl) v, index);
