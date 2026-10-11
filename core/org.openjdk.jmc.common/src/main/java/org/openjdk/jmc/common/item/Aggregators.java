@@ -41,6 +41,7 @@ import java.util.function.Predicate;
 import org.openjdk.jmc.common.messages.internal.Messages;
 import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IScalarAffineTransform;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.LinearKindOfQuantity;
@@ -300,8 +301,11 @@ public class Aggregators {
 					 * Since the Knuth algorithm (Chan et. al) can be used with partitioned sets, we
 					 * can combine the results from two aggregators with partial results like below.
 					 */
-					double otherMean = other.unit.valueTransformTo(unit).targetValue(other.mean);
-					double otherM2 = other.unit.valueTransformTo(unit).targetValue(other.M2);
+					IScalarAffineTransform transform = other.unit.valueTransformTo(unit);
+					double otherMean = transform.targetValue(other.mean);
+					double multiplier = transform.getMultiplier();
+					// M2 sums squared deviations, so unit scaling must be applied twice.
+					double otherM2 = other.M2 * multiplier * multiplier;
 					double deltaMean = otherMean - mean;
 					mean = mean + deltaMean * (other.n / (double) (other.n + n));
 					M2 = otherM2 + M2 + deltaMean * deltaMean * (other.n * n / (double) (n + other.n));
