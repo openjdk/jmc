@@ -547,7 +547,7 @@ public class Aggregators {
 
 			@Override
 			public MinMaxConsumer<V> newItemConsumer(IType<IItem> type) {
-				return new MinMaxConsumer<>(attribute.getAccessor(type), true);
+				return new MinMaxConsumer<>(attribute.getAccessor(type), max);
 			}
 
 			@Override

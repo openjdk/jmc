@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,12 +32,17 @@
  */
 package org.openjdk.jmc.common.test.item;
 
+import java.util.stream.Stream;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.Aggregators.AdvancedMaxAggregator;
 import org.openjdk.jmc.common.item.Aggregators.AdvancedMinAggregator;
+import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemToolkit;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.test.MCTestCase;
 import org.openjdk.jmc.test.mock.item.MockAggregators;
@@ -163,6 +168,40 @@ public class AggregatorTest extends MCTestCase {
 		IQuantity aggregate = mockDoubleCollection.getAggregate(MockAggregators.STDDEVP);
 		// Reference value from excel
 		Assert.assertEquals(aggregate.doubleValue(), 0, EPSILON);
+	}
+
+	@Test
+	public void testItemWithMinAndMaxAggregator() {
+		IItemCollection items = MockCollections.getNumberCollection(new Number[] {49.806, 1.001, 10.0});
+		assertExtremeItems(items);
+	}
+
+	@Test
+	public void testItemWithMinAndMaxAcrossChunks() {
+		IItemCollection first = MockCollections.getNumberCollection(new Number[] {1.001, 20.0});
+		IItemCollection second = MockCollections.getNumberCollection(new Number[] {49.806, 10.0});
+		IItem expectedMin = first.iterator().next().iterator().next();
+		IItem expectedMax = second.iterator().next().iterator().next();
+		IItemCollection forward = ItemCollectionToolkit.merge(() -> Stream.of(first, second));
+		IItemCollection reverse = ItemCollectionToolkit.merge(() -> Stream.of(second, first));
+		for (IItemCollection items : new IItemCollection[] {forward, reverse}) {
+			Assert.assertSame(expectedMin, items.getAggregate(Aggregators.itemWithMin(MockAttributes.DOUBLE_VALUE)));
+			Assert.assertSame(expectedMax, items.getAggregate(Aggregators.itemWithMax(MockAttributes.DOUBLE_VALUE)));
+			assertExtremeItems(items);
+		}
+	}
+
+	private static void assertExtremeItems(IItemCollection items) {
+		IItem minimum = items.getAggregate(Aggregators.itemWithMin(MockAttributes.DOUBLE_VALUE));
+		IItem maximum = items.getAggregate(Aggregators.itemWithMax(MockAttributes.DOUBLE_VALUE));
+		IQuantity minimumValue = MockAttributes.DOUBLE_VALUE.getAccessor(ItemToolkit.getItemType(minimum))
+				.getMember(minimum);
+		IQuantity maximumValue = MockAttributes.DOUBLE_VALUE.getAccessor(ItemToolkit.getItemType(maximum))
+				.getMember(maximum);
+		Assert.assertEquals(1.001, minimumValue.doubleValue(), EPSILON);
+		Assert.assertEquals(49.806, maximumValue.doubleValue(), EPSILON);
+		Assert.assertEquals(items.getAggregate(Aggregators.min(MockAttributes.DOUBLE_VALUE)), minimumValue);
+		Assert.assertEquals(items.getAggregate(Aggregators.max(MockAttributes.DOUBLE_VALUE)), maximumValue);
 	}
 
 	@Test
