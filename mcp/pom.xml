@@ -178,6 +178,7 @@
 				<configuration>
 					<systemPropertyVariables>
 						<native.image.path>${native.image.path}</native.image.path>
+						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
