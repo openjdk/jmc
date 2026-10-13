@@ -34,9 +34,14 @@
 package org.openjdk.jmc.mcp;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
@@ -44,7 +49,6 @@ import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
@@ -66,37 +70,11 @@ public final class JfrToolkit {
 	 * seconds-from-recording-start parameters the tools accept.
 	 */
 	public static IQuantity getRecordingStart(IItemCollection items) {
-		IQuantity earliest = null;
-		for (IItemIterable iterable : items) {
-			IMemberAccessor<IQuantity, IItem> accessor = JfrAttributes.START_TIME.getAccessor(iterable.getType());
-			if (accessor == null) {
-				continue;
-			}
-			for (IItem item : iterable) {
-				IQuantity start = accessor.getMember(item);
-				if (start != null && (earliest == null || start.compareTo(earliest) < 0)) {
-					earliest = start;
-				}
-			}
-		}
-		return earliest;
+		return items.getAggregate(Aggregators.min(JfrAttributes.START_TIME));
 	}
 
 	public static IQuantity getRecordingEnd(IItemCollection items) {
-		IQuantity latest = null;
-		for (IItemIterable iterable : items) {
-			IMemberAccessor<IQuantity, IItem> accessor = JfrAttributes.END_TIME.getAccessor(iterable.getType());
-			if (accessor == null) {
-				continue;
-			}
-			for (IItem item : iterable) {
-				IQuantity end = accessor.getMember(item);
-				if (end != null && (latest == null || end.compareTo(latest) > 0)) {
-					latest = end;
-				}
-			}
-		}
-		return latest;
+		return items.getAggregate(Aggregators.max(JfrAttributes.END_TIME));
 	}
 
 	/**
@@ -171,10 +149,10 @@ public final class JfrToolkit {
 	public static String validateFilterPair(String filterAttribute, String filterValue) {
 		boolean hasAttribute = filterAttribute != null && !filterAttribute.isBlank();
 		if (hasAttribute && filterValue == null) {
-			return "Error: filterAttribute was given without filterValue - both are required to filter by attribute.";
+			return "Error: filterAttribute was given without filterValue; both are required to filter by attribute.";
 		}
 		if (!hasAttribute && filterValue != null) {
-			return "Error: filterValue was given without filterAttribute - both are required to filter by attribute.";
+			return "Error: filterValue was given without filterAttribute; both are required to filter by attribute.";
 		}
 		return null;
 	}
@@ -185,22 +163,19 @@ public final class JfrToolkit {
 	 * underlying unit.
 	 */
 	public static IItemCollection filterByAttribute(IItemCollection items, String attributeId, String value) {
-		List<IItem> matching = new ArrayList<>();
-		if (value != null) {
-			for (IItemIterable iterable : items) {
-				IMemberAccessor<?, IItem> accessor = findAccessor(iterable.getType(), attributeId);
-				if (accessor == null) {
-					continue;
-				}
-				for (IItem item : iterable) {
-					Object member = accessor.getMember(item);
-					if (member != null && value.equals(format(member))) {
-						matching.add(item);
-					}
-				}
-			}
+		if (value == null) {
+			return items.apply(ItemFilters.none());
 		}
-		return ItemCollectionToolkit.build(matching.stream());
+		return items.apply(type -> {
+			IMemberAccessor<?, IItem> accessor = findAccessor(type, attributeId);
+			if (accessor == null) {
+				return ItemFilters.none().getPredicate(type);
+			}
+			return item -> {
+				Object member = accessor.getMember(item);
+				return member != null && value.equals(format(member));
+			};
+		});
 	}
 
 	public static List<IItem> toItemList(IItemCollection items) {
@@ -221,9 +196,22 @@ public final class JfrToolkit {
 		return count;
 	}
 
+	/**
+	 * Sums event counts by JMC type across populated item iterables. An item collection may contain
+	 * multiple iterables for the same event type.
+	 */
+	public static Map<IType<IItem>, Long> countByEventType(IItemCollection items) {
+		return items.stream().filter(IItemIterable::hasItems)
+				.sorted(Comparator.comparing(iterable -> iterable.getType().getIdentifier())).collect(Collectors
+						.toMap(IItemIterable::getType, IItemIterable::getItemCount, Long::sum, LinkedHashMap::new));
+	}
+
 	public static String format(Object value) {
 		if (value == null) {
 			return "";
+		}
+		if (value instanceof IQuantity quantity) {
+			return formatQuantity(quantity);
 		}
 		if (value instanceof IDisplayable) {
 			return ((IDisplayable) value).displayUsing(IDisplayable.AUTO);
@@ -232,7 +220,7 @@ public final class JfrToolkit {
 	}
 
 	public static String formatQuantity(IQuantity value) {
-		return value != null ? value.displayUsing(IDisplayable.AUTO) : "N/A";
+		return value != null ? value.displayUsing(IDisplayable.EXACT) : "N/A";
 	}
 
 	/**

@@ -57,22 +57,17 @@ public class MetadataTools {
 	@Inject
 	RecordingService recordings;
 
-	@Tool(description = "Lists all JFR event types in the recording with their event counts. Call this early - "
-			+ "the event type IDs it returns are the eventType arguments for all the querying tools.")
+	@Tool(description = "Lists all JFR event types in the recording with their event counts. Call this early. "
+			+ "The event type IDs it returns are the eventType arguments for all the querying tools.")
 	String getEventTypes(
 		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Event types in the recording:\n");
-			for (IItemIterable iterable : recording.getItems()) {
-				long count = iterable.getItemCount();
-				if (count > 0) {
-					sb.append("  ").append(iterable.getType().getIdentifier());
-					sb.append(" (").append(iterable.getType().getName()).append("): ");
-					sb.append(count).append(" events\n");
-				}
-			}
+			JfrToolkit.countByEventType(recording.getItems())
+					.forEach((type, count) -> sb.append("  ").append(type.getIdentifier()).append(" (")
+							.append(type.getName()).append("): ").append(count).append(" events\n"));
 			return sb.toString();
 		} catch (Exception e) {
 			return "Error: " + JfrToolkit.describeError(e);
@@ -104,7 +99,7 @@ public class MetadataTools {
 					}
 					String desc = attr.getDescription();
 					if (desc != null && !desc.isEmpty()) {
-						sb.append(" - ").append(desc);
+						sb.append(": ").append(desc);
 					}
 					sb.append("\n");
 				}
@@ -117,7 +112,7 @@ public class MetadataTools {
 	}
 
 	@Tool(description = "Lists attributes that are shared across multiple event types in the recording. Shared "
-			+ "attributes (like gcId, spanId, ecid) are natural correlation paths for relating events - e.g. gcId "
+			+ "attributes (like gcId, spanId, ecid) are natural correlation paths for relating events, e.g. gcId "
 			+ "links jdk.GarbageCollection to jdk.GCPhasePause. If eventType is given, shows only the shared "
 			+ "attributes present on that type and which other types share them. Call this early in an "
 			+ "investigation to discover how the events in this particular recording can be correlated, then use "
@@ -160,7 +155,7 @@ public class MetadataTools {
 		sb.append("Shared attributes across event types (potential correlation paths):\n\n");
 		for (Map.Entry<String, Set<String>> entry : shared.entrySet()) {
 			appendAttribute(sb, index, entry.getKey());
-			sb.append(" - ").append(entry.getValue().size()).append(" types\n");
+			sb.append(": ").append(entry.getValue().size()).append(" types\n");
 			for (String type : entry.getValue()) {
 				sb.append("    ").append(type).append("\n");
 			}

@@ -36,7 +36,21 @@ package org.openjdk.jmc.mcp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
+import org.openjdk.jmc.common.item.IAggregator;
+import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemConsumer;
+import org.openjdk.jmc.common.item.IItemFilter;
+import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
+import org.openjdk.jmc.common.unit.UnitLookup;
+import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
 
 class JfrToolkitTest {
@@ -61,6 +75,67 @@ class JfrToolkitTest {
 		assertEquals("N/A", JfrToolkit.formatQuantity(null));
 	}
 
+	@Test
+	void quantityFormattingPreservesAllNativeLongDigits() {
+		IQuantity quantity = UnitLookup.NANOSECOND.quantity(9007199254740993L);
+		// Strip localized grouping separators and the unit, retaining every numerical digit.
+		assertEquals("9007199254740993", JfrToolkit.formatQuantity(quantity).replaceAll("\\D", ""));
+		assertEquals("9007199254740993", JfrToolkit.format(quantity).replaceAll("\\D", ""));
+	}
+
+	@Test
+	void recordingBoundsUseCollectionAggregatesAndPreserveEpochNanoseconds() {
+		long earliest = 1_700_000_000_000_000_001L;
+		long latest = earliest + 11;
+		String endTime = JfrAttributes.END_TIME.getIdentifier();
+		IItemCollection fixture = TestItems.collection("test.Timed",
+				List.of(JfrAttributes.START_TIME, JfrAttributes.END_TIME),
+				List.of(Map.of("startTime", UnitLookup.EPOCH_NS.quantity(earliest + 3), endTime,
+						UnitLookup.EPOCH_NS.quantity(earliest + 7)),
+						Map.of("startTime", UnitLookup.EPOCH_NS.quantity(earliest), endTime,
+								UnitLookup.EPOCH_NS.quantity(latest)),
+						Map.of("startTime", UnitLookup.EPOCH_NS.quantity(earliest + 5), endTime,
+								UnitLookup.EPOCH_NS.quantity(earliest + 8)),
+						Map.of()));
+		IItemCollection items = aggregatesOnly(fixture);
+		IQuantity start = JfrToolkit.getRecordingStart(items);
+		IQuantity end = JfrToolkit.getRecordingEnd(items);
+		assertEquals(UnitLookup.EPOCH_NS, start.getUnit());
+		assertEquals(earliest, start.longValue());
+		assertEquals(UnitLookup.EPOCH_NS, end.getUnit());
+		assertEquals(latest, end.longValue());
+	}
+
+	private static IItemCollection aggregatesOnly(IItemCollection delegate) {
+		return new IItemCollection() {
+			@Override
+			public Iterator<IItemIterable> iterator() {
+				throw new AssertionError("Recording bounds must use the collection's aggregates.");
+			}
+
+			@Override
+			public IItemCollection apply(IItemFilter filter) {
+				return delegate.apply(filter);
+			}
+
+			@Override
+			public <V, C extends IItemConsumer<C>> V getAggregate(IAggregator<V, C> aggregator) {
+				return delegate.getAggregate(aggregator);
+			}
+
+			@Override
+			public boolean hasItems() {
+				return delegate.hasItems();
+			}
+
+			@Override
+			@SuppressWarnings("deprecation")
+			public Set<IRange<IQuantity>> getUnfilteredTimeRanges() {
+				return delegate.getUnfilteredTimeRanges();
+			}
+		};
+	}
+
 	/**
 	 * Guards the reason severity filtering compares scores instead of enum order: IGNORE is
 	 * declared last in Severity, so Enum.compareTo ranks it as the most severe value.
@@ -68,7 +143,7 @@ class JfrToolkitTest {
 	@Test
 	void severityEnumOrderDoesNotMatchSeverityScore() {
 		assertTrue(Severity.IGNORE.compareTo(Severity.WARNING) > 0,
-				"Enum order still puts IGNORE last - the score based comparison in AnalysisTools is what matters");
+				"Enum order still puts IGNORE last; the score based comparison in AnalysisTools is what matters");
 		assertTrue(Severity.IGNORE.getLimit() < Severity.WARNING.getLimit());
 		assertTrue(Severity.INFO.getLimit() < Severity.WARNING.getLimit());
 		assertTrue(Severity.OK.getLimit() < Severity.INFO.getLimit());

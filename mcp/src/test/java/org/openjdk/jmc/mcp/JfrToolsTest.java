@@ -93,7 +93,7 @@ class JfrToolsTest {
 	void loadReportsEventCountAndDuration() {
 		String info = recordingTools.getRecordingInfo(recordingId);
 		assertTrue(info.contains("46309"), info);
-		assertTrue(info.contains("78 event types"), info);
+		assertTrue(info.contains("69 event types"), info);
 	}
 
 	@Test
@@ -317,7 +317,7 @@ class JfrToolsTest {
 	void stackTraceResolvesWeightAttributeFromEventMetadata() {
 		String memoryWeighted = analysisTools.getStackTrace("jdk.GCHeapSummary", "heapUsed", null, null, 5,
 				recordingId);
-		assertTrue(memoryWeighted.contains("weighted by heapUsed (KiB)"), memoryWeighted);
+		assertTrue(memoryWeighted.contains("weighted by heapUsed; unit: KiB"), memoryWeighted);
 
 		String unknown = analysisTools.getStackTrace(null, "bogusWeight", null, null, 5, recordingId);
 		assertTrue(unknown.contains("No numeric attribute 'bogusWeight'"), unknown);

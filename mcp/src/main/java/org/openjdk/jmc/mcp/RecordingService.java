@@ -184,7 +184,7 @@ public class RecordingService {
 			}
 			throw new IllegalArgumentException(
 					recordings.isEmpty() ? "No recording is loaded. Call loadRecording with a JFR file path first."
-							: "Several recordings are loaded - specify a recordingId. Loaded: " + listIds());
+							: "Several recordings are loaded; specify a recordingId. Loaded: " + listIds());
 		}
 		Recording recording = recordings.get(recordingId);
 		if (recording == null) {

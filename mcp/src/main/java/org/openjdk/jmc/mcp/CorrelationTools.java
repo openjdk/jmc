@@ -35,19 +35,23 @@ package org.openjdk.jmc.mcp;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import jakarta.inject.Inject;
 
 import org.openjdk.jmc.common.IMCThread;
+import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemConsumer;
+import org.openjdk.jmc.common.item.IItemConsumerFactory;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
@@ -70,7 +74,7 @@ public class CorrelationTools {
 	@Inject
 	RecordingService recordings;
 
-	@Tool(description = "Finds events concurrent with, or contained within, a set of reference events - the core "
+	@Tool(description = "Finds events concurrent with, or contained within, a set of reference events. This is the core "
 			+ "move for root cause analysis ('what else was the JVM doing while this slow request ran?'). "
 			+ "IMPORTANT: scope the reference events to a SPECIFIC instance, using either a stored result set name "
 			+ "(from getEventTable/aggregateEvents storeAs) or filterAttribute/filterValue or fromSeconds/toSeconds. "
@@ -141,29 +145,11 @@ public class CorrelationTools {
 				return "No reference events found for: " + refDescription;
 			}
 
-			IQuantity earliest = null;
-			IQuantity latest = null;
-			Set<IMCThread> threads = new HashSet<>();
-			for (IItemIterable iterable : refEvents) {
-				IType<IItem> type = iterable.getType();
-				IMemberAccessor<IQuantity, IItem> startAccessor = JfrAttributes.START_TIME.getAccessor(type);
-				IMemberAccessor<IQuantity, IItem> endAccessor = JfrAttributes.END_TIME.getAccessor(type);
-				IMemberAccessor<IMCThread, IItem> threadAccessor = JfrAttributes.EVENT_THREAD.getAccessor(type);
-
-				for (IItem item : iterable) {
-					IQuantity start = startAccessor != null ? startAccessor.getMember(item) : null;
-					IQuantity end = endAccessor != null ? endAccessor.getMember(item) : null;
-					if (start != null && (earliest == null || start.compareTo(earliest) < 0)) {
-						earliest = start;
-					}
-					if (end != null && (latest == null || end.compareTo(latest) > 0)) {
-						latest = end;
-					}
-					IMCThread thread = threadAccessor != null ? threadAccessor.getMember(item) : null;
-					if (thread != null) {
-						threads.add(thread);
-					}
-				}
+			IQuantity earliest = refEvents.getAggregate(Aggregators.min(JfrAttributes.START_TIME));
+			IQuantity latest = refEvents.getAggregate(Aggregators.max(JfrAttributes.END_TIME));
+			Set<IMCThread> threads = refEvents.getAggregate(Aggregators.distinct(JfrAttributes.EVENT_THREAD));
+			if (threads == null) {
+				threads = Collections.emptySet();
 			}
 
 			if (earliest == null || latest == null) {
@@ -186,7 +172,7 @@ public class CorrelationTools {
 			if (!withReference && hasReference) {
 				// A stored reference can span any mix of types, so it is removed by event identity
 				// rather than by type.
-				result = ItemCollectionToolkit.build(subtract(result, refEvents).stream());
+				result = subtract(result, refEvents);
 			}
 
 			if (storeAs != null && !storeAs.isBlank()) {
@@ -199,7 +185,7 @@ public class CorrelationTools {
 				sb.append(" on the same threads");
 			}
 			sb.append(" during ").append(refDescription).append(":\n");
-			sb.append("Reference time range: ").append(JfrToolkit.formatQuantity(earliest)).append(" - ")
+			sb.append("Reference time range: ").append(JfrToolkit.formatQuantity(earliest)).append(" to ")
 					.append(JfrToolkit.formatQuantity(latest)).append("\n");
 			sb.append("Reference threads: ").append(threads.size()).append("\n");
 			if (storeAs != null && !storeAs.isBlank()) {
@@ -208,16 +194,10 @@ public class CorrelationTools {
 			}
 
 			sb.append("\nEvent type summary:\n");
-			boolean anyTypes = false;
-			for (IItemIterable iterable : result) {
-				long count = iterable.getItemCount();
-				if (count > 0) {
-					sb.append("  ").append(iterable.getType().getIdentifier()).append(": ").append(count)
-							.append(" events\n");
-					anyTypes = true;
-				}
-			}
-			if (!anyTypes) {
+			Map<IType<IItem>, Long> typeCounts = JfrToolkit.countByEventType(result);
+			typeCounts.forEach((type, count) -> sb.append("  ").append(type.getIdentifier()).append(": ").append(count)
+					.append(" events\n"));
+			if (typeCounts.isEmpty()) {
 				sb.append("  (none)\n");
 				return sb.toString();
 			}
@@ -242,8 +222,8 @@ public class CorrelationTools {
 	}
 
 	@Tool(description = "Lists the named result sets stored for a recording, with their event counts. Result sets "
-			+ "are created by the storeAs parameter of getEventTable and findRelatedEvents, and automatically by "
-			+ "aggregateEvents for its min/max events.")
+			+ "are created by the storeAs parameter of the querying and correlation tools, by combineResultSets, "
+			+ "and automatically by aggregateEvents for its min/max events.")
 	String listResultSets(
 		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
 		try {
@@ -266,8 +246,8 @@ public class CorrelationTools {
 
 	@Tool(description = "Combines two stored result sets with a set operation and stores the outcome under a new "
 			+ "name. Operations: intersect (events in both), union (events in either), subtract (events in setA but "
-			+ "not setB). Use this to narrow an investigation without moving event data through the conversation - "
-			+ "for example, intersect the events concurrent with a long GC pause with the events concurrent with a "
+			+ "not setB). Use this to narrow an investigation without moving event data through the conversation. "
+			+ "For example, intersect the events concurrent with a long GC pause with the events concurrent with a "
 			+ "slow request to see what the two incidents have in common. Both sets must come from the same "
 			+ "recording.")
 	String combineResultSets(
@@ -288,37 +268,31 @@ public class CorrelationTools {
 			}
 
 			String op = operation == null ? "" : operation.toLowerCase(Locale.ENGLISH);
-			List<IItem> combined;
+			IItemCollection result;
 			switch (op) {
 			case "intersect":
-				combined = intersect(a, b);
+				result = intersect(a, b);
 				break;
 			case "union":
-				combined = union(a, b);
+				result = union(a, b);
 				break;
 			case "subtract":
-				combined = subtract(a, b);
+				result = subtract(a, b);
 				break;
 			default:
 				return "Unknown operation: " + operation + ". Use 'intersect', 'union', or 'subtract'.";
 			}
 
-			IItemCollection result = ItemCollectionToolkit.build(combined.stream());
 			recording.store(storeAs, result);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(setA).append(" (").append(JfrToolkit.countItems(a)).append(") ").append(op).append(" ")
-					.append(setB).append(" (").append(JfrToolkit.countItems(b)).append(") = ").append(combined.size())
-					.append(" events, stored as '").append(storeAs).append("'\n");
-			if (!combined.isEmpty()) {
+					.append(setB).append(" (").append(JfrToolkit.countItems(b)).append(") = ")
+					.append(JfrToolkit.countItems(result)).append(" events, stored as '").append(storeAs).append("'\n");
+			if (result.hasItems()) {
 				sb.append("\nEvent type summary:\n");
-				for (IItemIterable iterable : result) {
-					long count = iterable.getItemCount();
-					if (count > 0) {
-						sb.append("  ").append(iterable.getType().getIdentifier()).append(": ").append(count)
-								.append(" events\n");
-					}
-				}
+				JfrToolkit.countByEventType(result).forEach((type, count) -> sb.append("  ")
+						.append(type.getIdentifier()).append(": ").append(count).append(" events\n"));
 				sb.append("\nUse getEventTable on this recording, or findRelatedEvents with reference='")
 						.append(storeAs).append("', to inspect it.\n");
 			}
@@ -347,47 +321,55 @@ public class CorrelationTools {
 	 * IItem itself defines no value equality.
 	 */
 	private static Set<IItem> identitySet(IItemCollection items) {
-		Set<IItem> set = Collections.newSetFromMap(new IdentityHashMap<>());
-		set.addAll(JfrToolkit.toItemList(items));
-		return set;
+		return identityItems(items).seen;
 	}
 
-	private static List<IItem> intersect(IItemCollection a, IItemCollection b) {
+	private static IItemCollection intersect(IItemCollection a, IItemCollection b) {
 		Set<IItem> inB = identitySet(b);
-		List<IItem> result = new ArrayList<>();
-		for (IItem item : JfrToolkit.toItemList(a)) {
-			if (inB.contains(item)) {
-				result.add(item);
-			}
-		}
-		return result;
+		return a.apply(type -> inB::contains);
 	}
 
-	private static List<IItem> union(IItemCollection a, IItemCollection b) {
-		Set<IItem> seen = Collections.newSetFromMap(new IdentityHashMap<>());
-		List<IItem> result = new ArrayList<>();
-		for (IItem item : JfrToolkit.toItemList(a)) {
-			if (seen.add(item)) {
-				result.add(item);
-			}
-		}
-		for (IItem item : JfrToolkit.toItemList(b)) {
-			if (seen.add(item)) {
-				result.add(item);
-			}
-		}
-		return result;
+	private static IItemCollection union(IItemCollection a, IItemCollection b) {
+		IdentityItems combined = identityItems(ItemCollectionToolkit.merge(() -> Stream.of(a, b)));
+		return ItemCollectionToolkit.build(combined.ordered.stream());
 	}
 
-	private static List<IItem> subtract(IItemCollection a, IItemCollection b) {
+	private static IItemCollection subtract(IItemCollection a, IItemCollection b) {
 		Set<IItem> inB = identitySet(b);
-		List<IItem> result = new ArrayList<>();
-		for (IItem item : JfrToolkit.toItemList(a)) {
-			if (!inB.contains(item)) {
-				result.add(item);
+		return a.apply(type -> item -> !inB.contains(item));
+	}
+
+	private static IdentityItems identityItems(IItemCollection items) {
+		IdentityItems result = items.getAggregate(Aggregators.forConsumer(new IItemConsumerFactory<IdentityItems>() {
+			@Override
+			public boolean acceptType(IType<IItem> type) {
+				return true;
+			}
+
+			@Override
+			public IdentityItems newItemConsumer(IType<IItem> type) {
+				return new IdentityItems();
+			}
+		}));
+		return result == null ? new IdentityItems() : result;
+	}
+
+	private static final class IdentityItems implements IItemConsumer<IdentityItems> {
+		final Set<IItem> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+		final List<IItem> ordered = new ArrayList<>();
+
+		@Override
+		public void consume(IItem item) {
+			if (seen.add(item)) {
+				ordered.add(item);
 			}
 		}
-		return result;
+
+		@Override
+		public IdentityItems merge(IdentityItems other) {
+			other.ordered.forEach(this::consume);
+			return this;
+		}
 	}
 
 	private void appendEventSummary(StringBuilder sb, IItem item, IType<IItem> type, int index) {
