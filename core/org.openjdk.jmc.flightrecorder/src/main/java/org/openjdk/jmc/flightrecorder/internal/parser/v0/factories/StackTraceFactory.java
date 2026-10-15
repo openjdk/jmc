@@ -46,8 +46,8 @@ import org.openjdk.jmc.common.util.MCStackTrace;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.ValueDescriptor;
 import org.openjdk.jmc.flightrecorder.internal.util.CanonicalConstantMap;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 import org.openjdk.jmc.flightrecorder.internal.util.ParserToolkit;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 
 /**
  * Factory that create an {@link IMCStackTrace} from the stack trace pool. If the same stack trace

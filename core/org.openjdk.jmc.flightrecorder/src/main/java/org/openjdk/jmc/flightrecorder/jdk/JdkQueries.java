@@ -122,8 +122,8 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_FOR;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_NAME;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.REC_SETTING_VALUE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RESERVED_SIZE;
-import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_SIZE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_PEAK;
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.RSS_SIZE;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SAFEPOINT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_FRACTION_INDEX;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_INDEX;
@@ -131,12 +131,11 @@ import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_FLUS
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_RECLAIMED;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_SWEPT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.SWEEP_METHOD_ZOMBIFIED;
-import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREAD_DUMP_RESULT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_ACCUMULATED_COUNT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_ACTIVE_COUNT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_DAEMON_COUNT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREADS_PEAK_COUNT;
-
+import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.THREAD_DUMP_RESULT;
 import static org.openjdk.jmc.flightrecorder.jdk.JdkAttributes.UNALLOCATED;
 
 import org.openjdk.jmc.common.item.Aggregators;

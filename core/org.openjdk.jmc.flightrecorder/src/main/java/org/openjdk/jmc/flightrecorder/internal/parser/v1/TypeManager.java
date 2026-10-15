@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.unit.ContentType;
@@ -51,7 +52,6 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.LoaderContext;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkMetadata.AnnotatedElement;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkMetadata.AnnotationElement;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ChunkMetadata.ClassElement;
@@ -83,6 +83,7 @@ import org.openjdk.jmc.flightrecorder.internal.util.JfrInternalConstants;
 import org.openjdk.jmc.flightrecorder.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.parser.IEventSink;
 import org.openjdk.jmc.flightrecorder.parser.ValueField;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 
 class TypeManager {
 

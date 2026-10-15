@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,6 @@
 package org.openjdk.jmc.flightrecorder.ui.selection;
 
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 
 /**
  * A flavor that can be evaluated to item collections.
@@ -41,31 +40,16 @@ import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 public interface IItemStreamFlavor extends ISelectionFlavor<IItemCollection> {
 
 	static IItemStreamFlavor build(IItemCollection items) {
-		return build(ItemCollectionToolkit.getDescription(items), items);
+		return SelectionFlavorAdapters.toUI(org.openjdk.jmc.flightrecorder.selection.IItemStreamFlavor.build(items));
 	}
 
 	static IItemStreamFlavor build(String name, IItemCollection items) {
-		return build(name, false, items);
+		return SelectionFlavorAdapters
+				.toUI(org.openjdk.jmc.flightrecorder.selection.IItemStreamFlavor.build(name, items));
 	}
 
 	static IItemStreamFlavor build(String name, Boolean isEmpty, IItemCollection items) {
-		return new IItemStreamFlavor() {
-
-			@Override
-			public String getName() {
-				return name;
-			}
-
-			@Override
-			public Boolean isEmpty() {
-				return isEmpty;
-			}
-
-			@Override
-			public IItemCollection evaluate() {
-				return items;
-			}
-		};
+		return SelectionFlavorAdapters
+				.toUI(org.openjdk.jmc.flightrecorder.selection.IItemStreamFlavor.build(name, isEmpty, items));
 	}
-
 }
