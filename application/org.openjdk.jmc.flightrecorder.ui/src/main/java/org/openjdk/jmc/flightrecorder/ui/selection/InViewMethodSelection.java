@@ -44,6 +44,8 @@ import org.openjdk.jmc.common.item.IItemFilter;
  * Selection type representing a method selected within a view. Views that display methods can fire
  * this selection to signal that a method was chosen. Other views can listen for this selection type
  * and react accordingly.
+ *
+ * @see org.openjdk.jmc.flightrecorder.selection.InViewMethodSelection
  */
 public class InViewMethodSelection extends FlavoredSelectionBase {
 
