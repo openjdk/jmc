@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -532,7 +532,7 @@ class ValueReaders {
 		public Object read(IDataInput in, boolean allowUnresolvedReference)
 				throws IOException, InvalidJfrFileException {
 			try {
-				Object instance = klass.newInstance();
+				Object instance = klass.getDeclaredConstructor().newInstance();
 				for (int i = 0; i < valueReaders.size(); i++) {
 					Object val = valueReaders.get(i).read(in, allowUnresolvedReference);
 					Field f = fields.get(i);
@@ -541,7 +541,7 @@ class ValueReaders {
 					}
 				}
 				return instance;
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (ReflectiveOperationException e) {
 				throw new RuntimeException(e);
 			}
 		}

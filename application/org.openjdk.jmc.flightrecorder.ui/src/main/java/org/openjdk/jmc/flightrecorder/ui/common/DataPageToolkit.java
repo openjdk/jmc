@@ -98,6 +98,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.IAggregator;
 import org.openjdk.jmc.common.item.IAttribute;
@@ -117,7 +118,6 @@ import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.QuantitiesToolkit;
 import org.openjdk.jmc.common.unit.QuantityRange;
-import org.openjdk.jmc.common.unit.RangeContentType;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.ColorToolkit;
 import org.openjdk.jmc.common.util.CompositeKey;
@@ -128,6 +128,7 @@ import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
 import org.openjdk.jmc.flightrecorder.jdk.JdkTypeIDs;
 import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.Severity;
+import org.openjdk.jmc.flightrecorder.selection.SelectionAspectToolkit;
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
 import org.openjdk.jmc.flightrecorder.ui.IPageContainer;
 import org.openjdk.jmc.flightrecorder.ui.PageManager;
@@ -136,8 +137,8 @@ import org.openjdk.jmc.flightrecorder.ui.common.ItemHistogram.CompositeKeyHistog
 import org.openjdk.jmc.flightrecorder.ui.common.ItemList.ItemListBuilder;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 import org.openjdk.jmc.flightrecorder.ui.overview.ResultOverview;
-import org.openjdk.jmc.flightrecorder.ui.pages.itemhandler.ItemHandlerPage;
 import org.openjdk.jmc.flightrecorder.ui.pages.itemhandler.ItemHandlerPage.ItemHandlerUiStandIn;
+import org.openjdk.jmc.flightrecorder.ui.pages.itemhandler.ItemHandlerPage;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFilterFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStore.SelectionStoreEntry;
 import org.openjdk.jmc.flightrecorder.ui.selection.SelectionStoreActionToolkit;
@@ -153,8 +154,8 @@ import org.openjdk.jmc.ui.charts.XYChart;
 import org.openjdk.jmc.ui.charts.XYDataRenderer;
 import org.openjdk.jmc.ui.charts.XYQuantities;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
-import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.column.TableSettings.ColumnSettings;
+import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.handlers.ActionToolkit;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.ChartCanvas;
@@ -982,33 +983,7 @@ public class DataPageToolkit {
 	}
 
 	public static Stream<IAttribute<?>> getPersistableAttributes(Stream<IAttribute<?>> attributes) {
-		// FIXME: Would like to always be able to persist a string representation of the attribute, because this is usable by filters.
-
-		// FIXME: Should we always include event type? Does it make any sense, except on the custom pages?
-
-		// FIXME: Transform both START_TIME and END_TIME to LIFETIME?
-		// FIXME: Add derived attributes, like a conversion of any THREAD or CLASS attribute? Thread group?
-		/*
-		 * Make sure to do the conversions in the right order, so for example a stack trace can be
-		 * converted to a top method, which then is converted to a method string.
-		 */
-		return attributes.map(a -> a.equals(JfrAttributes.EVENT_THREAD) ? JdkAttributes.EVENT_THREAD_NAME : a)
-				.flatMap(a -> a.equals(JfrAttributes.EVENT_STACKTRACE) ? Stream.of(JdkAttributes.STACK_TRACE_STRING,
-						JdkAttributes.STACK_TRACE_TOP_METHOD_STRING, JdkAttributes.STACK_TRACE_TOP_CLASS_STRING,
-						JdkAttributes.STACK_TRACE_TOP_PACKAGE, JdkAttributes.STACK_TRACE_BOTTOM_METHOD_STRING)
-						: Stream.of(a))
-				.map(a -> a.equals(JdkAttributes.COMPILER_METHOD) ? JdkAttributes.COMPILER_METHOD_STRING : a)
-				// FIXME: String or id?
-				.map(a -> a.equals(JdkAttributes.REC_SETTING_FOR) ? JdkAttributes.REC_SETTING_FOR_NAME : a)
-				.map(a -> a.equals(JdkAttributes.CLASS_DEFINING_CLASSLOADER)
-						? JdkAttributes.CLASS_DEFINING_CLASSLOADER_STRING : a)
-				.map(a -> a.equals(JdkAttributes.CLASS_INITIATING_CLASSLOADER)
-						? JdkAttributes.CLASS_INITIATING_CLASSLOADER_STRING : a)
-				.map(a -> a.equals(JdkAttributes.PARENT_CLASSLOADER) ? JdkAttributes.PARENT_CLASSLOADER_STRING : a)
-				.map(a -> a.equals(JdkAttributes.CLASSLOADER) ? JdkAttributes.CLASSLOADER_STRING : a)
-				.filter(a -> a.equals(JfrAttributes.EVENT_TYPE) || (a.getContentType() instanceof RangeContentType)
-						|| (a.getContentType().getPersister() != null))
-				.distinct();
+		return SelectionAspectToolkit.getPersistableAttributes(attributes);
 	}
 
 	/**

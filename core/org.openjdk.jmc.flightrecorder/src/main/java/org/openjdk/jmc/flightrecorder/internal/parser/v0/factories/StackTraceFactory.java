@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -46,8 +46,8 @@ import org.openjdk.jmc.common.util.MCStackTrace;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.ValueDescriptor;
 import org.openjdk.jmc.flightrecorder.internal.util.CanonicalConstantMap;
-import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 import org.openjdk.jmc.flightrecorder.internal.util.ParserToolkit;
+import org.openjdk.jmc.flightrecorder.stacktrace.FrameFilter;
 
 /**
  * Factory that create an {@link IMCStackTrace} from the stack trace pool. If the same stack trace
