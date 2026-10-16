@@ -72,6 +72,26 @@ function startJetty() {
     }
 }
 
+function startP2() {
+    local timestamp=$1
+    local p2SiteLog="${BASEDIR}/build_${timestamp}.1.p2_site.log"
+
+    pushd releng/third-party 1> /dev/null || {
+        err_log "directory releng/third-party not found"
+        exit 1
+    }
+    echo "$(date +%T) building p2:site - logging output to ${p2SiteLog}"
+    mvn p2:site --log-file "${p2SiteLog}"
+
+    echo "$(date +%T) starting p2 server - press Ctrl-C to stop"
+    mvn jetty:run
+
+    popd 1> /dev/null || {
+        err_log "could not go to project root directory"
+        exit 1
+    }
+}
+
 function err_log() {
     echo "$@" >&2
 }
@@ -87,6 +107,7 @@ function printHelp() {
         printf " \t%s\t%s\n" "--installCore" "to install JMC core"
         printf " \t%s\t%s\n" "--packageJmc" "to package JMC"
         printf " \t%s\t%s\n" "--packageAgent" "to package Agent"
+        printf " \t%s\t%s\n" "--startP2" "to build and start the third-party p2 server (Ctrl-C to stop)"
         printf " \t%s\t%s\n" "--skipJDPMulticastTests" "skip multicast related tests"
         printf " \t%s\t%s\n" "--clean" "to run maven clean"
         printf " \t%s\t%s\n" "--run" "to run JMC, once it is packaged"
@@ -283,6 +304,9 @@ function parseArgs() {
                 ;;
             --packageAgent)
                 packageAgent $timestamp
+                ;;
+            --startP2)
+                startP2 $timestamp
                 ;;
             --clean)
                 clean

@@ -70,7 +70,7 @@
 	</mailingLists>
 	<properties>
 		<!-- Config -->
-		<revision>1.0.1</revision>
+		<revision>1.1.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -180,6 +180,8 @@
 						<exclude>TestDynamicallyLoadedClasses.java</exclude>
 						<exclude>TestRetrieveCurrentTransforms.java</exclude>
 						<exclude>TestRetrieveEventProbes.java</exclude>
+						<exclude>TestCollectionResizeEvents.java</exclude>
+						<exclude>TestCollectionResizeDisabled.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -217,6 +219,7 @@
 						<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 							<manifestEntries>
 								<Automatic-Module-Name>org.openjdk.jmc.agent</Automatic-Module-Name>
+								<Implementation-Version>${revision}${changelist}</Implementation-Version>
 								<Agent-Class>org.openjdk.jmc.agent.Agent</Agent-Class>
 								<Premain-Class>org.openjdk.jmc.agent.Agent</Premain-Class>
 								<Can-Retransform-Classes>true</Can-Retransform-Classes>
@@ -317,6 +320,28 @@
 							    -cp target/agent-${revision}${changelist}.jar:target/test-classes/
 							</argLine>
 							<includes>TestRetrieveCurrentTransforms.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-collection-tracking-enabled</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine>--add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/collectiontracking_enabled.xml</argLine>
+							<includes>TestCollectionResizeEvents.java</includes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-collection-tracking-disabled</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<argLine>--add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder -javaagent:target/agent-${revision}${changelist}.jar=target/test-classes/org/openjdk/jmc/agent/test/collectiontracking_disabled.xml</argLine>
+							<includes>TestCollectionResizeDisabled.java</includes>
 						</configuration>
 					</execution>
 				</executions>
