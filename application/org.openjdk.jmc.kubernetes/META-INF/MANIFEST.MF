@@ -14,8 +14,7 @@ Require-Bundle: org.openjdk.jmc.jolokia;bundle-version="10.0.0",
  org.openjdk.jmc.rjmx
 Export-Package: org.openjdk.jmc.kubernetes,
  org.openjdk.jmc.kubernetes.preferences
-Import-Package: org.apache.commons.logging;version="1.2.0",
- org.jolokia.client,
+Import-Package: org.jolokia.client,
  org.jolokia.client.exception,
  org.jolokia.client.jdkclient,
  org.jolokia.client.request,
