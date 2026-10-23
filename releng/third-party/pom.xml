@@ -61,7 +61,7 @@
 		<jemmy.version>2.0.0</jemmy.version>
 		<jetty.version>12.1.12</jetty.version>
 		<spifly.version>1.3.7</spifly.version>
-		<jolokia.version>2.5.1</jolokia.version>
+		<jolokia.version>2.6.1</jolokia.version>
 		<wiremock.version>2.27.2</wiremock.version>
 		<fireplace.version>0.0.1-rc.11</fireplace.version>
 		<radiance.version>9.0.0</radiance.version>
@@ -182,6 +182,11 @@
 									<id>org.jolokia:jolokia-client-java:${jolokia.version}</id>
 									<transitive>false</transitive>
 								</artifact>
+								<artifact>
+									<id>org.jolokia:jolokia-client-kubernetes:jar:standalone:${jolokia.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+
 								<artifact>
 									<id>org.awaitility:awaitility:4.0.0</id>
 								</artifact>
