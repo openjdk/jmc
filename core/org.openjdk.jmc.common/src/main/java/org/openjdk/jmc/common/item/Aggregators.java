@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -1043,6 +1043,10 @@ public class Aggregators {
 			return new SetConsumer<>(attribute.getAccessor(itemType));
 		}
 	};
+
+	public static IAggregator<String, ?> distinctAttribute(String typeId, IAttribute<String> attribute) {
+		return filter(distinctAsString(attribute, "~ "), ItemFilters.type(typeId)); //$NON-NLS-1$
+	}
 
 	public static IAggregator<String, ?> distinctAsString(String typeId, IAttribute<String> attribute) {
 		return filter(distinctAsString(attribute, ", "), ItemFilters.type(typeId)); //$NON-NLS-1$

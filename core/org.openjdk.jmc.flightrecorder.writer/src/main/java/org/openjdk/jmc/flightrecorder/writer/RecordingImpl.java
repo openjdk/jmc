@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+ * Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,17 +35,20 @@ package org.openjdk.jmc.flightrecorder.writer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,8 +56,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openjdk.jmc.flightrecorder.writer.api.Annotation;
 import org.openjdk.jmc.flightrecorder.writer.api.Recording;
@@ -86,13 +89,24 @@ public final class RecordingImpl extends Recording {
 	private static final long CONSTANT_OFFSET_OFFSET = 16;
 	private static final long METADATA_OFFSET_OFFSET = 24;
 	private static final long DURATION_NANOS_OFFSET = 40;
+	// JFR file header: magic(4) + major(2) + minor(2) + size(8) + CP offset(8) + metadata offset(8)
+	// + start nanos(8) + duration(8) + start ticks(8) + ticks per second(8) + compressed flag(4)
+	private static final int JFR_HEADER_SIZE = 68;
 
 	private final Set<Chunk> activeChunks = new CopyOnWriteArraySet<>();
 	private final LEB128Writer globalWriter = LEB128Writer.getInstance();
-	private final InheritableThreadLocal<WeakReference<Chunk>> threadChunk = new InheritableThreadLocal<WeakReference<Chunk>>() {
+	private final ThreadMmapManager mmapManager;
+
+	private final ThreadLocal<WeakReference<Chunk>> threadChunk = new ThreadLocal<WeakReference<Chunk>>() {
 		@Override
 		protected WeakReference<Chunk> initialValue() {
-			Chunk chunk = new Chunk();
+			Chunk chunk;
+			if (mmapManager != null) {
+				LEB128MappedWriter mmapWriter = mmapManager.getActiveWriter(Thread.currentThread().getId());
+				chunk = new Chunk(mmapWriter, mmapManager);
+			} else {
+				chunk = new Chunk();
+			}
 			activeChunks.add(chunk);
 			/*
 			 * Use weak reference to minimize the damage caused by thread-local leaks. The chunk
@@ -112,18 +126,18 @@ public final class RecordingImpl extends Recording {
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	private final BlockingDeque<LEB128Writer> chunkDataQueue = new LinkedBlockingDeque<>();
-	private final ExecutorService chunkDataMergingService = Executors.newSingleThreadExecutor();
+	private final ExecutorService chunkDataMergingService;
 
 	private final ConstantPools constantPools = new ConstantPools();
 	private final MetadataImpl metadata = new MetadataImpl(constantPools);
 	private final TypesImpl types;
 
 	// a cache to hold already computed stack frames
-	private final Map<StackTraceElement, TypedValue> frameCache = new HashMap<>(16000);
-	// a cache to hold already resolved class loaders
-	private final Map<String, TypedValue> classLoaderCache = new HashMap<>(128);
-	// a cache to hold already resolved modules
-	private final Map<String, TypedValue> moduleCache = new HashMap<>(4096);
+	private final Map<StackTraceElement, TypedValue> frameCache = new ConcurrentHashMap<>(16000);
+	// caches to hold already resolved class loaders and modules; keyed by Object so that the null
+	// entry uses a dedicated sentinel that cannot collide with a real name
+	private final Map<Object, TypedValue> classLoaderCache = new ConcurrentHashMap<>(128);
+	private final Map<Object, TypedValue> moduleCache = new ConcurrentHashMap<>(4096);
 
 	public RecordingImpl(OutputStream output, RecordingSettings settings) {
 		this.startTicks = settings.getStartTicks() != -1 ? settings.getStartTicks() : System.nanoTime();
@@ -132,19 +146,43 @@ public final class RecordingImpl extends Recording {
 		this.duration = settings.getDuration();
 		this.outputStream = output;
 		this.types = new TypesImpl(metadata, settings.shouldInitializeJDKTypes());
-		writeFileHeader();
 
-		chunkDataMergingService.submit(() -> {
+		if (settings.useMmap()) {
 			try {
-				while (!chunkDataMergingService.isShutdown()) {
-					processChunkDataQueue(500, TimeUnit.MILLISECONDS);
+				Path baseDir = settings.getMmapTempDir();
+				Path tempDir = baseDir != null ? Files.createTempDirectory(baseDir, "jfr-writer-mmap-")
+						: Files.createTempDirectory("jfr-writer-mmap-");
+				try {
+					this.mmapManager = new ThreadMmapManager(tempDir, settings.getMmapChunkSize());
+				} catch (IOException | RuntimeException e) {
+					// the freshly created temp dir would otherwise be orphaned
+					ThreadMmapManager.deleteRecursively(tempDir);
+					throw e;
 				}
-				// process any outstanding elements in the queue
-				processChunkDataQueue(1, TimeUnit.NANOSECONDS);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
+			} catch (IOException e) {
+				throw new UncheckedIOException("Failed to initialize mmap manager", e);
 			}
-		});
+			this.chunkDataMergingService = null;
+		} else {
+			this.mmapManager = null;
+			this.chunkDataMergingService = Executors.newSingleThreadExecutor();
+			chunkDataMergingService.submit(() -> {
+				try {
+					while (!chunkDataMergingService.isShutdown()) {
+						processChunkDataQueue(500, TimeUnit.MILLISECONDS);
+					}
+					// process any outstanding elements in the queue
+					processChunkDataQueue(1, TimeUnit.NANOSECONDS);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			});
+		}
+
+		// in mmap mode the header is written by finalizeRecordingMmap() from the actual offsets
+		if (mmapManager == null) {
+			writeFileHeader();
+		}
 	}
 
 	private void processChunkDataQueue(long pollTimeout, TimeUnit timeUnit) throws InterruptedException {
@@ -166,52 +204,86 @@ public final class RecordingImpl extends Recording {
 		activeChunks.remove(chunk);
 		threadChunk.remove();
 
-		chunk.finish(writer -> {
+		if (mmapManager != null) {
+			long threadId = Thread.currentThread().getId();
 			try {
-				chunkDataQueue.put(writer);
-			} catch (InterruptedException ignored) {
-				Thread.currentThread().interrupt();
+				mmapManager.rotateChunk(threadId);
+			} catch (IOException e) {
+				throw new UncheckedIOException("Chunk rotation failed for thread " + threadId, e);
 			}
-		});
+		} else {
+			chunk.finish(writer -> {
+				try {
+					chunkDataQueue.put(writer);
+				} catch (InterruptedException ignored) {
+					Thread.currentThread().interrupt();
+				}
+			});
+		}
 		return this;
 	}
 
+	/**
+	 * Closes the recording and writes the assembled JFR stream. The caller must ensure that no
+	 * thread is still writing events: neither mode synchronizes close() against concurrent writers.
+	 * On failure in mmap mode the temp files are preserved so the data can be salvaged.
+	 */
 	@Override
 	public void close() throws IOException {
 		if (closed.compareAndSet(false, true)) {
+			boolean finalized = false;
 			try {
-				/*
-				 * All active chunks are stable here - no new data will be added there so we can get
-				 * away with slightly racy code ....
-				 */
-				for (Chunk chunk : activeChunks) {
-					chunk.finish(writer -> {
-						try {
-							chunkDataQueue.put(writer);
-						} catch (InterruptedException ignored) {
-							Thread.currentThread().interrupt();
-						}
-					});
+				if (mmapManager != null) {
+					closeMmapRecording();
+				} else {
+					closeHeapRecording();
 				}
-				activeChunks.clear();
-
-				chunkDataMergingService.shutdown();
-				boolean flushed = false;
-				try {
-					flushed = chunkDataMergingService.awaitTermination(5, TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+				finalized = true;
+			} catch (IOException e) {
+				if (mmapManager != null) {
+					// keep the mmap files so the recorded data can be salvaged
+					e.addSuppressed(new IOException("Mmap files preserved in " + mmapManager.getTempDir()));
 				}
-				if (!flushed) {
-					throw new RuntimeException("Unable to flush dangling JFR chunks");
-				}
-				finalizeRecording();
-
-				outputStream.write(globalWriter.export());
+				throw e;
 			} finally {
 				outputStream.close();
+				if (finalized && mmapManager != null) {
+					mmapManager.cleanup();
+				}
 			}
 		}
+	}
+
+	private void closeHeapRecording() throws IOException {
+		/*
+		 * All active chunks are stable here - no new data will be added there so we can get away
+		 * with slightly racy code ....
+		 */
+		for (Chunk chunk : activeChunks) {
+			chunk.finish(writer -> {
+				try {
+					chunkDataQueue.put(writer);
+				} catch (InterruptedException ignored) {
+					Thread.currentThread().interrupt();
+				}
+			});
+		}
+		activeChunks.clear();
+
+		if (chunkDataMergingService != null) {
+			if (!ThreadMmapManager.shutdownAndAwaitTermination(chunkDataMergingService, 5, TimeUnit.SECONDS)) {
+				throw new IllegalStateException("Unable to flush dangling JFR chunks");
+			}
+		}
+		finalizeRecording();
+
+		globalWriter.writeTo(outputStream);
+	}
+
+	private void closeMmapRecording() throws IOException {
+		mmapManager.finalFlush();
+		activeChunks.clear();
+		finalizeRecordingMmap();
 	}
 
 	private Chunk getChunk() {
@@ -506,7 +578,7 @@ public final class RecordingImpl extends Recording {
 					}
 					}
 				} catch (IllegalAccessException e) {
-					throw new RuntimeException();
+					throw new IllegalStateException(e);
 				}
 			}
 			if (!startTimeWritten) {
@@ -569,11 +641,15 @@ public final class RecordingImpl extends Recording {
 		});
 	}
 
+	// dedicated null-entry key; cannot collide with a real class loader or module name the way a
+	// String sentinel would
+	private static final Object NULL_KEY = new Object();
+
 	private TypedValue classLoaderValue(Types types, String classLoaderName) {
-		return classLoaderCache.computeIfAbsent(classLoaderName,
-				k -> types.getType(Types.JDK.CLASS_LOADER).asValue(p -> {
-					p.putField("name", k);
-				}));
+		Object key = classLoaderName != null ? classLoaderName : NULL_KEY;
+		return classLoaderCache.computeIfAbsent(key, k -> types.getType(Types.JDK.CLASS_LOADER).asValue(p -> {
+			p.putField("name", classLoaderName);
+		}));
 	}
 
 	private TypedValue packageValue(Types types, String packageName, String module) {
@@ -583,8 +659,9 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private TypedValue moduleValue(Types types, String module) {
-		return moduleCache.computeIfAbsent(module, k -> types.getType(Types.JDK.MODULE).asValue(p -> {
-			p.putField("name", k);
+		Object key = module != null ? module : NULL_KEY;
+		return moduleCache.computeIfAbsent(key, k -> types.getType(Types.JDK.MODULE).asValue(p -> {
+			p.putField("name", module);
 		}));
 	}
 
@@ -648,24 +725,31 @@ public final class RecordingImpl extends Recording {
 	}
 
 	private void writeFileHeader() {
-		globalWriter.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(0L) // size placeholder
-				.writeLongRaw(0L) // CP event offset
-				.writeLongRaw(0L) // meta event offset
+		// the size/CP/metadata/duration placeholders are patched in finalizeRecording()
+		writeJfrHeader(globalWriter, 0L, 0L, 0L, 0L);
+	}
+
+	private void writeJfrHeader(
+		LEB128Writer writer, long size, long checkpointOffset, long metadataOffset, long duration) {
+		// size is the total file size
+		writer.writeBytes(MAGIC).writeShortRaw(MAJOR_VERSION).writeShortRaw(MINOR_VERSION).writeLongRaw(size)
+				.writeLongRaw(checkpointOffset) // CP event offset
+				.writeLongRaw(metadataOffset) // meta event offset
 				.writeLongRaw(startNanos) // start time in nanoseconds
-				.writeLongRaw(0L) // duration placeholder
+				.writeLongRaw(duration) // duration
 				.writeLongRaw(startTicks) // start time in ticks
 				.writeLongRaw(1_000_000_000L) // 1 tick = 1 ns
 				.writeIntRaw(1); // use compressed integers
 	}
 
 	private void finalizeRecording() {
-		long recDuration = duration > 0 ? duration : System.nanoTime() - startTicks;
+		long recDuration = recordingDuration();
 		types.resolveAll();
 
 		long checkpointOffset = globalWriter.position();
-		writeCheckpointEvent(recDuration);
+		writeCheckpointEvent(globalWriter, recDuration);
 		long metadataOffset = globalWriter.position();
-		writeMetadataEvent(recDuration);
+		writeMetadataEvent(globalWriter, recDuration);
 
 		globalWriter.writeLongRaw(DURATION_NANOS_OFFSET, recDuration);
 		globalWriter.writeLongRaw(SIZE_OFFSET, globalWriter.position());
@@ -673,12 +757,43 @@ public final class RecordingImpl extends Recording {
 		globalWriter.writeLongRaw(METADATA_OFFSET_OFFSET, metadataOffset);
 	}
 
-	private void writeCheckpointEvent(long duration) {
-		LEB128Writer cpWriter = LEB128Writer.getInstance();
+	private void finalizeRecordingMmap() throws IOException {
+		long recDuration = recordingDuration();
+		types.resolveAll();
 
+		LEB128Writer cpEventWriter = LEB128Writer.getInstance();
+		writeCheckpointEvent(cpEventWriter, recDuration);
+
+		LEB128Writer mdWriter = LEB128Writer.getInstance();
+		writeMetadataEvent(mdWriter, recDuration);
+
+		// events are already written to the flushed chunk files; only the offsets are left to fill in
+		List<Path> flushedChunks = mmapManager.getFlushedChunks();
+		long chunksSize = 0;
+		for (Path chunk : flushedChunks) {
+			chunksSize += Files.size(chunk);
+		}
+
+		long checkpointOffset = JFR_HEADER_SIZE + chunksSize;
+		long metadataOffset = checkpointOffset + cpEventWriter.position();
+		long totalSize = metadataOffset + mdWriter.position();
+
+		LEB128Writer headerWriter = LEB128Writer.getInstance();
+		writeJfrHeader(headerWriter, totalSize, checkpointOffset, metadataOffset, recDuration);
+
+		outputStream.write(headerWriter.export());
+		for (Path chunkFile : flushedChunks) {
+			Files.copy(chunkFile, outputStream);
+		}
+		outputStream.write(cpEventWriter.export());
+		outputStream.write(mdWriter.export());
+	}
+
+	private LEB128Writer checkpointPayload(long recDuration) {
+		LEB128Writer cpWriter = LEB128Writer.getInstance();
 		cpWriter.writeLong(1L) // checkpoint event ID
 				.writeLong(startNanos) // start timestamp
-				.writeLong(duration) // duration till now
+				.writeLong(recDuration) // duration till now
 				.writeLong(0L) // fake delta-to-next
 				.writeInt(1) // all checkpoints are flush for now
 				.writeInt(metadata.getConstantPools().size()); // start writing constant pools array
@@ -686,12 +801,21 @@ public final class RecordingImpl extends Recording {
 		for (ConstantPool cp : metadata.getConstantPools()) {
 			cp.writeTo(cpWriter);
 		}
-
-		globalWriter.writeInt(cpWriter.length()); // write event size
-		globalWriter.writeBytes(cpWriter.export());
+		return cpWriter;
 	}
 
-	private void writeMetadataEvent(long duration) {
-		metadata.writeMetaEvent(globalWriter, startTicks, duration);
+	private void writeCheckpointEvent(LEB128Writer sink, long duration) {
+		LEB128Writer cpWriter = checkpointPayload(duration);
+
+		sink.writeInt(cpWriter.length()); // write event size
+		sink.writeBytes(cpWriter.export());
+	}
+
+	private void writeMetadataEvent(LEB128Writer sink, long duration) {
+		metadata.writeMetaEvent(sink, startTicks, duration);
+	}
+
+	private long recordingDuration() {
+		return duration > 0 ? duration : System.nanoTime() - startTicks;
 	}
 }

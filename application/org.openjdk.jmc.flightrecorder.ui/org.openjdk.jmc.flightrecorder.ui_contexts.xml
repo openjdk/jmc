@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--   
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
    
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
@@ -144,6 +144,11 @@
    <context id="tlaballocations">
       <description></description>
       <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/GUID-4F885E48-A548-4140-B985-74B1685BEDEA.htm" label="Using the TLAB Allocations Page" />
+   </context>
+   
+   <context id="security">
+      <description></description>
+      <topic href="PLUGINS_ROOT/org.openjdk.jmc.docs/html/SecurityPage.htm" label="Using the Security Page" />
    </context>
 
    <context id="environment">

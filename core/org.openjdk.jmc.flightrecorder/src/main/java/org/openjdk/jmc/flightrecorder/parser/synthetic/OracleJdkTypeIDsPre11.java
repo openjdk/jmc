@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -117,6 +117,8 @@ public final class OracleJdkTypeIDsPre11 {
 	private final static String THREAD_SLEEP = JVM_EVENT_ID_ROOT + "java/thread_sleep";
 	final static String MONITOR_ENTER = JVM_EVENT_ID_ROOT + "java/monitor_enter";
 	final static String MONITOR_WAIT = JVM_EVENT_ID_ROOT + "java/monitor_wait";
+
+	private final static String X509_CERTIFICATE = JDK_EVENT_ID_ROOT + "java/x509_certificate";
 
 	private final static String METASPACE_OOM = JVM_EVENT_ID_ROOT + "vm/gc/metaspace/out_of_memory";
 
@@ -416,6 +418,8 @@ public final class OracleJdkTypeIDsPre11 {
 			return JdkTypeIDs.RECORDINGS;
 		case GC_G1MMU:
 			return JdkTypeIDs.GC_G1MMU;
+		case X509_CERTIFICATE:
+			return JdkTypeIDs.X509_CERTIFICATE;
 		default:
 			return typeId;
 		}

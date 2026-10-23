@@ -33,7 +33,6 @@
  */
 package org.openjdk.jmc.ui.websocket;
 
-import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.time.Duration;
 import java.util.HashMap;
@@ -46,12 +45,11 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.eclipse.jetty.ee9.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee9.websocket.api.Session;
-import org.eclipse.jetty.ee9.websocket.api.WebSocketAdapter;
-import org.eclipse.jetty.ee9.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.websocket.api.Callback;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.server.WebSocketUpgradeHandler;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.flightrecorder.serializers.dot.DotSerializer;
 import org.openjdk.jmc.flightrecorder.serializers.json.FlameGraphJsonSerializer;
@@ -80,35 +78,33 @@ public class MCWebsocketServer {
 		connector.setPort(port);
 		server.addConnector(connector);
 
-		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		context.setContextPath("/");
-		server.setHandler(context);
-
-		JettyWebSocketServletContainerInitializer.configure(context, (servletContext, container) -> {
+		WebSocketUpgradeHandler upgradeHandler = WebSocketUpgradeHandler.from(server, container -> {
 			container.setMaxBinaryMessageSize(Long.MAX_VALUE);
-			container.setIdleTimeout(Duration.ofMinutes(Long.MAX_VALUE));
-			container.addMapping("/events/*", (req, resp) -> {
+			container.setIdleTimeout(Duration.ofMillis(Long.MAX_VALUE));
+			container.addMapping("/events/*", (req, resp, callback) -> {
 				String eventsJson = MCWebsocketServer.toEventsJsonString(currentSelection);
 				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(eventsJson);
 				handlers.add(handler);
 				return handler;
 			});
-			container.addMapping("/tree/*", (req, resp) -> {
+			container.addMapping("/tree/*", (req, resp, callback) -> {
 				String treeJson = MCWebsocketServer.toTreeModelJsonString(currentSelection);
 				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(treeJson);
 				treeHandlers.add(handler);
 				return handler;
 			});
-			container.addMapping("/graph/*", (req, resp) -> {
+			container.addMapping("/graph/*", (req, resp, callback) -> {
 				String dot = MCWebsocketServer.toGraphModelDotString(currentSelection);
 				WebsocketConnectionHandler handler = new WebsocketConnectionHandler(dot);
 				graphHandlers.add(handler);
 				return handler;
 			});
 		});
+		server.setHandler(upgradeHandler);
 
 		try {
 			server.start();
+			WebsocketPlugin.getLogger().log(Level.INFO, "JMC WebSocket server listening on 127.0.0.1:" + port);
 		} catch (Exception e) {
 			WebsocketPlugin.getLogger().log(Level.SEVERE, "Failed to start websocket server", e);
 		}
@@ -174,53 +170,47 @@ public class MCWebsocketServer {
 		server.stop();
 	}
 
-	private static class WebsocketConnectionHandler extends WebSocketAdapter {
+	public static class WebsocketConnectionHandler implements Session.Listener.AutoDemanding {
 		private String firstMessage;
+		private Session session;
 
 		WebsocketConnectionHandler(String firstMessage) {
 			this.firstMessage = firstMessage;
 		}
 
+		boolean isConnected() {
+			return session != null && session.isOpen();
+		}
+
 		public void sendMessage(String message) {
-			if (getSession() != null && isConnected()) {
-				WebsocketPlugin.getLogger().log(Level.INFO,
-						"Sending message to " + getSession().getRemoteAddress().toString());
-				try {
-					getSession().getRemote().sendString(message);
-				} catch (IOException e) {
-					WebsocketPlugin.getLogger().log(Level.SEVERE, "Failed to send websocket message", e);
-				}
+			if (isConnected()) {
+				WebsocketPlugin.getLogger().log(Level.INFO, "Sending message to " + session.getRemoteSocketAddress());
+				session.sendText(message, Callback.NOOP);
 			}
 		}
 
 		@Override
-		public void onWebSocketConnect(Session sess) {
-			super.onWebSocketConnect(sess);
-			WebsocketPlugin.getLogger().log(Level.INFO, "Socket connected to " + sess.getRemoteAddress().toString());
-			try {
-				if (firstMessage != null) {
-					getSession().getRemote().sendString(firstMessage);
-					firstMessage = null;
-				}
-			} catch (IOException e) {
-				WebsocketPlugin.getLogger().log(Level.SEVERE, "Failed to show outline view", e);
+		public void onWebSocketOpen(Session sess) {
+			this.session = sess;
+			WebsocketPlugin.getLogger().log(Level.INFO, "Socket connected to " + sess.getRemoteSocketAddress());
+			if (firstMessage != null) {
+				sess.sendText(firstMessage, Callback.NOOP);
+				firstMessage = null;
 			}
 		}
 
 		@Override
 		public void onWebSocketText(String message) {
-			super.onWebSocketText(message);
+			// No-op: the server is a one-way feed; incoming text is ignored.
 		}
 
 		@Override
 		public void onWebSocketClose(int statusCode, String reason) {
-			super.onWebSocketClose(statusCode, reason);
 			WebsocketPlugin.getLogger().log(Level.INFO, "Socket closed: [" + statusCode + "] " + reason);
 		}
 
 		@Override
 		public void onWebSocketError(Throwable cause) {
-			super.onWebSocketError(cause);
 			if (cause instanceof TimeoutException) {
 				WebsocketPlugin.getLogger().log(Level.INFO, "Websocket timed out");
 			} else if (cause instanceof ClosedChannelException) {

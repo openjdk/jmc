@@ -68,7 +68,6 @@ public class WebsocketPlugin extends AbstractUIPlugin implements IStartup {
 		this.getPreferenceStore().addPropertyChangeListener(preferenceChangeListener);
 		plugin = this;
 		startServer(getCryostatPort());
-		LOGGER.log(Level.INFO, "JMC Websocket Server is live!");
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -88,17 +87,22 @@ public class WebsocketPlugin extends AbstractUIPlugin implements IStartup {
 
 	private void startServer(int port) {
 		if (getServerEnabled()) {
+			LOGGER.log(Level.INFO, "Creating JMC WebSocket server on port " + port);
 			server = new MCWebsocketServer(port);
+		} else {
+			LOGGER.log(Level.INFO, "JMC WebSocket server disabled by preference; not creating");
 		}
 	}
 
 	private void stopServer() {
 		if (server != null) {
+			LOGGER.log(Level.INFO, "Stopping JMC WebSocket server");
 			try {
 				server.shutdown();
 			} catch (Exception e) {
 				LOGGER.log(Level.WARNING, "Error shutting down the Jetty WebSocket server", e);
 			}
+			server = null;
 		}
 	}
 

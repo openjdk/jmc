@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2021, 2025, Datadog, Inc. All rights reserved.
+   Copyright (c) 2021, 2026, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2021, 2026, Datadog, Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -50,6 +50,7 @@
 		<module>org.openjdk.jmc.flightrecorder.writer.test</module>
 		<module>org.openjdk.jmc.flightrecorder.serializers.test</module>
 		<module>org.openjdk.jmc.jdp.test</module>
+		<module>org.openjdk.jmc.joverflow.test</module>
 	</modules>
 	<properties>
 		<test.includes.default>**/Test*.java,**/*Test.java,**/*TestCase.java</test.includes.default>
@@ -110,6 +111,12 @@
 			<properties>
 				<test.excludes>${test.excludes.default}</test.excludes>
 			</properties>
+		</profile>
+		<profile>
+			<id>benchmarks</id>
+			<modules>
+				<module>org.openjdk.jmc.flightrecorder.writer.benchmarks</module>
+			</modules>
 		</profile>
 		<profile>
 			<id>coverage</id>

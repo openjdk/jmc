@@ -96,7 +96,6 @@
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
       <plugin id="org.openjdk.jmc.osgi.extension" autoStart="false" startLevel="4" />
       <plugin id="org.openjdk.jmc.rcp.application" autoStart="false" startLevel="5" />

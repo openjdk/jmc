@@ -57,7 +57,7 @@
       <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.help.webapp"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.apache.commons.codec"/>
+      <import plugin="org.apache.commons.commons-codec"/>
       <import plugin="org.eclipse.e4.core.di"/>
       <import plugin="org.eclipse.e4.core.contexts"/>
    </requires>
@@ -245,6 +245,27 @@
          unpack="false"/>
 
    <plugin
+         id="org.jolokia.json"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jolokia.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jolokia.client.java"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.jolokia.client.jmx-adapter"
          download-size="0"
          install-size="0"
@@ -274,13 +295,6 @@
 
    <plugin
          id="org.jolokia.server.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.osgi.service.servlet"
          download-size="0"
          install-size="0"
          version="0.0.0"
