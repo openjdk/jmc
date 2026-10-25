@@ -49,7 +49,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.console.agent.AgentJmxHelper;
 import org.openjdk.jmc.console.agent.AgentPlugin;
-import org.openjdk.jmc.console.agent.editor.sections.EventDetailSection;
 import org.openjdk.jmc.console.agent.editor.sections.EventListSection;
 import org.openjdk.jmc.console.agent.editor.sections.GlobalConfigSection;
 import org.openjdk.jmc.console.agent.manager.model.IEvent;
@@ -181,13 +180,12 @@ public class AgentEditorUi {
 	private void savePreset() {
 		IPreset preset = presetRepository.createPreset();
 		try {
-			// If there is no currently loaded instrumentation there is nothing to save. Check for
-			// events, since newer agents never return an empty document.
+			// Newer agents return a configuration document even without active instrumentation.
 			String probes = helper.retrieveEventProbes();
 			if (probes != null && !probes.isEmpty()) {
 				preset.deserialize(probes);
 			}
-			if (preset.getEvents().length > 0) {
+			if (preset.getEvents().length > 0 || preset.isCollectionTrackingEnabled()) {
 				presetRepository.addPreset(preset);
 				DialogToolkit.openConfirmOnUiThread(Messages.PresetSelectorWizardPage_SAVE_PRESET_TITLE, MessageFormat
 						.format(Messages.PresetSelectorWizardPage_SAVE_PRESET_MESSAGE, preset.getFileName()));

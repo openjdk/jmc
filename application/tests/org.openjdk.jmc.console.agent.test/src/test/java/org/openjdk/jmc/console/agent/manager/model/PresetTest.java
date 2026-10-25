@@ -107,6 +107,41 @@ public class PresetTest {
 	}
 
 	@Test
+	public void testCollectionTrackingDisabledWhenAbsentOrExplicitlyDisabled() throws Exception {
+		IPreset preset = new PresetRepository().createPreset();
+		assertFalse(preset.isCollectionTrackingEnabled());
+		preset.deserialize("<jfragent/>");
+		assertFalse(preset.isCollectionTrackingEnabled());
+		for (String attributes : new String[] {"enabled=\"false\"", "enabled=\"0\"", "enabled=\"  false  \"",
+				"enabled=\"  0  \" minsize=\"1024\""}) {
+			assertFalse(attributes, presetWithTracking(attributes).isCollectionTrackingEnabled());
+		}
+	}
+
+	@Test
+	public void testCollectionTrackingEnabledWithoutProbeEvents() throws Exception {
+		for (String attributes : new String[] {"", "minsize=\"1024\"", "enabled=\"true\"", "enabled=\"1\"",
+				"enabled=\"  true  \"", "enabled=\"  1  \""}) {
+			IPreset preset = presetWithTracking(attributes);
+			assertEquals(0, preset.getEvents().length);
+			assertTrue(attributes, preset.isCollectionTrackingEnabled());
+		}
+	}
+
+	@Test
+	public void testCollectionTrackingEnabledStateSurvivesCopiesAndRoundTrip() throws Exception {
+		IPreset enabled = presetWithTracking("minsize=\"1024\"");
+		assertTrue(roundTrip(enabled).isCollectionTrackingEnabled());
+		assertTrue(enabled.createWorkingCopy().isCollectionTrackingEnabled());
+		assertTrue(enabled.createDuplicate().isCollectionTrackingEnabled());
+
+		IPreset disabled = presetWithTracking("enabled=\"0\"");
+		assertFalse(roundTrip(disabled).isCollectionTrackingEnabled());
+		assertFalse(disabled.createWorkingCopy().isCollectionTrackingEnabled());
+		assertFalse(disabled.createDuplicate().isCollectionTrackingEnabled());
+	}
+
+	@Test
 	public void testLargeMinimumSizeRoundTrip() throws Exception {
 		String minSize = "1000000000000000000000000000000";
 		IPreset preset = presetWithTracking("enabled=\"1\" minsize=\"" + minSize + "\"");

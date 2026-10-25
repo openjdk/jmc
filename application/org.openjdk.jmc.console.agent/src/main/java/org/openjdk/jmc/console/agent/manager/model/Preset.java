@@ -81,6 +81,7 @@ public class Preset implements IPreset {
 	private static final String XML_TAG_ALLOW_TO_STRING = "allowtostring"; // $NON-NLS-1$
 	private static final String XML_TAG_ALLOW_CONVERTER = "allowconverter"; // $NON-NLS-1$
 	private static final String XML_TAG_COLLECTION_TRACKING = "collectiontracking"; // $NON-NLS-1$
+	private static final String XML_ATTRIBUTE_ENABLED = "enabled"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENTS = "events"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENT = "event"; // $NON-NLS-1$
 
@@ -336,6 +337,15 @@ public class Preset implements IPreset {
 	@Override
 	public boolean getAllowConverter() {
 		return allowConverter;
+	}
+
+	@Override
+	public boolean isCollectionTrackingEnabled() {
+		if (collectionTracking == null) {
+			return false;
+		}
+		String enabled = collectionTracking.getAttribute(XML_ATTRIBUTE_ENABLED).trim();
+		return !"false".equals(enabled) && !"0".equals(enabled); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
