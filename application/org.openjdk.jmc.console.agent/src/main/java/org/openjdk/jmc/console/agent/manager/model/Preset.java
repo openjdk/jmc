@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -80,6 +80,7 @@ public class Preset implements IPreset {
 	private static final String XML_TAG_CLASS_PREFIX = "classprefix"; // $NON-NLS-1$
 	private static final String XML_TAG_ALLOW_TO_STRING = "allowtostring"; // $NON-NLS-1$
 	private static final String XML_TAG_ALLOW_CONVERTER = "allowconverter"; // $NON-NLS-1$
+	private static final String XML_TAG_COLLECTION_TRACKING = "collectiontracking"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENTS = "events"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENT = "event"; // $NON-NLS-1$
 
@@ -98,6 +99,7 @@ public class Preset implements IPreset {
 	private String classPrefix;
 	private boolean allowToString;
 	private boolean allowConverter;
+	private Element collectionTracking;
 
 	Preset(PresetRepository repository) {
 		presetRepository = repository;
@@ -196,6 +198,10 @@ public class Preset implements IPreset {
 			}
 		}
 
+		elements = document.getElementsByTagName(XML_TAG_COLLECTION_TRACKING);
+		collectionTracking = elements.getLength() == 0 ? null
+				: (Element) builder.newDocument().importNode(elements.item(0), true);
+
 		elements = document.getElementsByTagName(XML_TAG_EVENTS); // $NON-NLS-1$
 		if (elements.getLength() != 0) {
 			Element eventsElement = (Element) elements.item(0);
@@ -244,6 +250,9 @@ public class Preset implements IPreset {
 		document.appendChild(jfrAgentElement);
 
 		jfrAgentElement.appendChild(buildConfigElement(document));
+		if (collectionTracking != null) {
+			jfrAgentElement.appendChild(document.importNode(collectionTracking, true));
+		}
 
 		Element eventsElement = document.createElement(XML_TAG_EVENTS);
 		for (IEvent event : events) {
@@ -391,6 +400,7 @@ public class Preset implements IPreset {
 		copy.classPrefix = classPrefix;
 		copy.allowToString = allowToString;
 		copy.allowConverter = allowConverter;
+		copy.collectionTracking = collectionTracking == null ? null : (Element) collectionTracking.cloneNode(true);
 
 		copy.events.addAll(events.stream().map(IEvent::createWorkingCopy).collect(Collectors.toList()));
 

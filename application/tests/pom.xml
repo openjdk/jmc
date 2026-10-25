@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -41,6 +41,7 @@
 	<artifactId>missioncontrol.application.tests</artifactId>
 	<packaging>pom</packaging>
 	<modules>
+		<module>org.openjdk.jmc.console.agent.test</module>
 		<module>org.openjdk.jmc.flightrecorder.controlpanel.ui.test</module>
 		<module>org.openjdk.jmc.flightrecorder.ext.jfx.test</module>
 		<module>org.openjdk.jmc.flightrecorder.graphview.test</module>
