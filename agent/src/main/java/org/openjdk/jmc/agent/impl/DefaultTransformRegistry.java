@@ -319,7 +319,9 @@ public class DefaultTransformRegistry implements TransformRegistry {
 		} catch (Throwable t) {
 			// Throwable: a missing jdk.jfr module or inaccessible Unsafe surfaces as an Error and
 			// must not escape into the JMX call.
-			logger.log(Level.SEVERE, "Failed to initialize collection resize tracking; it will not be enabled", t); //$NON-NLS-1$
+			logger.log(Level.SEVERE,
+					"Failed to initialize or retune collection resize tracking; keeping the previous configuration", t); //$NON-NLS-1$
+			return;
 		}
 		if (CollectionResizeEmitter.isInstalled()) {
 			collectionTrackingSettings = CollectionTrackingSettings.enabled(CollectionResizeEmitter.getMinSize());

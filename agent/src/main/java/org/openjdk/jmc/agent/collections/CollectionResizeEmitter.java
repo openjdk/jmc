@@ -81,14 +81,17 @@ public final class CollectionResizeEmitter {
 		if (initialized) {
 			return;
 		}
-		minSize = configuredMinSize;
-
 		FlightRecorder.register(CollectionResizeEvent.class);
 
-		byte[] bridgeBytes = readBridgeBytes();
-		Class<?> bridge = TypeUtils.defineClass(BRIDGE_CLASS_NAME, bridgeBytes, 0, bridgeBytes.length, null, null);
-		if (bridge == null) {
-			throw new IllegalStateException("Failed to define the collection event bridge in the bootstrap loader"); //$NON-NLS-1$
+		Class<?> bridge;
+		try {
+			bridge = Class.forName(BRIDGE_CLASS_NAME, false, null);
+		} catch (ClassNotFoundException e) {
+			byte[] bridgeBytes = readBridgeBytes();
+			bridge = TypeUtils.defineClass(BRIDGE_CLASS_NAME, bridgeBytes, 0, bridgeBytes.length, null, null);
+			if (bridge == null) {
+				throw new IllegalStateException("Failed to define the collection event bridge in the bootstrap loader"); //$NON-NLS-1$
+			}
 		}
 
 		MethodType bridgeType = MethodType.methodType(void.class, Object.class, long.class, Object.class, Object.class);
@@ -99,7 +102,7 @@ public final class CollectionResizeEmitter {
 		install.invoke(null, resizeHandle);
 
 		bridgeSetMinSize = bridge.getMethod("setMinSize", long.class); //$NON-NLS-1$
-		pushMinSizeToBridge(configuredMinSize);
+		setMinSize(configuredMinSize);
 
 		initialized = true;
 	}
@@ -112,7 +115,7 @@ public final class CollectionResizeEmitter {
 	 * @param explicitMinSize
 	 *            the explicitly configured {@code minsize}, or {@code null} if unspecified.
 	 * @throws Exception
-	 *             if the bridge could not be defined or wired up.
+	 *             if the bridge could not be defined, wired up or retuned.
 	 */
 	public static synchronized void installOrRetune(Integer explicitMinSize) throws Exception {
 		if (!initialized) {
@@ -133,21 +136,21 @@ public final class CollectionResizeEmitter {
 	/**
 	 * Retunes the emit threshold on an already-installed emitter (used by the JMX retune path).
 	 * Also updates the bridge-side fast filter.
+	 *
+	 * @param newMinSize
+	 *            the minimum collection size before an event is emitted.
+	 * @throws ReflectiveOperationException
+	 *             if the bridge threshold could not be updated.
+	 * @throws IllegalStateException
+	 *             if the bridge has not been installed.
 	 */
-	public static void setMinSize(int newMinSize) {
-		minSize = newMinSize;
-		pushMinSizeToBridge(newMinSize);
-	}
-
-	private static void pushMinSizeToBridge(long newMinSize) {
+	public static synchronized void setMinSize(int newMinSize) throws ReflectiveOperationException {
 		Method setter = bridgeSetMinSize;
-		if (setter != null) {
-			try {
-				setter.invoke(null, newMinSize);
-			} catch (Exception e) {
-				// The bridge keeps its previous threshold; this emitter still filters correctly.
-			}
+		if (setter == null) {
+			throw new IllegalStateException("The collection event bridge has not been installed"); //$NON-NLS-1$
 		}
+		setter.invoke(null, (long) newMinSize);
+		minSize = newMinSize;
 	}
 
 	/**
