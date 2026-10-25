@@ -40,6 +40,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -142,6 +143,44 @@ public class TestCollectionResizeEmitter {
 	}
 
 	@Test
+	public void testNoGrowthDoesNotRetainReentrancyGuard() throws Exception {
+		ThreadLocal<?> guard = (ThreadLocal<?>) emitterField("IN_EMIT").get(null);
+		guard.remove();
+		try {
+			Path recordingFile = temporaryFolder.newFile("no-growth.jfr").toPath();
+			Object collection = new Object();
+			Object[] backing = new Object[ORIGINAL_MIN_SIZE];
+			Object[] largerBacking = new Object[ORIGINAL_MIN_SIZE * 2];
+			try (Recording recording = new Recording()) {
+				recording.enable(CollectionResizeEvent.class);
+				recording.start();
+				assertTrue("The recording must enable the emitter's JFR path",
+						new CollectionResizeEvent().shouldCommit());
+				CollectionResizeEmitter.onResize(collection, ORIGINAL_MIN_SIZE, backing, backing);
+				assertFalse("The same backing array must not retain the guard", hasThreadLocalEntry(guard));
+				CollectionResizeEmitter.onResize(collection, ORIGINAL_MIN_SIZE, largerBacking, backing);
+				assertFalse("Shrinking must not retain the guard", hasThreadLocalEntry(guard));
+				CollectionResizeEmitter.onResize(collection, ORIGINAL_MIN_SIZE, null, null);
+				assertFalse("Null backing arrays must not retain the guard", hasThreadLocalEntry(guard));
+				CollectionResizeEmitter.onResize(collection, ORIGINAL_MIN_SIZE, backing, largerBacking);
+				assertFalse("Emitting a growth event must remove the guard", hasThreadLocalEntry(guard));
+				recording.stop();
+				recording.dump(recordingFile);
+			}
+			long collectionId = System.identityHashCode(collection) & 0xFFFFFFFFL;
+			List<RecordedEvent> events = RecordingFile.readAllEvents(recordingFile).stream()
+					.filter(event -> "jdk.jmc.CollectionResize".equals(event.getEventType().getName())
+							&& event.getLong("id") == collectionId)
+					.toList();
+			assertEquals(1, events.size());
+			assertEquals(ORIGINAL_MIN_SIZE, events.get(0).getLong("oldCapacity"));
+			assertEquals(ORIGINAL_MIN_SIZE * 2, events.get(0).getLong("newCapacity"));
+		} finally {
+			guard.remove();
+		}
+	}
+
+	@Test
 	public void testSuccessfulRetunesPublishEmitterThresholdAfterBridgeUpdate() throws Exception {
 		CollectionResizeEmitter.installOrRetune(Integer.valueOf(128));
 		assertEquals(ORIGINAL_MIN_SIZE, emitterMinSizeDuringBridgeUpdate);
@@ -210,6 +249,23 @@ public class TestCollectionResizeEmitter {
 		Field field = CollectionResizeEmitter.class.getDeclaredField(name);
 		field.setAccessible(true);
 		return field;
+	}
+
+	private static boolean hasThreadLocalEntry(ThreadLocal<?> key) throws Exception {
+		Field threadLocals = Thread.class.getDeclaredField("threadLocals");
+		threadLocals.setAccessible(true);
+		Object map = threadLocals.get(Thread.currentThread());
+		if (map == null) {
+			return false;
+		}
+		Field table = map.getClass().getDeclaredField("table");
+		table.setAccessible(true);
+		for (Object entry : (Object[]) table.get(map)) {
+			if (entry != null && ((Reference<?>) entry).get() == key) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static TransformRegistry fromXml(String xml) throws Exception {

@@ -172,7 +172,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven.surefire.version}</version>
 				<configuration>
-					<argLine>--add-opens java.base/jdk.internal.misc=ALL-UNNAMED -XX:+FlightRecorder</argLine>
+					<argLine>--add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+					    --add-opens java.base/java.lang=ALL-UNNAMED -XX:+FlightRecorder</argLine>
 					<excludes>
 						<exclude>TestDefineEventProbes.java</exclude>
 						<exclude>TestCustomClassloader.java</exclude>

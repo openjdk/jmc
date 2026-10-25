@@ -179,13 +179,13 @@ public final class CollectionResizeEmitter {
 		if (!event.shouldCommit()) {
 			return;
 		}
-		if (IN_EMIT.get()) {
-			return;
-		}
 		long oldCapacity = capacity(oldArray);
 		long newCapacity = capacity(newArray);
 		if (newCapacity <= oldCapacity) {
 			// Not an actual growth (e.g. HashMap.resize() returns the same table at MAXIMUM_CAPACITY).
+			return;
+		}
+		if (IN_EMIT.get()) {
 			return;
 		}
 		IN_EMIT.set(Boolean.TRUE);
