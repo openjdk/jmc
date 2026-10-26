@@ -226,6 +226,7 @@ usage: call ./build.sh with the following options:
    --test        to run the tests
    --testUi      to run the tests including UI tests
    --packageJmc  to package JMC
+   --startP2     to build and start the third-party p2 server (Ctrl-C to stop)
    --clean       to run maven clean
 ```
 
@@ -252,6 +253,8 @@ Or, if on Windows:
 ```bash
 mvn p2:site --file releng\third-party\pom.xml && mvn jetty:run --file releng\third-party\pom.xml
 ```
+
+Alternatively, use the build script to do the same thing: `./build.sh --startP2` on Mac / Linux, or `build.bat --startP2` on Windows.
 
 Then in another terminal (in the project root):
 

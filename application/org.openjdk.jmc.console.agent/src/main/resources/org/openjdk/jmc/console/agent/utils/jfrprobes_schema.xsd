@@ -10,7 +10,45 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element type="eventsType" name="events" minOccurs="0" />
+			<xs:element type="collectionTrackingType" name="collectiontracking" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Controls the collection resize tracking
+						capability, which emits JFR events when the backing
+						array of common collection classes (such as HashMap
+						and ArrayList) is resized. The element with enabled
+						absent or "true" enables the capability; with
+						enabled="false" it disables (unweaves) it. Omitting
+						the element leaves the capability unchanged, so
+						configurations from clients unaware of it do not
+						toggle it.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
+	</xs:complexType>
+
+	<xs:complexType name="collectionTrackingType">
+		<xs:attribute type="xs:boolean" name="enabled" use="optional">
+			<xs:annotation>
+				<xs:documentation>Whether collection resize tracking is
+					enabled. Defaults to true; set to false to explicitly
+					disable (unweave) the capability.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute type="xs:nonNegativeInteger" name="minsize" use="optional">
+			<xs:annotation>
+				<xs:documentation>The minimum collection size (entry count) that
+					must be reached
+					before a resize event is emitted. Used to suppress
+					the noise from small
+					collections resizing early in their life.
+					Defaults to 128 if omitted; when omitted while the
+					capability is already enabled, the live threshold is
+					kept.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="configType">

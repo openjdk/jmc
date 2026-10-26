@@ -29,6 +29,7 @@ echo 	--testUi	to run the tests including UI tests
 echo 	--installCore to install JMC core
 echo 	--packageJmc	to package JMC
 echo 	--packageAgent to package Agent
+echo 	--startP2 to build and start the third-party p2 server (Ctrl-C to stop)
 echo 	--runAgentExample to run Agent 'InstrumentMe' example, once it is packaged
 echo 	--runAgentConverterExample to run Agent 'InstrumentMeConverter' example, once it is packaged
 echo 	--clean	to run maven clean
@@ -43,12 +44,27 @@ if "%1" == "--testUi" goto testUi
 if "%1" == "--installCore" goto installCore
 if "%1" == "--packageJmc" goto packageJmc
 if "%1" == "--packageAgent" goto packageAgent
+if "%1" == "--startP2" goto startP2
 if "%1" == "--runAgentExample" goto runAgentExample
 if "%1" == "--runAgentConverterExample" goto runAgentConverterExample
 if "%1" == "--clean" goto clean
 if "%1" == "--run" goto run
 echo unknown argument %1
 goto print_usage
+
+:startP2
+for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)
+set TIMESTAMP=%LOCALDATETIME:~0,14%
+set P2_SITE_LOG=%cd%\build_%TIMESTAMP%.1.p2_site.log
+echo %time% building p2:site - logging output to %P2_SITE_LOG%
+call mvn -f releng\third-party\pom.xml p2:site --log-file "%P2_SITE_LOG%"
+if not %ERRORLEVEL% == 0 (
+	echo p2:site build failed!
+	exit /B 1
+)
+echo %time% starting p2 server - press Ctrl-C to stop
+call mvn -f releng\third-party\pom.xml jetty:run
+goto end
 
 :startJetty
 for /f "skip=1" %%A in ('wmic os get localdatetime ^| findstr .') do (set LOCALDATETIME=%%A)

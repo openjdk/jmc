@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -73,6 +73,9 @@ public class AgentController implements AgentControllerMXBean {
 				logger.severe("Failed to identify transformations: " + xmlDescription);
 				throw e;
 			}
+			// Also retransform (unweave) the classes whose transforms were removed by the modify,
+			// but not those whose transforms are unchanged.
+			initialClasses.removeAll(registry.getClassNames());
 			modifiedClasses.addAll(initialClasses);
 			classesToRetransformArray = retransformClasses(modifiedClasses);
 		}
@@ -102,7 +105,11 @@ public class AgentController implements AgentControllerMXBean {
 
 		List<JFRTransformDescriptor> jfrTds = new ArrayList<>();
 		for (TransformDescriptor td : tds) {
-			jfrTds.add((JFRTransformDescriptor) td);
+			// The registry may also hold non-JFR descriptors (e.g. collection resize tracking); this
+			// MBean operation only reports JFR event probes.
+			if (td instanceof JFRTransformDescriptor) {
+				jfrTds.add((JFRTransformDescriptor) td);
+			}
 		}
 		return (jfrTds.toArray(new JFRTransformDescriptor[0]));
 	}

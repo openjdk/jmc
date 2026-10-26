@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,8 +38,13 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 
 public interface IPreset {
+
+	enum CollectionTrackingMode {
+		UNCHANGED, ENABLED, DISABLED
+	}
 
 	String getFileName();
 
@@ -56,6 +61,16 @@ public interface IPreset {
 	void setAllowConverter(boolean allowed);
 
 	boolean getAllowConverter();
+
+	boolean isCollectionTrackingEnabled();
+
+	CollectionTrackingMode getCollectionTrackingMode();
+
+	void setCollectionTrackingMode(CollectionTrackingMode mode);
+
+	BigInteger getCollectionTrackingMinSize();
+
+	void setCollectionTrackingMinSize(BigInteger minSize);
 
 	IEvent[] getEvents();
 
