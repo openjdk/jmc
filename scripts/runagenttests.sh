@@ -1,5 +1,6 @@
-#!/bin/sh -l
+#!/bin/sh
 set -e
+mvn -v
 
 echo "======== Building and testing agent ========="
 cd agent

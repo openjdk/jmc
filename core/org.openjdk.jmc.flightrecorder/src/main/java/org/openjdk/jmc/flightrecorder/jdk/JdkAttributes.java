@@ -45,11 +45,11 @@ import static org.openjdk.jmc.common.unit.UnitLookup.NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.OLD_OBJECT;
 import static org.openjdk.jmc.common.unit.UnitLookup.PERCENTAGE;
 import static org.openjdk.jmc.common.unit.UnitLookup.PLAIN_TEXT;
+import static org.openjdk.jmc.common.unit.UnitLookup.RAW_NUMBER;
 import static org.openjdk.jmc.common.unit.UnitLookup.THREAD;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESPAN;
 import static org.openjdk.jmc.common.unit.UnitLookup.TIMESTAMP;
 import static org.openjdk.jmc.common.unit.UnitLookup.UNKNOWN;
-import static org.openjdk.jmc.common.unit.UnitLookup.RAW_NUMBER;
 
 import java.util.ArrayList;
 import java.util.List;
