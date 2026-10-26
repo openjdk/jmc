@@ -37,10 +37,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,6 +84,7 @@ public class Preset implements IPreset {
 	private static final String XML_TAG_ALLOW_CONVERTER = "allowconverter"; // $NON-NLS-1$
 	private static final String XML_TAG_COLLECTION_TRACKING = "collectiontracking"; // $NON-NLS-1$
 	private static final String XML_ATTRIBUTE_ENABLED = "enabled"; // $NON-NLS-1$
+	private static final String XML_ATTRIBUTE_MIN_SIZE = "minsize"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENTS = "events"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENT = "event"; // $NON-NLS-1$
 
@@ -231,21 +234,22 @@ public class Preset implements IPreset {
 		return element;
 	}
 
-	@Override
-	public Document buildDocument() {
+	private static Document newDocument() {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
 		try {
 			factory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
 			factory.setXIncludeAware(false);
 			factory.setExpandEntityReferences(false);
-			builder = factory.newDocumentBuilder();
+			return factory.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
 			// This should not happen anyway
 			throw new RuntimeException(e);
 		}
+	}
 
-		Document document = builder.newDocument();
+	@Override
+	public Document buildDocument() {
+		Document document = newDocument();
 
 		Element jfrAgentElement = document.createElement(XML_TAG_JFR_AGENT);
 		document.appendChild(jfrAgentElement);
@@ -341,11 +345,57 @@ public class Preset implements IPreset {
 
 	@Override
 	public boolean isCollectionTrackingEnabled() {
+		return getCollectionTrackingMode() == CollectionTrackingMode.ENABLED;
+	}
+
+	@Override
+	public CollectionTrackingMode getCollectionTrackingMode() {
 		if (collectionTracking == null) {
-			return false;
+			return CollectionTrackingMode.UNCHANGED;
 		}
 		String enabled = collectionTracking.getAttribute(XML_ATTRIBUTE_ENABLED).trim();
-		return !"false".equals(enabled) && !"0".equals(enabled); //$NON-NLS-1$ //$NON-NLS-2$
+		return "false".equals(enabled) || "0".equals(enabled) ? CollectionTrackingMode.DISABLED //$NON-NLS-1$ //$NON-NLS-2$
+				: CollectionTrackingMode.ENABLED;
+	}
+
+	@Override
+	public void setCollectionTrackingMode(CollectionTrackingMode mode) {
+		Objects.requireNonNull(mode);
+		if (mode == CollectionTrackingMode.UNCHANGED) {
+			collectionTracking = null;
+		} else {
+			getOrCreateCollectionTracking().setAttribute(XML_ATTRIBUTE_ENABLED,
+					Boolean.toString(mode == CollectionTrackingMode.ENABLED));
+		}
+	}
+
+	@Override
+	public BigInteger getCollectionTrackingMinSize() {
+		if (collectionTracking == null || !collectionTracking.hasAttribute(XML_ATTRIBUTE_MIN_SIZE)) {
+			return null;
+		}
+		return new BigInteger(collectionTracking.getAttribute(XML_ATTRIBUTE_MIN_SIZE).trim());
+	}
+
+	@Override
+	public void setCollectionTrackingMinSize(BigInteger minSize) {
+		if (minSize == null) {
+			if (collectionTracking != null) {
+				collectionTracking.removeAttribute(XML_ATTRIBUTE_MIN_SIZE);
+			}
+		} else {
+			if (minSize.signum() < 0) {
+				throw new IllegalArgumentException(Messages.Preset_ERROR_COLLECTION_TRACKING_MIN_SIZE);
+			}
+			getOrCreateCollectionTracking().setAttribute(XML_ATTRIBUTE_MIN_SIZE, minSize.toString());
+		}
+	}
+
+	private Element getOrCreateCollectionTracking() {
+		if (collectionTracking == null) {
+			collectionTracking = newDocument().createElement(XML_TAG_COLLECTION_TRACKING);
+		}
+		return collectionTracking;
 	}
 
 	@Override

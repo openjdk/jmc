@@ -35,12 +35,15 @@ package org.openjdk.jmc.console.agent.manager.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -49,6 +52,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.openjdk.jmc.console.agent.manager.model.IPreset.CollectionTrackingMode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -139,6 +143,92 @@ public class PresetTest {
 		assertFalse(roundTrip(disabled).isCollectionTrackingEnabled());
 		assertFalse(disabled.createWorkingCopy().isCollectionTrackingEnabled());
 		assertFalse(disabled.createDuplicate().isCollectionTrackingEnabled());
+	}
+
+	@Test
+	public void testCollectionTrackingStateCanBeEnabledDisabledOrUnchanged() throws Exception {
+		IPreset preset = new PresetRepository().createPreset();
+		assertEquals(CollectionTrackingMode.UNCHANGED, preset.getCollectionTrackingMode());
+		preset.setCollectionTrackingMode(CollectionTrackingMode.ENABLED);
+		assertEquals(CollectionTrackingMode.ENABLED, preset.getCollectionTrackingMode());
+		assertTracking(preset.serialize(), "true", null);
+		preset.setCollectionTrackingMinSize(BigInteger.valueOf(512));
+		preset.setCollectionTrackingMode(CollectionTrackingMode.DISABLED);
+		assertEquals(CollectionTrackingMode.DISABLED, preset.getCollectionTrackingMode());
+		assertTracking(preset.serialize(), "false", "512");
+		preset.setCollectionTrackingMode(CollectionTrackingMode.ENABLED);
+		assertTracking(preset.serialize(), "true", "512");
+		preset.setCollectionTrackingMode(CollectionTrackingMode.UNCHANGED);
+		assertEquals(CollectionTrackingMode.UNCHANGED, preset.getCollectionTrackingMode());
+		assertNull(preset.getCollectionTrackingMinSize());
+		assertFalse(preset.isCollectionTrackingEnabled());
+		assertFalse(roundTrip(preset).serialize().contains("collectiontracking"));
+	}
+
+	@Test
+	public void testMinimumSizeCanCreateTrackingAndBeCleared() throws Exception {
+		IPreset preset = new PresetRepository().createPreset();
+		preset.setCollectionTrackingMinSize(null);
+		assertEquals(CollectionTrackingMode.UNCHANGED, preset.getCollectionTrackingMode());
+		assertNull(preset.getCollectionTrackingMinSize());
+		preset.setCollectionTrackingMinSize(BigInteger.ZERO);
+		assertEquals(CollectionTrackingMode.ENABLED, preset.getCollectionTrackingMode());
+		assertEquals(BigInteger.ZERO, preset.getCollectionTrackingMinSize());
+		assertTracking(preset.serialize(), null, "0");
+		BigInteger largeMinSize = new BigInteger("1000000000000000000000000000000");
+		preset.setCollectionTrackingMinSize(largeMinSize);
+		assertEquals(largeMinSize, preset.getCollectionTrackingMinSize());
+		assertTracking(preset.serialize(), null, largeMinSize.toString());
+		preset.setCollectionTrackingMinSize(null);
+		assertNull(preset.getCollectionTrackingMinSize());
+		assertTracking(preset.serialize(), null, null);
+		preset.setCollectionTrackingMode(CollectionTrackingMode.DISABLED);
+		preset.setCollectionTrackingMinSize(BigInteger.valueOf(128));
+		assertTracking(preset.serialize(), "false", "128");
+		preset.setCollectionTrackingMinSize(null);
+		assertTracking(preset.serialize(), "false", null);
+	}
+
+	@Test
+	public void testNegativeMinimumSizeLeavesStateUnchanged() throws Exception {
+		IPreset preset = presetWithTracking("enabled=\"0\" minsize=\"512\"");
+		String before = preset.serialize();
+		assertThrows(IllegalArgumentException.class, () -> preset.setCollectionTrackingMinSize(BigInteger.valueOf(-1)));
+		assertEquals(before, preset.serialize());
+		IPreset absent = new PresetRepository().createPreset();
+		assertThrows(IllegalArgumentException.class, () -> absent.setCollectionTrackingMinSize(BigInteger.valueOf(-1)));
+		assertEquals(CollectionTrackingMode.UNCHANGED, absent.getCollectionTrackingMode());
+		assertNull(absent.getCollectionTrackingMinSize());
+	}
+
+	@Test
+	public void testCollectionTrackingEditsSurviveCopiesAndRoundTrip() throws Exception {
+		IPreset preset = new PresetRepository().createPreset();
+		BigInteger minSize = new BigInteger("1000000000000000000000000000000");
+		preset.setCollectionTrackingMode(CollectionTrackingMode.DISABLED);
+		preset.setCollectionTrackingMinSize(minSize);
+		IPreset workingCopy = preset.createWorkingCopy();
+		for (IPreset restored : new IPreset[] {workingCopy, preset.createDuplicate(), roundTrip(preset)}) {
+			assertEquals(CollectionTrackingMode.DISABLED, restored.getCollectionTrackingMode());
+			assertEquals(minSize, restored.getCollectionTrackingMinSize());
+			assertTracking(restored.serialize(), "false", minSize.toString());
+		}
+		workingCopy.setCollectionTrackingMode(CollectionTrackingMode.ENABLED);
+		workingCopy.setCollectionTrackingMinSize(BigInteger.ZERO);
+		assertTracking(roundTrip(workingCopy).serialize(), "true", "0");
+		assertTracking(preset.serialize(), "false", minSize.toString());
+	}
+
+	@Test
+	public void testReadingSettingsPreservesImportedAttributeValues() throws Exception {
+		IPreset preset = presetWithTracking("enabled=\"  1  \" minsize=\" +000512 \"");
+		assertEquals(CollectionTrackingMode.ENABLED, preset.getCollectionTrackingMode());
+		assertEquals(BigInteger.valueOf(512), preset.getCollectionTrackingMinSize());
+		assertTracking(preset.serialize(), "  1  ", " +000512 ");
+		preset.setCollectionTrackingMode(CollectionTrackingMode.DISABLED);
+		assertTracking(preset.serialize(), "false", " +000512 ");
+		preset.setCollectionTrackingMinSize(BigInteger.valueOf(512));
+		assertTracking(preset.serialize(), "false", "512");
 	}
 
 	@Test

@@ -38,8 +38,13 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 
 public interface IPreset {
+
+	enum CollectionTrackingMode {
+		UNCHANGED, ENABLED, DISABLED
+	}
 
 	String getFileName();
 
@@ -58,6 +63,14 @@ public interface IPreset {
 	boolean getAllowConverter();
 
 	boolean isCollectionTrackingEnabled();
+
+	CollectionTrackingMode getCollectionTrackingMode();
+
+	void setCollectionTrackingMode(CollectionTrackingMode mode);
+
+	BigInteger getCollectionTrackingMinSize();
+
+	void setCollectionTrackingMinSize(BigInteger minSize);
 
 	IEvent[] getEvents();
 

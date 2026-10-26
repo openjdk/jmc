@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.console.agent.AgentJmxHelper;
 import org.openjdk.jmc.console.agent.AgentPlugin;
+import org.openjdk.jmc.console.agent.editor.sections.EventDetailSection;
 import org.openjdk.jmc.console.agent.editor.sections.EventListSection;
 import org.openjdk.jmc.console.agent.editor.sections.GlobalConfigSection;
 import org.openjdk.jmc.console.agent.manager.model.IEvent;
