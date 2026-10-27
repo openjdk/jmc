@@ -11,6 +11,7 @@
     - `org.openjdk.jmc.testlib` - Test utilities
   - `application/` - Eclipse RCP UI components (Java 21)
   - `agent/` - JFR Agent for bytecode instrumentation
+  - `mcp/` - MCP server exposing JFR analysis as tools for LLM clients (Quarkus, GraalVM native image)
 
 ## Build & Test
 - `./build.sh --installCore` - Install core libraries
@@ -19,6 +20,10 @@
 - `./build.sh --testUi` - Run UI tests
 - `mvn verify -Dtest.includes=**/*TestName*` - Run specific tests
 - `mvn verify -Dspotbugs.skip=true` - Skip SpotBugs during verification
+
+`agent/` and `mcp/` are standalone Maven projects, not part of the root reactor. Build them from
+their own directory, after `./build.sh --installCore` has published the core libraries locally.
+For `mcp/`, `mvn package -Dnative` builds the GraalVM native image; see `mcp/README.md`.
 
 ### Build Scripts
 - `scripts/runcoretests.sh` - Run core library tests
