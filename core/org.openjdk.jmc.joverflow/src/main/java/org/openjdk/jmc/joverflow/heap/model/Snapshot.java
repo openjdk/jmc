@@ -57,6 +57,12 @@ public class Snapshot {
 	public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
 	/**
+	 * Returned by {@link #getGlobalObjectIndexForId(long)} when there is no object with the given
+	 * id. Note that this value is never a valid global object index.
+	 */
+	public static final int NO_GLOBAL_OBJECT_INDEX = Integer.MIN_VALUE;
+
+	/**
 	 * Size of object pointers used in this heap dump. May be different from the actual pointer size
 	 * in memory of the JVM that generated this heap dump, because of narrow references in 64-bit
 	 * mode. That is, for the 64-bit JVM hprofPointerSize is always 8, but in the real JVM the
@@ -219,6 +225,30 @@ public class Snapshot {
 		} else {
 			return classes[-globalIndex];
 		}
+	}
+
+	/**
+	 * Returns the global object index for an ID, or {@link #NO_GLOBAL_OBJECT_INDEX} if absent. Does
+	 * not allocate heap objects.
+	 */
+	public int getGlobalObjectIndexForId(long id) {
+		if (id == 0) {
+			return NO_GLOBAL_OBJECT_INDEX;
+		}
+		int objPosInTable = objIdToPosInObjectTable.get(id);
+		if (objPosInTable >= 0) {
+			return objPosInTable;
+		}
+		JavaClass clazz = classIdToJavaClass.get(id);
+		return clazz != null ? clazz.getGlobalObjectIndex() : NO_GLOBAL_OBJECT_INDEX;
+	}
+
+	/**
+	 * Instance and array indices satisfy {@code 0 < index < getGlobalObjectIndexBound()}. Class
+	 * indices range from {@code 1 - getNumClasses()} through 0.
+	 */
+	public int getGlobalObjectIndexBound() {
+		return objectTable.getLastObjEndPos();
 	}
 
 	public JavaClass getClassForName(String name) {

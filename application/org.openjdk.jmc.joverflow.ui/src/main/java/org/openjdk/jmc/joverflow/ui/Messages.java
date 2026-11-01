@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,6 +38,27 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.openjdk.jmc.joverflow.ui.messages"; //$NON-NLS-1$
 
+	public static String DominatorTreeItem_MORE_OBJECTS;
+	public static String DominatorTreeItem_UNREACHABLE_OBJECTS;
+	public static String DominatorTreePage_CALCULATE;
+	public static String DominatorTreePage_CANCEL;
+	public static String DominatorTreePage_DESCRIPTION;
+	public static String DominatorTreePage_FAILED_TITLE;
+	public static String DominatorTreePage_JOB_NAME;
+	public static String DominatorTreePage_OUT_OF_MEMORY;
+	public static String DominatorTreePage_PHASE_BUILDING_GRAPH;
+	public static String DominatorTreePage_PHASE_COMPUTING_DOMINATORS;
+	public static String DominatorTreePage_PHASE_COMPUTING_RETAINED_SIZES;
+	public static String DominatorTreePage_PHASE_SCANNING_HEAP;
+	public static String DominatorTreePage_PROGRESS;
+	public static String DominatorTreePage_SUMMARY;
+	public static String DominatorTreePage_WAITING_FOR_MODEL;
+	public static String DominatorTreePageBookView_NO_JOVERFLOW_EDITOR_SELECTED;
+	public static String DominatorTreeViewer_BYTES_TOOLTIP;
+	public static String DominatorTreeViewer_COLUMN_OBJECT;
+	public static String DominatorTreeViewer_COLUMN_RETAINED_PERCENTAGE;
+	public static String DominatorTreeViewer_COLUMN_RETAINED_SIZE;
+	public static String DominatorTreeViewer_COLUMN_SHALLOW_SIZE;
 	public static String TreemapAction_ZOOM_IN_DESCRIPTION;
 	public static String TreemapAction_ZOOM_OUT_DESCRIPTION;
 	public static String TreemapAction_ZOOM_RESET_DESCRIPTION;

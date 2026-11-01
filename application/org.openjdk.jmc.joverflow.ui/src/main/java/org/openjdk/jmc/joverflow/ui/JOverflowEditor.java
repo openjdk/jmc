@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -57,6 +57,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 
 import org.openjdk.jmc.flightrecorder.ui.FlightRecorderUI;
+import org.openjdk.jmc.joverflow.dominator.DominatorTree;
 import org.openjdk.jmc.joverflow.heap.model.Snapshot;
 import org.openjdk.jmc.joverflow.ui.model.ModelLoader;
 import org.openjdk.jmc.joverflow.ui.model.ModelLoaderListener;
@@ -74,8 +75,10 @@ public class JOverflowEditor extends EditorPart {
 	private JOverflowUi mJOverflowUi;
 
 	private ModelLoader mLoader;
+	private String mInputPath;
 	private Snapshot mSnapshot;
 	private Collection<ReferenceChain> mModel;
+	private DominatorTree mDominatorTree;
 	private Future<?> mBackground;
 
 	private final List<UiLoadedListener> mUiLoadedListeners = new ArrayList<>();
@@ -114,10 +117,12 @@ public class JOverflowEditor extends EditorPart {
 			mSnapshot.discard();
 			mSnapshot = null;
 		}
+		mDominatorTree = null;
 
 		setPartName(input.getName());
 
 		String inputPath = input.getPath().toOSString();
+		mInputPath = inputPath;
 		mLoader = new ModelLoader(inputPath, new ModelLoaderListener() {
 			private double worked = 0; // the amount of work already done
 
@@ -230,6 +235,7 @@ public class JOverflowEditor extends EditorPart {
 		if (mSnapshot != null) {
 			mSnapshot.discard();
 		}
+		mDominatorTree = null;
 	}
 
 	@Override
@@ -273,6 +279,23 @@ public class JOverflowEditor extends EditorPart {
 
 	Snapshot getSnapshot() {
 		return mSnapshot;
+	}
+
+	String getInputPath() {
+		return mInputPath;
+	}
+
+	/**
+	 * Returns the cached tree, or null before calculation.
+	 */
+	DominatorTree getDominatorTree() {
+		return mDominatorTree;
+	}
+
+	void setDominatorTree(DominatorTree dominatorTree) {
+		if (dominatorTree == null || dominatorTree.getSnapshot() == mSnapshot) {
+			mDominatorTree = dominatorTree;
+		}
 	}
 
 	void addUiLoadedListener(UiLoadedListener listener) {

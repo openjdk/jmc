@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--   
-   Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
-   
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
    
    The contents of this file are subject to the terms of either the Universal Permissive License 
@@ -67,7 +67,19 @@
                 restorable="true">
       </view>
    </extension>
- 
+ <extension point="org.eclipse.ui.views">
+     <category name="JOverflow" id="JOverflow"/>
+      <view
+                allowMultiple="false"
+                category="JOverflow"
+                class="org.openjdk.jmc.joverflow.ui.DominatorTreePageBookView"
+                id="org.openjdk.jmc.joverflow.ui.DominatorTreePageBookView"
+                icon="icons/dominator_tree.png"
+                name="JOverflow Dominator Tree"
+                restorable="true">
+      </view>
+   </extension>
+
  <extension point="org.eclipse.ui.editors">
       <editor
             class="org.openjdk.jmc.joverflow.ui.JOverflowEditor"
