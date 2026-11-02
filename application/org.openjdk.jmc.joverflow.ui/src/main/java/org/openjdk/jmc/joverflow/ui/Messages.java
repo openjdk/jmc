@@ -59,6 +59,12 @@ public class Messages extends NLS {
 	public static String DominatorTreeViewer_COLUMN_RETAINED_PERCENTAGE;
 	public static String DominatorTreeViewer_COLUMN_RETAINED_SIZE;
 	public static String DominatorTreeViewer_COLUMN_SHALLOW_SIZE;
+	public static String JOverflowEditor_MODE_SPACE_HUNTING;
+	public static String JOverflowEditor_MODE_SPACE_HUNTING_TOOLTIP;
+	public static String JOverflowEditor_MODE_DOMINATOR_TREE;
+	public static String JOverflowEditor_MODE_DOMINATOR_TREE_TOOLTIP;
+	public static String JOverflowEditor_RESET;
+	public static String JOverflowEditor_RESET_TOOLTIP;
 	public static String TreemapAction_ZOOM_IN_DESCRIPTION;
 	public static String TreemapAction_ZOOM_OUT_DESCRIPTION;
 	public static String TreemapAction_ZOOM_RESET_DESCRIPTION;

@@ -635,6 +635,7 @@ public class Snapshot {
 			JavaObjectTable objectTable = objTableBuilder.buildJavaObjectTable(classes);
 			resolveSuperclasses(classes);
 			recheckPointerSize(objectTable, readBuf);
+			recalculateInstanceSizes(classes);
 			roots.sort(null); // More interesting roots will be scanned first
 
 			Snapshot snapshot = new Snapshot(hprofPointerSize, pointerSize, objHeaderSize, objAlignment,
@@ -813,6 +814,24 @@ public class Snapshot {
 		private void resolveSuperclasses(JavaClass[] classes) {
 			for (JavaClass clazz : classes) {
 				clazz.resolveSuperclass((LongToObjectMap<JavaClass>) (LongToObjectMap<?>) classIdToJavaClass);
+			}
+		}
+
+		private void recalculateInstanceSizes(JavaClass[] classes) {
+			for (JavaClass clazz : classes) {
+				if (clazz.isArray()) {
+					continue;
+				}
+				int fieldsSizeInFile = 0;
+				int fieldsSizeInMemory = 0;
+				for (JavaField field : clazz.getFieldsForInstance()) {
+					fieldsSizeInFile += field.isReference() ? hprofPointerSize : field.getSizeInInstance();
+					fieldsSizeInMemory += field.isReference() ? pointerSize : field.getSizeInInstance();
+				}
+				// Preserve estimates for incomplete class descriptions.
+				if (fieldsSizeInFile == clazz.getFieldsSizeInFile()) {
+					clazz.updateInstanceSize(getInMemoryInstanceSize(fieldsSizeInMemory));
+				}
 			}
 		}
 

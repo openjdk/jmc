@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -65,18 +66,24 @@ public class DominatorTreeItem {
 	private final HeapObjectReader reader;
 	private final int node;
 	private final int hiddenChildren;
+	private final DominatorTreeItem parent;
 	private String label;
+	private int nameLength;
+	private int referencePrefixLength;
+	private Map<Integer, String> referenceNames;
 	private List<DominatorTreeItem> children;
 
 	public DominatorTreeItem(DominatorTree tree, int node, HeapObjectReader reader) {
-		this(tree, node, reader, 0);
+		this(tree, node, reader, 0, null);
 	}
 
-	private DominatorTreeItem(DominatorTree tree, int node, HeapObjectReader reader, int hiddenChildren) {
+	private DominatorTreeItem(DominatorTree tree, int node, HeapObjectReader reader, int hiddenChildren,
+			DominatorTreeItem parent) {
 		this.tree = tree;
 		this.reader = reader;
 		this.node = node;
 		this.hiddenChildren = hiddenChildren;
+		this.parent = parent;
 	}
 
 	public DominatorTree getTree() {
@@ -100,8 +107,26 @@ public class DominatorTreeItem {
 			if (label.length() > MAX_LABEL_LENGTH) {
 				label = label.substring(0, MAX_LABEL_LENGTH - 1) + '\u2026';
 			}
+			nameLength = Math.min(nameLength, label.length());
+			referencePrefixLength = Math.min(referencePrefixLength, nameLength);
 		}
 		return label;
+	}
+
+	/**
+	 * Returns the end of the object name, before address and preview details.
+	 */
+	public int getNameLength() {
+		getLabel();
+		return nameLength;
+	}
+
+	/**
+	 * Returns the length of a verified direct field or array index prefix, or zero.
+	 */
+	public int getReferencePrefixLength() {
+		getLabel();
+		return referencePrefixLength;
 	}
 
 	/**
@@ -145,10 +170,10 @@ public class DominatorTreeItem {
 		int shown = Math.min(count, MAX_CHILDREN);
 		List<DominatorTreeItem> result = new ArrayList<>(shown + 1);
 		for (int i = 0; i < shown; i++) {
-			result.add(new DominatorTreeItem(tree, tree.getChild(node, i), reader));
+			result.add(new DominatorTreeItem(tree, tree.getChild(node, i), reader, 0, this));
 		}
 		if (count > shown) {
-			result.add(new DominatorTreeItem(tree, DominatorTree.NO_NODE, reader, count - shown));
+			result.add(new DominatorTreeItem(tree, DominatorTree.NO_NODE, reader, count - shown, this));
 		}
 		return result;
 	}
@@ -159,28 +184,54 @@ public class DominatorTreeItem {
 					String.format("%,d", MAX_CHILDREN)); //$NON-NLS-1$
 		}
 		if (node == tree.getUnreachableObjectsNode()) {
+			nameLength = Messages.DominatorTreeItem_UNREACHABLE_OBJECTS.length();
 			return Messages.DominatorTreeItem_UNREACHABLE_OBJECTS;
 		}
 		JavaHeapObject obj = tree.getObject(node);
+		String description;
 		try {
-			return describe(obj);
+			description = describe(obj);
 		} catch (IOException | RuntimeException e) {
 			// Corrupt dumps may prevent reading object contents.
-			return obj instanceof JavaClass ? "class " + ((JavaClass) obj).getName() //$NON-NLS-1$
+			description = obj instanceof JavaClass ? "class " + ((JavaClass) obj).getName() //$NON-NLS-1$
 					: obj.getClazz().getHumanFriendlyName();
+			nameLength = description.length();
 		}
+		String prefix = parent == null ? null : parent.getReferenceNames().get(obj.getGlobalObjectIndex());
+		if (prefix != null) {
+			referencePrefixLength = prefix.length();
+			nameLength += prefix.length() + 1;
+			return prefix + ' ' + description;
+		}
+		return description;
+	}
+
+	private Map<Integer, String> getReferenceNames() {
+		if (referenceNames == null) {
+			referenceNames = Collections.emptyMap();
+			if (!isPlaceholder() && !tree.isSyntheticNode(node)) {
+				try {
+					referenceNames = reader.readReferenceNames(tree.getObject(node));
+				} catch (IOException | RuntimeException e) {
+					// A missing direct reference label does not prevent displaying the object.
+				}
+			}
+		}
+		return referenceNames;
 	}
 
 	private String describe(JavaHeapObject obj) throws IOException {
 		if (obj instanceof JavaClass) {
 			JavaClass clazz = (JavaClass) obj;
 			String name = "class " + clazz.getName(); //$NON-NLS-1$
+			nameLength = name.length();
+			StringBuilder details = new StringBuilder(name).append(" @ ").append(MiscUtils.toHex(reader.readId(clazz))); //$NON-NLS-1$
 			if (clazz.hasMultipleVersions()) {
 				JavaThing loader = clazz.getLoader();
-				name += " loader " + (loader instanceof JavaHeapObject //$NON-NLS-1$
+				details.append(" loader ").append(loader instanceof JavaHeapObject //$NON-NLS-1$
 						? MiscUtils.toHex(reader.readId((JavaHeapObject) loader)) : "null"); //$NON-NLS-1$
 			}
-			return name;
+			return details.toString();
 		}
 		JavaClass clazz = obj.getClazz();
 		String name = clazz.getHumanFriendlyName();
@@ -189,7 +240,8 @@ public class DominatorTreeItem {
 		} else if (obj instanceof JavaValueArray) {
 			name = insertLength(name, ((JavaValueArray) obj).getLength());
 		}
-		StringBuilder sb = new StringBuilder(name).append('@').append(MiscUtils.toHex(reader.readId(obj)));
+		nameLength = name.length();
+		StringBuilder sb = new StringBuilder(name).append(" @ ").append(MiscUtils.toHex(reader.readId(obj))); //$NON-NLS-1$
 		if (clazz.isString() && obj instanceof JavaObject) {
 			String value = reader.readString((JavaObject) obj, MAX_STRING_PREVIEW_LENGTH);
 			sb.append(' ').append(value == null ? "null" : MiscUtils.removeEndLinesAndAddQuotes(value, 0)); //$NON-NLS-1$

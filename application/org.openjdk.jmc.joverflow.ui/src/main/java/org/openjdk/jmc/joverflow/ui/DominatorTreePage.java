@@ -33,12 +33,6 @@
  */
 package org.openjdk.jmc.joverflow.ui;
 
-import java.io.IOException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -56,24 +50,19 @@ import org.openjdk.jmc.common.IDisplayable;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.joverflow.dominator.DominatorTree;
 import org.openjdk.jmc.joverflow.dominator.DominatorTreeBuilder;
-import org.openjdk.jmc.joverflow.heap.model.Snapshot;
-import org.openjdk.jmc.joverflow.heap.parser.HprofParsingCancelledException;
 import org.openjdk.jmc.joverflow.heap.parser.ReadBuffer;
 import org.openjdk.jmc.joverflow.ui.viewers.DominatorTreeViewer;
-import org.openjdk.jmc.ui.misc.DialogToolkit;
-import org.openjdk.jmc.ui.misc.DisplayToolkit;
 
 /**
- * Computes trees on request; the editor caches results across view reopenings.
+ * Displays the editor's shared dominator calculation and cached tree.
  */
 public class DominatorTreePage extends Page {
 	private static final int PROGRESS_UPDATE_INTERVAL_MS = 250;
-	private static final int MIN_READ_BUFFER_SIZE = 16 * 1024 * 1024;
-	private static final int MAX_READ_BUFFER_SIZE = 256 * 1024 * 1024;
 	private static final int LABEL_READ_BUFFER_SIZE = 1024 * 1024;
 
 	private final JOverflowEditor editor;
-	private final JOverflowEditor.UiLoadedListener uiLoadedListener = ui -> onSnapshotLoaded();
+	private final JOverflowEditor.UiLoadedListener uiLoadedListener = ui -> onTreeStateChanged();
+	private final Runnable treeListener = this::onTreeStateChanged;
 
 	private Composite container;
 	private StackLayout containerLayout;
@@ -91,7 +80,7 @@ public class DominatorTreePage extends Page {
 	private DominatorTreeViewer viewer;
 
 	private DominatorTreeBuilder builder;
-	private volatile IProgressMonitor jobMonitor;
+	private DominatorTree displayedTree;
 
 	DominatorTreePage(JOverflowEditor editor) {
 		this.editor = editor;
@@ -107,14 +96,10 @@ public class DominatorTreePage extends Page {
 		createProgressPanel();
 		createTreePanel();
 
-		DominatorTree tree = editor.getDominatorTree();
-		if (tree != null) {
-			showTree(tree);
-		} else {
-			showPanel(startPanel);
-		}
+		showPanel(startPanel);
 		// Fires immediately if the snapshot is already loaded
 		editor.addUiLoadedListener(uiLoadedListener);
+		editor.addDominatorTreeListener(treeListener);
 	}
 
 	private void createStartPanel() {
@@ -130,7 +115,8 @@ public class DominatorTreePage extends Page {
 		calculateButton = new Button(startPanel, SWT.PUSH);
 		calculateButton.setText(Messages.DominatorTreePage_CALCULATE);
 		calculateButton.setEnabled(false);
-		calculateButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> startCalculation()));
+		calculateButton.addSelectionListener(
+				SelectionListener.widgetSelectedAdapter(e -> editor.startDominatorTreeCalculation()));
 
 		waitingLabel = new Label(startPanel, SWT.NONE);
 		waitingLabel.setText(Messages.DominatorTreePage_WAITING_FOR_MODEL);
@@ -152,7 +138,8 @@ public class DominatorTreePage extends Page {
 
 		Button cancelButton = new Button(progressPanel, SWT.PUSH);
 		cancelButton.setText(Messages.DominatorTreePage_CANCEL);
-		cancelButton.addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> cancelCalculation()));
+		cancelButton.addSelectionListener(
+				SelectionListener.widgetSelectedAdapter(e -> editor.cancelDominatorTreeCalculation()));
 	}
 
 	private void createTreePanel() {
@@ -190,74 +177,49 @@ public class DominatorTreePage extends Page {
 	@Override
 	public void dispose() {
 		editor.removeUiLoadedListener(uiLoadedListener);
-		cancelCalculation();
+		editor.removeDominatorTreeListener(treeListener);
+		builder = null;
 		if (viewer != null && !viewer.getControl().isDisposed()) {
 			viewer.setDominatorTree(null);
 		}
 		super.dispose();
 	}
 
-	private void onSnapshotLoaded() {
+	private void onTreeStateChanged() {
 		if (calculateButton == null || calculateButton.isDisposed()) {
 			return;
 		}
 		calculateButton.setEnabled(editor.getSnapshot() != null && editor.getInputPath() != null);
 		waitingLabel.setVisible(!calculateButton.isEnabled());
-	}
-
-	private void startCalculation() {
-		Snapshot snapshot = editor.getSnapshot();
-		String inputPath = editor.getInputPath();
-		if (snapshot == null || inputPath == null || builder != null) {
+		DominatorTree tree = editor.getDominatorTree();
+		if (tree != null) {
+			builder = null;
+			if (tree != displayedTree) {
+				showTree(tree);
+			} else {
+				showPanel(treePanel);
+			}
 			return;
 		}
-		ReadBuffer.Factory factory = new ReadBuffer.CachedReadBufferFactory(inputPath, calculateReadBufferSize());
-		DominatorTreeBuilder newBuilder = new DominatorTreeBuilder(snapshot, factory);
-		builder = newBuilder;
-
-		Job job = new Job(NLS.bind(Messages.DominatorTreePage_JOB_NAME, editor.getPartName())) {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				jobMonitor = monitor;
-				try {
-					DominatorTree tree = newBuilder.build();
-					DisplayToolkit.safeAsyncExec(container, () -> onCalculationDone(newBuilder, tree));
-					return Status.OK_STATUS;
-				} catch (HprofParsingCancelledException e) {
-					DisplayToolkit.safeAsyncExec(container, () -> onCalculationCancelled(newBuilder));
-					return Status.CANCEL_STATUS;
-				} catch (IOException | RuntimeException | OutOfMemoryError e) {
-					DisplayToolkit.safeAsyncExec(container, () -> onCalculationFailed(newBuilder, e));
-					// The page reports failures; avoid a second job error dialog.
-					return Status.OK_STATUS;
-				} finally {
-					jobMonitor = null;
-				}
+		DominatorTreeBuilder currentBuilder = editor.getDominatorTreeBuilder();
+		if (currentBuilder == null) {
+			builder = null;
+			showPanel(startPanel);
+		} else {
+			boolean startPolling = currentBuilder != builder;
+			builder = currentBuilder;
+			progressBar.setSelection(builder.getProgressPercentage());
+			updateProgressLabel(builder);
+			showPanel(progressPanel);
+			if (startPolling) {
+				container.getDisplay().timerExec(PROGRESS_UPDATE_INTERVAL_MS, () -> updateProgress(currentBuilder));
 			}
-		};
-		job.setUser(false);
-		job.setSystem(false);
-
-		progressBar.setSelection(0);
-		updateProgressLabel(newBuilder);
-		showPanel(progressPanel);
-		job.schedule();
-		container.getDisplay().timerExec(PROGRESS_UPDATE_INTERVAL_MS, () -> updateProgress(newBuilder));
-	}
-
-	private void cancelCalculation() {
-		if (builder != null) {
-			builder.cancel();
 		}
 	}
 
 	private void updateProgress(DominatorTreeBuilder currentBuilder) {
 		if (currentBuilder != builder || container.isDisposed()) {
 			return;
-		}
-		IProgressMonitor monitor = jobMonitor;
-		if (monitor != null && monitor.isCanceled()) {
-			currentBuilder.cancel();
 		}
 		progressBar.setSelection(currentBuilder.getProgressPercentage());
 		updateProgressLabel(currentBuilder);
@@ -286,38 +248,6 @@ public class DominatorTreePage extends Page {
 		}
 	}
 
-	private void onCalculationDone(DominatorTreeBuilder finishedBuilder, DominatorTree tree) {
-		if (finishedBuilder != builder) {
-			return;
-		}
-		builder = null;
-		editor.setDominatorTree(tree);
-		showTree(tree);
-	}
-
-	private void onCalculationCancelled(DominatorTreeBuilder finishedBuilder) {
-		if (finishedBuilder != builder) {
-			return;
-		}
-		builder = null;
-		showPanel(startPanel);
-	}
-
-	private void onCalculationFailed(DominatorTreeBuilder finishedBuilder, Throwable failure) {
-		if (finishedBuilder != builder) {
-			return;
-		}
-		builder = null;
-		showPanel(startPanel);
-		if (failure instanceof OutOfMemoryError) {
-			DialogToolkit.showWarning(getSite().getShell(), Messages.DominatorTreePage_FAILED_TITLE,
-					Messages.DominatorTreePage_OUT_OF_MEMORY);
-		} else {
-			DialogToolkit.showException(getSite().getShell(), Messages.DominatorTreePage_FAILED_TITLE,
-					failure.getLocalizedMessage(), failure);
-		}
-	}
-
 	private void showTree(DominatorTree tree) {
 		int unreachableNode = tree.getUnreachableObjectsNode();
 		int unreachableCount = unreachableNode == DominatorTree.NO_NODE ? 0
@@ -326,6 +256,7 @@ public class DominatorTreePage extends Page {
 				new Object[] {formatSize(tree.getTotalSize()), String.format("%,d", tree.getObjectCount()), //$NON-NLS-1$
 						formatSize(tree.getUnreachableSize()), String.format("%,d", unreachableCount)})); //$NON-NLS-1$
 		viewer.setDominatorTree(tree);
+		displayedTree = tree;
 		showPanel(treePanel);
 	}
 
@@ -347,14 +278,5 @@ public class DominatorTreePage extends Page {
 		}
 		containerLayout.topControl = panel;
 		container.layout();
-	}
-
-	/**
-	 * Reserves most available memory for tree computation.
-	 */
-	private static int calculateReadBufferSize() {
-		Runtime runtime = Runtime.getRuntime();
-		long available = runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
-		return (int) Math.max(MIN_READ_BUFFER_SIZE, Math.min(MAX_READ_BUFFER_SIZE, available / 5));
 	}
 }

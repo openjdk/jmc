@@ -37,18 +37,26 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Function;
 
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
 
@@ -81,8 +89,9 @@ public class DominatorTreeViewer extends TreeViewer {
 		setContentProvider(new ContentProvider());
 		getControl().addDisposeListener(event -> closeReader());
 
-		createColumn(Messages.DominatorTreeViewer_COLUMN_OBJECT, OBJECT_COLUMN_WIDTH, SWT.LEFT,
-				DominatorTreeItem::getLabel, null, Comparator.comparing(DominatorTreeItem::getLabel));
+		TreeViewerColumn objectColumn = createColumn(Messages.DominatorTreeViewer_COLUMN_OBJECT, OBJECT_COLUMN_WIDTH,
+				SWT.LEFT, DominatorTreeItem::getLabel, null, Comparator.comparing(DominatorTreeItem::getLabel));
+		styleObjectColumn(objectColumn);
 		createColumn(Messages.DominatorTreeViewer_COLUMN_SHALLOW_SIZE, SIZE_COLUMN_WIDTH, SWT.RIGHT,
 				item -> formatSize(item.getShallowSize()), item -> formatBytes(item.getShallowSize()),
 				Comparator.comparingLong(DominatorTreeItem::getShallowSize));
@@ -136,7 +145,37 @@ public class DominatorTreeViewer extends TreeViewer {
 		}
 	}
 
-	private void createColumn(
+	private void styleObjectColumn(TreeViewerColumn column) {
+		LocalResourceManager resources = new LocalResourceManager(JFaceResources.getResources(), getControl());
+		Font boldFont = resources.createFont(FontDescriptor.createFrom(getTree().getFont()).setStyle(SWT.BOLD));
+		StyledString.Styler emphasis = new StyledString.Styler() {
+			@Override
+			public void applyStyles(TextStyle textStyle) {
+				textStyle.font = boldFont;
+			}
+		};
+		column.setLabelProvider(new StyledCellLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				DominatorTreeItem item = (DominatorTreeItem) cell.getElement();
+				String text = item.getLabel();
+				StyledString styled = new StyledString(text);
+				if (item.isPlaceholder()) {
+					styled.setStyle(0, text.length(), StyledString.QUALIFIER_STYLER);
+				} else {
+					int nameLength = item.getNameLength();
+					int prefixLength = item.getReferencePrefixLength();
+					styled.setStyle(0, prefixLength > 0 ? prefixLength : nameLength, emphasis);
+					styled.setStyle(nameLength, text.length() - nameLength, StyledString.QUALIFIER_STYLER);
+				}
+				cell.setText(text);
+				cell.setStyleRanges(styled.getStyleRanges());
+				super.update(cell);
+			}
+		});
+	}
+
+	private TreeViewerColumn createColumn(
 		String title, int width, int alignment, Function<DominatorTreeItem, String> text,
 		Function<DominatorTreeItem, String> toolTip, Comparator<DominatorTreeItem> comparator) {
 		TreeViewerColumn viewerColumn = new TreeViewerColumn(this, alignment);
@@ -169,6 +208,7 @@ public class DominatorTreeViewer extends TreeViewer {
 				refresh();
 			}
 		});
+		return viewerColumn;
 	}
 
 	private static String formatSize(long bytes) {

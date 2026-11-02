@@ -35,6 +35,9 @@ package org.openjdk.jmc.joverflow.heap.model;
 
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.openjdk.jmc.joverflow.heap.parser.ReadBuffer;
@@ -44,6 +47,9 @@ import org.openjdk.jmc.joverflow.heap.parser.ReadBuffer;
  * readers. Instances are not thread safe and should be closed when no longer needed.
  */
 public final class HeapObjectReader implements AutoCloseable {
+	private static final int MAX_NAMED_REFERENCES = 256;
+	private static final int MAX_INSTANCE_BYTES = 64 * 1024;
+	private static final int MAX_REFERENCE_LABEL_LENGTH = 150;
 	private final Snapshot snapshot;
 	private final ReadBuffer.Factory factory;
 	private final int idSize;
@@ -68,6 +74,80 @@ public final class HeapObjectReader implements AutoCloseable {
 			return object.readId(); // Class IDs are already in memory.
 		}
 		return readNumber(((JavaLazyReadObject) object).getObjOfsInFile(), idSize);
+	}
+
+	/**
+	 * Returns names of verified direct references, keyed by the target's global object index.
+	 * Examines at most 256 reference fields, static fields or array elements. Arrays larger than
+	 * 256 elements and instances with more than 64 KiB of field data are skipped entirely.
+	 */
+	public Map<Integer, String> readReferenceNames(JavaHeapObject object) throws IOException {
+		checkOpen();
+		Map<Integer, String> names = new LinkedHashMap<>();
+		if (object instanceof JavaObjectArray) {
+			JavaObjectArray array = (JavaObjectArray) object;
+			int length = array.getLength();
+			if (length < 0 || length > MAX_NAMED_REFERENCES) {
+				return Collections.emptyMap();
+			}
+			long offset = array.getObjOfsInFile() + 2L * idSize + 8;
+			for (int i = 0; i < length; i++) {
+				addReferenceName(names,
+						snapshot.getGlobalObjectIndexForId(readNumber(offset + (long) i * idSize, idSize)),
+						"[" + i + "]");
+			}
+		} else if (object instanceof JavaObject) {
+			JavaObject instance = (JavaObject) object;
+			JavaClass clazz = instance.getClazz();
+			int length = clazz.getFieldsSizeInFile();
+			if (length < 0 || length > MAX_INSTANCE_BYTES) {
+				return Collections.emptyMap();
+			}
+			int offset = 0;
+			int references = 0;
+			long fields = instance.getObjOfsInFile() + 2L * idSize + 8;
+			for (JavaClass current = clazz; current != null; current = current.getSuperclass()) {
+				for (JavaField field : current.getDefinedFields()) {
+					int size = field.isReference() ? idSize : field.getSizeInInstance();
+					if (size <= 0 || offset > length - size) {
+						return Collections.unmodifiableMap(names);
+					}
+					if (field.isReference()) {
+						addReferenceName(names, snapshot.getGlobalObjectIndexForId(readNumber(fields + offset, idSize)),
+								field.getName());
+						if (++references == MAX_NAMED_REFERENCES) {
+							return Collections.unmodifiableMap(names);
+						}
+					}
+					offset += size;
+				}
+			}
+		} else if (object instanceof JavaClass) {
+			JavaClass clazz = (JavaClass) object;
+			JavaField[] fields = clazz.getStaticFields();
+			JavaThing[] values = clazz.getStaticValues();
+			for (int i = 0, count = Math.min(MAX_NAMED_REFERENCES, fields.length); i < count; i++) {
+				if (fields[i].isReference() && values[i] instanceof JavaHeapObject) {
+					addReferenceName(names, ((JavaHeapObject) values[i]).getGlobalObjectIndex(), fields[i].getName());
+				}
+			}
+		}
+		return Collections.unmodifiableMap(names);
+	}
+
+	private void addReferenceName(Map<Integer, String> names, int target, String name) {
+		if (target == Snapshot.NO_GLOBAL_OBJECT_INDEX) {
+			return;
+		}
+		String previous = names.get(target);
+		if (previous != null) {
+			if (previous.length() >= MAX_REFERENCE_LABEL_LENGTH) {
+				return;
+			}
+			name = previous + ", " + name;
+		}
+		names.put(target, name.length() <= MAX_REFERENCE_LABEL_LENGTH ? name
+				: name.substring(0, MAX_REFERENCE_LABEL_LENGTH - 1) + '\u2026');
 	}
 
 	/**

@@ -36,6 +36,7 @@ package org.openjdk.jmc.joverflow.heap.model;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -157,6 +158,68 @@ public class HeapObjectReaderTest {
 		Assert.assertEquals(4, fixture.factory.bytesRead);
 	}
 
+	@Test
+	public void testReferenceNamesUseInstanceFieldLayout() throws Exception {
+		Fixture fixture = new Fixture(4, true, false, 4, null);
+		fixture.fields().putInt((int) STRING_ID).putInt((int) ARRAY_ID).putInt(0).putInt(4);
+		try (HeapObjectReader reader = new HeapObjectReader(fixture.snapshot, fixture.factory)) {
+			Map<Integer, String> names = reader.readReferenceNames(fixture.object);
+			Assert.assertEquals(1, names.size());
+			Assert.assertEquals("value", names.get(fixture.snapshot.getGlobalObjectIndexForId(ARRAY_ID)));
+			Assert.assertFalse("Primitive field contents are not references",
+					names.containsKey(fixture.object.getGlobalObjectIndex()));
+		}
+		Assert.assertEquals(4, fixture.factory.bytesRead);
+	}
+
+	@Test
+	public void testReferenceNamesUseArrayIndices() throws Exception {
+		Fixture fixture = new Fixture(8, false, false, 4, null, true);
+		ByteBuffer.wrap(fixture.image).position(ARRAY_OFFSET + 2 * fixture.idSize + 8).putLong(STRING_ID)
+				.putLong(ARRAY_ID).putLong(0).putLong(STRING_ID);
+		try (HeapObjectReader reader = new HeapObjectReader(fixture.snapshot, fixture.factory)) {
+			Map<Integer, String> names = reader.readReferenceNames(fixture.snapshot.getObjectForId(ARRAY_ID));
+			Assert.assertEquals(2, names.size());
+			Assert.assertEquals("[0], [3]", names.get(fixture.object.getGlobalObjectIndex()));
+			Assert.assertEquals("[1]", names.get(fixture.snapshot.getGlobalObjectIndexForId(ARRAY_ID)));
+		}
+		Assert.assertEquals(4 * fixture.idSize, fixture.factory.bytesRead);
+	}
+
+	@Test
+	public void testReferenceNamesSkipLargeArraysAndInstances() throws Exception {
+		Fixture fixture = new Fixture(4, false, false, 1_000_000_000, null, true);
+		JavaClass largeClass = new JavaClass(105, "LargeFields", 0, 0, 0, 0, JavaClass.NO_FIELDS, JavaClass.NO_FIELDS,
+				JavaClass.NO_VALUES, 65_537, 65_552);
+		JavaObject large = new JavaObject(largeClass, 100_000_000L, new int[3], 0, 1);
+		try (HeapObjectReader reader = new HeapObjectReader(fixture.snapshot, fixture.factory)) {
+			Assert.assertTrue(reader.readReferenceNames(fixture.snapshot.getObjectForId(ARRAY_ID)).isEmpty());
+			Assert.assertTrue(reader.readReferenceNames(large).isEmpty());
+		}
+		Assert.assertEquals("Skipped objects must not open or read a heap buffer", 0, fixture.factory.created);
+	}
+
+	@Test
+	public void testReferenceNamesUseStaticMetadataWithoutReading() throws Exception {
+		Fixture fixture = new Fixture(4, false, false, 4, null);
+		JavaField field = JavaField.newInstance("owner", 'L', 4);
+		JavaClass owner = new JavaClass(105, "StaticOwner", 0, 0, 0, 0, JavaClass.NO_FIELDS, new JavaField[] {field},
+				new JavaThing[] {fixture.object}, 0, 16);
+		try (HeapObjectReader reader = new HeapObjectReader(fixture.snapshot, fixture.factory)) {
+			Assert.assertEquals("owner", reader.readReferenceNames(owner).get(fixture.object.getGlobalObjectIndex()));
+		}
+		Assert.assertEquals(0, fixture.factory.created);
+	}
+
+	@Test
+	public void testReferenceNamesIgnoreUnresolvedTargets() throws Exception {
+		Fixture fixture = new Fixture(4, false, false, 4, null);
+		fixture.fields().putInt(0x0badf00d);
+		try (HeapObjectReader reader = new HeapObjectReader(fixture.snapshot, fixture.factory)) {
+			Assert.assertTrue(reader.readReferenceNames(fixture.object).isEmpty());
+		}
+	}
+
 	private static final class Fixture {
 		final byte[] image = new byte[256];
 		final TrackingFactory factory = new TrackingFactory(image);
@@ -166,6 +229,10 @@ public class HeapObjectReaderTest {
 		final int idSize;
 
 		Fixture(int idSize, boolean legacy, boolean compact, int arrayLength, ByteOrder order) {
+			this(idSize, legacy, compact, arrayLength, order, false);
+		}
+
+		Fixture(int idSize, boolean legacy, boolean compact, int arrayLength, ByteOrder order, boolean objectArray) {
 			this.idSize = idSize;
 			Snapshot.Builder builder = new Snapshot.Builder(image.length, idSize, idSize, null);
 			JavaField value = field("value", 'L');
@@ -188,7 +255,12 @@ public class HeapObjectReaderTest {
 						0, 16));
 			}
 			builder.addJavaObject(STRING_ID, STRING_CLASS_ID, STRING_OFFSET, fieldSize);
-			builder.addJavaValueArray(ARRAY_ID, compact ? 'B' : 'C', ARRAY_OFFSET, arrayLength, 0);
+			if (objectArray) {
+				builder.addClass(clazz(104, "[Ljava.lang.Object;", 0, JavaClass.NO_FIELDS, 0));
+				builder.addJavaObjectArray(ARRAY_ID, 104, ARRAY_OFFSET, arrayLength, 0);
+			} else {
+				builder.addJavaValueArray(ARRAY_ID, compact ? 'B' : 'C', ARRAY_OFFSET, arrayLength, 0);
+			}
 			if (idSize == 4) {
 				ByteBuffer.wrap(image).putInt(STRING_OFFSET, (int) STRING_ID).putInt(ARRAY_OFFSET, (int) ARRAY_ID);
 				fields().putInt((int) ARRAY_ID);
