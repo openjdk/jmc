@@ -85,6 +85,7 @@ public class JOverflowEditor extends EditorPart {
 	private final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
 	private FormToolkit mFormToolkit;
+	private Form mForm;
 
 	private Composite mParentComposite;
 	private ProgressIndicator mProgressIndicator;
@@ -234,7 +235,7 @@ public class JOverflowEditor extends EditorPart {
 	}
 
 	private void createJoverflowUi(Composite parent) {
-		Form mForm = mFormToolkit.createForm(parent);
+		mForm = mFormToolkit.createForm(parent);
 		mForm.setText("JOverflow");
 		mForm.setImage(getTitleImage());
 		mFormToolkit.decorateFormHeading(mForm);
@@ -300,7 +301,7 @@ public class JOverflowEditor extends EditorPart {
 		mSpaceHuntingAction.setChecked(!dominatorMode);
 		mDominatorTreeAction.setChecked(dominatorMode);
 		mResetAction.setEnabled(!dominatorMode);
-		mModeContainer.layout();
+		mForm.layout(true, true);
 	}
 
 	@Override
