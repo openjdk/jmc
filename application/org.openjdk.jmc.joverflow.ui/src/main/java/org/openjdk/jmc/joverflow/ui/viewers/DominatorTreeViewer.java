@@ -180,7 +180,10 @@ public class DominatorTreeViewer extends TreeViewer {
 		Function<DominatorTreeItem, String> toolTip, Comparator<DominatorTreeItem> comparator) {
 		TreeViewerColumn viewerColumn = new TreeViewerColumn(this, alignment);
 		TreeColumn column = viewerColumn.getColumn();
-		column.setText(title);
+		// SWT's themed Windows tree headers omit the right inset.
+		boolean padHeader = alignment == SWT.RIGHT && "win32".equals(SWT.getPlatform()); //$NON-NLS-1$
+		column.setText(padHeader ? title + '\u2002' : title);
+		column.setToolTipText(title);
 		column.setWidth(width);
 		column.setMoveable(true);
 		column.setResizable(true);
