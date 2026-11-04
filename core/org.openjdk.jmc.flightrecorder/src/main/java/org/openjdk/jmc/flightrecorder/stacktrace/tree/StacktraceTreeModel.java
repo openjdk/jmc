@@ -33,6 +33,8 @@
  */
 package org.openjdk.jmc.flightrecorder.stacktrace.tree;
 
+import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
+
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
@@ -49,8 +51,6 @@ import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.MCFrame;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator;
 import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorization;
-
-import static org.openjdk.jmc.flightrecorder.JfrAttributes.EVENT_STACKTRACE;
 
 public class StacktraceTreeModel {
 
