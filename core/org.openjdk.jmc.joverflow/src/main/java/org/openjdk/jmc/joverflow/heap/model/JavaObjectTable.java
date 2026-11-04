@@ -117,6 +117,13 @@ class JavaObjectTable {
 		return numObjs;
 	}
 
+	/**
+	 * Exclusive upper bound for all object positions in this table.
+	 */
+	int getLastObjEndPos() {
+		return lastObjEndPos;
+	}
+
 	Collection<JavaLazyReadObject> getObjects() {
 		return new AbstractCollection<JavaLazyReadObject>() {
 			@Override
