@@ -57,6 +57,7 @@ import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.selection.FlavoredSelectionBase;
+import org.openjdk.jmc.flightrecorder.selection.FilterBackedSelection;
 import org.openjdk.jmc.flightrecorder.selection.IFlavoredSelection;
 import org.openjdk.jmc.flightrecorder.selection.IItemStreamFlavor;
 import org.openjdk.jmc.flightrecorder.selection.ItemBackedSelection;
@@ -255,6 +256,17 @@ public class NamedSelectionRegistryTest {
 			assertEquals(1,
 					derived.apply(ItemFilters.more(MockAttributes.DOUBLE_VALUE, UnitLookup.NUMBER_UNITY.quantity(2)))
 							.getAggregate(Aggregators.count()).longValue());
+		}
+	}
+
+	@Test
+	public void testFilterBackedSelectionsExposeTheirFilteredItems() {
+		try (NamedSelectionRegistry registry = new NamedSelectionRegistry()) {
+			IItemCollection all = numbers(1, 2, 3);
+			registry.put("large", new FilterBackedSelection(all,
+					ItemFilters.more(MockAttributes.DOUBLE_VALUE, UnitLookup.NUMBER_UNITY.quantity(1)), "large"));
+			IItemCollection large = registry.getItems("large").get();
+			assertEquals(5, large.getAggregate(Aggregators.sum(MockAttributes.DOUBLE_VALUE)).longValue());
 		}
 	}
 

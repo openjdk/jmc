@@ -36,25 +36,35 @@ package org.openjdk.jmc.flightrecorder.selection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
+import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
+import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
+import org.openjdk.jmc.common.item.ItemFilters;
+import org.openjdk.jmc.common.item.ItemIterableToolkit;
 
 /**
- * Set operations on selections from the same parsed recording. Events are compared by reference
- * identity, not value equality, and repeated references are included only once. Collections from
- * independently parsed recordings do not share event identities, even when their values match.
+ * Set operations on selections from the same parsed recording.
  * <p>
- * Results materialize references to the selected events without copying the events. They can be
- * filtered and aggregated using the ordinary item APIs. Materialization avoids retaining excluded
- * events through source collections or membership predicates, but retained events can still refer
- * to shared recording structures. Results are grouped by event type; order within each type follows
- * first encounter in the inputs.
+ * Two {@link FilterBackedSelection}s with the same source are combined by composing their filters.
+ * The result is another filter-backed view over that source; it is created in constant time and
+ * retains no events of its own, only the source it filters.
+ * <p>
+ * Other inputs are combined by event identity, not value equality, and repeated references are
+ * included only once. Collections from independently parsed recordings do not share event
+ * identities, even when their values match. Such results hold references to the selected events
+ * without copying the events: creating them costs a pass over both inputs, they retain a list of
+ * references but not their inputs, and they evaluate as fast as any other collection. Results are
+ * grouped by event type; order within each type follows first encounter in the inputs.
  */
 public final class SelectionToolkit {
 
@@ -62,10 +72,40 @@ public final class SelectionToolkit {
 	}
 
 	/**
+	 * Returns the events present in both selections.
+	 */
+	public static ItemBackedSelection intersect(ItemBackedSelection a, ItemBackedSelection b, String name) {
+		IItemCollection source = commonSource(a, b);
+		return source != null ? new FilterBackedSelection(source, ItemFilters.and(filterOf(a), filterOf(b)), name)
+				: new ItemBackedSelection(intersect(a.getItems(), b.getItems()), name);
+	}
+
+	/**
+	 * Returns the events present in either selection.
+	 */
+	public static ItemBackedSelection union(ItemBackedSelection a, ItemBackedSelection b, String name) {
+		IItemCollection source = commonSource(a, b);
+		return source != null ? new FilterBackedSelection(source, ItemFilters.or(filterOf(a), filterOf(b)), name)
+				: new ItemBackedSelection(union(a.getItems(), b.getItems()), name);
+	}
+
+	/**
+	 * Returns the events in the first selection that are absent from the second selection.
+	 */
+	public static ItemBackedSelection subtract(ItemBackedSelection a, ItemBackedSelection b, String name) {
+		IItemCollection source = commonSource(a, b);
+		return source != null
+				? new FilterBackedSelection(source, ItemFilters.and(filterOf(a), ItemFilters.not(filterOf(b))), name)
+				: new ItemBackedSelection(subtract(a.getItems(), b.getItems()), name);
+	}
+
+	/**
 	 * Returns the events present in both inputs.
 	 */
 	public static IItemCollection intersect(IItemCollection a, IItemCollection b) {
-		return select(a, identities(b), true);
+		// Removing matches also drops repeated references in the first input.
+		Set<IItem> unmatched = identities(b);
+		return select(a, unmatched::remove);
 	}
 
 	/**
@@ -73,31 +113,60 @@ public final class SelectionToolkit {
 	 */
 	public static IItemCollection union(IItemCollection a, IItemCollection b) {
 		Set<IItem> seen = newIdentitySet();
-		List<IItem> result = new ArrayList<>();
-		appendUnique(a, seen, result);
-		appendUnique(b, seen, result);
-		return ItemCollectionToolkit.build(result.stream());
+		Map<IType<IItem>, List<IItem>> byType = new LinkedHashMap<>();
+		collect(a, seen::add, byType);
+		collect(b, seen::add, byType);
+		return build(byType);
 	}
 
 	/**
 	 * Returns the events in the first input that are absent from the second input.
 	 */
 	public static IItemCollection subtract(IItemCollection a, IItemCollection b) {
-		return select(a, identities(b), false);
+		// Adding kept events also drops repeated references in the first input.
+		Set<IItem> excluded = identities(b);
+		return select(a, excluded::add);
 	}
 
-	private static IItemCollection select(IItemCollection items, Set<IItem> membership, boolean included) {
+	private static IItemCollection commonSource(ItemBackedSelection a, ItemBackedSelection b) {
+		Objects.requireNonNull(a, "a"); //$NON-NLS-1$
+		Objects.requireNonNull(b, "b"); //$NON-NLS-1$
+		if (a instanceof FilterBackedSelection && b instanceof FilterBackedSelection) {
+			IItemCollection source = ((FilterBackedSelection) a).getSource();
+			return source == ((FilterBackedSelection) b).getSource() ? source : null;
+		}
+		return null;
+	}
+
+	private static IItemFilter filterOf(ItemBackedSelection selection) {
+		return ((FilterBackedSelection) selection).getFilter();
+	}
+
+	private static IItemCollection select(IItemCollection items, Predicate<IItem> keep) {
+		Map<IType<IItem>, List<IItem>> byType = new LinkedHashMap<>();
+		collect(items, keep, byType);
+		return build(byType);
+	}
+
+	private static void collect(IItemCollection items, Predicate<IItem> keep, Map<IType<IItem>, List<IItem>> byType) {
 		Objects.requireNonNull(items, "items"); //$NON-NLS-1$
-		Set<IItem> seen = newIdentitySet();
-		List<IItem> result = new ArrayList<>();
 		for (IItemIterable iterable : items) {
+			List<IItem> kept = null;
 			for (IItem item : iterable) {
-				if (membership.contains(item) == included && seen.add(item)) {
-					result.add(item);
+				if (keep.test(item)) {
+					if (kept == null) {
+						kept = byType.computeIfAbsent(iterable.getType(), type -> new ArrayList<>());
+					}
+					kept.add(item);
 				}
 			}
 		}
-		return ItemCollectionToolkit.build(result.stream());
+	}
+
+	private static IItemCollection build(Map<IType<IItem>, List<IItem>> byType) {
+		List<IItemIterable> iterables = new ArrayList<>(byType.size());
+		byType.forEach((type, items) -> iterables.add(ItemIterableToolkit.build(items::stream, type)));
+		return ItemCollectionToolkit.build(iterables::stream);
 	}
 
 	private static Set<IItem> identities(IItemCollection items) {
@@ -111,18 +180,8 @@ public final class SelectionToolkit {
 		return result;
 	}
 
-	private static void appendUnique(IItemCollection items, Set<IItem> seen, List<IItem> result) {
-		Objects.requireNonNull(items, "items"); //$NON-NLS-1$
-		for (IItemIterable iterable : items) {
-			for (IItem item : iterable) {
-				if (seen.add(item)) {
-					result.add(item);
-				}
-			}
-		}
-	}
-
 	private static Set<IItem> newIdentitySet() {
 		return Collections.newSetFromMap(new IdentityHashMap<>());
 	}
+
 }
