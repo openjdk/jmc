@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,107 +32,31 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.selection;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
 
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.IRange;
-import org.openjdk.jmc.common.unit.QuantityRange;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.ui.JfrPropertySheet;
-import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
+import org.openjdk.jmc.flightrecorder.selection.PointRangeSelection;
 
+/**
+ * @see PointRangeSelection
+ */
 public class ChartSelection extends FlavoredSelectionBase {
-	private final IItemCollection selectedRowsItems;
-	private final IAttribute<IQuantity> xAttribute;
-	private final IItemFilter rangeFilter;
-	private final IRange<IQuantity> range;
+
+	private final PointRangeSelection delegate;
 
 	public ChartSelection(String name, IItemCollection selectedItems, IQuantity selectionStart, IQuantity selectionEnd,
 			IAttribute<IQuantity> xAttribute) {
 		super(name);
-		this.xAttribute = xAttribute;
-		if (selectionStart != null && selectionEnd != null) {
-			this.range = QuantityRange.createWithEnd(selectionStart, selectionEnd);
-			this.rangeFilter = ItemFilters.interval(xAttribute, range.getStart(), true, range.getEnd(), true);
-			/*
-			 * selectedRowItems parameter is the full item collection of the selected row(s), not
-			 * the items inside the range, so need to filter here.
-			 */
-			this.selectedRowsItems = selectedItems.apply(rangeFilter);
-		} else {
-			this.range = null;
-			this.rangeFilter = null;
-			// If the range filter isn't present, the selection will be the entire row
-			this.selectedRowsItems = selectedItems;
-		}
+		delegate = new PointRangeSelection(name, selectedItems, selectionStart, selectionEnd, xAttribute);
 	}
 
-	/*
-	 * This is the same implementation as RangedChartSelection, could break out to abstract super
-	 * class, but waiting with that to make review easier.
-	 */
 	@Override
 	public Stream<IItemStreamFlavor> getFlavors(
-		IItemFilter dstFilter, IItemCollection items, List<IAttribute<?>> dstAttributes) {
-		IItemCollection dstItems = ItemCollectionToolkit.filterIfNotNull(items, dstFilter);
-		boolean itemsApplicableOnPage = ItemCollectionToolkit.filterIfNotNull(selectedRowsItems, dstFilter).hasItems();
-		Builder<IItemStreamFlavor> builder = Stream.builder();
-		Predicate<IAttribute<?>> includeAttributes = a -> true;
-
-		IItemStreamFlavor selectedItemsFlavor = IItemStreamFlavor.build(MessageFormat
-				.format(Messages.FLAVOR_SELECTED_EVENTS, ItemCollectionToolkit.getDescription(selectedRowsItems)),
-				selectedRowsItems);
-
-		if (rangeFilter != null) {
-			IPropertyFlavor selectedRangeFlavor = buildRange(MessageFormat.format(Messages.FLAVOR_SELECTED_RANGE,
-					IPropertyFlavor.getIntervalDescription(xAttribute, range)), items);
-
-			if (!itemsApplicableOnPage) {
-				// prio1: Selected range
-				builder.accept(selectedRangeFlavor);
-			}
-			if (selectedRowsItems.hasItems()) {
-				// prio1/2: All selected items
-				builder.accept(selectedItemsFlavor);
-				selectedItemsFlavor = null;
-			}
-			if (itemsApplicableOnPage) {
-				// prio2: Selected range
-				builder.accept(selectedRangeFlavor);
-			}
-
-			// Skip the x attribute, plus skip start time and end time if the x attribute is life time (more likely in the ranged chart case)
-			includeAttributes = a -> !a.equals(xAttribute) && !(xAttribute.equals(JfrAttributes.LIFETIME)
-					&& (a.equals(JfrAttributes.START_TIME) || a.equals(JfrAttributes.END_TIME)));
-
-		} else if (selectedRowsItems.hasItems()) {
-			if (itemsApplicableOnPage) {
-				// prio1/2: All selected items
-				builder.accept(selectedItemsFlavor);
-				selectedItemsFlavor = null;
-			}
-		}
-
-		// prio3: Destination items with properties shared with the selected items
-		JfrPropertySheet
-				.calculatePersistableFilterFlavors(selectedRowsItems, dstItems, items, dstAttributes, includeAttributes)
-				.forEach(builder::accept);
-		if (selectedItemsFlavor != null) {
-			builder.accept(selectedItemsFlavor);
-		}
-		return builder.build();
-	}
-
-	private IPropertyFlavor buildRange(String name, IItemCollection items) {
-		return IPropertyFlavor.buildPointRange(name, xAttribute, range, items);
+		IItemFilter filter, IItemCollection items, List<IAttribute<?>> attributes) {
+		return delegate.getFlavors(filter, items, attributes).map(SelectionFlavorAdapters::toUI);
 	}
 }

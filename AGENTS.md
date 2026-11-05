@@ -34,7 +34,7 @@ For `mcp/`, `mvn package -Dnative` builds the GraalVM native image; see `mcp/REA
 ### Eclipse Platform Profiles
 Build against specific Eclipse platform versions using Maven profiles:
 ```bash
-mvn verify -P 2024-12
+mvn verify -P 2025-03
 ```
 
 ## Java Version & Toolchains

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -47,7 +47,6 @@
 		<module>org.openjdk.jmc.flightrecorder.ui.test</module>
 		<module>org.openjdk.jmc.greychart.test</module>
 		<module>org.openjdk.jmc.ide.launch.test</module>
-		<module>org.openjdk.jmc.joverflow.test</module>
 		<module>org.openjdk.jmc.rjmx.services.jfr.test</module>
 		<module>org.openjdk.jmc.rjmx.test</module>
 		<module>org.openjdk.jmc.ui.common.test</module>

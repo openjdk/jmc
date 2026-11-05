@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (c) 2019, 2025, Oracle and/or its affiliates. All rights reserved.
-   Copyright (c) 2019, 2025, Red Hat Inc. All rights reserved.
+   Copyright (c) 2019, 2026, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2019, 2026, Red Hat Inc. All rights reserved.
 
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
@@ -89,6 +89,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>joverflow</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>rjmx.common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -143,6 +148,12 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>jdp.test</artifactId>
+			<scope>test</scope>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmc</groupId>
+			<artifactId>joverflow.test</artifactId>
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
