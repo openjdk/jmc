@@ -1,0 +1,15 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPath": "/api/v1/namespaces/ns1/pods/pod-abcdef/proxy/jolokia",
+		"bodyPatterns": [
+			{
+				"equalToJson": "{\"operation\":\"gc()\",\"mbean\":\"java.lang:type=Memory\",\"type\":\"EXEC\"}"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "jolokia-exec.json"
+	}
+}

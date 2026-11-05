@@ -1,0 +1,15 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPathPattern": "/api/v1/namespaces/ns1/pods/pod-abcdef.*/proxy/jolokia.*",
+		"bodyPatterns": [
+			{
+				"equalToJson": "[{\"attribute\":\"Pid\",\"mbean\":\"java.lang:type=Runtime\",\"type\":\"READ\"},{\"attribute\":\"Name\",\"mbean\":\"java.lang:type=Runtime\",\"type\":\"READ\"},{\"attribute\":\"InputArguments\",\"mbean\":\"java.lang:type=Runtime\",\"type\":\"READ\"},{\"attribute\":\"SystemProperties\",\"mbean\":\"java.lang:type=Runtime\",\"type\":\"READ\"}]"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"bodyFileName": "system-attributes.json"
+	}
+}

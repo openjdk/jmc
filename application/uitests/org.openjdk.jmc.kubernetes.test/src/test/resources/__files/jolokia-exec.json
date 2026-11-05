@@ -1,0 +1,10 @@
+{
+   "request" : {
+      "mbean" : "java.lang:type=Memory",
+      "operation" : "gc()",
+      "type" : "exec"
+   },
+   "status" : 200,
+   "timestamp" : 1658567003,
+   "value" : null
+}
