@@ -50,6 +50,7 @@ import org.openjdk.jmc.flightrecorder.rules.IResult;
 import org.openjdk.jmc.flightrecorder.rules.IRule;
 import org.openjdk.jmc.flightrecorder.rules.RuleRegistry;
 import org.openjdk.jmc.flightrecorder.rules.util.RulesToolkit;
+import org.openjdk.jmc.flightrecorder.selection.NamedSelectionRegistry;
 
 /**
  * Holds JFR recordings loaded on demand by file path, along with any named intermediate result sets
@@ -68,7 +69,7 @@ public class RecordingService {
 	public static final class Recording {
 		private final String id;
 		private final IItemCollection items;
-		private final Map<String, IItemCollection> stored = new ConcurrentHashMap<>();
+		private final NamedSelectionRegistry selections = new NamedSelectionRegistry();
 
 		private volatile Map<IRule, Future<IResult>> ruleResults;
 		private volatile SharedAttributeIndex sharedAttributes;
@@ -125,20 +126,11 @@ public class RecordingService {
 			return index;
 		}
 
-		public void store(String name, IItemCollection collection) {
-			stored.put(name, collection);
-		}
-
-		public IItemCollection getStored(String name) {
-			return stored.get(name);
-		}
-
-		public List<String> getStoredNames() {
-			return List.copyOf(stored.keySet());
-		}
-
-		public boolean removeStored(String name) {
-			return stored.remove(name) != null;
+		/**
+		 * @return the named result sets stored for this recording, closed when it is unloaded
+		 */
+		public NamedSelectionRegistry getSelections() {
+			return selections;
 		}
 	}
 
@@ -206,7 +198,11 @@ public class RecordingService {
 		if (recording == null) {
 			recording = recordings.get(canonicalize(recordingId));
 		}
-		return recording != null && recordings.remove(recording.getId()) != null;
+		if (recording == null || recordings.remove(recording.getId()) == null) {
+			return false;
+		}
+		recording.getSelections().close();
+		return true;
 	}
 
 	/**

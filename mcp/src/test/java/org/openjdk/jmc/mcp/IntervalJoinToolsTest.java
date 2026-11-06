@@ -281,8 +281,8 @@ class IntervalJoinToolsTest {
 		}
 		RecordingService service = new RecordingService();
 		RecordingService.Recording recording = service.load(path.toString());
-		recording.store("children", recording.getItems().apply(ItemFilters.type("test.JoinChild")));
-		recording.store("parents", recording.getItems().apply(ItemFilters.type("test.JoinParent")));
+		recording.getSelections().put("children", recording.getItems().apply(ItemFilters.type("test.JoinChild")));
+		recording.getSelections().put("parents", recording.getItems().apply(ItemFilters.type("test.JoinParent")));
 		IntervalJoinTools tools = new IntervalJoinTools();
 		tools.recordings = service;
 		Map<String, Object> result = tools.joinIntervals(null, null, "children", "parents", "run", true, "vehicle,run",
@@ -309,7 +309,7 @@ class IntervalJoinToolsTest {
 		assertNull(attributes(parent(bothRow, "test.JoinTick")).get("phase"));
 		assertEquals("run1", attributes(parent(bothRow, "test.JoinTick")).get("run"));
 
-		recording.store("empty", ItemCollectionToolkit.EMPTY);
+		recording.getSelections().put("empty", ItemCollectionToolkit.EMPTY);
 		Map<String, Object> empty = tools.joinIntervals("test.JoinChild", "test.JoinParent", "empty", null, null, true,
 				"vehicle", "phase", true, null, null, null);
 		assertEquals(0, empty.get("totalChildren"), EventValues.json(empty));

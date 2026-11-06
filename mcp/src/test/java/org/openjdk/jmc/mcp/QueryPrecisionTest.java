@@ -129,7 +129,7 @@ class QueryPrecisionTest {
 				List.of(Map.of("x", 5L), Map.of("x", -2L)));
 		IItemCollection unrelated = TestItems.collection("test.Text", List.of(text), List.of(Map.of("x", "text")));
 		Recording recording = TestItems.recording(ItemCollectionToolkit.merge(() -> Stream.of(source, unrelated)));
-		recording.store("numeric", source);
+		recording.getSelections().put("numeric", source);
 		IItemCollection selected = QuerySupport.select(recording, "numeric", null, null, null,
 				List.of(new Predicate("x", "gt", "0", null)));
 		assertEquals(1, JfrToolkit.countItems(selected));
@@ -144,7 +144,7 @@ class QueryPrecisionTest {
 				List.of(Map.of("x", 5L), Map.of("x", -2L)));
 		IItemCollection unrelated = TestItems.collection("test.Text", List.of(text), List.of(Map.of("x", "text")));
 		Recording recording = TestItems.recording(ItemCollectionToolkit.merge(() -> Stream.of(source, unrelated)));
-		recording.store("numeric", JfrToolkit.filterByAttribute(recording.getItems(), "x", "5"));
+		recording.getSelections().put("numeric", JfrToolkit.filterByAttribute(recording.getItems(), "x", "5"));
 		IItemCollection selected = QuerySupport.select(recording, "numeric", null, null, null,
 				List.of(new Predicate("x", "gt", "0", null)));
 		assertEquals(1, JfrToolkit.countItems(selected));

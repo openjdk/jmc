@@ -140,7 +140,6 @@ class JfrToolsTest {
 	void ruleResultsRespectMinimumSeverity() {
 		String warnings = analysisTools.getRuleResults("WARNING", false, recordingId);
 		assertTrue(warnings.contains("MethodProfiling"), warnings);
-		// IGNORE sorts after WARNING in the enum, so an ordinal comparison would leak it in here.
 		assertFalse(warnings.contains("Severity: Ignore"), warnings);
 	}
 

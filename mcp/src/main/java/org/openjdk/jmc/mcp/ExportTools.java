@@ -78,7 +78,7 @@ public class ExportTools {
 				throw new IllegalArgumentException("A stored result set name is required");
 			}
 			Recording recording = recordings.get(recordingId);
-			IItemCollection items = recording.getStored(resultSet);
+			IItemCollection items = recording.getSelections().getItems(resultSet).orElse(null);
 			if (items == null) {
 				throw new IllegalArgumentException("No stored result set named '" + resultSet + "'");
 			}

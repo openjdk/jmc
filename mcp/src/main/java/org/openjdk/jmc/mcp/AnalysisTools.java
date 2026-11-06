@@ -250,7 +250,7 @@ public class AnalysisTools {
 			}
 			IItemCollection source = recording.getItems();
 			if (sourceResultSet != null && !sourceResultSet.isBlank()) {
-				source = recording.getStored(sourceResultSet);
+				source = recording.getSelections().getItems(sourceResultSet).orElse(null);
 				if (source == null) {
 					throw new IllegalArgumentException("No stored result set named '" + sourceResultSet + "'.");
 				}
@@ -366,9 +366,7 @@ public class AnalysisTools {
 					failed++;
 					continue;
 				}
-				// Compare by score, not by enum order: IGNORE is declared last in Severity, so
-				// Enum.compareTo would rank it above WARNING and leak ignored results through.
-				if (result == null || result.getSeverity().getLimit() < min.getLimit()) {
+				if (result == null || !result.getSeverity().isAtLeast(min)) {
 					continue;
 				}
 				sb.append("Rule: ").append(result.getRule().getName()).append(" [").append(result.getRule().getId())
@@ -420,7 +418,7 @@ public class AnalysisTools {
 			return;
 		}
 		String storedName = eventType + (maximum ? ".max" : ".min");
-		recording.store(storedName, ItemCollectionToolkit.build(Stream.of(item)));
+		recording.getSelections().put(storedName, ItemCollectionToolkit.build(Stream.of(item)));
 		sb.append("  (stored as '").append(storedName).append("')\n");
 		sb.append("  ").append(label).append(" event details:\n");
 		JfrToolkit.appendItemAttributes(sb, item, typeOf(item), "    ");

@@ -236,7 +236,7 @@ class ExportToolsTest {
 	@Test
 	void emptyAndPastEndPagesAreExplicit(@TempDir Path directory) throws Exception {
 		ExportTools tools = storedRecording(directory);
-		tools.recordings.get(null).store("empty", ItemCollectionToolkit.EMPTY);
+		tools.recordings.get(null).getSelections().put("empty", ItemCollectionToolkit.EMPTY);
 		Map<String, Object> empty = tools.exportResultSet("empty", null, null, null, null, null);
 		assertEquals(0L, empty.get("total"));
 		assertEquals(0, empty.get("returned"));
@@ -279,7 +279,7 @@ class ExportToolsTest {
 		}
 		RecordingService service = new RecordingService();
 		RecordingService.Recording recording = service.load(path.toString());
-		recording.store("precise", recording.getItems().apply(ItemFilters.type(EVENT_TYPE)));
+		recording.getSelections().put("precise", recording.getItems().apply(ItemFilters.type(EVENT_TYPE)));
 		ExportTools tools = new ExportTools();
 		tools.recordings = service;
 		return tools;

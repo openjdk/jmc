@@ -121,7 +121,7 @@ public class GroupedQueryTools {
 			Map<String, Object> result = page(total, start, rows.size());
 			result.put("rows", rows);
 			if (storeAs != null && !storeAs.isBlank()) {
-				recording.store(storeAs, selected);
+				recording.getSelections().put(storeAs, selected);
 				result.put("storedAs", storeAs);
 			}
 			return result;
@@ -198,7 +198,7 @@ public class GroupedQueryTools {
 			result.put("stddevMethod", "population");
 			result.put("groups", rows);
 			if (storeAs != null && !storeAs.isBlank()) {
-				recording.store(storeAs, selected);
+				recording.getSelections().put(storeAs, selected);
 				result.put("storedAs", storeAs);
 			}
 			return result;

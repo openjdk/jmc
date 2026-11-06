@@ -143,7 +143,7 @@ public class QueryTools {
 
 			boolean stored = storeAs != null && !storeAs.isBlank();
 			if (stored) {
-				recording.store(storeAs, filtered);
+				recording.getSelections().put(storeAs, filtered);
 			}
 
 			if (!filtered.hasItems()) {

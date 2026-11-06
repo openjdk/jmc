@@ -71,13 +71,13 @@ class AnalysisToolsTest {
 		assertTrue(minimum.contains("Identifier: short"), result);
 		assertFalse(minimum.contains("Identifier: long"), result);
 		assertTrue(maximum.contains("Identifier: long"), result);
-		IItem min = JfrToolkit.toItemList(recording.getStored(TYPE + ".min")).getFirst();
-		IItem max = JfrToolkit.toItemList(recording.getStored(TYPE + ".max")).getFirst();
+		IItem min = JfrToolkit.toItemList(recording.getSelections().getItems(TYPE + ".min").orElseThrow()).getFirst();
+		IItem max = JfrToolkit.toItemList(recording.getSelections().getItems(TYPE + ".max").orElseThrow()).getFirst();
 		assertEquals("short", ID.getAccessor(type(min)).getMember(min));
 		assertEquals("long", ID.getAccessor(type(max)).getMember(max));
 		assertEquals(1_001_000, duration(min).longValueIn(UnitLookup.NANOSECOND));
 		assertEquals(49_806_000, duration(max).longValueIn(UnitLookup.NANOSECOND));
-		assertEquals(1, JfrToolkit.countItems(recording.getStored(TYPE + ".min")));
+		assertEquals(1, JfrToolkit.countItems(recording.getSelections().getItems(TYPE + ".min").orElseThrow()));
 		assertSame(JfrToolkit.toItemList(items).get(1), min);
 	}
 
@@ -90,8 +90,9 @@ class AnalysisToolsTest {
 		AnalysisTools tools = new AnalysisTools();
 		tools.recordings = TestItems.service(recording);
 		String result = tools.aggregateEvents(TYPE, "min", null, null, null);
-		assertEquals(1, JfrToolkit.countItems(recording.getStored(TYPE + ".min")));
-		IItem minimum = JfrToolkit.toItemList(recording.getStored(TYPE + ".min")).getFirst();
+		assertEquals(1, JfrToolkit.countItems(recording.getSelections().getItems(TYPE + ".min").orElseThrow()));
+		IItem minimum = JfrToolkit.toItemList(recording.getSelections().getItems(TYPE + ".min").orElseThrow())
+				.getFirst();
 		assertEquals(1_000_000, duration(minimum).longValueIn(UnitLookup.NANOSECOND));
 		assertTrue(result.contains("Identifier: " + ID.getAccessor(type(minimum)).getMember(minimum)), result);
 	}

@@ -112,7 +112,7 @@ class StackAnalysisTest {
 
 	@Test
 	void storedSetIsTheSourceForBothSelectionAndDenominator() {
-		recording.store("simulation",
+		recording.getSelections().put("simulation",
 				ItemCollectionToolkit.build(JfrToolkit.toItemList(recording.getItems()).stream().limit(3)));
 		Map<String, Object> result = analyze("simulation", null, "terrain", "source", "count");
 		assertEquals(3L, result.get("sourceEventCount"));

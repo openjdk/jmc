@@ -34,7 +34,6 @@
 package org.openjdk.jmc.mcp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -51,7 +50,6 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
-import org.openjdk.jmc.flightrecorder.rules.Severity;
 
 class JfrToolkitTest {
 
@@ -134,18 +132,5 @@ class JfrToolkitTest {
 				return delegate.getUnfilteredTimeRanges();
 			}
 		};
-	}
-
-	/**
-	 * Guards the reason severity filtering compares scores instead of enum order: IGNORE is
-	 * declared last in Severity, so Enum.compareTo ranks it as the most severe value.
-	 */
-	@Test
-	void severityEnumOrderDoesNotMatchSeverityScore() {
-		assertTrue(Severity.IGNORE.compareTo(Severity.WARNING) > 0,
-				"Enum order still puts IGNORE last; the score based comparison in AnalysisTools is what matters");
-		assertTrue(Severity.IGNORE.getLimit() < Severity.WARNING.getLimit());
-		assertTrue(Severity.INFO.getLimit() < Severity.WARNING.getLimit());
-		assertTrue(Severity.OK.getLimit() < Severity.INFO.getLimit());
 	}
 }

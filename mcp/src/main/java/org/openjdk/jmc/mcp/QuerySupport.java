@@ -54,6 +54,7 @@ import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.KindOfQuantity;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.selection.NamedSelectionRegistry.Entry;
 import org.openjdk.jmc.mcp.RecordingService.Recording;
 
 /** Shared typed predicates and result-set selection for analytical queries. */
@@ -79,10 +80,10 @@ public final class QuerySupport {
 		validateTimeRange(fromSeconds, toSeconds);
 		IItemCollection source = recording.getItems();
 		if (resultSet != null && !resultSet.isBlank()) {
-			source = recording.getStored(resultSet);
+			source = recording.getSelections().getItems(resultSet).orElse(null);
 			if (source == null) {
-				throw new IllegalArgumentException(
-						"No stored result set named '" + resultSet + "'. Available: " + recording.getStoredNames());
+				throw new IllegalArgumentException("No stored result set named '" + resultSet + "'. Available: "
+						+ recording.getSelections().list().stream().map(Entry::getName).toList());
 			}
 		}
 		IItemCollection selected = JfrToolkit.filterItems(source, recording.getStart(), eventType, fromSeconds,

@@ -141,13 +141,14 @@ class EventTypeMetadataTest {
 
 	@Test
 	void correlationAndCombinedSetSummariesMergeItemGroupCounts() {
-		recording.store("reference", ItemCollectionToolkit.build(JfrToolkit.toItemList(firstTicks).stream().limit(1)));
+		recording.getSelections().put("reference",
+				ItemCollectionToolkit.build(JfrToolkit.toItemList(firstTicks).stream().limit(1)));
 		String related = correlation.findRelatedEvents("concurrent", "reference", null, null, null, null, null, false,
 				true, null, 100, null);
 		assertEquals(1, related.lines().filter("  test.Tick: 5 events"::equals).count(), related);
 		assertEquals(1, related.lines().filter("  test.Other: 3 events"::equals).count(), related);
-		recording.store("first", firstTicks);
-		recording.store("second", secondTicks);
+		recording.getSelections().put("first", firstTicks);
+		recording.getSelections().put("second", secondTicks);
 		String combined = correlation.combineResultSets("first", "second", "union", "allTicks", null);
 		assertEquals(1, combined.lines().filter("  test.Tick: 5 events"::equals).count(), combined);
 	}

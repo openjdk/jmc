@@ -43,6 +43,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.flightrecorder.selection.NamedSelectionRegistry.Entry;
 import org.openjdk.jmc.mcp.RecordingService.Recording;
 
 /**
@@ -103,7 +104,7 @@ public class RecordingTools {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Recording: ").append(recording.getId()).append("\n");
 			appendSummary(sb, recording);
-			var stored = recording.getStoredNames();
+			var stored = recording.getSelections().list().stream().map(Entry::getName).toList();
 			if (!stored.isEmpty()) {
 				sb.append("  Stored result sets: ").append(String.join(", ", stored)).append("\n");
 			}

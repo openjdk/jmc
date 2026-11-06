@@ -33,25 +33,19 @@
  */
 package org.openjdk.jmc.mcp;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import jakarta.inject.Inject;
 
 import org.openjdk.jmc.common.IMCThread;
-import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
-import org.openjdk.jmc.common.item.IItemConsumer;
-import org.openjdk.jmc.common.item.IItemConsumerFactory;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
 import org.openjdk.jmc.common.item.IMemberAccessor;
@@ -59,7 +53,13 @@ import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
 import org.openjdk.jmc.common.item.ItemFilters;
 import org.openjdk.jmc.common.unit.IQuantity;
+import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.flightrecorder.JfrAttributes;
+import org.openjdk.jmc.flightrecorder.selection.IItemStreamFlavor;
+import org.openjdk.jmc.flightrecorder.selection.NamedSelectionRegistry;
+import org.openjdk.jmc.flightrecorder.selection.NamedSelectionRegistry.Entry;
+import org.openjdk.jmc.flightrecorder.selection.SelectionAspectToolkit;
+import org.openjdk.jmc.flightrecorder.selection.SelectionToolkit;
 import org.openjdk.jmc.mcp.RecordingService.Recording;
 
 /**
@@ -123,9 +123,10 @@ public class CorrelationTools {
 			IItemCollection refEvents;
 			String refDescription;
 			if (hasReference) {
-				refEvents = recording.getStored(reference);
+				refEvents = recording.getSelections().getItems(reference).orElse(null);
 				if (refEvents == null) {
-					return "No stored result set named '" + reference + "'. Available: " + recording.getStoredNames();
+					return "No stored result set named '" + reference + "'. Available: "
+							+ recording.getSelections().list().stream().map(Entry::getName).toList();
 				}
 				refDescription = reference;
 			} else {
@@ -145,25 +146,16 @@ public class CorrelationTools {
 				return "No reference events found for: " + refDescription;
 			}
 
-			IQuantity earliest = refEvents.getAggregate(Aggregators.min(JfrAttributes.START_TIME));
-			IQuantity latest = refEvents.getAggregate(Aggregators.max(JfrAttributes.END_TIME));
-			Set<IMCThread> threads = refEvents.getAggregate(Aggregators.distinct(JfrAttributes.EVENT_THREAD));
-			if (threads == null) {
-				threads = Collections.emptySet();
-			}
-
-			if (earliest == null || latest == null) {
+			IItemStreamFlavor referenceFlavor = IItemStreamFlavor.build(refDescription, refEvents);
+			Optional<IRange<IQuantity>> range = SelectionAspectToolkit.getRange(referenceFlavor);
+			if (range.isEmpty()) {
 				return "Could not determine a time range from the reference events.";
 			}
-
-			IItemFilter filter = contained
-					? ItemFilters.and(ItemFilters.moreOrEqual(JfrAttributes.START_TIME, earliest),
-							ItemFilters.lessOrEqual(JfrAttributes.END_TIME, latest))
-					: ItemFilters.and(ItemFilters.lessOrEqual(JfrAttributes.START_TIME, latest),
-							ItemFilters.moreOrEqual(JfrAttributes.END_TIME, earliest));
-			if (restrictThreads && !threads.isEmpty()) {
-				filter = ItemFilters.and(filter, ItemFilters.memberOf(JfrAttributes.EVENT_THREAD, threads));
-			}
+			IQuantity earliest = range.get().getStart();
+			IQuantity latest = range.get().getEnd();
+			Set<IMCThread> threads = SelectionAspectToolkit.getThreads(referenceFlavor, true, true);
+			IItemFilter filter = SelectionAspectToolkit.getRangeAndThreadFilter(range, threads, true, contained,
+					restrictThreads);
 			if (!withReference && !hasReference) {
 				filter = ItemFilters.and(filter, ItemFilters.not(ItemFilters.type(eventType)));
 			}
@@ -172,11 +164,11 @@ public class CorrelationTools {
 			if (!withReference && hasReference) {
 				// A stored reference can span any mix of types, so it is removed by event identity
 				// rather than by type.
-				result = subtract(result, refEvents);
+				result = SelectionToolkit.subtract(result, refEvents);
 			}
 
 			if (storeAs != null && !storeAs.isBlank()) {
-				recording.store(storeAs, result);
+				recording.getSelections().put(storeAs, result);
 			}
 
 			StringBuilder sb = new StringBuilder();
@@ -228,15 +220,15 @@ public class CorrelationTools {
 		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
-			List<String> names = new ArrayList<>(recording.getStoredNames());
+			NamedSelectionRegistry selections = recording.getSelections();
+			List<String> names = selections.list().stream().map(Entry::getName).sorted().toList();
 			if (names.isEmpty()) {
 				return "No stored result sets. Use the storeAs parameter of getEventTable or findRelatedEvents.";
 			}
-			Collections.sort(names);
 			StringBuilder sb = new StringBuilder("Stored result sets:\n");
 			for (String name : names) {
-				sb.append("  ").append(name).append(": ").append(JfrToolkit.countItems(recording.getStored(name)))
-						.append(" events\n");
+				IItemCollection items = selections.getItems(name).orElse(ItemCollectionToolkit.EMPTY);
+				sb.append("  ").append(name).append(": ").append(JfrToolkit.countItems(items)).append(" events\n");
 			}
 			return sb.toString();
 		} catch (Exception e) {
@@ -258,32 +250,34 @@ public class CorrelationTools {
 		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
-			IItemCollection a = recording.getStored(setA);
+			IItemCollection a = recording.getSelections().getItems(setA).orElse(null);
 			if (a == null) {
-				return "No stored result set named '" + setA + "'. Available: " + recording.getStoredNames();
+				return "No stored result set named '" + setA + "'. Available: "
+						+ recording.getSelections().list().stream().map(Entry::getName).toList();
 			}
-			IItemCollection b = recording.getStored(setB);
+			IItemCollection b = recording.getSelections().getItems(setB).orElse(null);
 			if (b == null) {
-				return "No stored result set named '" + setB + "'. Available: " + recording.getStoredNames();
+				return "No stored result set named '" + setB + "'. Available: "
+						+ recording.getSelections().list().stream().map(Entry::getName).toList();
 			}
 
 			String op = operation == null ? "" : operation.toLowerCase(Locale.ENGLISH);
 			IItemCollection result;
 			switch (op) {
 			case "intersect":
-				result = intersect(a, b);
+				result = SelectionToolkit.intersect(a, b);
 				break;
 			case "union":
-				result = union(a, b);
+				result = SelectionToolkit.union(a, b);
 				break;
 			case "subtract":
-				result = subtract(a, b);
+				result = SelectionToolkit.subtract(a, b);
 				break;
 			default:
 				return "Unknown operation: " + operation + ". Use 'intersect', 'union', or 'subtract'.";
 			}
 
-			recording.store(storeAs, result);
+			recording.getSelections().put(storeAs, result);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(setA).append(" (").append(JfrToolkit.countItems(a)).append(") ").append(op).append(" ")
@@ -308,67 +302,11 @@ public class CorrelationTools {
 		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
-			return recording.removeStored(name) ? "Deleted result set '" + name + "'"
-					: "No stored result set named '" + name + "'. Available: " + recording.getStoredNames();
+			return recording.getSelections().removeByName(name) ? "Deleted result set '" + name + "'"
+					: "No stored result set named '" + name + "'. Available: "
+							+ recording.getSelections().list().stream().map(Entry::getName).toList();
 		} catch (Exception e) {
 			return "Error: " + JfrToolkit.describeError(e);
-		}
-	}
-
-	/**
-	 * Set operations compare items by reference identity. Every result set for a recording is
-	 * derived from the same parsed item instances, so identity is both correct and cheap here -
-	 * IItem itself defines no value equality.
-	 */
-	private static Set<IItem> identitySet(IItemCollection items) {
-		return identityItems(items).seen;
-	}
-
-	private static IItemCollection intersect(IItemCollection a, IItemCollection b) {
-		Set<IItem> inB = identitySet(b);
-		return a.apply(type -> inB::contains);
-	}
-
-	private static IItemCollection union(IItemCollection a, IItemCollection b) {
-		IdentityItems combined = identityItems(ItemCollectionToolkit.merge(() -> Stream.of(a, b)));
-		return ItemCollectionToolkit.build(combined.ordered.stream());
-	}
-
-	private static IItemCollection subtract(IItemCollection a, IItemCollection b) {
-		Set<IItem> inB = identitySet(b);
-		return a.apply(type -> item -> !inB.contains(item));
-	}
-
-	private static IdentityItems identityItems(IItemCollection items) {
-		IdentityItems result = items.getAggregate(Aggregators.forConsumer(new IItemConsumerFactory<IdentityItems>() {
-			@Override
-			public boolean acceptType(IType<IItem> type) {
-				return true;
-			}
-
-			@Override
-			public IdentityItems newItemConsumer(IType<IItem> type) {
-				return new IdentityItems();
-			}
-		}));
-		return result == null ? new IdentityItems() : result;
-	}
-
-	private static final class IdentityItems implements IItemConsumer<IdentityItems> {
-		final Set<IItem> seen = Collections.newSetFromMap(new IdentityHashMap<>());
-		final List<IItem> ordered = new ArrayList<>();
-
-		@Override
-		public void consume(IItem item) {
-			if (seen.add(item)) {
-				ordered.add(item);
-			}
-		}
-
-		@Override
-		public IdentityItems merge(IdentityItems other) {
-			other.ordered.forEach(this::consume);
-			return this;
 		}
 	}
 

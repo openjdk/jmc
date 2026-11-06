@@ -137,7 +137,8 @@ class GroupedQueryToolsTest {
 		assertDecimal("1", map(percentiles.get("0")).get("exactValue"));
 		assertDecimal("3", map(percentiles.get("100")).get("exactValue"));
 		assertNotNull(map(map(car.get("statistics")).get("duration")).get("sum"));
-		assertEquals(3, JfrToolkit.countItems(service.get(recordingId).getStored("terrain")));
+		assertEquals(3,
+				JfrToolkit.countItems(service.get(recordingId).getSelections().getItems("terrain").orElseThrow()));
 	}
 
 	@Test
@@ -178,7 +179,7 @@ class GroupedQueryToolsTest {
 		assertError(
 				tools.queryEvents("test.Terrain", filters(), null, null, 2.0, 1.0, null, null, "invalid", recordingId),
 				"Time bounds");
-		assertFalse(service.get(recordingId).getStoredNames().contains("invalid"));
+		assertFalse(service.get(recordingId).getSelections().getByName("invalid").isPresent());
 	}
 
 	@Test
@@ -189,7 +190,7 @@ class GroupedQueryToolsTest {
 		assertEquals(0L, result.get("totalEvents"));
 		assertEquals(0, result.get("totalGroups"));
 		assertEquals(List.of(), result.get("groups"));
-		assertNotNull(service.get(recordingId).getStored("empty"));
+		assertTrue(service.get(recordingId).getSelections().getItems("empty").isPresent());
 	}
 
 	@Test
