@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="module" value="true"/>
-			<attribute name="limit-modules" value="java.datatransfer,java.instrument,java.net.http,java.scripting,java.smartcardio,java.transaction.xa,jdk.compiler,jdk.dynalink,jdk.httpserver,jdk.incubator.vector,jdk.internal.ed,jdk.internal.le,jdk.jartool,jdk.jdi,jdk.jsobject,jdk.management.agent,jdk.management.jfr,jdk.net,jdk.nio.mapmode,jdk.sctp,jdk.security.auth,jdk.security.jgss,jdk.unsupported"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
