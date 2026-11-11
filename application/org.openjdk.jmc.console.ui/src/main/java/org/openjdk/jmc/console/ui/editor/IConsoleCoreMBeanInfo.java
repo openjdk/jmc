@@ -40,8 +40,7 @@ import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 
 /**
- * This contains some basic MBean info useful when launching
- * console tabs
+ * This contains some basic MBean info useful when launching console tabs
  */
 public interface IConsoleCoreMBeanInfo {
 

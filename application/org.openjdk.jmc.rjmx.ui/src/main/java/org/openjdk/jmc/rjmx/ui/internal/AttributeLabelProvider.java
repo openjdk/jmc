@@ -50,8 +50,8 @@ public class AttributeLabelProvider extends TypedLabelProvider<MRI> {
 	private final IMRIMetadataService m_mds;
 	private final IMRIService m_availableAttributes;
 	private static final RGB UNAVAILABLE_COLOR = new RGB(192, 192, 192);
-    // Note, checking availability of an MRI may potentially
-    // involve external calls that we DO NOT want to trigger in the main thread
+	// Note, checking availability of an MRI may potentially
+	// involve external calls that we DO NOT want to trigger in the main thread
 	private final DeferredLabelProvider<MRI, Boolean> availableCache;
 
 	public AttributeLabelProvider(IMRIMetadataService mds, IMRIService availableAttributes, StructuredViewer viewer) {

@@ -99,8 +99,8 @@ public class OverviewTab implements IConsolePageStateHandler {
 	private void validateDependencies(
 		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mbeanInfo) {
 		try {
-			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Memory"),  //$NON-NLS-1$
-					new ObjectName("java.lang:type=OperatingSystem"))) {  //$NON-NLS-1$
+			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Memory"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$
 				return;
 			}
 		} catch (MalformedObjectNameException ignore) {

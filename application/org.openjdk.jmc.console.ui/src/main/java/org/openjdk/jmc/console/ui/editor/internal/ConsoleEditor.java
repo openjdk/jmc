@@ -321,8 +321,8 @@ public class ConsoleEditor extends FormEditor {
 	}
 
 	/**
-	 * Do some basic lookup BEFORE injecting values for the tabs.
-	 * That way we can avoid calling expensive operations WHILE building ghe GUI
+	 * Do some basic lookup BEFORE injecting values for the tabs. That way we can avoid calling
+	 * expensive operations WHILE building ghe GUI
 	 */
 	private IConsoleCoreMBeanInfo precomputeBasicMBeanInfo(MBeanServerConnection mbeanServer) {
 		if (!(mbeanServer instanceof IDummyService)) {
