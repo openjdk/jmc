@@ -55,8 +55,8 @@ public class AttributeConfiguratorWizardPage extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		table = AttributeConfiguratorTableFactory.createAttributeConfiguratorTable(parent,
-				m_viewModel, m_selectorModel, new Runnable() {
+		table = AttributeConfiguratorTableFactory.createAttributeConfiguratorTable(parent, m_viewModel, m_selectorModel,
+				new Runnable() {
 					@Override
 					public void run() {
 						setPageComplete(isPageComplete());

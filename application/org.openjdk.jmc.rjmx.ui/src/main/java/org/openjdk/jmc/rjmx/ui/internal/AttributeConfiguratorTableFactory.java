@@ -74,15 +74,16 @@ public final class AttributeConfiguratorTableFactory {
 	}
 
 	public static TableViewer createAttributeConfiguratorTable(
-		Composite parent, AttributeSelectionViewModel viewModel,
-		AttributeSelectionContentModel selectorModel, Runnable listener) {
+		Composite parent, AttributeSelectionViewModel viewModel, AttributeSelectionContentModel selectorModel,
+		Runnable listener) {
 		Map<KindOfQuantity<?>, List<IUnit>> types = getTypes();
 
 		TableViewer viewer = new TableViewer(parent,
 				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
-		AttributeLabelProvider alp = new AttributeLabelProvider(selectorModel.getMetadataService(), selectorModel.getMRIService(), viewer);
+		AttributeLabelProvider alp = new AttributeLabelProvider(selectorModel.getMetadataService(),
+				selectorModel.getMRIService(), viewer);
 
 		TableViewerColumn nameColumn = new TableViewerColumn(viewer, SWT.NONE);
 		nameColumn.getColumn().setWidth(200);
