@@ -75,7 +75,7 @@ public class AttributeLabelProvider extends TypedLabelProvider<MRI> {
 
 	@Override
 	protected Image getImageTyped(MRI mri) {
-		if (availableCache.getLabelAttribute(mri) == Boolean.TRUE) {
+		if (Boolean.TRUE.equals(availableCache.getLabelAttribute(mri))) {
 			java.awt.Color color = MRIMetadataToolkit.getColor(m_mds.getMetadata(mri));
 			return SWTColorToolkit.getColorThumbnail(SWTColorToolkit.asRGB(color));
 		} else {
@@ -85,7 +85,7 @@ public class AttributeLabelProvider extends TypedLabelProvider<MRI> {
 
 	@Override
 	protected Color getForegroundTyped(MRI element) {
-		if (availableCache.getLabelAttribute(element) != Boolean.FALSE) {
+		if (!Boolean.FALSE.equals(availableCache.getLabelAttribute(element))) {
 			return null;
 		}
 		return JFaceResources.getColorRegistry().get(JFacePreferences.QUALIFIER_COLOR);
