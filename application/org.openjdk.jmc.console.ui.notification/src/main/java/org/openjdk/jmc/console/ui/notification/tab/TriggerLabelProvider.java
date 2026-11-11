@@ -88,7 +88,7 @@ public class TriggerLabelProvider extends LabelProvider implements IColorProvide
 	@Override
 	public Color getForeground(Object element) {
 		if (element instanceof TriggerRule
-				&& availableCache.getLabelAttribute((TriggerRule) element) == Boolean.FALSE) {
+				&& Boolean.FALSE.equals(availableCache.getLabelAttribute((TriggerRule) element))) {
 			return JFaceResources.getColorRegistry().get(JFacePreferences.QUALIFIER_COLOR);
 		}
 		return null;
