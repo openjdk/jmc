@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -76,6 +76,7 @@ import org.openjdk.jmc.rjmx.ui.internal.TreeNodeFilter;
 import org.openjdk.jmc.ui.common.tree.ITreeNode;
 import org.openjdk.jmc.ui.common.util.AdapterUtil;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
+import org.openjdk.jmc.ui.misc.BackgroundViewerLoaderJob;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 import org.openjdk.jmc.ui.misc.IRefreshable;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
@@ -119,8 +120,7 @@ public class MBeanTreeSectionPart extends MCSectionPart implements IMBeanPropert
 				.setLayoutData(MCLayoutFactory.createFormPageLayoutData(SWT.DEFAULT, SWT.DEFAULT, true, true));
 		TreeNodeFilter.install(viewer, filterText, false);
 
-		ITreeNode[] nodes = buildTreeModel();
-		viewer.setInput(nodes);
+		BackgroundViewerLoaderJob.updateInTheBackground("MBean Hierachy", viewer, () -> buildTreeModel()); // $NON-NLS-1$ technical and not displayed
 		getMCToolBarManager().add(new AddMBeanAction(mbeanServer, guid));
 		getMCToolBarManager().add(refreshAction);
 		mbeanService.addMBeanServerChangeListener(refreshAction);

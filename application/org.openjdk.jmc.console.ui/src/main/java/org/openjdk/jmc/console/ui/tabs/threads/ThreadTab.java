@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.console.ui.tabs.threads;
 
 import jakarta.inject.Inject;
 import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.eclipse.jface.action.IToolBarManager;
@@ -47,6 +48,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
+import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleFormPage;
@@ -72,7 +74,8 @@ public class ThreadTab implements IConsolePageStateHandler {
 
 	@Inject
 	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection) {
+		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection,
+		IConsoleCoreMBeanInfo mBeanInfo) {
 		if (m_platformThreadingMBeanPresent) {
 			m_model = new ThreadsModel(connection);
 		} else {
@@ -116,10 +119,17 @@ public class ThreadTab implements IConsolePageStateHandler {
 			}
 
 		});
-		validateDependencies(page, connection);
+		validateDependencies(page, connection, mBeanInfo);
 	}
 
-	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
+	private void validateDependencies(
+		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mBeanInfo) {
+		try {
+			if (mBeanInfo.hasAllBeans(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$
+				return;
+			}
+		} catch (MalformedObjectNameException ignore) {
+		}
 		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
 		try {
 			if (connection.queryNames(new ObjectName("java.lang:type=Threading"), null).isEmpty()) { //$NON-NLS-1$

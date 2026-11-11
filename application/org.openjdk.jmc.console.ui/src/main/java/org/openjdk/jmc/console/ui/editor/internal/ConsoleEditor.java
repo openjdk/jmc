@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,11 +33,16 @@
 package org.openjdk.jmc.console.ui.editor.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
-import jakarta.inject.Inject;
+import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,6 +68,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.console.ui.ConsolePlugin;
+import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
@@ -70,6 +76,8 @@ import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.services.IDummyService;
+import org.openjdk.jmc.rjmx.common.services.internal.ServiceFactoryManager;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
 import org.openjdk.jmc.ui.UIPlugin;
@@ -77,6 +85,8 @@ import org.openjdk.jmc.ui.WorkbenchToolkit;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
+
+import jakarta.inject.Inject;
 
 /**
  * The ConsoleEditor is responsible for holding JMX console tabs. The tabs are added as FormPages
@@ -104,12 +114,12 @@ public class ConsoleEditor extends FormEditor {
 					WorkbenchToolkit.asyncCloseEditor(ConsoleEditor.this);
 					return Status.CANCEL_STATUS;
 				}
+				setUpInjectionables();
 				DisplayToolkit.safeAsyncExec(new Runnable() {
 
 					@Override
 					public void run() {
 						if (!mainUi.isDisposed()) {
-							setUpInjectionables();
 							doAddPages();
 							stackLayout.topControl.dispose();
 							stackLayout.topControl = mainUi;
@@ -303,8 +313,73 @@ public class ConsoleEditor extends FormEditor {
 		IEclipseContext context = this.getSite().getService(IEclipseContext.class);
 
 		// TODO: Consider carefully which services we want to support.
-		context.set(MBeanServerConnection.class, connection.getServiceOrDummy(MBeanServerConnection.class));
+		MBeanServerConnection mbeanServer = connection.getServiceOrDummy(MBeanServerConnection.class);
+		context.set(MBeanServerConnection.class, mbeanServer);
+		context.set(IConsoleCoreMBeanInfo.class, precomputeBasicMBeanInfo(mbeanServer));
 		context.set(ISubscriptionService.class, connection.getServiceOrDummy(ISubscriptionService.class));
 		context.set(IConnectionHandle.class, connection);
 	}
+
+	/**
+	 * Do some basic lookup BEFORE injecting values for the tabs.
+	 * That way we can avoid calling expensive operations WHILE building ghe GUI
+	 */
+	private IConsoleCoreMBeanInfo precomputeBasicMBeanInfo(MBeanServerConnection mbeanServer) {
+		if (!(mbeanServer instanceof IDummyService)) {
+			try {
+				Map<ObjectName, MBeanInfo> coreMBeans = new HashMap<>();
+				for (ObjectName name : Arrays.asList(new ObjectName("java.lang", "type", "OperatingSystem"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						new ObjectName("com.sun.management", "type", "DiagnosticCommand"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						new ObjectName("java.lang", "type", "Runtime"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						new ObjectName("java.lang", "type", "Threading"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						new ObjectName("java.lang", "type", "ClassLoading"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+					coreMBeans.put(name, mbeanServer.getMBeanInfo(name));
+				}
+				return new CoreMBeanInfo(mbeanServer.queryNames(null, null), coreMBeans);
+
+			} catch (Exception ignore) {
+				// fall back to dummy if for some reason the lookup fails
+				ignore.printStackTrace();
+			}
+		}
+
+		return ServiceFactoryManager.createDummyService(IConsoleCoreMBeanInfo.class, null);
+	}
+
+	static class CoreMBeanInfo implements IConsoleCoreMBeanInfo {
+		private Set<ObjectName> mbeanNames;
+		private Map<ObjectName, MBeanInfo> coreMBeans;
+
+		CoreMBeanInfo(Set<ObjectName> mbeanNames, Map<ObjectName, MBeanInfo> coreMBeans) {
+			this.mbeanNames = mbeanNames;
+			this.coreMBeans = coreMBeans;
+		}
+
+		@Override
+		public Set<ObjectName> mbeanNames() {
+			return mbeanNames;
+		}
+
+		@Override
+		public Map<ObjectName, MBeanInfo> coreMBeans() {
+			return coreMBeans;
+		}
+
+		@Override
+		public boolean hasAllBeans(ObjectName[] names) {
+			for (ObjectName mustHaveName : names) {
+				// use startswith to support garbage collection and memory beans
+				if (mbeanNames.stream()
+						.noneMatch(beanName -> beanName.getDomain().equals(mustHaveName.getDomain())
+								&& beanName.getKeyPropertyList().entrySet()
+										.containsAll(mustHaveName.getKeyPropertyList().entrySet()))) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,32 +36,36 @@ import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-
 import org.openjdk.jmc.console.ui.notification.NotificationPlugin;
 import org.openjdk.jmc.rjmx.triggers.TriggerRule;
 import org.openjdk.jmc.ui.UIPlugin;
+import org.openjdk.jmc.ui.misc.DeferredLabelProvider;
 
 /**
  * TriggerLabelProvider
  */
 public class TriggerLabelProvider extends LabelProvider implements IColorProvider {
 	final private RuleCheckedStateProvider ruleStateProvider;
+	final private DeferredLabelProvider<TriggerRule, Boolean> availableCache;
 
-	public TriggerLabelProvider(RuleCheckedStateProvider ruleStateProvider) {
+	public TriggerLabelProvider(RuleCheckedStateProvider ruleStateProvider, StructuredViewer viewer) {
 		this.ruleStateProvider = ruleStateProvider;
-	}
-
-	public TriggerLabelProvider() {
-		this(null);
+		this.availableCache = new DeferredLabelProvider<TriggerRule, Boolean>(viewer, this::isAvailable);
 	}
 
 	@Override
 	public Image getImage(Object obj) {
 		if (obj instanceof TriggerRule) {
 			TriggerRule rule = (TriggerRule) obj;
-			return NotificationPlugin.getDefault().getImage(rule.getAction(), isAvailable(rule));
+			Boolean availabilityState = availableCache.getLabelAttribute(rule);
+			if (availabilityState == null) {
+				// We are still not sure, return nothing for now
+				return null;
+			}
+			return NotificationPlugin.getDefault().getImage(rule.getAction(), availabilityState);
 		}
 		if (obj instanceof RuleGroup) {
 			return UIPlugin.getDefault().getImage(UIPlugin.ICON_FOLDER_CLOSED);
@@ -83,7 +87,8 @@ public class TriggerLabelProvider extends LabelProvider implements IColorProvide
 
 	@Override
 	public Color getForeground(Object element) {
-		if (element instanceof TriggerRule && !isAvailable((TriggerRule) element)) {
+		if (element instanceof TriggerRule
+				&& availableCache.getLabelAttribute((TriggerRule) element) == Boolean.FALSE) {
 			return JFaceResources.getColorRegistry().get(JFacePreferences.QUALIFIER_COLOR);
 		}
 		return null;

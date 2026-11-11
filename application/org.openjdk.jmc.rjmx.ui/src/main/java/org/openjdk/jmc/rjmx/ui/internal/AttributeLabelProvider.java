@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.rjmx.ui.internal;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -41,6 +42,7 @@ import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
 import org.openjdk.jmc.rjmx.common.subscription.IMRIService;
 import org.openjdk.jmc.rjmx.common.subscription.MRI;
 import org.openjdk.jmc.rjmx.subscription.MRIMetadataToolkit;
+import org.openjdk.jmc.ui.misc.DeferredLabelProvider;
 import org.openjdk.jmc.ui.misc.SWTColorToolkit;
 import org.openjdk.jmc.ui.misc.TypedLabelProvider;
 
@@ -48,11 +50,15 @@ public class AttributeLabelProvider extends TypedLabelProvider<MRI> {
 	private final IMRIMetadataService m_mds;
 	private final IMRIService m_availableAttributes;
 	private static final RGB UNAVAILABLE_COLOR = new RGB(192, 192, 192);
+    // Note, checking availability of an MRI may potentially
+    // involve external calls that we DO NOT want to trigger in the main thread
+	private final DeferredLabelProvider<MRI, Boolean> availableCache;
 
-	public AttributeLabelProvider(IMRIMetadataService mds, IMRIService availableAttributes) {
+	public AttributeLabelProvider(IMRIMetadataService mds, IMRIService availableAttributes, StructuredViewer viewer) {
 		super(MRI.class);
 		m_mds = mds;
 		m_availableAttributes = availableAttributes;
+		availableCache = new DeferredLabelProvider<MRI, Boolean>(viewer, m_availableAttributes::isMRIAvailable);
 	}
 
 	@Override
@@ -69,7 +75,7 @@ public class AttributeLabelProvider extends TypedLabelProvider<MRI> {
 
 	@Override
 	protected Image getImageTyped(MRI mri) {
-		if (m_availableAttributes.isMRIAvailable(mri)) {
+		if (availableCache.getLabelAttribute(mri) == Boolean.TRUE) {
 			java.awt.Color color = MRIMetadataToolkit.getColor(m_mds.getMetadata(mri));
 			return SWTColorToolkit.getColorThumbnail(SWTColorToolkit.asRGB(color));
 		} else {
@@ -79,7 +85,7 @@ public class AttributeLabelProvider extends TypedLabelProvider<MRI> {
 
 	@Override
 	protected Color getForegroundTyped(MRI element) {
-		if (m_availableAttributes.isMRIAvailable(element)) {
+		if (availableCache.getLabelAttribute(element) != Boolean.FALSE) {
 			return null;
 		}
 		return JFaceResources.getColorRegistry().get(JFacePreferences.QUALIFIER_COLOR);

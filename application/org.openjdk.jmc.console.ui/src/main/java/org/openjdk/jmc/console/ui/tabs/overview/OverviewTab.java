@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,6 +34,7 @@ package org.openjdk.jmc.console.ui.tabs.overview;
 
 import jakarta.inject.Inject;
 import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.eclipse.jface.action.IToolBarManager;
@@ -43,6 +44,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
+import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor;
@@ -69,7 +71,8 @@ public class OverviewTab implements IConsolePageStateHandler {
 
 	@Inject
 	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection) {
+		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection,
+		IConsoleCoreMBeanInfo mbeanInfo) {
 		// Create SectionPartManager
 		m_managedForm = managedForm;
 		m_sectionPartManager = new SectionPartManager(managedForm);
@@ -90,10 +93,19 @@ public class OverviewTab implements IConsolePageStateHandler {
 				}));
 		toolbar.update(true);
 		restoreState(page.loadConfig(), connection);
-		validateDependencies(page, connection);
+		validateDependencies(page, connection, mbeanInfo);
 	}
 
-	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
+	private void validateDependencies(
+		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mbeanInfo) {
+		try {
+			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Memory"),  //$NON-NLS-1$
+					new ObjectName("java.lang:type=OperatingSystem"))) {  //$NON-NLS-1$
+				return;
+			}
+		} catch (MalformedObjectNameException ignore) {
+		}
+
 		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
 		try {
 			if (connection.queryNames(new ObjectName("java.lang:type=Memory"), null).isEmpty() //$NON-NLS-1$

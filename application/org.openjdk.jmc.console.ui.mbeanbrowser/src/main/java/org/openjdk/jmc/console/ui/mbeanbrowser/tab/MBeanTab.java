@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -80,8 +80,7 @@ public class MBeanTab implements IConsolePageStateHandler {
 				((ConsoleEditor) page.getEditor()).getSectionPartManagers().get(0));
 		managedForm.addPart(detailsPart);
 		tree.addMBeanListener(detailsPart);
-		tree.selectDefaultBean();
-
+		sashForm.getDisplay().asyncExec(() -> tree.selectDefaultBean());
 		sashForm.setWeights(new int[] {7, 20});
 		form.getBody().setLayout(MCLayoutFactory.createFormPageLayout());
 		sashForm.setLayoutData(MCLayoutFactory.createFormPageLayoutData());

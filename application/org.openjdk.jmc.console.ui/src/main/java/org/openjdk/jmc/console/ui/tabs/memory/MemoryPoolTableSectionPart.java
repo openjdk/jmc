@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistable;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
@@ -54,6 +53,7 @@ import org.openjdk.jmc.ui.column.IColumn;
 import org.openjdk.jmc.ui.column.TableSettings;
 import org.openjdk.jmc.ui.handlers.MCContextMenuManager;
 import org.openjdk.jmc.ui.misc.BackgroundFractionDrawer;
+import org.openjdk.jmc.ui.misc.BackgroundViewerLoaderJob;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
 import org.openjdk.jmc.ui.misc.MCSectionPart;
@@ -76,7 +76,7 @@ public class MemoryPoolTableSectionPart extends MCSectionPart implements IPersis
 		table.setLayoutData(MCLayoutFactory.createFormPageLayoutData());
 		TableViewer viewer = new TableViewer(table);
 		viewer.setContentProvider(TreeStructureContentProvider.INSTANCE);
-		viewer.setInput(poolModel.getAllPools());
+		BackgroundViewerLoaderJob.updateInTheBackground("Memory Pools", viewer, () -> poolModel.getAllPools()); // $NON-NLS-1$ technical and not displayed
 		ColumnViewerToolTipSupport.enableFor(viewer);
 
 		IColumn nameColumn = new ColumnBuilder(Messages.POOL_NAME_NAME_TEXT, "name", MemoryPoolInformation::getPoolName) //$NON-NLS-1$

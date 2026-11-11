@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,14 +32,12 @@
  */
 package org.openjdk.jmc.console.ui.tabs.memory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 
 import org.eclipse.swt.SWT;
@@ -48,11 +46,9 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
+import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
-import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
-import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.common.subscription.MRI;
@@ -73,7 +69,7 @@ class GcTableSectionPart extends MCSectionPart {
 	private final Map<String, MRIAttributeInspector> tabs = new HashMap<>();
 
 	public GcTableSectionPart(SectionPartManager sectionPartManager, Composite parent, FormToolkit toolkit,
-			IConnectionHandle ch, IMemento state) {
+			IConnectionHandle ch, IMemento state, IConsoleCoreMBeanInfo mbeanInfo) {
 		super(parent, toolkit, Messages.GcTableSectionPart_GC_TABLE_SECTION_TITLE);
 
 		Composite body = createSectionBody(MCLayoutFactory.createMarginFreeFormPageLayout());
@@ -86,7 +82,7 @@ class GcTableSectionPart extends MCSectionPart {
 				gcStates.put(m.getString(GC_NAME_ID), m);
 			}
 		}
-		for (ObjectName gcName : findGcNames(ch)) {
+		for (ObjectName gcName : findGcNames(ch, mbeanInfo)) {
 			String name = gcName.getKeyProperty("name"); //$NON-NLS-1$
 			IMemento gcState = gcStates.get(name);
 			if (gcState == null && !gcStates.isEmpty()) {
@@ -118,21 +114,17 @@ class GcTableSectionPart extends MCSectionPart {
 		}
 	}
 
-	private static List<ObjectName> findGcNames(IConnectionHandle connectionHandle) {
+	private static List<ObjectName> findGcNames(IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mBeanInfo) {
 		List<ObjectName> gcNames = new ArrayList<>();
-		try {
-			IMBeanHelperService h = connectionHandle.getServiceOrThrow(IMBeanHelperService.class);
-			for (Entry<ObjectName, MBeanInfo> entry : h.getMBeanInfos().entrySet()) {
-				ObjectName o = entry.getKey();
-				if (o.getDomain().equals("java.lang")) { //$NON-NLS-1$
-					if ("GarbageCollector".equals(o.getKeyProperty("type"))) { //$NON-NLS-1$ //$NON-NLS-2$
-						gcNames.add(o);
-					}
+
+		for (ObjectName o : mBeanInfo.mbeanNames()) {
+			if (o.getDomain().equals("java.lang")) { //$NON-NLS-1$
+				if ("GarbageCollector".equals(o.getKeyProperty("type"))) { //$NON-NLS-1$ //$NON-NLS-2$
+					gcNames.add(o);
 				}
 			}
-		} catch (IOException e1) {
-		} catch (ServiceNotAvailableException e) {
 		}
+
 		return gcNames;
 	}
 

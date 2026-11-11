@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,7 +33,9 @@
 package org.openjdk.jmc.console.ui.tabs.system;
 
 import jakarta.inject.Inject;
+
 import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.eclipse.swt.widgets.Composite;
@@ -43,6 +45,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
+import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor;
@@ -62,7 +65,8 @@ public class SystemTab implements IConsolePageStateHandler {
 	private SystemPropertiesSectionPart systemProperties;
 
 	@Inject
-	protected void createPageContent(IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle ch) {
+	protected void createPageContent(
+		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle ch, IConsoleCoreMBeanInfo mbeanInfo) {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		Composite container = managedForm.getForm().getBody();
@@ -94,10 +98,19 @@ public class SystemTab implements IConsolePageStateHandler {
 				currentState.getChild(SYSTEM_PROPERTIES_ID));
 		managedForm.addPart(systemProperties);
 		MCLayoutFactory.addGrabOnExpandLayoutData(systemProperties.getSection());
-		validateDependencies(page, ch);
+		validateDependencies(page, ch, mbeanInfo);
 	}
 
-	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
+	private void validateDependencies(
+		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mbeanInfo) {
+		try {
+			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=ClassLoading"), new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$ //$NON-NLS-2$
+				return;
+			}
+		} catch (MalformedObjectNameException ignore) {
+		}
+
 		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
 		try {
 			if (connection.queryNames(new ObjectName("java.lang:type=Runtime"), null).isEmpty() //$NON-NLS-1$

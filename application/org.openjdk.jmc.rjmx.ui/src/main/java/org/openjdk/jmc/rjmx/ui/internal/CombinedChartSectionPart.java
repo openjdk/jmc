@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -240,8 +240,7 @@ public class CombinedChartSectionPart extends MCSectionPart implements IAttribut
 		final Composite chartContainer = toolkit.createComposite(stackContainer);
 		chartContainer.setLayout(new GridLayout(2, false));
 		IMemento tableState = state == null ? null : state.getChild(TABLE_TAG);
-		m_statisticsTable = new StatisticsTable(stackContainer, new AttributeLabelProvider(mds, mris), this, false,
-				tableState);
+		m_statisticsTable = new StatisticsTable(stackContainer, mds, mris, this, false, tableState);
 		m_statisticsTable.getViewer().setInput(statisticsProvider);
 		chart = new ChartComposite(chartContainer, SWT.NONE, createEnableUpdatesCallback());
 
@@ -554,7 +553,7 @@ public class CombinedChartSectionPart extends MCSectionPart implements IAttribut
 		});
 		legend.setComparator(new ViewerComparator());
 		legend.setContentProvider(MCArrayContentProvider.INSTANCE);
-		legend.setLabelProvider(new AttributeLabelProvider(mds, mris));
+		legend.setLabelProvider(new AttributeLabelProvider(mds, mris, legend));
 		legend.setInput(this);
 		ColumnViewerToolTipSupport.enableFor(legend);
 		legend.getTable().addKeyListener(new KeyAdapter() {
