@@ -76,7 +76,7 @@ public class RuleExportWizard extends Wizard implements IExportWizard {
 			Object[] rootNodes = itcp.getElements("Whatever. The notification model is static!"); //$NON-NLS-1$
 			viewer.setAutoExpandLevel(rootNodes.length == 1 ? AbstractTreeViewer.ALL_LEVELS : 0);
 			viewer.setContentProvider(new TriggerContentProvider(model));
-			viewer.setLabelProvider(new TriggerLabelProvider(null, viewer));
+			viewer.setLabelProvider(new TriggerLabelProvider());
 			viewer.setComparator(new ViewerComparator());
 			viewer.setInput("Whatever. The notification model is static!"); //$NON-NLS-1$
 		}

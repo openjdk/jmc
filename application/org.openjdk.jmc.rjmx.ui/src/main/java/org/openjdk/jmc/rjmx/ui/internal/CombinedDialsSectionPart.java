@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,8 +40,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -244,7 +242,8 @@ public class CombinedDialsSectionPart extends MCSectionPart implements IAttribut
 		final Composite tableContainer = toolkit.createComposite(stackContainer);
 		tableContainer.setLayout(MCLayoutFactory.createMarginFreeFormPageLayout());
 		IMemento tableState = state == null ? null : state.getChild(TABLE_TAG);
-		m_statisticsTable = new StatisticsTable(tableContainer, m_mds, m_mriService, this, true, tableState);
+		m_statisticsTable = new StatisticsTable(tableContainer, new AttributeLabelProvider(m_mds, m_mriService), this,
+				true, tableState);
 		m_statisticsTable.getViewer().getControl().setLayoutData(MCLayoutFactory.createFormPageLayoutData());
 		m_statisticsTable.getViewer().setInput(m_model.values());
 
@@ -313,18 +312,6 @@ public class CombinedDialsSectionPart extends MCSectionPart implements IAttribut
 		return attributes.toArray(new MRI[attributes.size()]);
 	}
 
-	private void setupSubscriptionInBackground(Runnable action) {
-		Job subscription = Job.create("Adding subscription", monitor -> { // $NON-NLS-1$ technical and not displayed
-			if (monitor.isCanceled()) {
-				return Status.CANCEL_STATUS;
-			}
-			action.run();
-			return Status.OK_STATUS;
-		});
-		subscription.setSystem(true);
-		subscription.schedule();
-	}
-
 	private boolean add(final MRI mri, DialConfiguration dialConfiguration) {
 		if (!m_model.containsKey(mri)) {
 			final AttributeDial newDial = new AttributeDial(mri, dialConfiguration);
@@ -339,7 +326,8 @@ public class CombinedDialsSectionPart extends MCSectionPart implements IAttribut
 			m_model.put(mri, newDial.statistics);
 			m_refreshController.add(newDial.getDialViewer());
 			m_refreshController.start();
-			setupSubscriptionInBackground(() -> m_subscriptionService.addMRIValueListener(mri, newDial));
+			m_subscriptionService.addMRIValueListener(mri, newDial);
+
 			MenuManager menuManager = new MenuManager();
 			menuManager.add(new Action(Messages.AttributeDialSectionPart_CLEAR_STATISTICS_MENU_TEXT) {
 				@Override

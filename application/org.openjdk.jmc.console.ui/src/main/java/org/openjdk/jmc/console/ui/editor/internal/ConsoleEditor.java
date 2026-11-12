@@ -32,18 +32,11 @@
  */
 package org.openjdk.jmc.console.ui.editor.internal;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
-import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,7 +62,6 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.common.io.IOToolkit;
 import org.openjdk.jmc.console.ui.ConsolePlugin;
-import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
@@ -77,9 +69,6 @@ import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
-import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
-import org.openjdk.jmc.rjmx.common.services.IDummyService;
-import org.openjdk.jmc.rjmx.common.services.internal.ServiceFactoryManager;
 import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
@@ -120,15 +109,12 @@ public class ConsoleEditor extends FormEditor {
 				try {
 					// As building and loading of tabls typically rely on presence of mbeans and mbean info
 					// trigger caching before delegating to GUI render thread (main) below
+					// For the mbean viewer we will probably fetch all mbean infos anyway, so simply do it up front
 					IMBeanHelperService mbeanHelper = connection.getServiceOrThrow(IMBeanHelperService.class);
 					mbeanHelper.getMBeanInfos();
 					mbeanHelper.getMBeanNames();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ServiceNotAvailableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (Exception e) {
+					ConsolePlugin.getDefault().getLogger().log(Level.FINE, "Exception trying to cache mbeans", e);
 				}
 				DisplayToolkit.safeAsyncExec(new Runnable() {
 
@@ -329,74 +315,8 @@ public class ConsoleEditor extends FormEditor {
 		IEclipseContext context = this.getSite().getService(IEclipseContext.class);
 
 		// TODO: Consider carefully which services we want to support.
-		MBeanServerConnection mbeanServer = connection.getServiceOrDummy(MBeanServerConnection.class);
-		context.set(MBeanServerConnection.class, mbeanServer);
-//		context.set(IConsoleCoreMBeanInfo.class, precomputeBasicMBeanInfo(mbeanServer));
-//		context.set(IMBeanHelperService.class, connection.getServiceOrDummy(IMBeanHelperService.class));
+		context.set(MBeanServerConnection.class, connection.getServiceOrDummy(MBeanServerConnection.class));
 		context.set(ISubscriptionService.class, connection.getServiceOrDummy(ISubscriptionService.class));
 		context.set(IConnectionHandle.class, connection);
 	}
-
-	/**
-	 * Do some basic lookup BEFORE injecting values for the tabs. That way we can avoid calling
-	 * expensive operations WHILE building ghe GUI
-	 */
-	private IConsoleCoreMBeanInfo precomputeBasicMBeanInfo(MBeanServerConnection mbeanServer) {
-		if (!(mbeanServer instanceof IDummyService)) {
-			try {
-				Map<ObjectName, MBeanInfo> coreMBeans = new HashMap<>();
-//				for (ObjectName name : Arrays.asList(new ObjectName("java.lang", "type", "OperatingSystem"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//						new ObjectName("com.sun.management", "type", "DiagnosticCommand"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//						new ObjectName("java.lang", "type", "Runtime"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//						new ObjectName("java.lang", "type", "Threading"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//						new ObjectName("java.lang", "type", "ClassLoading"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//
-//					coreMBeans.put(name, mbeanServer.getMBeanInfo(name));
-//				}
-				return new CoreMBeanInfo(mbeanServer.queryNames(null, null), coreMBeans);
-
-			} catch (Exception ignore) {
-				// fall back to dummy if for some reason the lookup fails
-				ignore.printStackTrace();
-			}
-		}
-
-		return ServiceFactoryManager.createDummyService(IConsoleCoreMBeanInfo.class, null);
-	}
-
-	static class CoreMBeanInfo implements IConsoleCoreMBeanInfo {
-		private Set<ObjectName> mbeanNames;
-		private Map<ObjectName, MBeanInfo> coreMBeans;
-
-		CoreMBeanInfo(Set<ObjectName> mbeanNames, Map<ObjectName, MBeanInfo> coreMBeans) {
-			this.mbeanNames = mbeanNames;
-			this.coreMBeans = coreMBeans;
-		}
-
-		@Override
-		public Set<ObjectName> mbeanNames() {
-			return mbeanNames;
-		}
-
-		@Override
-		public Map<ObjectName, MBeanInfo> coreMBeans() {
-			return coreMBeans;
-		}
-
-		@Override
-		public boolean hasAllBeans(ObjectName[] names) {
-			for (ObjectName mustHaveName : names) {
-				// use startswith to support garbage collection and memory beans
-				if (mbeanNames.stream()
-						.noneMatch(beanName -> beanName.getDomain().equals(mustHaveName.getDomain())
-								&& beanName.getKeyPropertyList().entrySet()
-										.containsAll(mustHaveName.getKeyPropertyList().entrySet()))) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-	}
-
 }

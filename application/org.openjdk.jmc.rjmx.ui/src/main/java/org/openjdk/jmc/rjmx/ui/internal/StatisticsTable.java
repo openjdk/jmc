@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -42,9 +42,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.actions.SelectionProviderAction;
+
 import org.openjdk.jmc.common.item.IMemberAccessor;
-import org.openjdk.jmc.rjmx.common.subscription.IMRIMetadataService;
-import org.openjdk.jmc.rjmx.common.subscription.IMRIService;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.ColumnMenusFactory;
@@ -61,11 +60,8 @@ public class StatisticsTable {
 	private final TableViewer viewer;
 	private final ColumnManager columnManager;
 
-	public StatisticsTable(Composite parent, IMRIMetadataService m_mds, IMRIService m_mriService,
-			IAttributeSet attributes, final boolean addResetAction, IMemento state) {
-		viewer = new TableViewer(parent,
-				SWT.MULTI | SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		AttributeLabelProvider attributeLp = new AttributeLabelProvider(m_mds, m_mriService, viewer);
+	public StatisticsTable(Composite parent, AttributeLabelProvider attributeLp, final IAttributeSet attributes,
+			final boolean addResetAction, IMemento state) {
 		@SuppressWarnings({"unchecked", "rawtypes"})
 		IMemberAccessor<?, Object> attributeAccessor = (IMemberAccessor) StatisticsCalculator.GET_ATTRIBUTE;
 		IColumn name = new ColumnBuilder(Messages.StatisticsTable_ATTRIBUTE_NAME, "attribute", //$NON-NLS-1$
@@ -83,6 +79,8 @@ public class StatisticsTable {
 		IColumn sigma = new ColumnBuilder("\u03C3", "sigma", StatisticsCalculator.GET_SIGMA) //$NON-NLS-1$ //$NON-NLS-2$
 				.description(Messages.StatisticsTable_SIGMA_DESCRIPTION).style(SWT.RIGHT).build();
 
+		viewer = new TableViewer(parent,
+				SWT.MULTI | SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		viewer.setContentProvider(MCArrayContentProvider.INSTANCE);
 		columnManager = ColumnManager.build(viewer, Arrays.asList(name, last, min, max, av, sigma),

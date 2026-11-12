@@ -32,12 +32,6 @@
  */
 package org.openjdk.jmc.console.ui.tabs.threads;
 
-import jakarta.inject.Inject;
-
-import java.util.Arrays;
-
-import javax.management.MBeanServerConnection;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.eclipse.jface.action.IToolBarManager;
@@ -49,18 +43,19 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
-import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleFormPage;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.ui.internal.CombinedChartSectionPart;
 import org.openjdk.jmc.ui.misc.MCActionContributionItem;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
 import org.openjdk.jmc.ui.misc.MCSectionPart;
+
+import jakarta.inject.Inject;
 
 /**
  * Threads Tab

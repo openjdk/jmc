@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,10 @@ public class AttributeConfiguratorWizardPage extends WizardPage {
 
 	public final static String PAGE_NAME = "org.openjdk.jmc.rjmx.attribute.configuration"; //$NON-NLS-1$
 
+	private static AttributeLabelProvider createNameLabelProvider(AttributeSelectionContentModel selectorModel) {
+		return new AttributeLabelProvider(selectorModel.getMetadataService(), selectorModel.getMRIService());
+	}
+
 	private final AttributeSelectionViewModel m_viewModel;
 	private final AttributeSelectionContentModel m_selectorModel;
 	private TableViewer table;
@@ -55,8 +59,8 @@ public class AttributeConfiguratorWizardPage extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		table = AttributeConfiguratorTableFactory.createAttributeConfiguratorTable(parent, m_viewModel, m_selectorModel,
-				new Runnable() {
+		table = AttributeConfiguratorTableFactory.createAttributeConfiguratorTable(parent,
+				createNameLabelProvider(m_selectorModel), m_viewModel, m_selectorModel, new Runnable() {
 					@Override
 					public void run() {
 						setPageComplete(isPageComplete());

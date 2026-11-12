@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -75,7 +75,7 @@ public class PersistenceSectionPart extends MCSectionPart implements IAttributeS
 		section.setClient(container);
 		table = new TableViewer(container);
 		table.setContentProvider(MCArrayContentProvider.INSTANCE);
-		table.setLabelProvider(new AttributeLabelProvider(mds, attributes, table));
+		table.setLabelProvider(new AttributeLabelProvider(mds, attributes));
 		table.setInput(this);
 		ColumnViewerToolTipSupport.enableFor(table);
 
