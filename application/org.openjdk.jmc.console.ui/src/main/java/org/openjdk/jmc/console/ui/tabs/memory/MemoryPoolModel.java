@@ -56,7 +56,7 @@ public class MemoryPoolModel extends Observable {
 	private MemoryPoolInformation[] m_pools;
 	private final IConnectionHandle connectionHandle;
 
-	public MemoryPoolModel(IConnectionHandle connectionHandle, IMBeanHelperService mBeanInfo) {
+	public MemoryPoolModel(IConnectionHandle connectionHandle) {
 		this.connectionHandle = connectionHandle;
 	}
 

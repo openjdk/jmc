@@ -74,8 +74,7 @@ public class OverviewTab implements IConsolePageStateHandler {
 
 	@Inject
 	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection,
-		IMBeanHelperService mbeanInfo) {
+		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection) {
 		// Create SectionPartManager
 		m_managedForm = managedForm;
 		m_sectionPartManager = new SectionPartManager(managedForm);
@@ -96,18 +95,11 @@ public class OverviewTab implements IConsolePageStateHandler {
 				}));
 		toolbar.update(true);
 		restoreState(page.loadConfig(), connection);
-		validateDependencies(page, connection, mbeanInfo);
+		validateDependencies(page, connection);
 	}
 
 	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle, IMBeanHelperService mbeanInfo) {
-//		try {
-//			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Memory"), //$NON-NLS-1$
-//					new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$
-//				return;
-//			}
-//		} catch (MalformedObjectNameException ignore) {
-//		}
+		IConsolePageContainer page, IConnectionHandle connectionHandle) {
 
 		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {

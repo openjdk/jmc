@@ -130,12 +130,12 @@ public class ConsoleEditor extends FormEditor {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				setUpInjectionables();
 				DisplayToolkit.safeAsyncExec(new Runnable() {
 
 					@Override
 					public void run() {
 						if (!mainUi.isDisposed()) {
+							setUpInjectionables();
 							doAddPages();
 							stackLayout.topControl.dispose();
 							stackLayout.topControl = mainUi;
@@ -331,8 +331,8 @@ public class ConsoleEditor extends FormEditor {
 		// TODO: Consider carefully which services we want to support.
 		MBeanServerConnection mbeanServer = connection.getServiceOrDummy(MBeanServerConnection.class);
 		context.set(MBeanServerConnection.class, mbeanServer);
-		context.set(IConsoleCoreMBeanInfo.class, precomputeBasicMBeanInfo(mbeanServer));
-		context.set(IMBeanHelperService.class, connection.getServiceOrDummy(IMBeanHelperService.class));
+//		context.set(IConsoleCoreMBeanInfo.class, precomputeBasicMBeanInfo(mbeanServer));
+//		context.set(IMBeanHelperService.class, connection.getServiceOrDummy(IMBeanHelperService.class));
 		context.set(ISubscriptionService.class, connection.getServiceOrDummy(ISubscriptionService.class));
 		context.set(IConnectionHandle.class, connection);
 	}

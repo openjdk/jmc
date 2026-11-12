@@ -72,7 +72,7 @@ class GcTableSectionPart extends MCSectionPart {
 	private final Map<String, MRIAttributeInspector> tabs = new HashMap<>();
 
 	public GcTableSectionPart(SectionPartManager sectionPartManager, Composite parent, FormToolkit toolkit,
-			IConnectionHandle ch, IMemento state, IMBeanHelperService mbeanInfo) {
+			IConnectionHandle ch, IMemento state) {
 		super(parent, toolkit, Messages.GcTableSectionPart_GC_TABLE_SECTION_TITLE);
 
 		Composite body = createSectionBody(MCLayoutFactory.createMarginFreeFormPageLayout());

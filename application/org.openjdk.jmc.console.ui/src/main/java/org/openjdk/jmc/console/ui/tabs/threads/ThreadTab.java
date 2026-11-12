@@ -77,8 +77,7 @@ public class ThreadTab implements IConsolePageStateHandler {
 
 	@Inject
 	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection,
-		IMBeanHelperService mBeanInfo) {
+		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection) {
 		if (m_platformThreadingMBeanPresent) {
 			m_model = new ThreadsModel(connection);
 		} else {
@@ -122,17 +121,11 @@ public class ThreadTab implements IConsolePageStateHandler {
 			}
 
 		});
-		validateDependencies(page, connection, mBeanInfo);
+		validateDependencies(page, connection);
 	}
 
 	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle, IMBeanHelperService mBeanInfo) {
-//		try {
-//			if (mBeanInfo.hasAllBeans(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$
-//				return;
-//			}
-//		} catch (MalformedObjectNameException ignore) {
-//		}
+		IConsolePageContainer page, IConnectionHandle connectionHandle) {
 		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
 			if (!connection.getMBeanNames().contains(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$

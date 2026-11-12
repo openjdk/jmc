@@ -100,8 +100,7 @@ public class MemoryTab implements IConsolePageStateHandler {
 
 	@Inject
 	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle handle,
-		IMBeanHelperService mBeanInfo) {
+		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle handle) {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 
@@ -121,27 +120,18 @@ public class MemoryTab implements IConsolePageStateHandler {
 		}
 
 		gcTableSectionPart = new GcTableSectionPart(((ConsoleEditor) page.getEditor()).getSectionPartManagers().get(0),
-				container, toolkit, handle, currentState.getChild(GC_TABLE_ID), mBeanInfo);
+				container, toolkit, handle, currentState.getChild(GC_TABLE_ID));
 		managedForm.addPart(gcTableSectionPart);
 		MCLayoutFactory.addGrabOnExpandLayoutData(gcTableSectionPart.getSection());
 
-		poolTable = new MemoryPoolTableSectionPart(container, toolkit, new MemoryPoolModel(handle, mBeanInfo),
+		poolTable = new MemoryPoolTableSectionPart(container, toolkit, new MemoryPoolModel(handle),
 				currentState.getChild(MEMORY_POOL_ID));
 		managedForm.addPart(poolTable);
 		MCLayoutFactory.addGrabOnExpandLayoutData(poolTable.getSection());
-		validateDependencies(page, handle, mBeanInfo);
+		validateDependencies(page, handle);
 	}
 
-	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle, IMBeanHelperService mbeanInfo) {
-//		try {
-//			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=GarbageCollector"), //$NON-NLS-1$
-//					new ObjectName("java.lang:type=MemoryPool"))) { //$NON-NLS-1$
-//				return;
-//			}
-//		} catch (MalformedObjectNameException ignore) {
-//		}
-
+	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
 		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
 			if (MemoryPoolModel.findPools(connection).isEmpty()

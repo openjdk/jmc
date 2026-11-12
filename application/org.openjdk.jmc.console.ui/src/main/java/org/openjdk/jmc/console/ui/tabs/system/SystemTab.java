@@ -64,8 +64,7 @@ public class SystemTab implements IConsolePageStateHandler {
 	private SystemPropertiesSectionPart systemProperties;
 
 	@Inject
-	protected void createPageContent(IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle ch,
-			IMBeanHelperService mbeanInfo) {
+	protected void createPageContent(IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle ch) {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		Composite container = managedForm.getForm().getBody();
@@ -97,19 +96,10 @@ public class SystemTab implements IConsolePageStateHandler {
 				currentState.getChild(SYSTEM_PROPERTIES_ID));
 		managedForm.addPart(systemProperties);
 		MCLayoutFactory.addGrabOnExpandLayoutData(systemProperties.getSection());
-		validateDependencies(page, ch, mbeanInfo);
+		validateDependencies(page, ch);
 	}
 
-	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle,
-			IMBeanHelperService mbeanInfo) {
-//		try {
-//			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
-//					new ObjectName("java.lang:type=ClassLoading"), new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$ //$NON-NLS-2$
-//				return;
-//			}
-//		} catch (MalformedObjectNameException ignore) {
-//		}
-
+	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
 		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
 			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
