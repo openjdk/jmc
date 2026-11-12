@@ -124,8 +124,7 @@ public class ThreadTab implements IConsolePageStateHandler {
 		validateDependencies(page, connection);
 	}
 
-	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle) {
+	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
 		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
 			if (!connection.getMBeanNames().contains(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$

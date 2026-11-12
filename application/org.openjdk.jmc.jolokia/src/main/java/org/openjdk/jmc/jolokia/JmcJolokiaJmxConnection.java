@@ -229,10 +229,10 @@ public class JmcJolokiaJmxConnection extends ConnectionDecorator {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public boolean isRegistered(ObjectName name) throws IOException {
-		return this.mbeanInfoCache.containsKey(name) ||  super.isRegistered(name);
+		return this.mbeanInfoCache.containsKey(name) || super.isRegistered(name);
 	}
 
 }

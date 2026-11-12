@@ -99,8 +99,7 @@ public class MemoryTab implements IConsolePageStateHandler {
 	};
 
 	@Inject
-	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle handle) {
+	protected void createPageContent(IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle handle) {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 

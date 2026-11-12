@@ -98,12 +98,11 @@ public class OverviewTab implements IConsolePageStateHandler {
 		validateDependencies(page, connection);
 	}
 
-	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle) {
+	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
 
 		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Memory"),  //$NON-NLS-1$
+			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Memory"), //$NON-NLS-1$
 					new ObjectName("java.lang:type=OperatingSystem")))) { //$NON-NLS-1$
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 			}

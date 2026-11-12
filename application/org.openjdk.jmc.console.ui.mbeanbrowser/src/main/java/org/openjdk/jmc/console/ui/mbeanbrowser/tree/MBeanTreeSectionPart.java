@@ -120,7 +120,7 @@ public class MBeanTreeSectionPart extends MCSectionPart implements IMBeanPropert
 				.setLayoutData(MCLayoutFactory.createFormPageLayoutData(SWT.DEFAULT, SWT.DEFAULT, true, true));
 		TreeNodeFilter.install(viewer, filterText, false);
 
-		BackgroundViewerLoaderJob.updateInTheBackground("MBean Hierachy", viewer, () -> buildTreeModel()); // $NON-NLS-1$ technical and not displayed
+		viewer.setInput(buildTreeModel());
 		getMCToolBarManager().add(new AddMBeanAction(mbeanServer, guid));
 		getMCToolBarManager().add(refreshAction);
 		mbeanService.addMBeanServerChangeListener(refreshAction);

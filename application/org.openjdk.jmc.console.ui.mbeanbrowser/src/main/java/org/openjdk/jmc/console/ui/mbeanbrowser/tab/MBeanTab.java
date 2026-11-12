@@ -80,7 +80,8 @@ public class MBeanTab implements IConsolePageStateHandler {
 				((ConsoleEditor) page.getEditor()).getSectionPartManagers().get(0));
 		managedForm.addPart(detailsPart);
 		tree.addMBeanListener(detailsPart);
-		sashForm.getDisplay().asyncExec(() -> tree.selectDefaultBean());
+		tree.selectDefaultBean();
+//		sashForm.getDisplay().asyncExec(() -> tree.selectDefaultBean());
 		sashForm.setWeights(new int[] {7, 20});
 		form.getBody().setLayout(MCLayoutFactory.createFormPageLayout());
 		sashForm.setLayoutData(MCLayoutFactory.createFormPageLayoutData());
