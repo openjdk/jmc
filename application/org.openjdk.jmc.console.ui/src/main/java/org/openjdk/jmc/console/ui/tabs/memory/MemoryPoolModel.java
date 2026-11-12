@@ -43,9 +43,8 @@ import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
-import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.common.subscription.MRI;
@@ -57,7 +56,7 @@ public class MemoryPoolModel extends Observable {
 	private MemoryPoolInformation[] m_pools;
 	private final IConnectionHandle connectionHandle;
 
-	public MemoryPoolModel(IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mBeanInfo) {
+	public MemoryPoolModel(IConnectionHandle connectionHandle, IMBeanHelperService mBeanInfo) {
 		this.connectionHandle = connectionHandle;
 	}
 
@@ -143,7 +142,7 @@ public class MemoryPoolModel extends Observable {
 		}
 	}
 
-	private List<ObjectName> findPools(IMBeanHelperService mbeanHelperService) {
+	static List<ObjectName> findPools(IMBeanHelperService mbeanHelperService) {
 		List<ObjectName> poolNames = new ArrayList<>();
 		try {
 			for (Entry<ObjectName, MBeanInfo> entry : mbeanHelperService.getMBeanInfos().entrySet()) {

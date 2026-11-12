@@ -32,10 +32,8 @@
  */
 package org.openjdk.jmc.console.ui.tabs.system;
 
-import jakarta.inject.Inject;
+import java.util.Arrays;
 
-import javax.management.MBeanServerConnection;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.eclipse.swt.widgets.Composite;
@@ -43,18 +41,19 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
-import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.AttributeSectionPart;
 import org.openjdk.jmc.ui.misc.MCActionContributionItem;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
+
+import jakarta.inject.Inject;
 
 public class SystemTab implements IConsolePageStateHandler {
 	private static final String JVM_STATISTICS_ID = "JVMStatistics"; //$NON-NLS-1$
@@ -65,8 +64,8 @@ public class SystemTab implements IConsolePageStateHandler {
 	private SystemPropertiesSectionPart systemProperties;
 
 	@Inject
-	protected void createPageContent(
-		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle ch, IConsoleCoreMBeanInfo mbeanInfo) {
+	protected void createPageContent(IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle ch,
+			IMBeanHelperService mbeanInfo) {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		Composite container = managedForm.getForm().getBody();
@@ -101,21 +100,22 @@ public class SystemTab implements IConsolePageStateHandler {
 		validateDependencies(page, ch, mbeanInfo);
 	}
 
-	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mbeanInfo) {
-		try {
-			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
-					new ObjectName("java.lang:type=ClassLoading"), new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$ //$NON-NLS-2$
-				return;
-			}
-		} catch (MalformedObjectNameException ignore) {
-		}
+	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle,
+			IMBeanHelperService mbeanInfo) {
+//		try {
+//			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
+//					new ObjectName("java.lang:type=ClassLoading"), new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$ //$NON-NLS-2$
+//				return;
+//			}
+//		} catch (MalformedObjectNameException ignore) {
+//		}
 
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=Runtime"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=ClassLoading"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=OperatingSystem"), null).isEmpty()) { //$NON-NLS-1$
+			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=ClassLoading"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=OperatingSystem") //$NON-NLS-1$
+			))) {
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 			}
 		} catch (Exception e) {

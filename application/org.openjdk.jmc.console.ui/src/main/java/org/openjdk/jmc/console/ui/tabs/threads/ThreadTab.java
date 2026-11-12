@@ -33,6 +33,9 @@
 package org.openjdk.jmc.console.ui.tabs.threads;
 
 import jakarta.inject.Inject;
+
+import java.util.Arrays;
+
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -48,7 +51,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
-import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleFormPage;
@@ -75,7 +78,7 @@ public class ThreadTab implements IConsolePageStateHandler {
 	@Inject
 	protected void createPageContent(
 		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection,
-		IConsoleCoreMBeanInfo mBeanInfo) {
+		IMBeanHelperService mBeanInfo) {
 		if (m_platformThreadingMBeanPresent) {
 			m_model = new ThreadsModel(connection);
 		} else {
@@ -123,16 +126,16 @@ public class ThreadTab implements IConsolePageStateHandler {
 	}
 
 	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mBeanInfo) {
+		IConsolePageContainer page, IConnectionHandle connectionHandle, IMBeanHelperService mBeanInfo) {
+//		try {
+//			if (mBeanInfo.hasAllBeans(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$
+//				return;
+//			}
+//		} catch (MalformedObjectNameException ignore) {
+//		}
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (mBeanInfo.hasAllBeans(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$
-				return;
-			}
-		} catch (MalformedObjectNameException ignore) {
-		}
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
-		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=Threading"), null).isEmpty()) { //$NON-NLS-1$
+			if (!connection.getMBeanNames().contains(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 				m_platformThreadingMBeanPresent = false;
 			}

@@ -33,6 +33,9 @@
 package org.openjdk.jmc.console.ui.tabs.overview;
 
 import jakarta.inject.Inject;
+
+import java.util.Arrays;
+
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -44,7 +47,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
-import org.openjdk.jmc.console.ui.editor.IConsoleCoreMBeanInfo;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor;
@@ -72,7 +75,7 @@ public class OverviewTab implements IConsolePageStateHandler {
 	@Inject
 	protected void createPageContent(
 		IConsolePageContainer page, IManagedForm managedForm, IConnectionHandle connection,
-		IConsoleCoreMBeanInfo mbeanInfo) {
+		IMBeanHelperService mbeanInfo) {
 		// Create SectionPartManager
 		m_managedForm = managedForm;
 		m_sectionPartManager = new SectionPartManager(managedForm);
@@ -97,19 +100,19 @@ public class OverviewTab implements IConsolePageStateHandler {
 	}
 
 	private void validateDependencies(
-		IConsolePageContainer page, IConnectionHandle connectionHandle, IConsoleCoreMBeanInfo mbeanInfo) {
-		try {
-			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Memory"), //$NON-NLS-1$
-					new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$
-				return;
-			}
-		} catch (MalformedObjectNameException ignore) {
-		}
+		IConsolePageContainer page, IConnectionHandle connectionHandle, IMBeanHelperService mbeanInfo) {
+//		try {
+//			if (mbeanInfo.hasAllBeans(new ObjectName("java.lang:type=Memory"), //$NON-NLS-1$
+//					new ObjectName("java.lang:type=OperatingSystem"))) { //$NON-NLS-1$
+//				return;
+//			}
+//		} catch (MalformedObjectNameException ignore) {
+//		}
 
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=Memory"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=OperatingSystem"), null).isEmpty()) { //$NON-NLS-1$
+			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Memory"),  //$NON-NLS-1$
+					new ObjectName("java.lang:type=OperatingSystem")))) { //$NON-NLS-1$
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 			}
 		} catch (Exception e) {

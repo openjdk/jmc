@@ -32,6 +32,7 @@
  */
 package org.openjdk.jmc.console.ui.editor.internal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,8 +77,10 @@ import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.common.services.IDummyService;
 import org.openjdk.jmc.rjmx.common.services.internal.ServiceFactoryManager;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
 import org.openjdk.jmc.ui.UIPlugin;
@@ -113,6 +116,19 @@ public class ConsoleEditor extends FormEditor {
 					IOToolkit.closeSilently(connection);
 					WorkbenchToolkit.asyncCloseEditor(ConsoleEditor.this);
 					return Status.CANCEL_STATUS;
+				}
+				try {
+					// As building and loading of tabls typically rely on presence of mbeans and mbean info
+					// trigger caching before delegating to GUI render thread (main) below
+					IMBeanHelperService mbeanHelper = connection.getServiceOrThrow(IMBeanHelperService.class);
+					mbeanHelper.getMBeanInfos();
+					mbeanHelper.getMBeanNames();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ServiceNotAvailableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				setUpInjectionables();
 				DisplayToolkit.safeAsyncExec(new Runnable() {
@@ -316,6 +332,7 @@ public class ConsoleEditor extends FormEditor {
 		MBeanServerConnection mbeanServer = connection.getServiceOrDummy(MBeanServerConnection.class);
 		context.set(MBeanServerConnection.class, mbeanServer);
 		context.set(IConsoleCoreMBeanInfo.class, precomputeBasicMBeanInfo(mbeanServer));
+		context.set(IMBeanHelperService.class, connection.getServiceOrDummy(IMBeanHelperService.class));
 		context.set(ISubscriptionService.class, connection.getServiceOrDummy(ISubscriptionService.class));
 		context.set(IConnectionHandle.class, connection);
 	}
@@ -328,14 +345,14 @@ public class ConsoleEditor extends FormEditor {
 		if (!(mbeanServer instanceof IDummyService)) {
 			try {
 				Map<ObjectName, MBeanInfo> coreMBeans = new HashMap<>();
-				for (ObjectName name : Arrays.asList(new ObjectName("java.lang", "type", "OperatingSystem"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						new ObjectName("com.sun.management", "type", "DiagnosticCommand"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						new ObjectName("java.lang", "type", "Runtime"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						new ObjectName("java.lang", "type", "Threading"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						new ObjectName("java.lang", "type", "ClassLoading"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-					coreMBeans.put(name, mbeanServer.getMBeanInfo(name));
-				}
+//				for (ObjectName name : Arrays.asList(new ObjectName("java.lang", "type", "OperatingSystem"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//						new ObjectName("com.sun.management", "type", "DiagnosticCommand"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//						new ObjectName("java.lang", "type", "Runtime"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//						new ObjectName("java.lang", "type", "Threading"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//						new ObjectName("java.lang", "type", "ClassLoading"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//
+//					coreMBeans.put(name, mbeanServer.getMBeanInfo(name));
+//				}
 				return new CoreMBeanInfo(mbeanServer.queryNames(null, null), coreMBeans);
 
 			} catch (Exception ignore) {
