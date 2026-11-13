@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -43,6 +43,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.openjdk.jmc.console.agent.manager.model.IPreset;
+import org.openjdk.jmc.console.agent.manager.model.IPreset.CollectionTrackingMode;
+import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.openjdk.jmc.ui.column.ColumnBuilder;
 import org.openjdk.jmc.ui.column.ColumnManager;
 import org.openjdk.jmc.ui.column.IColumn;
@@ -50,8 +52,9 @@ import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
 import org.openjdk.jmc.ui.misc.MCSectionPart;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -135,10 +138,22 @@ public class GlobalConfigSection extends MCSectionPart {
 
 			IPreset preset = (IPreset) inputElement;
 
-			Map<String, String> entries = new HashMap<>(3);
+			Map<String, String> entries = new LinkedHashMap<>();
 			entries.put(ALLOW_TO_STRING, String.valueOf(preset.getAllowToString()));
 			entries.put(ALLOW_CONVERTER, String.valueOf(preset.getAllowConverter()));
 			entries.put(CLASS_PREFIX, preset.getClassPrefix());
+			CollectionTrackingMode trackingMode = preset.getCollectionTrackingMode();
+			String trackingState = trackingMode == CollectionTrackingMode.UNCHANGED
+					? Messages.PresetEditingWizardConfigPage_COLLECTION_TRACKING_KEEP_CURRENT
+					: trackingMode == CollectionTrackingMode.ENABLED
+							? Messages.PresetEditingWizardConfigPage_COLLECTION_TRACKING_ENABLED
+							: Messages.PresetEditingWizardConfigPage_COLLECTION_TRACKING_DISABLED;
+			entries.put(Messages.GlobalConfigSection_COLLECTION_TRACKING, trackingState);
+			if (trackingMode == CollectionTrackingMode.ENABLED) {
+				BigInteger minSize = preset.getCollectionTrackingMinSize();
+				entries.put(Messages.GlobalConfigSection_COLLECTION_TRACKING_MIN_SIZE, minSize == null
+						? Messages.GlobalConfigSection_COLLECTION_TRACKING_MIN_SIZE_UNCHANGED : minSize.toString());
+			}
 
 			return entries.entrySet().toArray(new Map.Entry[0]);
 		}

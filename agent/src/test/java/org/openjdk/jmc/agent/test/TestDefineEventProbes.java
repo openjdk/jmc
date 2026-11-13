@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2019, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2026, Red Hat Inc. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -121,7 +121,6 @@ public class TestDefineEventProbes {
 			doDefineEventProbes(MALFORMED_XML);
 		} catch (Exception e) {
 			exceptionThrown = true;
-			e.printStackTrace(System.err);
 		}
 		assertTrue(exceptionThrown);
 	}

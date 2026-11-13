@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,6 +35,8 @@ package org.openjdk.jmc.agent;
 import java.util.List;
 import java.util.Set;
 
+import org.openjdk.jmc.agent.collections.CollectionTrackingSettings;
+
 public interface TransformRegistry {
 	/**
 	 * The named class has transforms that have not been executed yet.
@@ -63,14 +65,30 @@ public interface TransformRegistry {
 	Set<String> getClassNames();
 
 	/**
-	 * Returns the currently instrumented configuration.
+	 * Returns the collection resize tracking settings parsed from the configuration.
+	 *
+	 * @return the collection tracking settings; never {@code null} (disabled if not configured).
+	 */
+	CollectionTrackingSettings getCollectionTrackingSettings();
+
+	/**
+	 * Disables collection resize tracking and removes its transforms (e.g. when the bridge failed
+	 * to install). Already-woven classes revert to their original bytecode on the next retransform.
+	 */
+	void disableCollectionTracking();
+
+	/**
+	 * Returns the currently instrumented configuration. The effective collection tracking state is
+	 * always rendered in explicitly (as {@code <collectiontracking enabled="..." minsize="..."/>}),
+	 * even when the pushed configuration omitted it.
 	 *
 	 * @return an XML snippet of the configuration.
 	 */
 	String getCurrentConfiguration();
 
 	/**
-	 * Set the current configuration that will be instrumented
+	 * Set the current configuration that will be instrumented. The effective collection tracking
+	 * state is rendered into the stored document, see {@link #getCurrentConfiguration()}.
 	 *
 	 * @param xmlDescription
 	 *            an XML snippet describing the current configuration
@@ -78,7 +96,11 @@ public interface TransformRegistry {
 	void setCurrentConfiguration(String xmlDescription);
 
 	/**
-	 * Modifies class information in the registry according to the xml description.
+	 * Modifies class information in the registry according to the xml description. JFR event probes
+	 * are declarative: probes not in the description are reverted. Collection tracking is sticky:
+	 * an omitted {@code collectiontracking} element leaves the capability unchanged (so clients
+	 * unaware of it cannot toggle it); it is only disabled by an explicit {@code enabled="false"}
+	 * or by {@link #clearAllTransformData()}.
 	 *
 	 * @param xmlDescription
 	 *            an XML snippet describing the wanted modifications.
@@ -89,7 +111,8 @@ public interface TransformRegistry {
 	Set<String> modify(String xmlDescription) throws XMLValidationException;
 
 	/**
-	 * Clears all classes and their corresponding transforms in the registry.
+	 * Clears all classes and their corresponding transforms in the registry, including the
+	 * collection tracking transforms (a full revert disables the capability).
 	 *
 	 * @return the set of class names that were cleared.
 	 */

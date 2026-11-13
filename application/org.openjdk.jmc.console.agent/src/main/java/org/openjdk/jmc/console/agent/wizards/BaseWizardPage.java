@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -232,9 +232,7 @@ public abstract class BaseWizardPage extends WizardPage {
 			runnable.run();
 			exceptions.remove(widget);
 
-			if (exceptions.isEmpty()) {
-				setErrorMessage(null);
-			}
+			setErrorMessage(exceptions.isEmpty() ? null : exceptions.values().iterator().next().getLocalizedMessage());
 		} catch (IllegalArgumentException e) {
 			exceptions.put(widget, e);
 			setErrorMessage(e.getLocalizedMessage());

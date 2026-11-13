@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -37,10 +37,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,6 +82,9 @@ public class Preset implements IPreset {
 	private static final String XML_TAG_CLASS_PREFIX = "classprefix"; // $NON-NLS-1$
 	private static final String XML_TAG_ALLOW_TO_STRING = "allowtostring"; // $NON-NLS-1$
 	private static final String XML_TAG_ALLOW_CONVERTER = "allowconverter"; // $NON-NLS-1$
+	private static final String XML_TAG_COLLECTION_TRACKING = "collectiontracking"; // $NON-NLS-1$
+	private static final String XML_ATTRIBUTE_ENABLED = "enabled"; // $NON-NLS-1$
+	private static final String XML_ATTRIBUTE_MIN_SIZE = "minsize"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENTS = "events"; // $NON-NLS-1$
 	private static final String XML_TAG_EVENT = "event"; // $NON-NLS-1$
 
@@ -98,6 +103,7 @@ public class Preset implements IPreset {
 	private String classPrefix;
 	private boolean allowToString;
 	private boolean allowConverter;
+	private Element collectionTracking;
 
 	Preset(PresetRepository repository) {
 		presetRepository = repository;
@@ -196,6 +202,10 @@ public class Preset implements IPreset {
 			}
 		}
 
+		elements = document.getElementsByTagName(XML_TAG_COLLECTION_TRACKING);
+		collectionTracking = elements.getLength() == 0 ? null
+				: (Element) builder.newDocument().importNode(elements.item(0), true);
+
 		elements = document.getElementsByTagName(XML_TAG_EVENTS); // $NON-NLS-1$
 		if (elements.getLength() != 0) {
 			Element eventsElement = (Element) elements.item(0);
@@ -224,26 +234,30 @@ public class Preset implements IPreset {
 		return element;
 	}
 
-	@Override
-	public Document buildDocument() {
+	private static Document newDocument() {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
 		try {
 			factory.setFeature(XML_PARSER_DISALLOW_DOCTYPE_ATTRIBUTE, true);
 			factory.setXIncludeAware(false);
 			factory.setExpandEntityReferences(false);
-			builder = factory.newDocumentBuilder();
+			return factory.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
 			// This should not happen anyway
 			throw new RuntimeException(e);
 		}
+	}
 
-		Document document = builder.newDocument();
+	@Override
+	public Document buildDocument() {
+		Document document = newDocument();
 
 		Element jfrAgentElement = document.createElement(XML_TAG_JFR_AGENT);
 		document.appendChild(jfrAgentElement);
 
 		jfrAgentElement.appendChild(buildConfigElement(document));
+		if (collectionTracking != null) {
+			jfrAgentElement.appendChild(document.importNode(collectionTracking, true));
+		}
 
 		Element eventsElement = document.createElement(XML_TAG_EVENTS);
 		for (IEvent event : events) {
@@ -330,6 +344,61 @@ public class Preset implements IPreset {
 	}
 
 	@Override
+	public boolean isCollectionTrackingEnabled() {
+		return getCollectionTrackingMode() == CollectionTrackingMode.ENABLED;
+	}
+
+	@Override
+	public CollectionTrackingMode getCollectionTrackingMode() {
+		if (collectionTracking == null) {
+			return CollectionTrackingMode.UNCHANGED;
+		}
+		String enabled = collectionTracking.getAttribute(XML_ATTRIBUTE_ENABLED).trim();
+		return "false".equals(enabled) || "0".equals(enabled) ? CollectionTrackingMode.DISABLED //$NON-NLS-1$ //$NON-NLS-2$
+				: CollectionTrackingMode.ENABLED;
+	}
+
+	@Override
+	public void setCollectionTrackingMode(CollectionTrackingMode mode) {
+		Objects.requireNonNull(mode);
+		if (mode == CollectionTrackingMode.UNCHANGED) {
+			collectionTracking = null;
+		} else {
+			getOrCreateCollectionTracking().setAttribute(XML_ATTRIBUTE_ENABLED,
+					Boolean.toString(mode == CollectionTrackingMode.ENABLED));
+		}
+	}
+
+	@Override
+	public BigInteger getCollectionTrackingMinSize() {
+		if (collectionTracking == null || !collectionTracking.hasAttribute(XML_ATTRIBUTE_MIN_SIZE)) {
+			return null;
+		}
+		return new BigInteger(collectionTracking.getAttribute(XML_ATTRIBUTE_MIN_SIZE).trim());
+	}
+
+	@Override
+	public void setCollectionTrackingMinSize(BigInteger minSize) {
+		if (minSize == null) {
+			if (collectionTracking != null) {
+				collectionTracking.removeAttribute(XML_ATTRIBUTE_MIN_SIZE);
+			}
+		} else {
+			if (minSize.signum() < 0) {
+				throw new IllegalArgumentException(Messages.Preset_ERROR_COLLECTION_TRACKING_MIN_SIZE);
+			}
+			getOrCreateCollectionTracking().setAttribute(XML_ATTRIBUTE_MIN_SIZE, minSize.toString());
+		}
+	}
+
+	private Element getOrCreateCollectionTracking() {
+		if (collectionTracking == null) {
+			collectionTracking = newDocument().createElement(XML_TAG_COLLECTION_TRACKING);
+		}
+		return collectionTracking;
+	}
+
+	@Override
 	public IEvent[] getEvents() {
 		return events.toArray(new IEvent[0]);
 	}
@@ -391,6 +460,7 @@ public class Preset implements IPreset {
 		copy.classPrefix = classPrefix;
 		copy.allowToString = allowToString;
 		copy.allowConverter = allowConverter;
+		copy.collectionTracking = collectionTracking == null ? null : (Element) collectionTracking.cloneNode(true);
 
 		copy.events.addAll(events.stream().map(IEvent::createWorkingCopy).collect(Collectors.toList()));
 

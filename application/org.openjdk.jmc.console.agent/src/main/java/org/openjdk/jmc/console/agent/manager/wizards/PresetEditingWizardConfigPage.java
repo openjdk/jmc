@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,16 +33,20 @@
  */
 package org.openjdk.jmc.console.agent.manager.wizards;
 
+import java.math.BigInteger;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.openjdk.jmc.console.agent.manager.model.IPreset;
+import org.openjdk.jmc.console.agent.manager.model.IPreset.CollectionTrackingMode;
 import org.openjdk.jmc.console.agent.messages.internal.Messages;
 import org.openjdk.jmc.console.agent.wizards.BaseWizardPage;
 
@@ -53,6 +57,8 @@ public class PresetEditingWizardConfigPage extends BaseWizardPage {
 	private Text classPrefixText;
 	private Button allowToStringButton;
 	private Button allowConverterButton;
+	private Combo collectionTrackingCombo;
+	private Text collectionTrackingMinSizeText;
 
 	protected PresetEditingWizardConfigPage(IPreset preset) {
 		super(Messages.PresetEditingWizardConfigPage_PAGE_NAME);
@@ -76,6 +82,8 @@ public class PresetEditingWizardConfigPage extends BaseWizardPage {
 		createFileNameContainer(container).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		createSeparator(container).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		createGlobalConfigContainer(container).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		createSeparator(container).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		createCollectionTrackingContainer(container).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		populateUi();
 		bindListeners();
@@ -95,6 +103,27 @@ public class PresetEditingWizardConfigPage extends BaseWizardPage {
 
 		fileNameText = createTextInput(container, cols, Messages.PresetEditingWizardConfigPage_LABEL_FILE_NAME,
 				Messages.PresetEditingWizardConfigPage_MESSAGE_NAME_OF_THE_SAVED_XML);
+
+		return container;
+	}
+
+	private Composite createCollectionTrackingContainer(Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
+		int cols = 5;
+		GridLayout layout = new GridLayout(cols, false);
+		layout.horizontalSpacing = 8;
+		container.setLayout(layout);
+
+		collectionTrackingCombo = createComboInput(container, cols,
+				Messages.PresetEditingWizardConfigPage_LABEL_COLLECTION_TRACKING,
+				new String[] {Messages.PresetEditingWizardConfigPage_COLLECTION_TRACKING_KEEP_CURRENT,
+						Messages.PresetEditingWizardConfigPage_COLLECTION_TRACKING_ENABLED,
+						Messages.PresetEditingWizardConfigPage_COLLECTION_TRACKING_DISABLED});
+		collectionTrackingMinSizeText = createTextInput(container, cols,
+				Messages.PresetEditingWizardConfigPage_LABEL_COLLECTION_TRACKING_MIN_SIZE,
+				Messages.PresetEditingWizardConfigPage_MESSAGE_COLLECTION_TRACKING_MIN_SIZE);
+		collectionTrackingMinSizeText
+				.setToolTipText(Messages.PresetEditingWizardConfigPage_MESSAGE_COLLECTION_TRACKING_MIN_SIZE);
 
 		return container;
 	}
@@ -125,6 +154,36 @@ public class PresetEditingWizardConfigPage extends BaseWizardPage {
 				handleExceptionIfAny((Listener) e -> preset.setAllowToString(allowToStringButton.getSelection())));
 		allowConverterButton.addListener(SWT.Selection,
 				handleExceptionIfAny((Listener) e -> preset.setAllowConverter(allowConverterButton.getSelection())));
+		collectionTrackingCombo.addListener(SWT.Selection,
+				handleExceptionIfAny((Listener) e -> updateCollectionTracking()));
+		collectionTrackingMinSizeText
+				.addModifyListener(handleExceptionIfAny((ModifyListener) e -> updateCollectionTrackingMinSize()));
+	}
+
+	private void updateCollectionTracking() {
+		int selected = collectionTrackingCombo.getSelectionIndex();
+		CollectionTrackingMode mode = selected == 0 ? CollectionTrackingMode.UNCHANGED
+				: selected == 1 ? CollectionTrackingMode.ENABLED : CollectionTrackingMode.DISABLED;
+		preset.setCollectionTrackingMode(mode);
+		collectionTrackingMinSizeText.setEnabled(mode == CollectionTrackingMode.ENABLED);
+		if (mode == CollectionTrackingMode.UNCHANGED) {
+			setText(collectionTrackingMinSizeText, null);
+		}
+		handleExceptionIfAny(collectionTrackingMinSizeText, () -> updateCollectionTrackingMinSize());
+	}
+
+	private void updateCollectionTrackingMinSize() {
+		if (!collectionTrackingMinSizeText.isEnabled()) {
+			return;
+		}
+		String value = collectionTrackingMinSizeText.getText().trim();
+		BigInteger minSize;
+		try {
+			minSize = value.isEmpty() ? null : new BigInteger(value);
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(Messages.Preset_ERROR_COLLECTION_TRACKING_MIN_SIZE);
+		}
+		preset.setCollectionTrackingMinSize(minSize);
 	}
 
 	private void populateUi() {
@@ -132,5 +191,11 @@ public class PresetEditingWizardConfigPage extends BaseWizardPage {
 		setText(classPrefixText, preset.getClassPrefix());
 		allowToStringButton.setSelection(preset.getAllowToString());
 		allowConverterButton.setSelection(preset.getAllowConverter());
+		CollectionTrackingMode mode = preset.getCollectionTrackingMode();
+		collectionTrackingCombo
+				.select(mode == CollectionTrackingMode.UNCHANGED ? 0 : mode == CollectionTrackingMode.ENABLED ? 1 : 2);
+		BigInteger minSize = preset.getCollectionTrackingMinSize();
+		setText(collectionTrackingMinSizeText, minSize == null ? null : minSize.toString());
+		collectionTrackingMinSizeText.setEnabled(mode == CollectionTrackingMode.ENABLED);
 	}
 }

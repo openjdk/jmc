@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -47,6 +48,9 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.openjdk.jmc.agent.collections.CollectionResizeEmitter;
+import org.openjdk.jmc.agent.collections.CollectionTrackingSettings;
+import org.openjdk.jmc.agent.collections.CollectionTransformDescriptor;
 import org.openjdk.jmc.agent.impl.DefaultTransformRegistry;
 import org.openjdk.jmc.agent.jmx.AgentManagementFactory;
 import org.openjdk.jmc.agent.util.ModuleUtils;
@@ -56,9 +60,9 @@ import org.openjdk.jmc.agent.util.ModuleUtils;
  */
 public class Agent {
 	/**
-	 * This should be generated as part of the build later.
+	 * The agent version, read from the Implementation-Version attribute of the agent jar manifest.
 	 */
-	public static final String VERSION = "1.0.0"; //$NON-NLS-1$
+	public static final String VERSION = determineVersion();
 	private static boolean loadedDynamically = false;
 
 	/**
@@ -88,6 +92,9 @@ public class Agent {
 		printVersion();
 		getLogger().fine("Starting from agentmain"); //$NON-NLS-1$
 		loadedDynamically = true;
+		// Needed to define the collection tracking bridge into the bootstrap loader via Unsafe (premain
+		// opens it above).
+		ModuleUtils.openUnsafePackage(instrumentation);
 		initializeAgent(agentArguments, instrumentation);
 	}
 
@@ -106,10 +113,26 @@ public class Agent {
 			throws XMLStreamException, XMLValidationException {
 		TransformRegistry registry = configuration != null ? DefaultTransformRegistry.from(configuration)
 				: DefaultTransformRegistry.empty();
+		CollectionTrackingSettings collectionTracking = registry.getCollectionTrackingSettings();
+		if (collectionTracking.isEnabled()) {
+			try {
+				CollectionResizeEmitter.init(collectionTracking.getMinSize());
+			} catch (Throwable t) {
+				// Catch Throwable: a missing jdk.jfr module (NoClassDefFoundError) or an
+				// inaccessible Unsafe (ExceptionInInitializerError) must disable the capability, not
+				// escape premain and abort JVM startup.
+				getLogger().log(Level.SEVERE, "Failed to initialize collection resize tracking; disabling it", t); //$NON-NLS-1$
+				registry.disableCollectionTracking();
+			}
+		}
 		instrumentation.addTransformer(new Transformer(registry), true);
 		AgentManagementFactory.createAndRegisterAgentControllerMBean(instrumentation, registry);
 		if (loadedDynamically) {
 			retransformClasses(registry.getClassNames(), instrumentation);
+		} else if (collectionTracking.isEnabled() && CollectionResizeEmitter.isInstalled()) {
+			// premain: the collection classes are already loaded, so retransform them to weave in the
+			// instrumentation. Only when the bridge installed, else the weave is a wasted no-op.
+			retransformClasses(collectionTrackingClassNames(), instrumentation);
 		}
 	}
 
@@ -172,5 +195,24 @@ public class Agent {
 
 	private static void printVersion() {
 		getLogger().info(String.format("JMC BCI agent v%s", VERSION)); //$NON-NLS-1$
+	}
+
+	private static String determineVersion() {
+		Package agentPackage = Agent.class.getPackage();
+		String version = agentPackage == null ? null : agentPackage.getImplementationVersion();
+		// null when not running from the shaded agent jar, e.g. from an IDE or unit tests.
+		return version == null ? "unknown" : version; //$NON-NLS-1$
+	}
+
+	/**
+	 * @return the internal names of the JDK collection classes instrumented by the collection
+	 *         resize tracking capability.
+	 */
+	private static Set<String> collectionTrackingClassNames() {
+		Set<String> names = new HashSet<>();
+		for (CollectionTransformDescriptor descriptor : CollectionTransformDescriptor.all()) {
+			names.add(descriptor.getClassName());
+		}
+		return names;
 	}
 }

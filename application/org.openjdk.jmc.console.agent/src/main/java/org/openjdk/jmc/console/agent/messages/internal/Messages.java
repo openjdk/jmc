@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -72,6 +72,7 @@ public class Messages extends NLS {
 	public static String Preset_ERROR_FILE_NAME_CANNOT_BE_EMPTY_OR_NULL;
 	public static String Preset_ERROR_MUST_HAVE_UNIQUE_ID;
 	public static String Preset_ERROR_MUST_HAVE_UNIQUE_EVENT_CLASS_NAME;
+	public static String Preset_ERROR_COLLECTION_TRACKING_MIN_SIZE;
 	public static String CapturedValueEditingPage_PAGE_NAME;
 	public static String CapturedValueEditingPage_MESSAGE_PARAMETER_OR_RETURN_VALUE_EDITING_PAGE_TITLE;
 	public static String CapturedValueEditingPage_MESSAGE_PARAMETER_OR_RETURN_VALUE_EDITING_PAGE_DESCRIPTION;
@@ -148,6 +149,12 @@ public class Messages extends NLS {
 	public static String PresetEditingWizardConfigPage_LABEL_CLASS_PREFIX;
 	public static String PresetEditingWizardConfigPage_LABEL_ALLOW_TO_STRING;
 	public static String PresetEditingWizardConfigPage_LABEL_ALLOW_CONVERTER;
+	public static String PresetEditingWizardConfigPage_LABEL_COLLECTION_TRACKING;
+	public static String PresetEditingWizardConfigPage_LABEL_COLLECTION_TRACKING_MIN_SIZE;
+	public static String PresetEditingWizardConfigPage_COLLECTION_TRACKING_KEEP_CURRENT;
+	public static String PresetEditingWizardConfigPage_COLLECTION_TRACKING_ENABLED;
+	public static String PresetEditingWizardConfigPage_COLLECTION_TRACKING_DISABLED;
+	public static String PresetEditingWizardConfigPage_MESSAGE_COLLECTION_TRACKING_MIN_SIZE;
 	public static String PresetEditingWizardConfigPage_MESSAGE_NAME_OF_THE_SAVED_XML;
 	public static String PresetEditingWizardConfigPage_MESSAGE_PREFIX_ADDED_TO_GENERATED_EVENT_CLASSES;
 	public static String PresetEditingWizardEventPage_PAGE_NAME;
@@ -192,6 +199,9 @@ public class Messages extends NLS {
 	public static String EditAgentSection_MESSAGE_APPLY;
 	public static String EditAgentSection_MESSAGE_NO_WARNINGS_OR_ERRORS_FOUND;
 	public static String PresetsTab_TITLE;
+	public static String GlobalConfigSection_COLLECTION_TRACKING;
+	public static String GlobalConfigSection_COLLECTION_TRACKING_MIN_SIZE;
+	public static String GlobalConfigSection_COLLECTION_TRACKING_MIN_SIZE_UNCHANGED;
 	public static String BaseWizardPage_MESSAGE_UNEXPECTED_ERROR_HAS_OCCURRED;
 	public static String StartAgentWizard_MESSAGE_FAILED_TO_START_AGENT;
 	public static String StartAgentWizard_MESSAGE_FAILED_TO_OPEN_AGENT_EDITOR;

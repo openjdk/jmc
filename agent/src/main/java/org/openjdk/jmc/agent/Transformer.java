@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,12 +36,16 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.List;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+import org.openjdk.jmc.agent.collections.CollectionResizeEmitter;
+import org.openjdk.jmc.agent.collections.CollectionTransformDescriptor;
+import org.openjdk.jmc.agent.collections.impl.CollectionResizeClassVisitor;
 import org.openjdk.jmc.agent.jfr.JFRTransformDescriptor;
 import org.openjdk.jmc.agent.jfr.impl.JFRClassVisitor;
 import org.openjdk.jmc.agent.jfrlegacy.impl.JFRLegacyClassVisitor;
@@ -74,7 +78,6 @@ public class Transformer implements ClassFileTransformer {
 			// FIXME: Optimization, should do all transforms to one class in one go, instead of creating one class writer per transform.
 			classfileBuffer = doTransform(td, classfileBuffer, definingClassLoader, classBeingRedefined,
 					protectionDomain);
-			td.setPendingTransforms(false);
 		}
 		return classfileBuffer;
 	}
@@ -82,31 +85,71 @@ public class Transformer implements ClassFileTransformer {
 	private byte[] doTransform(
 		TransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader, Class<?> classBeingRedefined,
 		ProtectionDomain protectionDomain) {
-		return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, classBeingRedefined,
-				protectionDomain);
+		if (td instanceof CollectionTransformDescriptor) {
+			return doCollectionTracking((CollectionTransformDescriptor) td, classfileBuffer);
+		}
+		if (td instanceof JFRTransformDescriptor) {
+			return doJFRLogging((JFRTransformDescriptor) td, classfileBuffer, definingClassLoader, classBeingRedefined,
+					protectionDomain);
+		}
+		// A ClassCastException here would be swallowed by the JVM, silently leaving the class
+		// uninstrumented - log instead.
+		Logger.getLogger(getClass().getName()).severe("Unknown transform descriptor type: " + td.getClass().getName()); //$NON-NLS-1$
+		return classfileBuffer;
+	}
+
+	private byte[] doCollectionTracking(CollectionTransformDescriptor td, byte[] classfileBuffer) {
+		if (!CollectionResizeEmitter.isInstalled()) {
+			// No bridge defined (init failed, or not enabled) - weaving the call would throw
+			// NoClassDefFoundError out of the JDK method. Leave the class untouched; the descriptor
+			// stays pending so a later retransform retries the weave.
+			return classfileBuffer;
+		}
+		byte[] woven = weave(classfileBuffer, classWriter -> new CollectionResizeClassVisitor(classWriter, td),
+				"collection class " + td.getClassName()); //$NON-NLS-1$
+		if (woven == null) {
+			// Weave failed; the descriptor stays pending so a later retransform retries.
+			return classfileBuffer;
+		}
+		td.setPendingTransforms(false);
+		return woven;
 	}
 
 	private byte[] doJFRLogging(
 		JFRTransformDescriptor td, byte[] classfileBuffer, ClassLoader definingClassLoader,
 		Class<?> classBeingRedefined, ProtectionDomain protectionDomain) {
+		td.setPendingTransforms(false);
 		if (VersionUtils.getAvailableJFRVersion() == JFRVersion.NONE) {
 			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
 					"Could not find JFR classes. Failed to instrument " + td.getMethod().toString()); //$NON-NLS-1$
 			return classfileBuffer;
 		}
+		byte[] woven = weave(classfileBuffer,
+				classWriter -> VersionUtils.getAvailableJFRVersion() == JFRVersion.JFRNEXT
+						? new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined,
+								protectionDomain)
+						: new JFRLegacyClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined,
+								protectionDomain),
+				td.getMethod().toString());
+		return woven != null ? woven : classfileBuffer;
+	}
+
+	/**
+	 * Runs the class bytes through the supplied visitor.
+	 *
+	 * @return the woven class bytes, or {@code null} if the weave failed (never let a broken weave
+	 *         take down the class load/retransform).
+	 */
+	private byte[] weave(byte[] classfileBuffer, Function<ClassWriter, ClassVisitor> visitorFactory, String target) {
 		try {
 			ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-			ClassVisitor visitor = VersionUtils.getAvailableJFRVersion() == JFRVersion.JFRNEXT
-					? new JFRClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined, protectionDomain)
-					: new JFRLegacyClassVisitor(classWriter, td, definingClassLoader, classBeingRedefined,
-							protectionDomain);
+			ClassVisitor visitor = visitorFactory.apply(classWriter);
 			ClassReader reader = new ClassReader(classfileBuffer);
 			reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 			return classWriter.toByteArray();
 		} catch (Throwable t) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE,
-					"Failed to instrument " + td.getMethod().toString(), t); //$NON-NLS-1$
-			return classfileBuffer;
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Failed to instrument " + target, t); //$NON-NLS-1$
+			return null;
 		}
 	}
 }
