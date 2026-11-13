@@ -35,10 +35,8 @@ package org.openjdk.jmc.console.ui.tabs.memory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Observable;
 
-import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 
