@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -70,7 +69,6 @@ import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
-import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
@@ -114,11 +112,8 @@ public class ConsoleEditor extends FormEditor {
 					// If the information is already cached the main thread should return quickly
 					IMBeanHelperService mbeanHelper = connection.getServiceOrThrow(IMBeanHelperService.class);
 					mbeanHelper.getMBeanNames();
-					// Some beans we know will be used
-					preloadCoreMBeans("java.lang:type=OperatingSystem", "com.sun.management:type=DiagnosticCommand", //$NON-NLS-1$ //$NON-NLS-2$
-							"java.lang:type=Threading", "java.lang:type=ClassLoading", //$NON-NLS-1$ //$NON-NLS-2$
-							"com.sun.management:type=GarbageCollectionAggregator", //$NON-NLS-1$
-							"JMImplementation:type=MBeanServerDelegate", "java.lang:type=Memory"); //$NON-NLS-1$ //$NON-NLS-2$
+					mbeanHelper.getMBeanInfos();
+
 				} catch (Exception e) {
 					ConsolePlugin.getDefault().getLogger().log(Level.FINE, "Exception trying to cache mbeans", e); //$NON-NLS-1$
 				}
@@ -145,16 +140,6 @@ public class ConsoleEditor extends FormEditor {
 			}
 		}
 
-		private void preloadCoreMBeans(String ... names) throws ConnectionException, ServiceNotAvailableException {
-			MBeanServerConnection rjmx = connection.getServiceOrThrow(MBeanServerConnection.class);
-
-			for (String name : names) {
-				try {
-					rjmx.getMBeanInfo(new ObjectName(name));
-				} catch (Exception ignore) {
-				}
-			}
-		}
 	}
 
 	private void onConnectionChange(IConnectionHandle connection) {
