@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 
 import org.eclipse.swt.SWT;
@@ -121,8 +120,7 @@ class GcTableSectionPart extends MCSectionPart {
 		List<ObjectName> gcNames = new ArrayList<>();
 		try {
 			IMBeanHelperService h = connectionHandle.getServiceOrThrow(IMBeanHelperService.class);
-			for (Entry<ObjectName, MBeanInfo> entry : h.getMBeanInfos().entrySet()) {
-				ObjectName o = entry.getKey();
+			for (ObjectName o : h.getMBeanNames()) {
 				if (o.getDomain().equals("java.lang")) { //$NON-NLS-1$
 					if ("GarbageCollector".equals(o.getKeyProperty("type"))) { //$NON-NLS-1$ //$NON-NLS-2$
 						gcNames.add(o);

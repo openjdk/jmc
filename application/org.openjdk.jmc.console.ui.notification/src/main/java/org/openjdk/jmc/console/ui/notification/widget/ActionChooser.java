@@ -68,6 +68,7 @@ import org.openjdk.jmc.rjmx.triggers.internal.INotificationFactory;
 import org.openjdk.jmc.rjmx.triggers.internal.NotificationRegistry;
 import org.openjdk.jmc.rjmx.triggers.internal.RegistryEntry;
 import org.openjdk.jmc.ui.misc.AbstractStructuredContentProvider;
+import org.openjdk.jmc.ui.misc.DeferredLabelProvider;
 import org.openjdk.jmc.ui.misc.IRefreshable;
 import org.openjdk.jmc.ui.uibuilder.IUIBuilder;
 
@@ -90,9 +91,12 @@ public class ActionChooser {
 
 	public class ActionLabelProvider extends LabelProvider implements IColorProvider {
 		final private IConnectionHandle m_connectionHandle;
+		final private DeferredLabelProvider<ITriggerAction, Boolean> m_supportedCache;
 
-		public ActionLabelProvider(IConnectionHandle connectionHandle) {
+		public ActionLabelProvider(IConnectionHandle connectionHandle, TableViewer m_viewer) {
 			m_connectionHandle = connectionHandle;
+			m_supportedCache = new DeferredLabelProvider<>(m_viewer,
+					action -> action.supportsAction(m_connectionHandle));
 		}
 
 		@Override
@@ -120,7 +124,8 @@ public class ActionChooser {
 		}
 
 		private boolean isSupportedByConnection(Object action) {
-			return action instanceof ITriggerAction && ((ITriggerAction) action).supportsAction(m_connectionHandle);
+			return action instanceof ITriggerAction
+					&& Boolean.TRUE.equals(m_supportedCache.getLabelAttribute((ITriggerAction) action));
 		}
 
 		@Override
@@ -283,7 +288,7 @@ public class ActionChooser {
 	private void createViewer(Table table) {
 		m_viewer = new TableViewer(table);
 		m_viewer.setContentProvider(new TriggerContentProvider());
-		m_viewer.setLabelProvider(new ActionLabelProvider(m_connectionHandle));
+		m_viewer.setLabelProvider(new ActionLabelProvider(m_connectionHandle, m_viewer));
 		m_viewer.setInput(m_actionsCache);
 		m_viewer.setComparator(new ViewerComparator());
 		m_viewer.refresh();

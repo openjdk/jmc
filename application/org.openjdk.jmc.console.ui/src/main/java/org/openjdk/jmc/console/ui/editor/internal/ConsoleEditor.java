@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,6 +70,7 @@ import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.ServiceNotAvailableException;
 import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
@@ -107,14 +109,20 @@ public class ConsoleEditor extends FormEditor {
 					return Status.CANCEL_STATUS;
 				}
 				try {
-					// As building and loading of tabls typically rely on presence of mbeans and mbean info
+					// As building and loading of tabls typically rely on presence of mbeans and
+					// mbean info
 					// trigger caching before delegating to GUI render thread (main) below
-					// For the mbean viewer we will probably fetch all mbean infos anyway, so simply do it up front
+					// For the mbean viewer we will probably fetch all mbean infos anyway, so simply
+					// do it up front
 					IMBeanHelperService mbeanHelper = connection.getServiceOrThrow(IMBeanHelperService.class);
-					mbeanHelper.getMBeanInfos();
 					mbeanHelper.getMBeanNames();
+					// Some beans we know will be used
+					preloadCoreMBeans("java.lang:type=OperatingSystem", "com.sun.management:type=DiagnosticCommand", //$NON-NLS-1$ //$NON-NLS-2$
+							"java.lang:type=Threading", "java.lang:type=ClassLoading", //$NON-NLS-1$ //$NON-NLS-2$
+							"com.sun.management:type=GarbageCollectionAggregator", //$NON-NLS-1$
+							"JMImplementation:type=MBeanServerDelegate", "java.lang:type=Memory"); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (Exception e) {
-					ConsolePlugin.getDefault().getLogger().log(Level.FINE, "Exception trying to cache mbeans", e);
+					ConsolePlugin.getDefault().getLogger().log(Level.FINE, "Exception trying to cache mbeans", e); //$NON-NLS-1$
 				}
 				DisplayToolkit.safeAsyncExec(new Runnable() {
 
@@ -136,6 +144,17 @@ public class ConsoleEditor extends FormEditor {
 				// FIXME: Show stacktrace? (Need to show our own ExceptionDialog in that case, or maybe create our own DetailsAreaProvider, see WorkbenchStatusDialogManager.setDetailsAreaProvider)
 				return new Status(IStatus.ERROR, ConsolePlugin.PLUGIN_ID, IStatus.ERROR,
 						NLS.bind(e.getLocalizedMessage(), getEditorInput().getName(), e.getMessage()), e);
+			}
+		}
+
+		private void preloadCoreMBeans(String ... names) throws ConnectionException, ServiceNotAvailableException {
+			MBeanServerConnection rjmx = connection.getServiceOrThrow(MBeanServerConnection.class);
+
+			for (String name : names) {
+				try {
+					rjmx.getMBeanInfo(new ObjectName(name));
+				} catch (Exception ignore) {
+				}
 			}
 		}
 	}
