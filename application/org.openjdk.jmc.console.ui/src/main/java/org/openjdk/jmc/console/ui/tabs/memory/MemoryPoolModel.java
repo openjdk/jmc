@@ -145,8 +145,7 @@ public class MemoryPoolModel extends Observable {
 	static List<ObjectName> findPools(IMBeanHelperService mbeanHelperService) {
 		List<ObjectName> poolNames = new ArrayList<>();
 		try {
-			for (Entry<ObjectName, MBeanInfo> entry : mbeanHelperService.getMBeanInfos().entrySet()) {
-				ObjectName o = entry.getKey();
+			for (ObjectName o : mbeanHelperService.getMBeanNames()) {
 				if (o.getDomain().equals("java.lang")) { //$NON-NLS-1$
 					if (o.getKeyProperty("type").equals("MemoryPool")) { //$NON-NLS-1$ //$NON-NLS-2$
 						poolNames.add(o);
