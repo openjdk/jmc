@@ -109,11 +109,9 @@ public class ConsoleEditor extends FormEditor {
 					return Status.CANCEL_STATUS;
 				}
 				try {
-					// As building and loading of tabls typically rely on presence of mbeans and
-					// mbean info
-					// trigger caching before delegating to GUI render thread (main) below
-					// For the mbean viewer we will probably fetch all mbean infos anyway, so simply
-					// do it up front
+					// As building and loading of tabs typically rely on presence of MBeans and
+					// mbean info, we trigger caching before delegating to GUI render thread (main) below
+					// If the information is already cached the main thread should return quickly
 					IMBeanHelperService mbeanHelper = connection.getServiceOrThrow(IMBeanHelperService.class);
 					mbeanHelper.getMBeanNames();
 					// Some beans we know will be used
