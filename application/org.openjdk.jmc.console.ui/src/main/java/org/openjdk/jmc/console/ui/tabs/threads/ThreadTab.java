@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +32,6 @@
  */
 package org.openjdk.jmc.console.ui.tabs.threads;
 
-import jakarta.inject.Inject;
-import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import org.eclipse.jface.action.IToolBarManager;
@@ -45,17 +43,19 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleFormPage;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.ui.internal.CombinedChartSectionPart;
 import org.openjdk.jmc.ui.misc.MCActionContributionItem;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
 import org.openjdk.jmc.ui.misc.MCSectionPart;
+
+import jakarta.inject.Inject;
 
 /**
  * Threads Tab
@@ -120,9 +120,9 @@ public class ThreadTab implements IConsolePageStateHandler {
 	}
 
 	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=Threading"), null).isEmpty()) { //$NON-NLS-1$
+			if (!connection.getMBeanNames().contains(new ObjectName("java.lang:type=Threading"))) { //$NON-NLS-1$
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 				m_platformThreadingMBeanPresent = false;
 			}

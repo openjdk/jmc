@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,9 +34,7 @@ package org.openjdk.jmc.console.ui.tabs.memory;
 
 import java.util.logging.Level;
 
-import jakarta.inject.Inject;
 import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -46,7 +44,6 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-
 import org.openjdk.jmc.console.ui.ConsolePlugin;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
@@ -56,10 +53,13 @@ import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.ConnectionToolkit;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.services.IDiagnosticCommandService;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.MCActionContributionItem;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
+
+import jakarta.inject.Inject;
 
 /**
  * Garbage Collection Tab
@@ -131,10 +131,10 @@ public class MemoryTab implements IConsolePageStateHandler {
 	}
 
 	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=GarbageCollector,*"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=MemoryPool,*"), null).isEmpty()) { //$NON-NLS-1$
+			if (MemoryPoolModel.findPools(connection).isEmpty()
+					|| GcTableSectionPart.findGcNames(connectionHandle).isEmpty()) {
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 			} else if (!(connectionHandle.getServiceOrNull(IDiagnosticCommandService.class) != null)) {
 				page.presentError(Messages.ConsoleEditor_DIAGNOSTIC_COMMANDS_UNAVAILABLE);

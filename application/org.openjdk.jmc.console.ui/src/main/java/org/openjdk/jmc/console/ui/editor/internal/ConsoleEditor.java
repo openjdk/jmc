@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import jakarta.inject.Inject;
 import javax.management.MBeanServerConnection;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -70,6 +69,7 @@ import org.openjdk.jmc.rjmx.IServerHandle;
 import org.openjdk.jmc.rjmx.JVMSupportToolkit;
 import org.openjdk.jmc.rjmx.common.ConnectionException;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
 import org.openjdk.jmc.ui.UIPlugin;
@@ -77,6 +77,8 @@ import org.openjdk.jmc.ui.WorkbenchToolkit;
 import org.openjdk.jmc.ui.misc.CompositeToolkit;
 import org.openjdk.jmc.ui.misc.DialogToolkit;
 import org.openjdk.jmc.ui.misc.DisplayToolkit;
+
+import jakarta.inject.Inject;
 
 /**
  * The ConsoleEditor is responsible for holding JMX console tabs. The tabs are added as FormPages
@@ -104,6 +106,17 @@ public class ConsoleEditor extends FormEditor {
 					WorkbenchToolkit.asyncCloseEditor(ConsoleEditor.this);
 					return Status.CANCEL_STATUS;
 				}
+				try {
+					// As building and loading of tabs typically rely on presence of MBeans and
+					// mbean info, we trigger caching before delegating to GUI render thread (main) below
+					// If the information is already cached the main thread should return quickly
+					IMBeanHelperService mbeanHelper = connection.getServiceOrThrow(IMBeanHelperService.class);
+					mbeanHelper.getMBeanNames();
+					mbeanHelper.getMBeanInfos();
+
+				} catch (Exception e) {
+					ConsolePlugin.getDefault().getLogger().log(Level.FINE, "Exception trying to cache mbeans", e); //$NON-NLS-1$
+				}
 				DisplayToolkit.safeAsyncExec(new Runnable() {
 
 					@Override
@@ -126,6 +139,7 @@ public class ConsoleEditor extends FormEditor {
 						NLS.bind(e.getLocalizedMessage(), getEditorInput().getName(), e.getMessage()), e);
 			}
 		}
+
 	}
 
 	private void onConnectionChange(IConnectionHandle connection) {

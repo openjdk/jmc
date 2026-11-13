@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -35,16 +35,14 @@ package org.openjdk.jmc.console.ui.tabs.memory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Observable;
 
-import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 
 import org.openjdk.jmc.common.unit.UnitLookup;
-import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
+import org.openjdk.jmc.rjmx.common.IConnectionHandle;
 import org.openjdk.jmc.rjmx.common.subscription.IMRIValueListener;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.common.subscription.MRI;
@@ -53,16 +51,20 @@ import org.openjdk.jmc.rjmx.common.subscription.MRI.Type;
 
 public class MemoryPoolModel extends Observable {
 
-	private final MemoryPoolInformation[] m_pools;
+	private MemoryPoolInformation[] m_pools;
+	private final IConnectionHandle connectionHandle;
 
 	public MemoryPoolModel(IConnectionHandle connectionHandle) {
-		IMBeanHelperService mbeanHelperService = connectionHandle.getServiceOrDummy(IMBeanHelperService.class);
-		ISubscriptionService subscriptionService = connectionHandle.getServiceOrDummy(ISubscriptionService.class);
-		List<ObjectName> memoryPools = findPools(mbeanHelperService);
-		m_pools = setupSubscriptions(memoryPools, mbeanHelperService, subscriptionService);
+		this.connectionHandle = connectionHandle;
 	}
 
 	public MemoryPoolInformation[] getAllPools() {
+		if (m_pools == null) {
+			IMBeanHelperService mbeanHelperService = connectionHandle.getServiceOrDummy(IMBeanHelperService.class);
+			ISubscriptionService subscriptionService = connectionHandle.getServiceOrDummy(ISubscriptionService.class);
+			List<ObjectName> memoryPools = findPools(mbeanHelperService);
+			m_pools = setupSubscriptions(memoryPools, mbeanHelperService, subscriptionService);
+		}
 		return m_pools;
 	}
 
@@ -138,11 +140,10 @@ public class MemoryPoolModel extends Observable {
 		}
 	}
 
-	private List<ObjectName> findPools(IMBeanHelperService mbeanHelperService) {
+	static List<ObjectName> findPools(IMBeanHelperService mbeanHelperService) {
 		List<ObjectName> poolNames = new ArrayList<>();
 		try {
-			for (Entry<ObjectName, MBeanInfo> entry : mbeanHelperService.getMBeanInfos().entrySet()) {
-				ObjectName o = entry.getKey();
+			for (ObjectName o : mbeanHelperService.getMBeanNames()) {
 				if (o.getDomain().equals("java.lang")) { //$NON-NLS-1$
 					if (o.getKeyProperty("type").equals("MemoryPool")) { //$NON-NLS-1$ //$NON-NLS-2$
 						poolNames.add(o);

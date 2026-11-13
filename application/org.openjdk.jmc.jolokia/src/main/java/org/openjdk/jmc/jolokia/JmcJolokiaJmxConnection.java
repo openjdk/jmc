@@ -103,9 +103,9 @@ public class JmcJolokiaJmxConnection extends ConnectionDecorator {
 			final MBeanInfo modifiedMBeanInfo = new MBeanInfo(mBeanInfo.getClassName(), mBeanInfo.getDescription(),
 					mBeanInfo.getAttributes(), mBeanInfo.getConstructors(), modifiedOperations,
 					mBeanInfo.getNotifications());
-			this.mbeanInfoCache.put(name, modifiedMBeanInfo);
-			return modifiedMBeanInfo;
+			mBeanInfo = modifiedMBeanInfo;
 		}
+		this.mbeanInfoCache.put(name, mBeanInfo);
 		return mBeanInfo;
 	}
 
@@ -228,6 +228,11 @@ public class JmcJolokiaJmxConnection extends ConnectionDecorator {
 			//Handle this until it is fixed in jolokia https://github.com/jolokia/jolokia/issues/666
 			return false;
 		}
+	}
+
+	@Override
+	public boolean isRegistered(ObjectName name) throws IOException {
+		return this.mbeanInfoCache.containsKey(name) || super.isRegistered(name);
 	}
 
 }

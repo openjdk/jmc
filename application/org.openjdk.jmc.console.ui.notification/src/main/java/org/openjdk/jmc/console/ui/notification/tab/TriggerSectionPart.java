@@ -496,7 +496,7 @@ public class TriggerSectionPart extends MCSectionPart {
 		CheckboxTreeViewer viewer = new ContainerCheckedTreeViewer(tree);
 		viewer.setContentProvider(new TriggerContentProvider(model));
 		viewer.setComparator(new ViewerComparator());
-		viewer.setLabelProvider(new TriggerLabelProvider(ruleStateProvider));
+		viewer.setLabelProvider(new TriggerLabelProvider(ruleStateProvider, viewer));
 		viewer.setInput(model);
 		viewer.setCheckStateProvider(ruleStateProvider);
 		viewer.addCheckStateListener(ruleStateProvider);

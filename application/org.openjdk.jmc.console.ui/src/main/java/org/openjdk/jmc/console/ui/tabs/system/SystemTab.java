@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.console.ui.tabs.system;
 
-import jakarta.inject.Inject;
-import javax.management.MBeanServerConnection;
+import java.util.Arrays;
+
 import javax.management.ObjectName;
 
 import org.eclipse.swt.widgets.Composite;
@@ -41,17 +41,19 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.common.subscription.ISubscriptionService;
 import org.openjdk.jmc.rjmx.ui.internal.AttributeSectionPart;
 import org.openjdk.jmc.ui.misc.MCActionContributionItem;
 import org.openjdk.jmc.ui.misc.MCLayoutFactory;
+
+import jakarta.inject.Inject;
 
 public class SystemTab implements IConsolePageStateHandler {
 	private static final String JVM_STATISTICS_ID = "JVMStatistics"; //$NON-NLS-1$
@@ -98,11 +100,12 @@ public class SystemTab implements IConsolePageStateHandler {
 	}
 
 	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=Runtime"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=ClassLoading"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=OperatingSystem"), null).isEmpty()) { //$NON-NLS-1$
+			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Runtime"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=ClassLoading"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=OperatingSystem") //$NON-NLS-1$
+			))) {
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 			}
 		} catch (Exception e) {

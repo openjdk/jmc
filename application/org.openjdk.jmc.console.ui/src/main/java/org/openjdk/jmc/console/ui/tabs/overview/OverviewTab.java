@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,8 +32,8 @@
  */
 package org.openjdk.jmc.console.ui.tabs.overview;
 
-import jakarta.inject.Inject;
-import javax.management.MBeanServerConnection;
+import java.util.Arrays;
+
 import javax.management.ObjectName;
 
 import org.eclipse.jface.action.IToolBarManager;
@@ -41,13 +41,13 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-
 import org.openjdk.jmc.console.ui.actions.ResetToDefaultsAction;
 import org.openjdk.jmc.console.ui.editor.IConsolePageContainer;
 import org.openjdk.jmc.console.ui.editor.IConsolePageStateHandler;
 import org.openjdk.jmc.console.ui.editor.internal.ConsoleEditor;
 import org.openjdk.jmc.console.ui.messages.internal.Messages;
 import org.openjdk.jmc.rjmx.common.IConnectionHandle;
+import org.openjdk.jmc.rjmx.common.subscription.IMBeanHelperService;
 import org.openjdk.jmc.rjmx.ui.internal.CombinedChartSectionPart;
 import org.openjdk.jmc.rjmx.ui.internal.CombinedDialsSectionPart;
 import org.openjdk.jmc.rjmx.ui.internal.NewChartAction;
@@ -55,6 +55,8 @@ import org.openjdk.jmc.rjmx.ui.internal.PersistenceSectionPart;
 import org.openjdk.jmc.rjmx.ui.internal.SectionPartManager;
 import org.openjdk.jmc.ui.misc.MCActionContributionItem;
 import org.openjdk.jmc.ui.misc.MCSectionPart;
+
+import jakarta.inject.Inject;
 
 /**
  * Tab that shows an overview for the JMX Console
@@ -94,10 +96,11 @@ public class OverviewTab implements IConsolePageStateHandler {
 	}
 
 	private void validateDependencies(IConsolePageContainer page, IConnectionHandle connectionHandle) {
-		MBeanServerConnection connection = connectionHandle.getServiceOrNull(MBeanServerConnection.class);
+
+		IMBeanHelperService connection = connectionHandle.getServiceOrNull(IMBeanHelperService.class);
 		try {
-			if (connection.queryNames(new ObjectName("java.lang:type=Memory"), null).isEmpty() //$NON-NLS-1$
-					|| connection.queryNames(new ObjectName("java.lang:type=OperatingSystem"), null).isEmpty()) { //$NON-NLS-1$
+			if (!connection.getMBeanNames().containsAll(Arrays.asList(new ObjectName("java.lang:type=Memory"), //$NON-NLS-1$
+					new ObjectName("java.lang:type=OperatingSystem")))) { //$NON-NLS-1$
 				page.presentError(Messages.ConsoleEditor_PLATFORM_MBEANS_UNAVAILABLE);
 			}
 		} catch (Exception e) {
