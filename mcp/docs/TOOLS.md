@@ -8,7 +8,8 @@ For the tool overview, recording visibility and stored result sets, see the [REA
 
 1. `loadRecording`, then `getRuleResults` to see what JMC already knows is wrong.
 2. `getEventTypes` / `getSharedAttributes` to see what the recording contains and how it can be correlated.
-3. `aggregateEvents` or `getTimeSeries` to find the specific bad instance or interval.
+3. `aggregateEvents` or `getTimeSeries` to find the specific bad instance or interval, and `getHistogram` to tell an
+   outlier from a pattern.
 4. `findRelatedEvents` with `storeAs`, then `combineResultSets`, to work out what coincided with it.
 5. `getEventTable` or `getStackTrace` to read the detail.
 
@@ -72,6 +73,67 @@ only one side are marked as such. Percentage changes from a zero or missing base
 relative to the start of each recording. When grouping by thread, threads are matched by name, since thread IDs
 differ between runs. Counts and sums are not normalized, so compare recordings or time windows
 of similar length.
+
+## Distributions
+
+`getHistogram` returns the exact distribution of one numeric attribute, `duration` by default, using the same
+`eventType`, `filters`, `resultSet`, time bounds and `storeAs` as `aggregateGroups`. For example, to see whether
+`java.util.concurrent` parking is dominated by a few long waits:
+
+```json
+{
+  "eventType": "jdk.ThreadPark",
+  "filters": [
+    {
+      "attribute": "duration",
+      "operator": "gte",
+      "value": "1",
+      "unit": "ms"
+    }
+  ]
+}
+```
+
+Buckets default to a log scale in a 1-2-5 sequence; set `bucketing` to `linear` and `buckets` to a count for equal
+widths. Each bucket includes `from` and excludes `to`, except that the last bucket also includes `to`, and carries
+`count`, `percent` and `cumulativePercent`. Only the range from the smallest to the largest value is covered,
+but empty buckets in between are kept so gaps and multiple modes stay visible. Zero and negative values get a leading
+bucket from the minimum. Durations are shown in milliseconds and memory sizes in bytes unless `unit` is given, for
+example `us` or `KiB`. Values are plain numbers in that unit.
+
+Each percentile carries `countAtOrAbove`, the number of values at or above it, so a high p99.9 backed by one or two
+events can be told apart from a pattern. The defaults are 50, 90, 99, 99.9, 99.99 and 100. Percentiles are computed
+exactly, with the same linear interpolation as `aggregateGroups`, so both tools agree on the same selection.
+
+For durations, `recordingThresholds` lists the JFR threshold of each event type in the selection. Events shorter than
+the threshold were never recorded, so the low end of the distribution is cut off there; it is not evidence that short
+events did not happen. When the threshold changed during the recording, the highest value is reported.
+
+### Selecting by percentile
+
+With `storeFromPercentile` and/or `storeToPercentile`, `storeAs` keeps only the events whose value lies in that
+percentile range, rather than every filtered event. The range includes `from` and excludes `to`, except that a `to` of
+100 includes the maximum, so adjacent ranges never overlap. The bounds are the same interpolated values as the
+reported percentiles, so `storedEventCount` for `storeFromPercentile: 99` equals the `countAtOrAbove` of p99.
+`storedRange` reports the percentiles and the values they resolved to. Events without a value for the attribute are
+never stored.
+
+The stored set is an ordinary result set, so it composes with every other tool. For example, with the
+`jdk.JavaMonitorEnter` events already stored as `blocking`, the slowest percent of them can be stored and then
+aggregated:
+
+```json
+{
+  "resultSet": "blocking",
+  "percentiles": [99],
+  "storeAs": "slowBlocking",
+  "storeFromPercentile": 99
+}
+```
+
+`aggregateGroups` with `resultSet` set to `slowBlocking` then gives their average duration, `getStackTrace` shows where
+they were blocked, and `getHistogram` can split them further. To select a value range rather than a percentile range,
+use `filters` with `gte` and `lt` instead.
 
 ## Precise results and export
 

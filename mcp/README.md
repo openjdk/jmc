@@ -48,6 +48,7 @@ Built on [Quarkus](https://quarkus.io/) and the
 | `getRuleResults`      | Run JMC's automated analysis rules. **A cheap, low token way, to find ideas on where to look.**  |
 | `aggregateEvents`     | count/sum/avg/min/max/stddev over event durations; stores the min/max events.                    |
 | `aggregateGroups`     | Group by attributes and compute count, sum, average, extrema, standard deviation, median, and percentiles. |
+| `getHistogram`        | Exact distribution of one attribute: log or linear buckets, percentiles with tail counts, JFR thresholds. |
 | `compareRecordings`   | Apply identical filters and grouping to two recordings; return statistics, deltas, and percentage changes. |
 | `getStackTrace`       | Stack paths with self/inclusive weights; scope by result set, thread, time, or frame.             |
 | `getStackStatistics`  | Precise structured stack weights and percentages with an explicit denominator.                  |
@@ -71,8 +72,8 @@ the current process holds, and use distinct result set names when agents share a
 ### Result sets
 
 Several tools accept a `storeAs` parameter, which keeps the matched events on the server under a name.
-`queryEvents`, `aggregateGroups`, `getStackTrace`, `getStackStatistics`, `joinIntervals`, `exportResultSet`,
-`findRelatedEvents` and `combineResultSets` can then take those names as input. This lets an agent compose a multi-step
+`queryEvents`, `aggregateGroups`, `getHistogram`, `getStackTrace`, `getStackStatistics`, `joinIntervals`,
+`exportResultSet`, `findRelatedEvents` and `combineResultSets` can then take those names as input. This lets an agent compose a multi-step
 correlation, such as "the events during the long GC pause, intersected with the events during the slow request", **without
 the event data ever passing through the model's context**.
 

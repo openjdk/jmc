@@ -142,6 +142,9 @@ class StructuredToolsIT {
 			assertTrue(comparisonRequired.contains("candidateRecordingId"));
 			assertTrue(comparisonTool.containsKey("outputSchema"));
 			assertTrue(tool(tools, "exportResultSet").containsKey("outputSchema"));
+			JsonObject histogramTool = tool(tools, "getHistogram");
+			assertPredicateSchema(histogramTool);
+			assertTrue(histogramTool.containsKey("outputSchema"));
 			JsonObject joinProperties = tool(tools, "joinIntervals").getJsonObject("inputSchema")
 					.getJsonObject("properties");
 			assertTrue(joinProperties.containsKey("matchAttributes"));
@@ -249,6 +252,35 @@ class StructuredToolsIT {
 				selfWeight = selfWeight.add(self);
 			}
 			assertEquals(totalWeight, selfWeight);
+
+			JsonObject histogram = server.structured("getHistogram",
+					new JsonObject().put("eventType", TERRAIN_TYPE).put("resultSet", "selected")
+							.put("attribute", "remainingSeconds").put("percentiles", new JsonArray().add(50).add(100)));
+			assertEquals(3, histogram.getInteger("valueCount"));
+			assertEquals("", histogram.getString("unit"));
+			JsonArray histogramBuckets = histogram.getJsonArray("buckets");
+			assertEquals(2, histogramBuckets.size(), histogram.toString());
+			assertHistogramBucket(histogramBuckets.getJsonObject(0), 1, 2, 1);
+			assertHistogramBucket(histogramBuckets.getJsonObject(1), 2, 5, 2);
+			assertEquals(100.0, histogramBuckets.getJsonObject(1).getDouble("cumulativePercent"), 1e-9);
+			JsonObject median = histogram.getJsonArray("percentiles").getJsonObject(0);
+			assertEquals(2.0, median.getDouble("value"));
+			assertEquals(2L, median.getLong("countAtOrAbove"));
+			JsonObject maximum = histogram.getJsonArray("percentiles").getJsonObject(1);
+			assertEquals(3.0, maximum.getDouble("value"));
+			assertEquals(1L, maximum.getLong("countAtOrAbove"));
+			JsonObject durations = server.structured("getHistogram", new JsonObject().put("eventType", TERRAIN_TYPE)
+					.put("resultSet", "selected").put("bucketing", "linear").put("buckets", 4).put("unit", "us"));
+			assertEquals("us", durations.getString("unit"));
+			long counted = 0;
+			for (int i = 0; i < durations.getJsonArray("buckets").size(); i++) {
+				counted += durations.getJsonArray("buckets").getJsonObject(i).getLong("count");
+			}
+			assertEquals(3L, counted, durations.toString());
+			JsonObject invalid = server
+					.call("getHistogram", new JsonObject().put("eventType", TERRAIN_TYPE).put("bucketing", "cubic"))
+					.getJsonObject("structuredContent");
+			assertTrue(invalid.getString("error").contains("Unknown bucketing"), invalid.toString());
 
 			Path candidate = directory.resolve("terrain-candidate.jfr");
 			Files.copy(recording, candidate);
@@ -399,6 +431,12 @@ class StructuredToolsIT {
 		} else {
 			assertEquals(TestItems.plain(expected.numberValue()), actual.getString("exactValue"));
 		}
+	}
+
+	private static void assertHistogramBucket(JsonObject bucket, double from, double to, long count) {
+		assertEquals(from, bucket.getDouble("from"), bucket.toString());
+		assertEquals(to, bucket.getDouble("to"), bucket.toString());
+		assertEquals(count, bucket.getLong("count"), bucket.toString());
 	}
 
 	private static void assertDecimal(String expected, String actual) {
