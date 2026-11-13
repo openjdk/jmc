@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -265,7 +265,7 @@ public class JfrRulesReport {
 					continue;
 				}
 
-				if (result != null && result.getSeverity().compareTo(minSeverity) >= 0) {
+				if (result != null && result.getSeverity().isAtLeast(minSeverity)) {
 					Element ruleNode = createRuleNode(parent, reportNode, result.getRule());
 
 					ruleNode.appendChild(createValueNode(parent.getOwnerDocument(), "severity", //$NON-NLS-1$

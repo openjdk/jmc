@@ -32,27 +32,18 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.selection;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
 
 import org.openjdk.jmc.common.IMCFrame;
 import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.item.ItemFilters;
-import org.openjdk.jmc.common.util.FormatToolkit;
-import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
-import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 
 public class StacktraceFrameSelection extends FlavoredSelectionBase {
 
-	private IMCFrame frame;
-	private IItemCollection selectedItems;
-	private IItemCollection fullItems;
+	private final org.openjdk.jmc.flightrecorder.selection.StacktraceFrameSelection delegate;
 
 	public StacktraceFrameSelection(IMCFrame frame, IItemCollection selectedItems, String name) {
 		this(frame, selectedItems, null, name);
@@ -61,65 +52,34 @@ public class StacktraceFrameSelection extends FlavoredSelectionBase {
 	public StacktraceFrameSelection(IMCFrame frame, IItemCollection selectedItems, IItemCollection fullItems,
 			String name) {
 		super(name);
-		this.frame = frame;
-		this.selectedItems = selectedItems;
-		this.fullItems = fullItems;
+		delegate = new org.openjdk.jmc.flightrecorder.selection.StacktraceFrameSelection(frame, selectedItems,
+				fullItems, name);
 	}
 
 	public IMCFrame getFrame() {
-		return frame;
+		return delegate.getFrame();
 	}
 
 	public IMCMethod getMethod() {
-		return frame != null ? frame.getMethod() : null;
+		return delegate.getMethod();
 	}
 
 	public IItemCollection getSelectedItems() {
-		return selectedItems;
+		return delegate.getSelectedItems();
 	}
 
 	/**
-	 * Returns the full/unfiltered item collection from the recording. This can be used by views
-	 * that need to apply their own filters (e.g., to find all events containing a method anywhere
-	 * in the stack trace, not just at the top).
+	 * Returns the full/unfiltered item collection from the recording.
 	 *
 	 * @return the full item collection, or null if not available
 	 */
 	public IItemCollection getFullItems() {
-		return fullItems;
+		return delegate.getFullItems();
 	}
 
 	@Override
 	public Stream<IItemStreamFlavor> getFlavors(
 		IItemFilter filter, IItemCollection items, List<IAttribute<?>> attributes) {
-		Builder<IItemStreamFlavor> builder = Stream.builder();
-		builder.add(IItemStreamFlavor.build(MessageFormat.format(Messages.FLAVOR_SELECTED_EVENTS,
-				ItemCollectionToolkit.getDescription(selectedItems)), selectedItems));
-		builder.add(buildContainsMethodFlavor(frame.getMethod(), items));
-
-		// FIXME: What more useful flavors can we create, can we use the frame, and how to we get the distinguish by option?
-//		builder.add(IPropertyFlavor.build(JdkAttributes.STACK_TRACE_TOP_METHOD, frame.getMethod(), selectedItems));
-		return builder.build();
-	}
-
-	private static IFilterFlavor buildContainsMethodFlavor(IMCMethod method, IItemCollection items) {
-		return new IFilterFlavor() {
-
-			@Override
-			public String getName() {
-				return MessageFormat.format(Messages.FLAVOR_CONTAINS, JdkAttributes.STACK_TRACE_STRING.getName(),
-						FormatToolkit.getHumanReadable(method));
-			}
-
-			@Override
-			public IItemCollection evaluate() {
-				return items.apply(getFilter());
-			}
-
-			@Override
-			public IItemFilter getFilter() {
-				return ItemFilters.contains(JdkAttributes.STACK_TRACE_STRING, FormatToolkit.getHumanReadable(method));
-			}
-		};
+		return delegate.getFlavors(filter, items, attributes).map(SelectionFlavorAdapters::toUI);
 	}
 }

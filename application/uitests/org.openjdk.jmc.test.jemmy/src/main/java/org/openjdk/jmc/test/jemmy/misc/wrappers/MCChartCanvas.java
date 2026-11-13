@@ -139,9 +139,7 @@ public class MCChartCanvas extends MCJemmyBase {
 	 * Click the center of the chart in the ChartCanvas
 	 */
 	public void clickChart() {
-		Display.getDefault().syncExec(() -> {
-			control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);
-		});
+		control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -91,14 +91,9 @@ final public class UnitLookup {
 	private static final String UNIT_ID_SEPARATOR = ":";
 	public static final LinearKindOfQuantity MEMORY = createMemory();
 	public static final LinearKindOfQuantity TIMESPAN = createTimespan();
-	/*
-	 * NOTE: These 3 (count, index, and identifier) cannot be persisted/restored due to Long(1) and
-	 * Integer(1) not being equal or comparable. We either need to split into concrete wrappers,
-	 * support a custom Comparator, or wrap into a (simple) IQuantity.
-	 */
-	public static final ContentType<Number> COUNT = createCount();
-	public static final ContentType<Number> INDEX = createIndex();
-	public static final ContentType<Number> IDENTIFIER = createIdentifier();
+	public static final ContentType<Long> COUNT = createCount();
+	public static final ContentType<Long> INDEX = createIndex();
+	public static final ContentType<Long> IDENTIFIER = createIdentifier();
 	public static final KindOfQuantity<TimestampUnit> TIMESTAMP = createTimestamp(TIMESPAN);
 	public static final LinearKindOfQuantity PERCENTAGE = createPercentage();
 	public static final LinearKindOfQuantity NUMBER = createNumber();
@@ -426,15 +421,99 @@ final public class UnitLookup {
 		return String.format("0x%08X", quantity.longValue());
 	}
 
+	private static Number parseNumber(String numberStr) {
+		try {
+			return Long.parseLong(numberStr);
+		} catch (NumberFormatException eLong) {
+			return Double.parseDouble(numberStr);
+		}
+	}
+
 	// FIXME: Rename to createPrimitiveNumber? Remove?
 	private static ContentType<Number> createRawNumber() {
-		ContentType<Number> contentType = new ContentType<>("raw number");
+		ContentType<Number> contentType = new LeafContentType<Number>("raw number") {
+			@Override
+			public boolean validate(Number value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parsePersisted(String persistedValue) throws QuantityConversionException {
+				checkNull(persistedValue);
+				try {
+					return parseNumber(persistedValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(persistedValue, 0, this);
+				}
+			}
+
+			@Override
+			public String interactiveFormat(Number value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Number parseInteractive(String interactiveValue) throws QuantityConversionException {
+				checkNull(interactiveValue);
+				try {
+					return parseNumber(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(interactiveValue, 0, this);
+				}
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
 
 	private static ContentType<Long> createRawLong() {
-		ContentType<Long> contentType = new ContentType<>("raw long");
+		ContentType<Long> contentType = new LeafContentType<Long>("raw long") {
+			@Override
+			public boolean validate(Long value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
+				checkNull(persistedValue);
+				try {
+					return Long.parseLong(persistedValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
+				}
+			}
+
+			@Override
+			public String interactiveFormat(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
+				checkNull(interactiveValue);
+				try {
+					return Long.parseLong(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
+				}
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
@@ -568,25 +647,134 @@ final public class UnitLookup {
 		return percentage;
 	}
 
-	private static ContentType<Number> createCount() {
-		ContentType<Number> contentType = new ContentType<>("count");
-//		contentType.addDisplayUnit(
-//				new DisplayUnit(contentType, DisplayUnit.ENGINEERING_NOTATION_IDENTIFIER, "Engineering Notation"));
-		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
+	private static ContentType<Long> createCount() {
+		ContentType<Long> contentType = new LeafContentType<Long>("count") {
+			@Override
+			public boolean validate(Long value) {
+				checkNull(value);
+				return false;
+			}
 
-//		contentType.addDisplayUnit(
-//				new DisplayUnit(contentType, DisplayUnit.SCIENTIFIC_NOTATION_IDENTIFIER, "Scientific Notation"));
+			@Override
+			public String persistableString(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
+				checkNull(persistedValue);
+				try {
+					return Long.parseLong(persistedValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
+				}
+			}
+
+			@Override
+			public String interactiveFormat(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
+				checkNull(interactiveValue);
+				try {
+					return Long.parseLong(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
+				}
+			}
+		};
+		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
 
-	private static ContentType<Number> createIdentifier() {
-		ContentType<Number> contentType = new ContentType<>("identifier");
+	private static ContentType<Long> createIdentifier() {
+		ContentType<Long> contentType = new LeafContentType<Long>("identifier") {
+			@Override
+			public boolean validate(Long value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
+				checkNull(persistedValue);
+				try {
+					return Long.parseLong(persistedValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
+				}
+			}
+
+			@Override
+			public String interactiveFormat(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
+				checkNull(interactiveValue);
+				try {
+					return Long.parseLong(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
+				}
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}
 
-	private static ContentType<Number> createIndex() {
-		ContentType<Number> contentType = new ContentType<>("index");
+	private static ContentType<Long> createIndex() {
+		ContentType<Long> contentType = new LeafContentType<Long>("index") {
+			@Override
+			public boolean validate(Long value) {
+				checkNull(value);
+				return false;
+			}
+
+			@Override
+			public String persistableString(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parsePersisted(String persistedValue) throws QuantityConversionException {
+				checkNull(persistedValue);
+				try {
+					return Long.parseLong(persistedValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(persistedValue, 0L, this);
+				}
+			}
+
+			@Override
+			public String interactiveFormat(Long value) {
+				validate(value);
+				return value.toString();
+			}
+
+			@Override
+			public Long parseInteractive(String interactiveValue) throws QuantityConversionException {
+				checkNull(interactiveValue);
+				try {
+					return Long.parseLong(interactiveValue);
+				} catch (NumberFormatException e) {
+					throw QuantityConversionException.unparsable(interactiveValue, 0L, this);
+				}
+			}
+		};
 		contentType.addFormatter(new DisplayFormatter<>(contentType, IDisplayable.AUTO, "Value"));
 		return contentType;
 	}

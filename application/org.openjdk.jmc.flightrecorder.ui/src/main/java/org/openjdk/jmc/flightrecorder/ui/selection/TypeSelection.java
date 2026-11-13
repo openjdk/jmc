@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -40,23 +40,22 @@ import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IType;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
 
 /**
  * Selection representing a set of types.
  */
 public class TypeSelection extends FlavoredSelectionBase {
 
-	private final Set<IType<?>> selectedTypes;
+	private final org.openjdk.jmc.flightrecorder.selection.TypeSelection delegate;
 
 	public TypeSelection(Set<IType<?>> selectedTypes, String name) {
 		super(name);
-		this.selectedTypes = selectedTypes;
+		delegate = new org.openjdk.jmc.flightrecorder.selection.TypeSelection(selectedTypes, name);
 	}
 
 	@Override
 	public Stream<IItemStreamFlavor> getFlavors(
-		IItemFilter ignoredFilter, IItemCollection items, List<IAttribute<?>> ignoredAttributes) {
-		return Stream.of(IPropertyFlavor.build(JfrAttributes.EVENT_TYPE, selectedTypes, items));
+		IItemFilter filter, IItemCollection items, List<IAttribute<?>> attributes) {
+		return delegate.getFlavors(filter, items, attributes).map(SelectionFlavorAdapters::toUI);
 	}
 }

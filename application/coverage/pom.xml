@@ -209,11 +209,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.joverflow</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.joverflow.ui</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -311,12 +306,6 @@
 		<dependency>
 			<groupId>org.openjdk.jmc</groupId>
 			<artifactId>org.openjdk.jmc.ide.launch.test</artifactId>
-			<scope>test</scope>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjdk.jmc</groupId>
-			<artifactId>org.openjdk.jmc.joverflow.test</artifactId>
 			<scope>test</scope>
 			<version>${project.version}</version>
 		</dependency>
