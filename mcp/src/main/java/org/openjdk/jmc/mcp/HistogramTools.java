@@ -105,7 +105,7 @@ public class HistogramTools {
 		@ToolArg(description = "Store all filtered events, or the percentile range, under this name", required = false) String storeAs,
 		@ToolArg(description = "Lower percentile of the events to store, inclusive; default 0", required = false) Double storeFromPercentile,
 		@ToolArg(description = "Upper percentile of the events to store, exclusive unless 100; default 100", required = false) Double storeToPercentile,
-		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
+		@ToolArg(description = "From loadRecording; omit when only one recording is loaded", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
 			String id = attribute == null || attribute.isBlank() ? "duration" : attribute.trim();

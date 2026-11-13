@@ -57,10 +57,10 @@ public class MetadataTools {
 	@Inject
 	RecordingService recordings;
 
-	@Tool(description = "Lists all JFR event types in the recording with their event counts. Call this early. "
-			+ "The event type IDs it returns are the eventType arguments for all the querying tools.")
+	@Tool(description = "Lists the event types in the recording with event counts. Call this early; the IDs are the eventType"
+			+ " arguments of the other tools.")
 	String getEventTypes(
-		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
+		@ToolArg(description = "From loadRecording; omit when only one recording is loaded", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
 			StringBuilder sb = new StringBuilder();
@@ -74,12 +74,11 @@ public class MetadataTools {
 		}
 	}
 
-	@Tool(description = "Lists all available attributes for a given JFR event type, including their identifiers, "
-			+ "names, and content types (e.g. timespan, memory, percentage). Use this to discover what data is "
-			+ "available before querying, aggregating, or building a time series.")
+	@Tool(description = "Lists the attributes of an event type: identifier, name and content type (e.g. timespan, memory, "
+			+ "percentage). Use it before querying, aggregating or building a time series.")
 	String getAttributes(
 		@ToolArg(description = "The JFR event type ID, e.g. jdk.JavaMonitorEnter") String eventType,
-		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
+		@ToolArg(description = "From loadRecording; omit when only one recording is loaded", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
 			IItemCollection filtered = recording.getItems().apply(ItemFilters.type(eventType));
@@ -111,15 +110,13 @@ public class MetadataTools {
 		}
 	}
 
-	@Tool(description = "Lists attributes that are shared across multiple event types in the recording. Shared "
-			+ "attributes (like gcId, spanId, ecid) are natural correlation paths for relating events, e.g. gcId "
-			+ "links jdk.GarbageCollection to jdk.GCPhasePause. If eventType is given, shows only the shared "
-			+ "attributes present on that type and which other types share them. Call this early in an "
-			+ "investigation to discover how the events in this particular recording can be correlated, then use "
-			+ "getEventTable with filterAttribute/filterValue to pull one correlated group.")
+	@Tool(description = "Lists attributes shared by several event types, such as gcId, spanId or ecid: the natural paths for "
+			+ "correlating events, e.g. gcId links jdk.GarbageCollection to jdk.GCPhasePause. With eventType, shows"
+			+ " only that type's shared attributes and the types sharing them. Call early, then pull one correlated"
+			+ " group with getEventTable filterAttribute/filterValue.")
 	String getSharedAttributes(
 		@ToolArg(description = "Optional event type to find correlation paths from. Omit to list all shared attributes.", required = false) String eventType,
-		@ToolArg(description = "The recordingId from loadRecording. Leave empty when only one recording is loaded.", required = false) String recordingId) {
+		@ToolArg(description = "From loadRecording; omit when only one recording is loaded", required = false) String recordingId) {
 		try {
 			Recording recording = recordings.get(recordingId);
 			SharedAttributeIndex index = recording.getSharedAttributes();
