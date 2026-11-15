@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -41,6 +41,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -67,6 +68,9 @@ public class DefaultTitleRenderer extends AbstractSeriesRenderer implements Titl
 	private Color m_textColor = FontAndColors.getDefaultMiddleColor();
 	private float m_relativeFontSize = DEFAULT_TITLE_RELATIVE_FONT_SIZE;
 	private Image m_titleImageCache;
+	private int m_titleWidth;
+	private double m_cachedScaleX;
+	private double m_cachedScaleY;
 	private String m_lastTitle;
 	private Object cachedImageAntialiasingValue;
 	private final Rectangle m_lastRendered = new Rectangle(0, 0);
@@ -91,9 +95,14 @@ public class DefaultTitleRenderer extends AbstractSeriesRenderer implements Titl
 		}
 
 		String title = getTitle();
+		// Cache the image at the scale of the context, so that it is not stretched when drawn
+		AffineTransform transform = ctx.getTransform();
+		double scaleX = Math.max(1, Math.abs(transform.getScaleX()));
+		double scaleY = Math.max(1, Math.abs(transform.getScaleY()));
 
 		if (!targetArea.equals(m_lastRendered) || !title.equals(m_lastTitle)
-				|| (ctx.getRenderingHint(RenderingHints.KEY_ANTIALIASING) != cachedImageAntialiasingValue)) {
+				|| (ctx.getRenderingHint(RenderingHints.KEY_ANTIALIASING) != cachedImageAntialiasingValue)
+				|| scaleX != m_cachedScaleX || scaleY != m_cachedScaleY) {
 			// Need size of height & boundingbox width.
 			float fontSize = getActualFontSize(fullGraphArea.height * getRelativeFontSize());
 			Font font = null;
@@ -103,23 +112,30 @@ public class DefaultTitleRenderer extends AbstractSeriesRenderer implements Titl
 				font = ctx.getFont();
 			}
 
-			BufferedImage img = new BufferedImage(
-					(int) ctx.getFontMetrics(font)
-							.getStringBounds((title == null) || title.equals("") ? " " : title, ctx).getWidth(), //$NON-NLS-1$ //$NON-NLS-2$
-					targetArea.height, ColorSpace.TYPE_RGB);
+			int width = (int) ctx.getFontMetrics(font)
+					.getStringBounds((title == null) || title.equals("") ? " " : title, ctx).getWidth(); //$NON-NLS-1$ //$NON-NLS-2$
+			BufferedImage img = new BufferedImage((int) Math.ceil(width * scaleX),
+					(int) Math.ceil(targetArea.height * scaleY), ColorSpace.TYPE_RGB);
 
 			Graphics2D gctx = (Graphics2D) img.getGraphics();
+			// The scaled fill of drawTitle can leave the last pixel row of the image unfilled
+			gctx.setColor(getBackground());
+			gctx.fillRect(0, 0, img.getWidth(), img.getHeight());
+			gctx.scale(scaleX, scaleY);
 			gctx.setFont(font);
 			gctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					ctx.getRenderingHint(RenderingHints.KEY_ANTIALIASING));
 			drawTitle(gctx, targetArea, title);
 			m_titleImageCache = img;
+			m_titleWidth = width;
+			m_cachedScaleX = scaleX;
+			m_cachedScaleY = scaleY;
 			cachedImageAntialiasingValue = ctx.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 			setRenderedBounds(targetArea);
 			m_lastTitle = title;
 			m_lastRendered.setBounds(targetArea);
 		}
-		int width = m_titleImageCache.getWidth(null);
+		int width = m_titleWidth;
 
 		ctx.drawImage(m_titleImageCache, targetArea.x + (targetArea.width - width) / 2, targetArea.y, width,
 				targetArea.height, null);

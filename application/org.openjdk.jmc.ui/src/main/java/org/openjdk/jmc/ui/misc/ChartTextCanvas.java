@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -224,13 +224,10 @@ public class ChartTextCanvas extends Canvas {
 			}
 
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
-				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height);
+				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height, ThemeUtils.isDarkTheme()
+						? Palette.PF_BLACK_900.getAWTColor() : Palette.PF_BLACK_100.getAWTColor());
 				minLaneHeight = (int) (g2d.getFontMetrics().getHeight() * xScale);
 				Point adjusted = chartCanvas.translateDisplayToImageCoordinates(rect.width, rect.height);
-				// Use theme-appropriate color for background
-				boolean isDarkTheme = ThemeUtils.isDarkTheme();
-				g2d.setColor(isDarkTheme ? Palette.PF_BLACK_900.getAWTColor() : Palette.PF_BLACK_100.getAWTColor());
-				g2d.fillRect(0, 0, adjusted.x, adjusted.y);
 				render(g2d, adjusted.x, adjusted.y);
 				((ScrolledComposite) getParent()).setMinSize(rect.width, rect.height);
 				if (highlightRects != null) {
@@ -357,7 +354,7 @@ public class ChartTextCanvas extends Canvas {
 	private final double xScale = Display.getDefault().getDPI().x / Environment.getNormalDPI();
 	private final double yScale = Display.getDefault().getDPI().y / Environment.getNormalDPI();
 
-	public final AwtCanvas awtCanvas = new AwtCanvas();
+	public final AwtCanvas awtCanvas = new AwtCanvas(this);
 	private boolean awtNeedsRedraw;
 	private Runnable selectionListener;
 	private IPropertyChangeListener aaListener;

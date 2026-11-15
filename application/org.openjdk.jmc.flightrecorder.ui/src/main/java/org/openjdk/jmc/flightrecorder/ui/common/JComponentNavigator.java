@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -51,8 +51,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -62,6 +62,7 @@ import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.ui.charts.SubdividedQuantityRange;
+import org.openjdk.jmc.ui.misc.AwtCanvas;
 
 // FIXME: rename class
 public class JComponentNavigator extends Canvas {
@@ -77,6 +78,10 @@ public class JComponentNavigator extends Canvas {
 
 	private Image coloredImage;
 	private Image greyImage;
+	// Size in SWT points, and pixels per point, of the images
+	private int imageWidth;
+	private int imageHeight;
+	private double imagePixelScale = 1;
 	private volatile boolean invalidateNavigator;
 
 	private DragHandles dragHandles;
@@ -290,18 +295,47 @@ public class JComponentNavigator extends Canvas {
 
 	private boolean isChartImagesInvalid(Rectangle clientArea) {
 		return invalidateNavigator || (coloredImage == null) || coloredImage.isDisposed()
-				|| (coloredImage.getBounds().width != clientArea.width)
-				|| (coloredImage.getBounds().height != clientArea.height);
+				|| (imageWidth != clientArea.width) || (imageHeight != clientArea.height)
+				|| (imagePixelScale != AwtCanvas.getPixelScale(this));
 	}
 
 	private void drawBackground(GC gc, Rectangle clientArea, int leftW, int winRight) {
-		int height = clientArea.height;
-		int winW = winRight - leftW;
-		gc.drawImage(greyImage, 0, 0, leftW, height, clientArea.x, clientArea.y, leftW, height);
-		gc.drawImage(coloredImage, leftW, 0, winW, height, clientArea.x + leftW, clientArea.y, winW, height);
-		int rightW = clientArea.width - winRight;
-		if (rightW > 0) {
-			gc.drawImage(greyImage, winRight, 0, rightW, height, clientArea.x + winRight, clientArea.y, rightW, height);
+		int margin = AwtCanvas.MARGIN;
+		if (margin > 0) {
+			// The control can be a pixel larger than the images drawn over this fill
+			gc.fillRectangle(clientArea.x + clientArea.width - 1, clientArea.y, 1 + margin, clientArea.height + margin);
+			gc.fillRectangle(clientArea.x, clientArea.y + clientArea.height - 1, clientArea.width, 1 + margin);
+		}
+		gc.drawImage(greyImage, clientArea.x, clientArea.y);
+		drawImagePart(gc, coloredImage, leftW, winRight - leftW, clientArea);
+	}
+
+	/**
+	 * Draws a vertical slice, given in SWT points, of an image.
+	 */
+	private void drawImagePart(GC gc, Image image, int x, int width, Rectangle clientArea) {
+		x = Math.max(0, x);
+		width = Math.min(width, imageWidth - x);
+		if (width <= 0) {
+			return;
+		}
+		// SWT on Windows misreads the clipping of an unclipped GC in a right-to-left paint
+		boolean clipped = gc.isClipped();
+		Region originalClipping = new Region(gc.getDevice());
+		Region sliceClipping = new Region(gc.getDevice());
+		try {
+			sliceClipping.add(new Rectangle(clientArea.x + x, clientArea.y, width, clientArea.height));
+			if (clipped) {
+				gc.getClipping(originalClipping);
+				sliceClipping.intersect(originalClipping);
+			}
+			gc.setClipping(sliceClipping);
+			// Drawing the full image avoids source-rectangle resampling at fractional zoom levels
+			gc.drawImage(image, clientArea.x, clientArea.y);
+		} finally {
+			gc.setClipping(clipped ? originalClipping : null);
+			sliceClipping.dispose();
+			originalClipping.dispose();
 		}
 	}
 
@@ -331,26 +365,41 @@ public class JComponentNavigator extends Canvas {
 			greyImage.dispose();
 		}
 
-		BufferedImage imageAWT = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_3BYTE_BGR);
+		// The client area is in SWT points, render with the pixels it covers on screen
+		imagePixelScale = AwtCanvas.getPixelScale(this);
+		imageWidth = rect.width;
+		imageHeight = rect.height;
+		int pixelWidth = AwtCanvas.toPixels(rect.width, imagePixelScale);
+		int pixelHeight = AwtCanvas.toPixels(rect.height, imagePixelScale);
+		BufferedImage imageAWT = AwtCanvas.createBufferedImage(pixelWidth, pixelHeight);
 		PaletteData vpPalette = new PaletteData(0xff, 0xff00, 0xff0000);
 		byte[] byteData = ((DataBufferByte) imageAWT.getRaster().getDataBuffer()).getData();
 		Graphics2D graphicsAWT = imageAWT.createGraphics();
-		ImageData coloredImageData = new ImageData(rect.width, rect.height, 24, vpPalette, 3 * rect.width, byteData);
-		// Don't try to draw on the first and last pixel of the client area, BUG# 9312855
-		graphicsAWT.translate(1, 1);
-		renderBackdrop(graphicsAWT, rect.width - 2, rect.height - 2);
-		coloredImage = new Image(e.display, coloredImageData);
-		for (int x = 0; x < rect.width; x++) {
-			for (int y = 0; y < rect.height; y++) {
-				RGB rgb = vpPalette.getRGB(coloredImageData.getPixel(x, y));
-				int value = (int) (192 + .20 * (0.3 * rgb.red + 0.59 * rgb.green + 0.11 * rgb.blue));
-				rgb.red = value;
-				rgb.green = value;
-				rgb.blue = value;
-				coloredImageData.setPixel(x, y, vpPalette.getPixel(rgb));
+		ImageData coloredImageData = new ImageData(pixelWidth, pixelHeight, 24, vpPalette, 4, byteData);
+		try {
+			graphicsAWT.scale(imagePixelScale, imagePixelScale);
+			// Don't try to draw on the first and last pixel of the client area, BUG# 9312855
+			graphicsAWT.translate(1, 1);
+			renderBackdrop(graphicsAWT, rect.width - 2, rect.height - 2);
+		} finally {
+			graphicsAWT.dispose();
+		}
+		coloredImage = AwtCanvas.createImage(e.display, coloredImageData, imageWidth, imageHeight);
+		ImageData greyImageData = (ImageData) coloredImageData.clone();
+		// Convert BGR pixels, leaving the scanline padding unchanged
+		byte[] greyPixels = greyImageData.data;
+		for (int y = 0; y < pixelHeight; y++) {
+			int rowStart = y * greyImageData.bytesPerLine;
+			int rowEnd = rowStart + pixelWidth * 3;
+			for (int offset = rowStart; offset < rowEnd; offset += 3) {
+				byte value = (byte) (192 + .20 * (0.3 * (greyPixels[offset + 2] & 0xff)
+						+ 0.59 * (greyPixels[offset + 1] & 0xff) + 0.11 * (greyPixels[offset] & 0xff)));
+				greyPixels[offset] = value;
+				greyPixels[offset + 1] = value;
+				greyPixels[offset + 2] = value;
 			}
 		}
-		greyImage = new Image(e.display, coloredImageData);
+		greyImage = AwtCanvas.createImage(e.display, greyImageData, imageWidth, imageHeight);
 		invalidateNavigator = false;
 	}
 
