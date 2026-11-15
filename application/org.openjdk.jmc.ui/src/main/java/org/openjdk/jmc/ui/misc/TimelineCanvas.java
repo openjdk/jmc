@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -78,7 +78,7 @@ public class TimelineCanvas extends Canvas {
 		super(parent, SWT.NONE);
 		this.chartCanvas = chartCanvas;
 		this.sashForm = sashForm;
-		awtCanvas = new AwtCanvas();
+		awtCanvas = new AwtCanvas(this);
 		addPaintListener(new TimelineCanvasPainter());
 		DragDetector dragDetector = new DragDetector();
 		addMouseListener(dragDetector);
@@ -113,13 +113,9 @@ public class TimelineCanvas extends Canvas {
 			xOffset = chartCanvas.translateDisplayToImageXCoordinates(calculateXOffset());
 
 			Rectangle rect = getClientArea();
-			g2d = awtCanvas.getGraphics(rect.width, rect.height);
-
-			// Draw the background
-			Point adjusted = chartCanvas.translateDisplayToImageCoordinates(rect.width, rect.height);
 			boolean isDarkTheme = ThemeUtils.isDarkTheme();
-			g2d.setColor(isDarkTheme ? Palette.PF_BLACK_900.getAWTColor() : Palette.PF_BLACK_100.getAWTColor());
-			g2d.fillRect(0, 0, adjusted.x, adjusted.y);
+			g2d = awtCanvas.getGraphics(rect.width, rect.height,
+					isDarkTheme ? Palette.PF_BLACK_900.getAWTColor() : Palette.PF_BLACK_100.getAWTColor());
 
 			// Draw the horizontal axis
 			if (xTickRange != null) {
@@ -137,7 +133,7 @@ public class TimelineCanvas extends Canvas {
 			g2d.fillRect(indicatorRect.x, indicatorRect.y, indicatorRect.width, indicatorRect.height);
 
 			Point totalSize = sashForm.getChildren()[1].getSize();
-			adjusted = chartCanvas.translateDisplayToImageCoordinates(totalSize.x, totalSize.y);
+			Point adjusted = chartCanvas.translateDisplayToImageCoordinates(totalSize.x, totalSize.y);
 			timelineRect = new Rectangle(xOffset,
 					chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorYOffset), adjusted.x,
 					chartCanvas.translateDisplayToImageYCoordinates(rangeIndicatorHeight));

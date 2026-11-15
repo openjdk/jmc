@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -238,11 +238,9 @@ public class ChartCanvas extends Canvas {
 			}
 
 			if (awtNeedsRedraw || !awtCanvas.hasImage(rect.width, rect.height)) {
-				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height);
+				Graphics2D g2d = awtCanvas.getGraphics(rect.width, rect.height, ThemeUtils.isDarkTheme()
+						? Palette.PF_BLACK_900.getAWTColor() : Palette.PF_BLACK_100.getAWTColor());
 				Point adjusted = translateDisplayToImageCoordinates(rect.width, rect.height);
-				g2d.setColor(ThemeUtils.isDarkTheme() ? Palette.PF_BLACK_900.getAWTColor()
-						: Palette.PF_BLACK_100.getAWTColor());
-				g2d.fillRect(0, 0, adjusted.x, adjusted.y);
 				render(g2d, adjusted.x, adjusted.y);
 				if (isScrollableChart()) {
 					minReadableLaneHeight = (int) (g2d.getFontMetrics().getHeight() * xScale);
@@ -492,7 +490,7 @@ public class ChartCanvas extends Canvas {
 	private final double xScale = Display.getDefault().getDPI().x / Environment.getNormalDPI();
 	private final double yScale = Display.getDefault().getDPI().y / Environment.getNormalDPI();
 
-	private final AwtCanvas awtCanvas = new AwtCanvas();
+	private final AwtCanvas awtCanvas = new AwtCanvas(this);
 	private boolean awtNeedsRedraw;
 	private Runnable selectionListener;
 	private Runnable zoomToSelectionListener;

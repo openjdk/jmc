@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.openjdk.jmc.common.util.Environment;
+import org.openjdk.jmc.ui.misc.AwtCanvas;
 
 /**
  * Canvas typically used for a grey chart that you want to make a selection on
@@ -68,6 +69,8 @@ public abstract class SelectionCanvas extends Canvas {
 	private BufferedImage m_imageAWT;
 	private Graphics2D m_graphicsAWT;
 	private int lastDesiredWidth;
+	private int lastDesiredHeight;
+	private double lastPixelScale;
 	protected double xScale = Display.getDefault().getDPI().x / Environment.getNormalDPI();
 	protected double yScale = Display.getDefault().getDPI().y / Environment.getNormalDPI();
 
@@ -82,33 +85,43 @@ public abstract class SelectionCanvas extends Canvas {
 		ChartSelectionListener chs = new ChartSelectionListener();
 		addMouseMoveListener(chs);
 		addMouseListener(chs);
+		addDisposeListener(e -> {
+			if (m_graphicsAWT != null) {
+				m_graphicsAWT.dispose();
+			}
+		});
 	}
 
 	public void paint(GC gc) {
 		org.eclipse.swt.graphics.Rectangle rect = getClientArea();
-		if ((m_imageDataSWT == null) || (lastDesiredWidth != rect.width) || (m_imageDataSWT.height != rect.height)) {
+		if (rect.width <= 0 || rect.height <= 0) {
+			return;
+		}
+		// The client area is in SWT points, render with the pixels it covers on screen
+		double pixelScale = AwtCanvas.getPixelScale(this);
+		int margin = AwtCanvas.getMargin(this);
+		if ((m_imageDataSWT == null) || (lastDesiredWidth != rect.width) || (lastDesiredHeight != rect.height)
+				|| (lastPixelScale != pixelScale)) {
 			lastDesiredWidth = rect.width;
-			/*
-			 * We adjust the width to prevent SWT from performing expensive conversions due to
-			 * scan-line padding lengths.
-			 */
-			int width = rect.width;
-			// This calculation should be explained.
-			while ((((((width * 24 + 7) / 8) + 2) / 3 * 3) % 4) != 0) {
-				width++;
+			lastDesiredHeight = rect.height;
+			lastPixelScale = pixelScale;
+			int imageWidth = AwtCanvas.toPixels(rect.width + margin, pixelScale);
+			int imageHeight = AwtCanvas.toPixels(rect.height + margin, pixelScale);
+			if (m_graphicsAWT != null) {
+				m_graphicsAWT.dispose();
 			}
-			m_imageAWT = new BufferedImage(width, rect.height, BufferedImage.TYPE_3BYTE_BGR);
+			m_imageAWT = AwtCanvas.createBufferedImage(imageWidth, imageHeight);
 			PaletteData vpPalette = new PaletteData(0xff, 0xff00, 0xff0000);
-			int scanlinePad = 3;
+			int scanlinePad = 4;
 			byte[] byteData = ((DataBufferByte) m_imageAWT.getRaster().getDataBuffer()).getData();
 			m_graphicsAWT = m_imageAWT.createGraphics();
 			AffineTransform defaultTransform = m_graphicsAWT.getDeviceConfiguration().getDefaultTransform();
-			defaultTransform.scale(xScale, yScale);
+			defaultTransform.scale(xScale * pixelScale, yScale * pixelScale);
 			m_graphicsAWT.setTransform(defaultTransform);
-			m_imageDataSWT = new ImageData(width, rect.height, 24, vpPalette, scanlinePad, byteData);
+			m_imageDataSWT = new ImageData(imageWidth, imageHeight, 24, vpPalette, scanlinePad, byteData);
 		}
-		int adjustedWidth = (int) Math.round(rect.width / xScale);
-		int adjustedHeight = (int) Math.round(rect.height / yScale);
+		int adjustedWidth = Math.max(1, (int) Math.round(rect.width / xScale));
+		int adjustedHeight = Math.max(1, (int) Math.round(rect.height / yScale));
 		selectable = render(m_graphicsAWT, new Rectangle(adjustedWidth, adjustedHeight));
 		if (selectable != null && selectionStart >= 0 && selectionEnd >= 0) {
 			m_graphicsAWT.setColor(Color.WHITE);
@@ -119,9 +132,16 @@ public abstract class SelectionCanvas extends Canvas {
 			m_graphicsAWT.fillRect(drawSelFrom, selectable.y, selectionWidth, selectable.height);
 			m_graphicsAWT.setPaintMode();
 		}
-		Image img = new Image(gc.getDevice(), m_imageDataSWT);
-		gc.drawImage(img, rect.x, rect.y);
-		img.dispose();
+		// The pixels that the chart covers completely, allowing for a rounding error in the product
+		int chartWidth = (int) Math.floor(adjustedWidth * xScale * pixelScale + 1e-9);
+		int chartHeight = (int) Math.floor(adjustedHeight * yScale * pixelScale + 1e-9);
+		AwtCanvas.extendEdges(m_imageAWT, chartWidth, chartHeight);
+		Image img = AwtCanvas.createImage(gc.getDevice(), m_imageDataSWT, rect.width + margin, rect.height + margin);
+		try {
+			gc.drawImage(img, rect.x, rect.y);
+		} finally {
+			img.dispose();
+		}
 	}
 
 	/**
