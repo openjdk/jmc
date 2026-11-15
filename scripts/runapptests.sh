@@ -1,5 +1,6 @@
-#!/bin/sh -l
+#!/bin/sh
 set -e
+mvn -v
 
 # Note that core must have been installed, and the p2 repo started
 # before running this.

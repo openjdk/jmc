@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020, 2025, Red Hat Inc. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2026, Red Hat Inc. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -36,6 +36,7 @@ package org.openjdk.jmc.test.jemmy.misc.wrappers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -108,9 +109,7 @@ public class MCTextCanvas extends MCJemmyBase {
 	 * Click the middle thread listed in the Text Canvas
 	 */
 	public void clickTextCanvas() {
-		Display.getDefault().syncExec(() -> {
-			control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);
-		});
+		control.mouse().click(1, getRelativeClickPoint(), MouseButtons.BUTTON1);
 	}
 
 	/**
@@ -122,8 +121,11 @@ public class MCTextCanvas extends MCJemmyBase {
 		Fetcher<Point> fetcher = new Fetcher<Point>() {
 			@Override
 			public void run() {
-				Rectangle clientArea = ChartTextCanvas.class.cast(control.getControl()).getClientArea();
-				setOutput(new Point(clientArea.width / 2, clientArea.height / 2));
+				ChartTextCanvas textCanvas = ChartTextCanvas.class.cast(control.getControl());
+				ScrolledComposite scrollContainer = ScrolledComposite.class.cast(textCanvas.getParent());
+				Rectangle viewport = scrollContainer.getClientArea();
+				org.eclipse.swt.graphics.Point origin = scrollContainer.getOrigin();
+				setOutput(new Point(origin.x + viewport.width / 2, origin.y + viewport.height / 2));
 			}
 		};
 		Display.getDefault().syncExec(fetcher);

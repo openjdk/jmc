@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,60 +32,34 @@
  */
 package org.openjdk.jmc.flightrecorder.ui.selection;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
 
 import org.openjdk.jmc.common.item.IAttribute;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
-import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.flightrecorder.ui.JfrPropertySheet;
-import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
 
 public class ItemBackedSelection extends FlavoredSelectionBase {
 
-	private final IItemCollection selectedItems;
+	private final org.openjdk.jmc.flightrecorder.selection.ItemBackedSelection delegate;
 
 	public ItemBackedSelection(IItemCollection selectedItems, String name) {
 		super(name);
-		this.selectedItems = selectedItems;
+		delegate = new org.openjdk.jmc.flightrecorder.selection.ItemBackedSelection(selectedItems, name);
 	}
 
 	/**
 	 * Returns the items that form the basis of this selection.
-	 * 
+	 *
 	 * @return the collection of items this selection is based on
 	 */
 	public IItemCollection getItems() {
-		return selectedItems;
+		return delegate.getItems();
 	}
 
 	@Override
 	public Stream<IItemStreamFlavor> getFlavors(
-		IItemFilter filter, IItemCollection items, List<IAttribute<?>> dstAttributes) {
-		boolean itemsApplicableOnPage = ItemCollectionToolkit.filterIfNotNull(selectedItems, filter).hasItems();
-
-		Builder<IItemStreamFlavor> builder = Stream.builder();
-
-		// prio1/2: All selected items, first if they can be shown on the destination page, last otherwise
-		IItemStreamFlavor selectedEventsFlavor = IItemStreamFlavor.build(MessageFormat.format(
-				Messages.FLAVOR_SELECTED_EVENTS, ItemCollectionToolkit.getDescription(selectedItems)), selectedItems);
-
-		if (itemsApplicableOnPage) {
-			builder.accept(selectedEventsFlavor);
-		}
-
-		// prio2/1: Destination items with properties shared with the selected items
-		IItemCollection dstItems = ItemCollectionToolkit.filterIfNotNull(items, filter);
-		JfrPropertySheet.calculatePersistableFilterFlavors(selectedItems, dstItems, items, dstAttributes)
-				.forEach(builder::accept);
-
-		if (!itemsApplicableOnPage) {
-			builder.accept(selectedEventsFlavor);
-		}
-
-		return builder.build();
+		IItemFilter filter, IItemCollection items, List<IAttribute<?>> attributes) {
+		return delegate.getFlavors(filter, items, attributes).map(SelectionFlavorAdapters::toUI);
 	}
 }

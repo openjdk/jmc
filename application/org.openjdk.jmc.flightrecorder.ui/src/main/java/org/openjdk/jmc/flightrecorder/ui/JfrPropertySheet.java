@@ -33,14 +33,11 @@
 package org.openjdk.jmc.flightrecorder.ui;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -69,33 +66,25 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+
 import org.openjdk.jmc.common.IDescribable;
 import org.openjdk.jmc.common.IDisplayable;
+import org.openjdk.jmc.common.IMCMethod;
 import org.openjdk.jmc.common.IMCThread;
 import org.openjdk.jmc.common.IState;
 import org.openjdk.jmc.common.collection.IteratorToolkit;
 import org.openjdk.jmc.common.item.Aggregators;
 import org.openjdk.jmc.common.item.IAttribute;
-import org.openjdk.jmc.common.item.IItem;
 import org.openjdk.jmc.common.item.IItemCollection;
 import org.openjdk.jmc.common.item.IItemFilter;
 import org.openjdk.jmc.common.item.IItemIterable;
-import org.openjdk.jmc.common.item.IMemberAccessor;
 import org.openjdk.jmc.common.item.IType;
 import org.openjdk.jmc.common.item.ItemCollectionToolkit;
-import org.openjdk.jmc.common.unit.ContentType;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.IRange;
-import org.openjdk.jmc.common.unit.KindOfQuantity;
-import org.openjdk.jmc.common.unit.QuantitiesToolkit;
-import org.openjdk.jmc.common.unit.QuantityRange;
-import org.openjdk.jmc.common.unit.RangeContentType;
-import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.TypeHandling;
-import org.openjdk.jmc.common.IMCMethod;
-import org.openjdk.jmc.flightrecorder.JfrAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkAttributes;
 import org.openjdk.jmc.flightrecorder.jdk.JdkFilters;
+import org.openjdk.jmc.flightrecorder.selection.SelectionAspectToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.DataPageToolkit;
 import org.openjdk.jmc.flightrecorder.ui.common.ImageConstants;
 import org.openjdk.jmc.flightrecorder.ui.messages.internal.Messages;
@@ -105,8 +94,8 @@ import org.openjdk.jmc.flightrecorder.ui.selection.IFilterFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.IFlavoredSelection;
 import org.openjdk.jmc.flightrecorder.ui.selection.IItemStreamFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.InViewMethodSelection;
-import org.openjdk.jmc.flightrecorder.ui.selection.IPropertyFlavor;
 import org.openjdk.jmc.flightrecorder.ui.selection.ItemBackedSelection;
+import org.openjdk.jmc.flightrecorder.ui.selection.SelectionFlavorAdapters;
 import org.openjdk.jmc.ui.TypeAppearance;
 import org.openjdk.jmc.ui.UIPlugin;
 import org.openjdk.jmc.ui.accessibility.FocusTracker;
@@ -134,124 +123,18 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 
 	private static class PropertySheetRowSelection extends FlavoredSelectionBase {
 
-		private final PropertySheetRow row;
+		private final org.openjdk.jmc.flightrecorder.selection.PropertySelection delegate;
 
 		PropertySheetRowSelection(PropertySheetRow row) {
 			super(MessageFormat.format(Messages.JFR_PROPERTIES_PROPERTY_SELECTION, row.attribute.getName()));
-			this.row = row;
+			delegate = new org.openjdk.jmc.flightrecorder.selection.PropertySelection(row.attribute, row.value,
+					getName());
 		}
 
 		@Override
 		public Stream<IItemStreamFlavor> getFlavors(
 			IItemFilter dstFilter, IItemCollection items, List<IAttribute<?>> dstAttributes) {
-			/*
-			 * FIXME: Is this the desired behavior? Discuss and change if necessary.
-			 * 
-			 * This most likely need more thought and discussion, but the implemented order of
-			 * flavors is currently:
-			 * 
-			 * For chart selections:
-			 * 
-			 * 1: The selected events if any of them appear on the destination page
-			 * 
-			 * 2: All events on the destination page in the selected range (if a range was selected)
-			 * 
-			 * 3-n: All events on the destination page filtered on any of the attributes common to
-			 * all selected events (excluding the range attribute if a range was selected)
-			 * 
-			 * For histogram and list selections:
-			 * 
-			 * 1: The selected events if any of them appear on the destination page
-			 * 
-			 * 2-n: All events on the destination page filtered on any of the attributes common to
-			 * all selected events (all will at least have (endTime))
-			 * 
-			 * For properties view selections:
-			 * 
-			 * 1: All events on the destination page filtered on the selected attribute:value if
-			 * they all have the selected attribute
-			 * 
-			 * 2: All events on the destination page filtered on the selected value if they all have
-			 * an attribute with the same content type
-			 * 
-			 * 3: All events on the destination page filtered on all common attributes with values
-			 * from all events filtered on the selected attribute:value (see example)
-			 * 
-			 * 4: All events on the destination page filtered on the selected attribute:value if
-			 * there are any events with the attribute (and the attribute is not common to all
-			 * events in which case this flavor has already been added in (1))
-			 * 
-			 * Example of properties view selections (3):
-			 * 
-			 * ECID:1-2-3-4 was selected and the user navigates to Java Application. All events on
-			 * Java Application share (thread) and (endTime), so all events on the page are filtered
-			 * on those properties. The values to include are collected from all events with the
-			 * ECID attribute having value 1-2-3-4. The threads will be put in a set, the timestamps
-			 * will form a range.
-			 */
-			IItemCollection filteredDstItems = ItemCollectionToolkit.filterIfNotNull(items, dstFilter);
-			IPropertyFlavor relatedFilterFlavor = IPropertyFlavor.build(row.attribute, row.value, filteredDstItems);
-			LinkedList<IItemStreamFlavor> flavors = new LinkedList<>();
-
-			boolean anyRelatedOnDst = relatedFilterFlavor.evaluate().hasItems();
-			IPropertyFlavor selectedPropertyFlavor = IPropertyFlavor.build(row.attribute, row.value, items);
-			if (anyRelatedOnDst) {
-				// prio1(a): Items related to the selected attribute if there are any
-				flavors.add(selectedPropertyFlavor);
-				selectedPropertyFlavor = null;
-			}
-			IItemCollection itemsRelatedToSelection = items.apply(relatedFilterFlavor.getFilter());
-			if (dstAttributes == null || dstAttributes.isEmpty()) {
-				dstAttributes = commonAttributes(filteredDstItems.iterator()).collect(Collectors.toList());
-			}
-			Iterator<IAttribute<?>> commonDstAttr = dstAttributes.iterator();
-			List<IPropertyFlavor> relatedProperties = new ArrayList<>();
-			while (commonDstAttr.hasNext()) {
-				IAttribute<?> dstAttribute = commonDstAttr.next();
-				if (!dstAttribute.equals(JfrAttributes.EVENT_TYPE)
-						&& (!(dstAttribute.getContentType() instanceof KindOfQuantity)
-								|| dstAttribute.equals(JfrAttributes.END_TIME))) {
-					// FIXME: Collect type or quantity values?
-					if (dstAttribute.equals(row.attribute)) {
-						if (!anyRelatedOnDst && selectedPropertyFlavor != null) {
-							// prio1(b): Related to the selected attribute even though it's empty, since the attribute is shared by all
-							flavors.push(selectedPropertyFlavor);
-							selectedPropertyFlavor = null;
-						}
-						relatedProperties = null;
-					} else if (!dstAttribute.equals(row.attribute)
-							&& dstAttribute.getContentType().equals(row.attribute.getContentType())) {
-						// prio2: Destination items with an attribute of the selected content type and which equals the selected value
-						flavors.add(IPropertyFlavor.build(dstAttribute, row.value, items));
-					}
-					if (relatedProperties != null) {
-						// Collect values from items related to selection (only items of types that has the attribute), and add as filter
-						PropertySheetRow av = buildProperty(dstAttribute,
-								itemsRelatedToSelection.stream()
-										.filter(is -> dstAttribute.getAccessor(is.getType()) != null).iterator(),
-								Integer.MAX_VALUE);
-						if (av != null) {
-							relatedProperties.add(IPropertyFlavor.build(av.attribute, av.value, items));
-						}
-					}
-				}
-			}
-			if (relatedProperties != null) {
-				if (relatedProperties.size() > 1) {
-					// prio3: Destination items with properties shared with the items related to the selection
-					flavors.add(IPropertyFlavor.combine(relatedProperties::stream, items));
-				}
-
-				// FIXME: Combinations with for example two properties if there are three properties in total shared?
-
-				// prio4: Destination items with one property shared with the items related to the selection
-				flavors.addAll(relatedProperties);
-			}
-			if (selectedPropertyFlavor != null) {
-				// prio4: Items related to the selected attribute even if there aren't any
-				flavors.add(selectedPropertyFlavor);
-			}
-			return flavors.stream();
+			return delegate.getFlavors(dstFilter, items, dstAttributes).map(SelectionFlavorAdapters::toUI);
 		}
 	}
 
@@ -577,31 +460,8 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 		return Stream.concat(rows, Stream.of(new PropertySheetRow(null, items))).toArray(PropertySheetRow[]::new);
 	}
 
-	private static Stream<IAttribute<?>> commonAttributes(Iterator<? extends IItemIterable> iterables)
-			throws IllegalArgumentException {
-		// FIXME: List of attributes for the item collection should be provided from elsewhere
-		if (!iterables.hasNext()) {
-			return Stream.empty();
-		} else {
-			IItemIterable single = iterables.next();
-			@SuppressWarnings("deprecation")
-			List<IAttribute<?>> attributes = single.getType().getAttributes();
-			if (iterables.hasNext()) {
-				attributes = new ArrayList<>(attributes); // modifiable copy
-				while (iterables.hasNext()) {
-					IType<?> otherType = iterables.next().getType();
-					// FIXME: Use a Set<IType<?>> to avoid going through any type more than once.
-					Iterator<IAttribute<?>> aIterator = attributes.iterator();
-					while (aIterator.hasNext()) {
-						if (!otherType.hasAttribute(aIterator.next())) {
-							aIterator.remove();
-						}
-					}
-				}
-			}
-			// FIXME: Possible remove this filter if we convert this to persistable attributes.
-			return attributes.stream().filter(a -> a.getContentType() != UnitLookup.STACKTRACE);
-		}
+	private static Stream<IAttribute<?>> commonAttributes(Iterator<? extends IItemIterable> iterables) {
+		return SelectionAspectToolkit.getCommonAttributes(iterables);
 	}
 
 	public static Stream<IFilterFlavor> calculatePersistableFilterFlavors(
@@ -613,139 +473,19 @@ public class JfrPropertySheet extends Page implements IPropertySheetPage {
 	public static Stream<IFilterFlavor> calculatePersistableFilterFlavors(
 		IItemCollection srcItems, IItemCollection dstItems, IItemCollection allItems, List<IAttribute<?>> dstAttributes,
 		Predicate<IAttribute<?>> include) {
-		// FIXME: Calculate common content types from the dstItems, and see if any of the srcItems can deliver them?
-		Stream<IAttribute<?>> commonAttributes = null;
-		if (dstAttributes != null && !dstAttributes.isEmpty()) {
-			commonAttributes = commonAttributes(srcItems.iterator()).filter(a -> dstAttributes.contains(a));
-		} else {
-			Stream<? extends IItemIterable> items = Stream.concat(srcItems.stream(), dstItems.stream());
-			commonAttributes = commonAttributes(items.iterator());
-		}
-		Stream<IAttribute<?>> persistableAttributes = DataPageToolkit.getPersistableAttributes(commonAttributes)
-				.filter(include::test);
-		// FIXME: Add combinations here as well, similar to PropertySheetRowSelection.buildFlavors
-		// FIXME: Can we get construct a life time filter from start and end times?
-		return persistableAttributes.map(attr -> buildProperty(attr, srcItems.iterator(), MAX_DISTINCT_VALUES))
-				.filter(p -> p != null && p.value != TOO_MANY_VALUES).sorted(RELEVANCE_ORDER)
-				.map(p -> IPropertyFlavor.build(p.attribute, p.value, allItems));
+		return SelectionAspectToolkit
+				.calculatePersistableFilterFlavors(srcItems, dstItems, allItems, dstAttributes, include)
+				.map(flavor -> (IFilterFlavor) SelectionFlavorAdapters.toUI(flavor));
 	}
 
 	private static final int MAX_DISTINCT_VALUES = 10;
 
-	// FIXME: How to order? (currently quantity attributes last). Should we involve relational key attributes?
-	private static final Comparator<PropertySheetRow> RELEVANCE_ORDER = new Comparator<PropertySheetRow>() {
-
-		@Override
-		public int compare(PropertySheetRow o1, PropertySheetRow o2) {
-			int a1c = getAttributeCategory(o1.getAttribute());
-			int a2c = getAttributeCategory(o2.getAttribute());
-			if (a1c == a2c) {
-				return o1.getAttribute().getIdentifier().compareTo(o2.getAttribute().getIdentifier());
-			}
-			return Integer.compare(a1c, a2c);
-		}
-
-		private int getAttributeCategory(IAttribute<?> attr) {
-			ContentType<?> ct = attr.getContentType();
-			if (ct.equals(UnitLookup.TIMESTAMP)) {
-				return 0;
-			} else if (ct instanceof KindOfQuantity) {
-				return 2;
-			}
-			return 1;
-		}
-
-	};
-
 	private static <M> PropertySheetRow buildProperty(
 		IAttribute<M> attribute, Iterator<? extends IItemIterable> iterables, int maxDistinct) {
-		ContentType<M> contentType = attribute.getContentType();
-		if (contentType instanceof KindOfQuantity) {
-			@SuppressWarnings("unchecked")
-			IAttribute<IQuantity> qAttribute = (IAttribute<IQuantity>) attribute;
-			IQuantity minValue = null;
-			IQuantity maxValue = null;
-			while (iterables.hasNext()) {
-				IItemIterable ii = iterables.next();
-				IMemberAccessor<IQuantity, IItem> accessor = qAttribute.getAccessor(ii.getType());
-				Iterator<? extends IItem> items = ii.iterator();
-				while (items.hasNext()) {
-					IQuantity val = accessor.getMember(items.next());
-					if (val == null) {
-						// FIXME: Should null values be expected/accepted?
-//						FlightRecorderUI.getDefault().getLogger().warning("Null value in " + qAttribute.getIdentifier() + " field"); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (minValue == null) {
-						minValue = maxValue = val;
-					} else {
-						minValue = QuantitiesToolkit.min(val, minValue);
-						maxValue = QuantitiesToolkit.max(val, maxValue);
-					}
-				}
-			}
-
-			if (minValue != null) {
-				if (minValue == maxValue) {
-					return new PropertySheetRow(qAttribute, minValue);
-				} else {
-					return new PropertySheetRow(qAttribute, QuantityRange.createWithEnd(minValue, maxValue));
-				}
-			}
-		} else if (contentType instanceof RangeContentType) {
-			if (((RangeContentType<?>) contentType).getEndPointContentType() instanceof KindOfQuantity) {
-				@SuppressWarnings("unchecked")
-				IAttribute<IRange<IQuantity>> rangeAttribute = (IAttribute<IRange<IQuantity>>) attribute;
-				IQuantity minValue = null;
-				IQuantity maxValue = null;
-				while (iterables.hasNext()) {
-					IItemIterable ii = iterables.next();
-					IMemberAccessor<IRange<IQuantity>, IItem> accessor = rangeAttribute.getAccessor(ii.getType());
-					Iterator<? extends IItem> items = ii.iterator();
-					while (items.hasNext()) {
-						IRange<IQuantity> range = accessor.getMember(items.next());
-						if (range == null) {
-							// FIXME: Should null values be expected/accepted?
-//							FlightRecorderUI.getDefault().getLogger().warning("Null value in " + rangeAttribute.getIdentifier() + " field"); //$NON-NLS-1$ //$NON-NLS-2$
-						} else if (minValue == null) {
-							minValue = range.getStart();
-							maxValue = range.getEnd();
-						} else {
-							minValue = QuantitiesToolkit.min(range.getStart(), minValue);
-							maxValue = QuantitiesToolkit.max(range.getEnd(), maxValue);
-						}
-					}
-				}
-
-				if (minValue != null) {
-					if (minValue == maxValue) {
-						return new PropertySheetRow(rangeAttribute, minValue);
-					} else {
-						return new PropertySheetRow(rangeAttribute, QuantityRange.createWithEnd(minValue, maxValue));
-					}
-				}
-			}
-		}
-
-		Set<M> keys = new HashSet<>();
-		while (iterables.hasNext()) {
-			IItemIterable ii = iterables.next();
-			IMemberAccessor<M, IItem> accessor = attribute.getAccessor(ii.getType());
-			Iterator<? extends IItem> items = ii.iterator();
-			while (items.hasNext()) {
-				if (keys.size() > maxDistinct) {
-					return new PropertySheetRow(attribute, TOO_MANY_VALUES);
-				}
-				// FIXME: Add more limitations if there are a lot of items?
-				keys.add(accessor.getMember(items.next()));
-			}
-		}
-		if (keys.size() == 0) {
-			return null;
-		} else if (keys.size() == 1) {
-			return new PropertySheetRow(attribute, keys.iterator().next());
-		} else {
-			return new PropertySheetRow(attribute, keys);
-		}
-
+		SelectionAspectToolkit.PropertySummary summary = SelectionAspectToolkit.summarizeProperty(attribute, iterables,
+				maxDistinct);
+		return summary == null ? null : new PropertySheetRow(summary.getAttribute(),
+				summary.isTooManyValues() ? TOO_MANY_VALUES : summary.getValue());
 	}
 
 	@Override

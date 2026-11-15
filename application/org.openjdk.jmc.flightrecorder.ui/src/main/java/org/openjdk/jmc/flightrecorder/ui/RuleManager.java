@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -111,7 +111,7 @@ public class RuleManager {
 				if (dependencyType != null) {
 					while (true) {
 						if (evaluatedRules.containsKey(dependencyType)) {
-							if (evaluatedRules.get(dependencyType).compareTo(dependency.severity()) < 0) {
+							if (!evaluatedRules.get(dependencyType).isAtLeast(dependency.severity())) {
 								return false;
 							}
 							return true;
@@ -304,8 +304,8 @@ public class RuleManager {
 	}
 
 	public Severity getMaxSeverity(String ... topics) {
-		return getResults(topics).parallelStream().map(IResult::getSeverity).max(Comparator.naturalOrder())
-				.orElse(Severity.NA);
+		return getResults(topics).parallelStream().map(IResult::getSeverity)
+				.max(Comparator.comparingDouble(Severity::getLimit)).orElse(Severity.NA);
 	}
 
 	public Collection<IResult> getUnmappedResults() {

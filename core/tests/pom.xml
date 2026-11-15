@@ -113,6 +113,12 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>benchmarks</id>
+			<modules>
+				<module>org.openjdk.jmc.flightrecorder.writer.benchmarks</module>
+			</modules>
+		</profile>
+		<profile>
 			<id>coverage</id>
 			<build>
 				<plugins>

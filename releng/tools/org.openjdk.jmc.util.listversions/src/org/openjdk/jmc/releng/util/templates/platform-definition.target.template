@@ -45,7 +45,6 @@
             <unit id="org.adoptopenjdk.jemmy-browser" version="${org.adoptopenjdk.jemmy-browser.version}"/>
             <unit id="org.adoptopenjdk.jemmy-core" version="${org.adoptopenjdk.jemmy-core.version}"/>
             <unit id="org.adoptopenjdk.jemmy-swt" version="${org.adoptopenjdk.jemmy-swt.version}"/>
-            <unit id="org.osgi.service.servlet" version="${org.osgi.service.servlet.version}"/>
             <unit id="org.jolokia.client.jmx-adapter" version="${org.jolokia.client.jmx-adapter.version}"/>
             <unit id="org.jolokia.core" version="${org.jolokia.core.version}"/>
             <unit id="org.jolokia.service.discovery" version="${org.jolokia.service.discovery.version}"/>
@@ -81,7 +80,6 @@
             <unit id="org.eclipse.equinox.p2.director.app" version="${org.eclipse.equinox.p2.director.app.version}"/>
             <unit id="org.eclipse.ui.themes" version="${org.eclipse.ui.themes.version}"/>
             <unit id="org.eclipse.sdk" version="${org.eclipse.sdk.version}"/>
-            <unit id="org.eclipse.osgi.services" version="${org.eclipse.osgi.services.version}"/>
             <unit id="org.eclipse.emf.common.feature.group" version="${org.eclipse.emf.common.feature.group.version}"/>
             <unit id="org.eclipse.emf.ecore.feature.group" version="${org.eclipse.emf.ecore.feature.group.version}"/>
             <repository location="https://download.eclipse.org/releases/${ECLIPSE_VERSION}/" />

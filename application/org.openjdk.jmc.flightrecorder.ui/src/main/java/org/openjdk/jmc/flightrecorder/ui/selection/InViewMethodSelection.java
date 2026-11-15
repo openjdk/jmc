@@ -42,31 +42,31 @@ import org.openjdk.jmc.common.item.IItemFilter;
 
 /**
  * Selection type representing a method selected within a view. Views that display methods can fire
- * this selection to signal that a method was chosen. Other views (such as the Butterfly View) can
- * listen for this selection type and react accordingly.
+ * this selection to signal that a method was chosen. Other views can listen for this selection type
+ * and react accordingly.
+ *
+ * @see org.openjdk.jmc.flightrecorder.selection.InViewMethodSelection
  */
 public class InViewMethodSelection extends FlavoredSelectionBase {
 
-	private final IMCMethod method;
-	private final IItemCollection items;
+	private final org.openjdk.jmc.flightrecorder.selection.InViewMethodSelection delegate;
 
 	public InViewMethodSelection(IMCMethod method, IItemCollection items, String name) {
 		super(name);
-		this.method = method;
-		this.items = items;
+		delegate = new org.openjdk.jmc.flightrecorder.selection.InViewMethodSelection(method, items, name);
 	}
 
 	public IMCMethod getMethod() {
-		return method;
+		return delegate.getMethod();
 	}
 
 	public IItemCollection getItems() {
-		return items;
+		return delegate.getItems();
 	}
 
 	@Override
 	public Stream<IItemStreamFlavor> getFlavors(
 		IItemFilter filter, IItemCollection items, List<IAttribute<?>> attributes) {
-		return Stream.of(IItemStreamFlavor.build(getName(), this.items));
+		return delegate.getFlavors(filter, items, attributes).map(SelectionFlavorAdapters::toUI);
 	}
 }
