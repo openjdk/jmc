@@ -20320,49 +20320,49 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <startTime name="Start Time">1524058298093746187 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <throwables name="Exceptions Created">68</throwables>
 </event>
 <event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <startTime name="Start Time">1524058299093948430 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <throwables name="Exceptions Created">68</throwables>
 </event>
 <event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <startTime name="Start Time">1524058300152097806 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <throwables name="Exceptions Created">68</throwables>
 </event>
 <event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <startTime name="Start Time">1524058301152362371 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <throwables name="Exceptions Created">68</throwables>
 </event>
 <event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <startTime name="Start Time">1524058302152810466 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <throwables name="Exceptions Created">68</throwables>
 </event>
 <event name="Exception Statistics" path="jdk.ExceptionStatistics">
   <startTime name="Start Time">1524058303153864105 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <throwables name="Exceptions Created">68</throwables>
 </event>
 <event name="Flight Recording" path="jdk.ActiveRecording">
   <startTime name="Start Time">1524058295491654624 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <id name="Id">5</id>
@@ -20384,7 +20384,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058295493624816 epochns</startTime>
-  <duration name="Duration">123368492 ticks</duration>
+  <duration name="Duration">51403538 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(25)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20420,7 +20420,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058295505172957 epochns</startTime>
-  <duration name="Duration">22410547416 ticks</duration>
+  <duration name="Duration">9337728090 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(23)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20456,7 +20456,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058295546108920 epochns</startTime>
-  <duration name="Duration">22313330904 ticks</duration>
+  <duration name="Duration">9297221210 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(25)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20492,7 +20492,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058298093784335 epochns</startTime>
-  <duration name="Duration">2269747524 ticks</duration>
+  <duration name="Duration">945728135 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20510,7 +20510,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058298093825155 epochns</startTime>
-  <duration name="Duration">2269203204 ticks</duration>
+  <duration name="Duration">945501335 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20525,7 +20525,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058298094427696 epochns</startTime>
-  <duration name="Duration">2400023752 ticks</duration>
+  <duration name="Duration">1000009896 ns</duration>
   <eventThread name="Event Thread">Thread-0</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20548,7 +20548,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058298094438871 epochns</startTime>
-  <duration name="Duration">2400056370 ticks</duration>
+  <duration name="Duration">1000023487 ns</duration>
   <eventThread name="Event Thread">Thread-1</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20571,7 +20571,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058299039356206 epochns</startTime>
-  <duration name="Duration">241273810 ticks</duration>
+  <duration name="Duration">100530754 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20586,7 +20586,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058299039704449 epochns</startTime>
-  <duration name="Duration">129690770 ticks</duration>
+  <duration name="Duration">54037820 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20604,7 +20604,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058299093966639 epochns</startTime>
-  <duration name="Duration">2539152786 ticks</duration>
+  <duration name="Duration">1057980327 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20622,7 +20622,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058299094455087 epochns</startTime>
-  <duration name="Duration">2538394844 ticks</duration>
+  <duration name="Duration">1057664518 ns</duration>
   <eventThread name="Event Thread">Thread-0</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20645,7 +20645,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058299094467265 epochns</startTime>
-  <duration name="Duration">2538405066 ticks</duration>
+  <duration name="Duration">1057668777 ns</duration>
   <eventThread name="Event Thread">Thread-1</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20668,7 +20668,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058299140474995 epochns</startTime>
-  <duration name="Duration">2427399812 ticks</duration>
+  <duration name="Duration">1011416588 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20683,7 +20683,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058300151925707 epochns</startTime>
-  <duration name="Duration">835893420 ticks</duration>
+  <duration name="Duration">348288925 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20698,7 +20698,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058300152110047 epochns</startTime>
-  <duration name="Duration">2400247964 ticks</duration>
+  <duration name="Duration">1000103318 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20716,7 +20716,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058300152129653 epochns</startTime>
-  <duration name="Duration">2400797890 ticks</duration>
+  <duration name="Duration">1000332454 ns</duration>
   <eventThread name="Event Thread">Thread-0</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20739,7 +20739,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058300152142046 epochns</startTime>
-  <duration name="Duration">2400811934 ticks</duration>
+  <duration name="Duration">1000338305 ns</duration>
   <eventThread name="Event Thread">Thread-1</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20762,7 +20762,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058300500243027 epochns</startTime>
-  <duration name="Duration">1564617072 ticks</duration>
+  <duration name="Duration">651923780 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20777,7 +20777,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058301152192058 epochns</startTime>
-  <duration name="Duration">243862364 ticks</duration>
+  <duration name="Duration">101609318 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20792,7 +20792,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058301152448667 epochns</startTime>
-  <duration name="Duration">2400120830 ticks</duration>
+  <duration name="Duration">1000050345 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20810,7 +20810,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058301152474257 epochns</startTime>
-  <duration name="Duration">2400935120 ticks</duration>
+  <duration name="Duration">1000389633 ns</duration>
   <eventThread name="Event Thread">Thread-0</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20833,7 +20833,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058301152519147 epochns</startTime>
-  <duration name="Duration">2401078934 ticks</duration>
+  <duration name="Duration">1000449555 ns</duration>
   <eventThread name="Event Thread">Thread-1</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20856,7 +20856,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058301253837774 epochns</startTime>
-  <duration name="Duration">2371176610 ticks</duration>
+  <duration name="Duration">987990254 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20871,7 +20871,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058302152828297 epochns</startTime>
-  <duration name="Duration">2400400124 ticks</duration>
+  <duration name="Duration">1000166718 ns</duration>
   <eventThread name="Event Thread">JFR Periodic Tasks</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20889,7 +20889,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058302152877260 epochns</startTime>
-  <duration name="Duration">2400443378 ticks</duration>
+  <duration name="Duration">1000184740 ns</duration>
   <eventThread name="Event Thread">Thread-0</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20912,7 +20912,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058302152979609 epochns</startTime>
-  <duration name="Duration">2402169976 ticks</duration>
+  <duration name="Duration">1000904156 ns</duration>
   <eventThread name="Event Thread">Thread-1</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -20935,7 +20935,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Java Monitor Wait" path="jdk.JavaMonitorWait">
   <startTime name="Start Time">1524058302241855756 epochns</startTime>
-  <duration name="Duration">953266416 ticks</duration>
+  <duration name="Duration">397194340 ns</duration>
   <eventThread name="Event Thread">Java2D Queue Flusher</eventThread>
   <stackTrace>
      <frame method="java.lang.Object#wait(J)V" modifier="public final native" line="-1" type="JIT_COMPILED"/>
@@ -21007,7 +21007,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295449215006 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Setting</settingFor>
@@ -21016,7 +21016,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295449258418 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Setting</settingFor>
@@ -21025,7 +21025,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295449341398 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Setting</settingFor>
@@ -21034,7 +21034,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295449359251 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Flight Recording</settingFor>
@@ -21043,7 +21043,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295449360481 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Flight Recording</settingFor>
@@ -21052,7 +21052,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295449361433 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Flight Recording</settingFor>
@@ -21061,7 +21061,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491876611 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Start</settingFor>
@@ -21070,7 +21070,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491881737 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread End</settingFor>
@@ -21079,7 +21079,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491883297 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
@@ -21088,7 +21088,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491884686 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
@@ -21097,7 +21097,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491885686 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Sleep</settingFor>
@@ -21106,7 +21106,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491887005 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Park</settingFor>
@@ -21115,7 +21115,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491888112 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Park</settingFor>
@@ -21124,7 +21124,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491889092 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Park</settingFor>
@@ -21133,7 +21133,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491890566 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
@@ -21142,7 +21142,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491891674 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
@@ -21151,7 +21151,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491892662 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Blocked</settingFor>
@@ -21160,7 +21160,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491893792 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
@@ -21169,7 +21169,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491894775 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
@@ -21178,7 +21178,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491895748 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Wait</settingFor>
@@ -21187,7 +21187,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491896898 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Inflated</settingFor>
@@ -21196,7 +21196,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491897960 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Inflated</settingFor>
@@ -21205,7 +21205,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491898915 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Monitor Inflated</settingFor>
@@ -21214,7 +21214,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491900121 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Reserved Stack Activation</settingFor>
@@ -21223,7 +21223,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491900900 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Reserved Stack Activation</settingFor>
@@ -21232,7 +21232,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491902290 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Load</settingFor>
@@ -21241,7 +21241,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491903131 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Load</settingFor>
@@ -21250,7 +21250,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491903951 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Load</settingFor>
@@ -21259,7 +21259,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491905244 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Define</settingFor>
@@ -21268,7 +21268,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491906037 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Define</settingFor>
@@ -21277,7 +21277,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491907211 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Unload</settingFor>
@@ -21286,7 +21286,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491908356 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Int Flag Changed</settingFor>
@@ -21295,7 +21295,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491909300 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Unsigned Int Flag Changed</settingFor>
@@ -21304,7 +21304,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491910216 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Long Flag Changed</settingFor>
@@ -21313,7 +21313,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491911227 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Unsigned Long Flag Changed</settingFor>
@@ -21322,7 +21322,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491915308 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Double Flag Changed</settingFor>
@@ -21331,7 +21331,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491916814 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Boolean Flag Changed</settingFor>
@@ -21340,7 +21340,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491917886 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">String Flag Changed</settingFor>
@@ -21349,7 +21349,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491919053 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Heap Summary</settingFor>
@@ -21358,7 +21358,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491920182 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace Summary</settingFor>
@@ -21367,7 +21367,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491921271 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace GC Threshold</settingFor>
@@ -21376,7 +21376,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491922484 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace Allocation Failure</settingFor>
@@ -21385,7 +21385,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491923390 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace Allocation Failure</settingFor>
@@ -21394,7 +21394,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491924719 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace Out of Memory</settingFor>
@@ -21403,7 +21403,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491925686 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace Out of Memory</settingFor>
@@ -21412,7 +21412,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491926950 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Metaspace Chunk Free List Summary</settingFor>
@@ -21421,7 +21421,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491928079 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Parallel Scavenge Heap Summary</settingFor>
@@ -21430,7 +21430,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491929146 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Heap Summary</settingFor>
@@ -21439,7 +21439,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491930281 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Garbage Collection</settingFor>
@@ -21448,7 +21448,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491931196 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Garbage Collection</settingFor>
@@ -21457,7 +21457,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491932550 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Parallel Old Garbage Collection</settingFor>
@@ -21466,7 +21466,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491933316 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Parallel Old Garbage Collection</settingFor>
@@ -21475,7 +21475,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491935521 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Young Garbage Collection</settingFor>
@@ -21484,7 +21484,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491936468 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Young Garbage Collection</settingFor>
@@ -21493,7 +21493,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491937685 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Old Garbage Collection</settingFor>
@@ -21502,7 +21502,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491938621 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Old Garbage Collection</settingFor>
@@ -21511,7 +21511,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491939736 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Garbage Collection</settingFor>
@@ -21520,7 +21520,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491940655 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Garbage Collection</settingFor>
@@ -21529,7 +21529,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491941902 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 MMU Information</settingFor>
@@ -21538,7 +21538,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491943161 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Evacuation Information</settingFor>
@@ -21547,7 +21547,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491944413 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Reference Statistics</settingFor>
@@ -21556,7 +21556,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491945635 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Object Count after GC</settingFor>
@@ -21565,7 +21565,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491946899 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Evacuation Statistics for Young</settingFor>
@@ -21574,7 +21574,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491947851 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Evacuation Memory Statistics for Old</settingFor>
@@ -21583,7 +21583,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491948836 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Basic IHOP Statistics</settingFor>
@@ -21592,7 +21592,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491949911 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Adaptive IHOP Statistics</settingFor>
@@ -21601,7 +21601,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491951276 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Promotion in new PLAB</settingFor>
@@ -21610,7 +21610,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491952508 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Promotion outside PLAB</settingFor>
@@ -21619,7 +21619,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491953858 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Promotion Failed</settingFor>
@@ -21628,7 +21628,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491955121 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Evacuation Failed</settingFor>
@@ -21637,7 +21637,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491956319 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Concurrent Mode Failure</settingFor>
@@ -21646,7 +21646,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491957351 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause</settingFor>
@@ -21655,7 +21655,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491958140 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause</settingFor>
@@ -21664,7 +21664,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491959328 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause Level 1</settingFor>
@@ -21673,7 +21673,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491960102 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause Level 1</settingFor>
@@ -21682,7 +21682,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491961176 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause Level 2</settingFor>
@@ -21691,7 +21691,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491961797 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause Level 2</settingFor>
@@ -21700,7 +21700,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491963111 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause Level 3</settingFor>
@@ -21709,7 +21709,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491963748 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Pause Level 3</settingFor>
@@ -21718,7 +21718,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491964839 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Concurrent</settingFor>
@@ -21727,7 +21727,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491965441 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Phase Concurrent</settingFor>
@@ -21736,7 +21736,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491966413 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Allocation Requiring GC</settingFor>
@@ -21745,7 +21745,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491967191 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Allocation Requiring GC</settingFor>
@@ -21754,7 +21754,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491968160 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Tenuring Distribution</settingFor>
@@ -21763,7 +21763,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491969529 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Heap Region Type Change</settingFor>
@@ -21772,7 +21772,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491970490 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compilation</settingFor>
@@ -21781,7 +21781,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491971418 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compilation</settingFor>
@@ -21790,7 +21790,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491972423 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compiler Phase</settingFor>
@@ -21799,7 +21799,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491973266 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compiler Phase</settingFor>
@@ -21808,7 +21808,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491974353 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compilation Failure</settingFor>
@@ -21817,7 +21817,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491975716 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Method Inlining</settingFor>
@@ -21826,7 +21826,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491976696 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Sweep Code Cache</settingFor>
@@ -21835,7 +21835,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491977644 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Sweep Code Cache</settingFor>
@@ -21844,7 +21844,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491978581 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Cache Full</settingFor>
@@ -21853,7 +21853,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491979605 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Begin</settingFor>
@@ -21862,7 +21862,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491980279 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Begin</settingFor>
@@ -21871,7 +21871,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491981556 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint State Synchronization</settingFor>
@@ -21880,7 +21880,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491982401 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint State Synchronization</settingFor>
@@ -21889,7 +21889,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491983578 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Wait Blocked</settingFor>
@@ -21898,7 +21898,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491984466 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Wait Blocked</settingFor>
@@ -21907,7 +21907,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491985889 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Cleanup</settingFor>
@@ -21916,7 +21916,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491986804 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Cleanup</settingFor>
@@ -21925,7 +21925,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491987912 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Cleanup Task</settingFor>
@@ -21934,7 +21934,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491988818 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint Cleanup Task</settingFor>
@@ -21943,7 +21943,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491989857 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint End</settingFor>
@@ -21952,7 +21952,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491990687 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Safepoint End</settingFor>
@@ -21961,7 +21961,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491992045 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">VM Operation</settingFor>
@@ -21970,7 +21970,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491992968 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">VM Operation</settingFor>
@@ -21979,7 +21979,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491994046 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Allocation in new TLAB</settingFor>
@@ -21988,7 +21988,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491994956 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Allocation in new TLAB</settingFor>
@@ -21997,7 +21997,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491996149 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Allocation outside TLAB</settingFor>
@@ -22006,7 +22006,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491997037 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Allocation outside TLAB</settingFor>
@@ -22015,7 +22015,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491998133 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Reason</settingFor>
@@ -22024,7 +22024,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295491999383 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Data Loss</settingFor>
@@ -22033,7 +22033,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492000816 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">JVM Information</settingFor>
@@ -22042,7 +22042,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492002049 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">JVM Information</settingFor>
@@ -22051,7 +22051,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492003371 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">OS Information</settingFor>
@@ -22060,7 +22060,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492004291 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">OS Information</settingFor>
@@ -22069,7 +22069,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492005444 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Initial System Property</settingFor>
@@ -22078,7 +22078,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492009556 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Initial System Property</settingFor>
@@ -22087,7 +22087,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492010910 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Initial Environment Variable</settingFor>
@@ -22096,7 +22096,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492011831 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Initial Environment Variable</settingFor>
@@ -22105,7 +22105,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492013121 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">System Process</settingFor>
@@ -22114,7 +22114,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492014167 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">System Process</settingFor>
@@ -22123,7 +22123,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492015526 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">CPU Information</settingFor>
@@ -22132,7 +22132,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492016583 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">CPU Information</settingFor>
@@ -22141,7 +22141,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492017805 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">CPU Time Stamp Counter</settingFor>
@@ -22150,7 +22150,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492018845 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">CPU Time Stamp Counter</settingFor>
@@ -22159,7 +22159,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492020184 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">CPU Load</settingFor>
@@ -22168,7 +22168,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492021069 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">CPU Load</settingFor>
@@ -22177,7 +22177,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492022441 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Thread Context Switch Rate</settingFor>
@@ -22186,7 +22186,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492023456 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Thread Context Switch Rate</settingFor>
@@ -22195,7 +22195,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492024366 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Statistics</settingFor>
@@ -22204,7 +22204,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492025182 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Thread Statistics</settingFor>
@@ -22213,7 +22213,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492026398 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Loading Statistics</settingFor>
@@ -22222,7 +22222,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492027218 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Loading Statistics</settingFor>
@@ -22231,7 +22231,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492028301 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Loader Statistics</settingFor>
@@ -22240,7 +22240,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492029308 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Class Loader Statistics</settingFor>
@@ -22249,7 +22249,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492030330 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Thread Allocation Statistics</settingFor>
@@ -22258,7 +22258,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492031353 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Thread Allocation Statistics</settingFor>
@@ -22267,7 +22267,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492032603 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Physical Memory</settingFor>
@@ -22276,7 +22276,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492033542 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Physical Memory</settingFor>
@@ -22285,7 +22285,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492034714 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Method Profiling Sample</settingFor>
@@ -22294,7 +22294,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492035529 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Method Profiling Sample</settingFor>
@@ -22303,7 +22303,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492036483 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Thread Dump</settingFor>
@@ -22312,7 +22312,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492037302 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Thread Dump</settingFor>
@@ -22321,7 +22321,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492038351 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Native Library</settingFor>
@@ -22330,7 +22330,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492039064 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Native Library</settingFor>
@@ -22339,7 +22339,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492040067 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Module Require</settingFor>
@@ -22348,7 +22348,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492040860 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Module Require</settingFor>
@@ -22357,7 +22357,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492041993 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Module Export</settingFor>
@@ -22366,7 +22366,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492042729 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Module Export</settingFor>
@@ -22375,7 +22375,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492043753 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compiler Statistics</settingFor>
@@ -22384,7 +22384,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492044537 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compiler Statistics</settingFor>
@@ -22393,7 +22393,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492046551 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compiler Configuration</settingFor>
@@ -22402,7 +22402,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492047302 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Compiler Configuration</settingFor>
@@ -22411,7 +22411,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492048403 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Cache Statistics</settingFor>
@@ -22420,7 +22420,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492049054 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Cache Statistics</settingFor>
@@ -22429,7 +22429,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492049953 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Cache Configuration</settingFor>
@@ -22438,7 +22438,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492050641 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Cache Configuration</settingFor>
@@ -22447,7 +22447,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492051624 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Sweeper Statistics</settingFor>
@@ -22456,7 +22456,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492052390 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Sweeper Statistics</settingFor>
@@ -22465,7 +22465,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492053314 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Sweeper Configuration</settingFor>
@@ -22474,7 +22474,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492054189 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Code Sweeper Configuration</settingFor>
@@ -22483,7 +22483,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492055216 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Int Flag</settingFor>
@@ -22492,7 +22492,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492055931 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Int Flag</settingFor>
@@ -22501,7 +22501,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492056851 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Unsigned Int Flag</settingFor>
@@ -22510,7 +22510,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492057589 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Unsigned Int Flag</settingFor>
@@ -22519,7 +22519,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492058514 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Long Flag</settingFor>
@@ -22528,7 +22528,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492059202 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Long Flag</settingFor>
@@ -22537,7 +22537,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492060246 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Unsigned Long Flag</settingFor>
@@ -22546,7 +22546,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492060931 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Unsigned Long Flag</settingFor>
@@ -22555,7 +22555,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492061773 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Double Flag</settingFor>
@@ -22564,7 +22564,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492062477 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Double Flag</settingFor>
@@ -22573,7 +22573,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492063387 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Boolean Flag</settingFor>
@@ -22582,7 +22582,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492064035 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Boolean Flag</settingFor>
@@ -22591,7 +22591,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492065049 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">String Flag</settingFor>
@@ -22600,7 +22600,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492065767 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">String Flag</settingFor>
@@ -22609,7 +22609,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492066918 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Object Count</settingFor>
@@ -22618,7 +22618,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492067660 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Object Count</settingFor>
@@ -22627,7 +22627,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492068766 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Heap Region Information</settingFor>
@@ -22636,7 +22636,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492069781 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">G1 Heap Region Information</settingFor>
@@ -22645,7 +22645,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492070930 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Configuration</settingFor>
@@ -22654,7 +22654,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492071925 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Configuration</settingFor>
@@ -22663,7 +22663,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492073104 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Survivor Configuration</settingFor>
@@ -22672,7 +22672,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492074141 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Survivor Configuration</settingFor>
@@ -22681,7 +22681,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492075170 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">TLAB Configuration</settingFor>
@@ -22690,7 +22690,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492075961 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">TLAB Configuration</settingFor>
@@ -22699,7 +22699,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492077051 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Heap Configuration</settingFor>
@@ -22708,7 +22708,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492078117 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">GC Heap Configuration</settingFor>
@@ -22717,7 +22717,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492079122 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Young Generation Configuration</settingFor>
@@ -22726,7 +22726,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492080184 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Young Generation Configuration</settingFor>
@@ -22735,7 +22735,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492081321 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">File Read</settingFor>
@@ -22744,7 +22744,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492082537 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">File Read</settingFor>
@@ -22753,7 +22753,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492083421 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">File Read</settingFor>
@@ -22762,7 +22762,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492084555 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">File Write</settingFor>
@@ -22771,7 +22771,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492085782 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">File Write</settingFor>
@@ -22780,7 +22780,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492086591 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">File Write</settingFor>
@@ -22789,7 +22789,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492088348 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Socket Read</settingFor>
@@ -22798,7 +22798,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492089454 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Socket Read</settingFor>
@@ -22807,7 +22807,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492090238 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Socket Read</settingFor>
@@ -22816,7 +22816,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492091291 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Socket Write</settingFor>
@@ -22825,7 +22825,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492092314 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Socket Write</settingFor>
@@ -22834,7 +22834,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492093111 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Socket Write</settingFor>
@@ -22843,7 +22843,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492094123 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Exception</settingFor>
@@ -22852,7 +22852,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492094989 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Exception</settingFor>
@@ -22861,7 +22861,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492095850 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Exception</settingFor>
@@ -22870,7 +22870,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492097063 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Exception Statistics</settingFor>
@@ -22879,7 +22879,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492098179 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Exception Statistics</settingFor>
@@ -22888,7 +22888,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492099429 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Error</settingFor>
@@ -22897,7 +22897,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492100301 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Error</settingFor>
@@ -22906,7 +22906,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492101139 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Java Error</settingFor>
@@ -22915,7 +22915,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492102204 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Setting</settingFor>
@@ -22924,7 +22924,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492103358 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Setting</settingFor>
@@ -22933,7 +22933,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492104381 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Recording Setting</settingFor>
@@ -22942,7 +22942,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492105365 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Flight Recording</settingFor>
@@ -22951,7 +22951,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492106084 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Flight Recording</settingFor>
@@ -22960,7 +22960,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Recording Setting" path="jdk.ActiveSetting">
   <startTime name="Start Time">1524058295492107051 epochns</startTime>
-  <duration name="Duration">0 ticks</duration>
+  <duration name="Duration">0 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace name="Stack Trace">null</stackTrace>
   <settingFor name="Setting For">Flight Recording</settingFor>
@@ -22969,7 +22969,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058295449932121 epochns</startTime>
-  <duration name="Duration">104548598 ticks</duration>
+  <duration name="Duration">43561915 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(25)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -22996,7 +22996,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058295499307274 epochns</startTime>
-  <duration name="Duration">104801284 ticks</duration>
+  <duration name="Duration">43667201 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23023,7 +23023,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058295546655764 epochns</startTime>
-  <duration name="Duration">2401521378 ticks</duration>
+  <duration name="Duration">1000633907 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23050,7 +23050,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058296589994675 epochns</startTime>
-  <duration name="Duration">2403421784 ticks</duration>
+  <duration name="Duration">1001425743 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23077,7 +23077,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058297594582961 epochns</startTime>
-  <duration name="Duration">2406975184 ticks</duration>
+  <duration name="Duration">1002906326 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23104,7 +23104,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058298601931727 epochns</startTime>
-  <duration name="Duration">2488879226 ticks</duration>
+  <duration name="Duration">1037033010 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23131,7 +23131,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058299641747211 epochns</startTime>
-  <duration name="Duration">2404091132 ticks</duration>
+  <duration name="Duration">1001704638 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23158,7 +23158,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058300696359451 epochns</startTime>
-  <duration name="Duration">2394168776 ticks</duration>
+  <duration name="Duration">997570323 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(26)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23185,7 +23185,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058301702954280 epochns</startTime>
-  <duration name="Duration">2486493910 ticks</duration>
+  <duration name="Duration">1036039129 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(26)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23212,7 +23212,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058302745812209 epochns</startTime>
-  <duration name="Duration">2406823898 ticks</duration>
+  <duration name="Duration">1002843290 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(26)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23239,7 +23239,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Read" path="jdk.SocketRead">
   <startTime name="Start Time">1524058303753494490 epochns</startTime>
-  <duration name="Duration">2485240244 ticks</duration>
+  <duration name="Duration">1035516768 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(26)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketInputStream#read([BIII)I" modifier="" line="51" type="JIT_COMPILED"/>
@@ -23266,7 +23266,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Write" path="jdk.SocketWrite">
   <startTime name="Start Time">1524058296555304631 epochns</startTime>
-  <duration name="Duration">80752904 ticks</duration>
+  <duration name="Duration">33647043 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketOutputStream#socketWrite([BII)V" modifier="private" line="49" type="JIT_COMPILED"/>
@@ -23298,7 +23298,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="Socket Write" path="jdk.SocketWrite">
   <startTime name="Start Time">1524058300655394321 epochns</startTime>
-  <duration name="Duration">80535462 ticks</duration>
+  <duration name="Duration">33556442 ns</duration>
   <eventThread name="Event Thread">RMI TCP Connection(24)-10.161.183.200</eventThread>
   <stackTrace>
      <frame method="java.net.SocketOutputStream#socketWrite([BII)V" modifier="private" line="49" type="JIT_COMPILED"/>
@@ -23677,7 +23677,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="VM Operation" path="jdk.ExecuteVMOperation">
   <startTime name="Start Time">1524058295496106015 epochns</startTime>
-  <duration name="Duration">2138346 ticks</duration>
+  <duration name="Duration">890977 ns</duration>
   <eventThread name="Event Thread">VM Thread</eventThread>
   <operation name="Operation">ClassLoaderStatsOperation</operation>
   <safepoint name="At Safepoint">true</safepoint>
@@ -23687,7 +23687,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="VM Operation" path="jdk.ExecuteVMOperation">
   <startTime name="Start Time">1524058304793077047 epochns</startTime>
-  <duration name="Duration">25528104 ticks</duration>
+  <duration name="Duration">10636710 ns</duration>
   <eventThread name="Event Thread">VM Thread</eventThread>
   <operation name="Operation">G1IncCollectionPause</operation>
   <safepoint name="At Safepoint">true</safepoint>
@@ -23697,7 +23697,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="VM Operation" path="jdk.ExecuteVMOperation">
   <startTime name="Start Time">1524058304849282645 epochns</startTime>
-  <duration name="Duration">66398 ticks</duration>
+  <duration name="Duration">27665 ns</duration>
   <eventThread name="Event Thread">VM Thread</eventThread>
   <operation name="Operation">RevokeBias</operation>
   <safepoint name="At Safepoint">true</safepoint>
@@ -23707,7 +23707,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="VM Operation" path="jdk.ExecuteVMOperation">
   <startTime name="Start Time">1524058304945707511 epochns</startTime>
-  <duration name="Duration">132395456 ticks</duration>
+  <duration name="Duration">55164773 ns</duration>
   <eventThread name="Event Thread">VM Thread</eventThread>
   <operation name="Operation">CGC_Operation</operation>
   <safepoint name="At Safepoint">true</safepoint>
@@ -23717,7 +23717,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="VM Operation" path="jdk.ExecuteVMOperation">
   <startTime name="Start Time">1524058305005423006 epochns</startTime>
-  <duration name="Duration">80797370 ticks</duration>
+  <duration name="Duration">33665570 ns</duration>
   <eventThread name="Event Thread">VM Thread</eventThread>
   <operation name="Operation">CGC_Operation</operation>
   <safepoint name="At Safepoint">true</safepoint>
@@ -23727,7 +23727,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
 </event>
 <event name="VM Operation" path="jdk.ExecuteVMOperation">
   <startTime name="Start Time">1524058305443266822 epochns</startTime>
-  <duration name="Duration">2671560 ticks</duration>
+  <duration name="Duration">1113150 ns</duration>
   <eventThread name="Event Thread">VM Thread</eventThread>
   <operation name="Operation">ClassLoaderStatsOperation</operation>
   <safepoint name="At Safepoint">true</safepoint>

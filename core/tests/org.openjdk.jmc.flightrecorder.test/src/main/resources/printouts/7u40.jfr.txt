@@ -160,7 +160,7 @@ Supports: On-Chip FPU, Virtual Mode Extensions, Debugging Extensions, Page Size 
   <fastTimeAutoEnabled name="Trusted Platform">false</fastTimeAutoEnabled>
   <fastTimeConversionAdjustments name="Conversion Adjustments">0</fastTimeConversionAdjustments>
   <timeToFastTimeFactor name="Conversion Factor">1.0</timeToFastTimeFactor>
-  <timeToInitialize name="Initialization Time">0 ticks</timeToInitialize>
+  <timeToInitialize name="Initialization Time">0 ns</timeToInitialize>
   <timeToFastTimeOffset name="Fast Time Offset">0</timeToFastTimeOffset>
   <osFrequency name="OS Frequency Per Second">1000000</osFrequency>
   <fastTimeFrequency name="Fast Time Frequency per Second">1000000</fastTimeFrequency>

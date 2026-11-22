@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -33,6 +33,7 @@
 package org.openjdk.jmc.flightrecorder.internal.parser.v0;
 
 import org.openjdk.jmc.common.unit.ContentType;
+import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.DataType;
@@ -52,28 +53,36 @@ class QuantityReader implements IValueReader {
 		switch (dataType) {
 		case BYTE:
 		case U1:
-			return unit.quantity(NumberReaders.readByte(bytes, offset));
+			return quantity(NumberReaders.readByte(bytes, offset));
 		case SHORT:
 		case U2:
-			return unit.quantity(NumberReaders.readShort(bytes, offset));
+			return quantity(NumberReaders.readShort(bytes, offset));
 		case INTEGER:
 		case U4:
-			return unit.quantity(NumberReaders.readInt(bytes, offset));
+			return quantity(NumberReaders.readInt(bytes, offset));
 		case LONG:
 		case U8:
-			return unit.quantity(NumberReaders.readLong(bytes, offset));
+			return quantity(NumberReaders.readLong(bytes, offset));
 		case FLOAT: {
 			float value = NumberReaders.readFloat(bytes, offset);
-			return Float.isNaN(value) ? null : unit.quantity(value);
+			return Float.isNaN(value) ? null : quantity(value);
 		}
 		case DOUBLE: {
 			double value = NumberReaders.readDouble(bytes, offset);
-			return Double.isNaN(value) ? null : unit.quantity(value);
+			return Double.isNaN(value) ? null : quantity(value);
 		}
 		default:
 			// Non-numeric data types can't be read as quantities
 		}
 		throw new InvalidJfrFileException();
+	}
+
+	IQuantity quantity(long numericalValue) {
+		return unit.quantity(numericalValue);
+	}
+
+	IQuantity quantity(double numericalValue) {
+		return unit.quantity(numericalValue);
 	}
 
 	@Override

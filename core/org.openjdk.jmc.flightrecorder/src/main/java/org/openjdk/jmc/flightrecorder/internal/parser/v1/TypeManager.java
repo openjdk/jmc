@@ -78,6 +78,7 @@ import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.QuantityRe
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.ReflectiveReader;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.StringReader;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.StructReader;
+import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.TicksTimespanReader;
 import org.openjdk.jmc.flightrecorder.internal.parser.v1.ValueReaders.TicksTimestampReader;
 import org.openjdk.jmc.flightrecorder.internal.util.JfrInternalConstants;
 import org.openjdk.jmc.flightrecorder.messages.internal.Messages;
@@ -484,7 +485,7 @@ class TypeManager {
 		boolean isLong = PrimitiveReader.isLong(typeIdentifier);
 		IValueReader reader = fieldType.getReader();
 		if (f.ticksUnitKind == UnitLookup.TIMESPAN) {
-			reader = new QuantityReader(typeIdentifier, header.getTicksTimespanUnit(), f.unsigned);
+			reader = new TicksTimespanReader(typeIdentifier, header, f.unsigned);
 		} else if (f.ticksUnitKind == UnitLookup.TIMESTAMP) {
 			reader = new TicksTimestampReader(typeIdentifier, header, f.unsigned);
 		} else if (f.unit != null) {

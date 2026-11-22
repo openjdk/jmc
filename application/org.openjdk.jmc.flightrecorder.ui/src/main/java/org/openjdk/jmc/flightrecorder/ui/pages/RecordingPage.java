@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -127,7 +127,7 @@ public class RecordingPage extends AbstractDataPage {
 					Messages.RecordingPage_SECTION_RECORDING_INFORMATION);
 			ItemAggregateViewer infoViewer = new ItemAggregateViewer(recInfoSection, toolkit, 2);
 			// TODO: JMC-5409 - We don't know the start and end of this recording. Improve how the user is informed about this.
-			// Start/end/extent values might be in ticks. We limit them to nanoseconds that is better handled in formatting.
+			// Normalize start/end/extent values to nanoseconds for consistent formatting.
 			infoViewer.addValueFunction(
 					ic -> UnitLookup.EPOCH_NS.quantity(
 							pageContainer.getRecordingRange().getStart().clampedLongValueIn(UnitLookup.EPOCH_NS)),

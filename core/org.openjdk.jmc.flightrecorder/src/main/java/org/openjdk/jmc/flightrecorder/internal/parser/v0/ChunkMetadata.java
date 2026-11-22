@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -32,11 +32,10 @@
  */
 package org.openjdk.jmc.flightrecorder.internal.parser.v0;
 
-import org.openjdk.jmc.common.unit.DecimalPrefix;
 import org.openjdk.jmc.common.unit.IQuantity;
-import org.openjdk.jmc.common.unit.LinearUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
+import org.openjdk.jmc.flightrecorder.internal.parser.TicksConverter;
 import org.openjdk.jmc.flightrecorder.internal.parser.v0.model.ProducerDescriptor;
 import org.openjdk.jmc.flightrecorder.internal.util.DataInputToolkit;
 
@@ -49,9 +48,8 @@ class ChunkMetadata {
 	private final IQuantity endTime;
 	private final long startTimeNanos;
 	private final long startTicks;
-	private final double ticksPerNano;
+	private final TicksConverter ticksConverter;
 	private final int previousCheckPoint;
-	private final LinearUnit ticksUnit;
 
 	private static final TypedArrayParser<ProducerDescriptor> PRODUCERS_PARSER = new TypedArrayParser<>(
 			new ProducerParser());
@@ -65,12 +63,8 @@ class ChunkMetadata {
 		startTimeNanos = startTimeMillis * 1000 * 1000;
 		endTime = UnitLookup.EPOCH_MS.quantity(NumberReaders.readLong(data, offset));
 		startTicks = NumberReaders.readLong(data, offset);
-		ticksPerNano = ((double) NumberReaders.readLong(data, offset)) / (1000 * 1000 * 1000);
+		ticksConverter = new TicksConverter(NumberReaders.readLong(data, offset));
 		previousCheckPoint = (int) NumberReaders.readLong(data, offset);
-		// FIXME: Make unpersistable, possibly "Custom". Avoid plural unit name.
-		ticksUnit = UnitLookup.TIMESPAN.makeUnit("ticks", //$NON-NLS-1$
-				UnitLookup.TIMESPAN.getUnit(DecimalPrefix.NANO).quantity(1 / ticksPerNano));
-		// FIXME: Make "ticks" based timestamp unit with recording provided origo to avoid nanosecond long/double precision issues?
 		// Omit data not in use
 		// locale = UTFStringParser.readString(data, offset);
 		// gmtOffset = IntegerParser.readInt(data, offset);
@@ -92,8 +86,8 @@ class ChunkMetadata {
 		return startTicks;
 	}
 
-	LinearUnit getTicksUnit() {
-		return ticksUnit;
+	TicksConverter getTicksConverter() {
+		return ticksConverter;
 	}
 
 	int getPreviousCheckPoint() {
@@ -101,6 +95,6 @@ class ChunkMetadata {
 	}
 
 	long asNanoTimestamp(long relativeTicks) {
-		return startTimeNanos + (long) ((relativeTicks - startTicks) / ticksPerNano);
+		return startTimeNanos + ticksConverter.toNanos(relativeTicks - startTicks);
 	}
 }
