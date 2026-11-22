@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,7 +34,6 @@ package org.openjdk.jmc.flightrecorder.internal.parser.v0;
 
 import org.openjdk.jmc.common.collection.FastAccessNumberMap;
 import org.openjdk.jmc.common.unit.ContentType;
-import org.openjdk.jmc.common.unit.DecimalPrefix;
 import org.openjdk.jmc.common.unit.IUnit;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.common.util.LabeledIdentifier;
@@ -146,9 +145,9 @@ class ReaderFactory {
 			case EventParserManager.CONTENT_TYPE_MILLIS:
 				return new QuantityReader(dataType, UnitLookup.MILLISECOND);
 			case EventParserManager.CONTENT_TYPE_NANOS:
-				return new QuantityReader(dataType, UnitLookup.TIMESPAN.getUnit(DecimalPrefix.NANO));
+				return new QuantityReader(dataType, UnitLookup.NANOSECOND);
 			case EventParserManager.CONTENT_TYPE_TICKS:
-				return new QuantityReader(dataType, metadata.getTicksUnit());
+				return new TicksTimespanReader(dataType, metadata.getTicksConverter());
 			case EventParserManager.CONTENT_TYPE_PERCENTAGE:
 				return new QuantityReader(dataType, UnitLookup.PERCENT_UNITY);
 			case EventParserManager.CONTENT_TYPE_MEMORY:

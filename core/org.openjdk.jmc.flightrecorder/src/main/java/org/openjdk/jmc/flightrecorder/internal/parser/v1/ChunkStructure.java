@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2026, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -34,14 +34,13 @@ package org.openjdk.jmc.flightrecorder.internal.parser.v1;
 
 import java.io.IOException;
 
-import org.openjdk.jmc.common.unit.DecimalPrefix;
 import org.openjdk.jmc.common.unit.IQuantity;
 import org.openjdk.jmc.common.unit.IRange;
-import org.openjdk.jmc.common.unit.LinearUnit;
 import org.openjdk.jmc.common.unit.QuantityRange;
 import org.openjdk.jmc.common.unit.UnitLookup;
 import org.openjdk.jmc.flightrecorder.internal.InvalidJfrFileException;
 import org.openjdk.jmc.flightrecorder.internal.parser.Chunk;
+import org.openjdk.jmc.flightrecorder.internal.parser.TicksConverter;
 import org.openjdk.jmc.flightrecorder.internal.util.DataInputToolkit;
 
 class ChunkStructure {
@@ -54,10 +53,9 @@ class ChunkStructure {
 	private final long startTimeNanos;
 	private final long durationNanos;
 	private final long startTicks;
-	private final double ticksPerNano;
+	private final TicksConverter ticksConverter;
 	private final int features;
 	private final int bodyOffset;
-	private final LinearUnit ticksUnit;
 
 	ChunkStructure(Chunk chunkInput) throws IOException, InvalidJfrFileException {
 		int position = chunkInput.getPosition();
@@ -74,12 +72,10 @@ class ChunkStructure {
 		position += DataInputToolkit.LONG_SIZE;
 		startTicks = DataInputToolkit.readLong(buffer, position);
 		position += DataInputToolkit.LONG_SIZE;
-		ticksPerNano = DataInputToolkit.readLong(buffer, position) / 1000000000.0; // ticsPerSecond -> ticksPerNano
+		ticksConverter = new TicksConverter(DataInputToolkit.readLong(buffer, position));
 		position += DataInputToolkit.LONG_SIZE;
 		features = DataInputToolkit.readInt(buffer, position);
 		bodyOffset = position + DataInputToolkit.INTEGER_SIZE;
-		ticksUnit = UnitLookup.TIMESPAN.makeUnit("ticks", //$NON-NLS-1$
-				UnitLookup.TIMESPAN.getUnit(DecimalPrefix.NANO).quantity(1 / ticksPerNano));
 	}
 
 	long getBodyStartOffset() {
@@ -102,17 +98,30 @@ class ChunkStructure {
 		return (features & COMPRESSED_INTS) != 0;
 	}
 
-	LinearUnit getTicksTimespanUnit() {
-		return ticksUnit;
+	IQuantity ticksTimestamp(long relativeTicks) {
+		return UnitLookup.EPOCH_NS.quantity(startTimeNanos + ticksConverter.toNanos(relativeTicks - startTicks));
 	}
 
-	IQuantity ticsTimestamp(long relativeTicks) {
-		return UnitLookup.EPOCH_NS.quantity(startTimeNanos + (long) ((relativeTicks - startTicks) / ticksPerNano));
+	IQuantity ticksTimestamp(double relativeTicks) {
+		long wholeTicks = (long) relativeTicks;
+		if (relativeTicks == wholeTicks) {
+			return ticksTimestamp(wholeTicks);
+		}
+		return UnitLookup.EPOCH_NS.quantity(startTimeNanos + ticksConverter.toNanos(relativeTicks - startTicks));
+	}
+
+	IQuantity ticksTimespan(long ticks) {
+		return UnitLookup.NANOSECOND.quantity(ticksConverter.toNanos(ticks));
+	}
+
+	IQuantity ticksTimespan(double ticks) {
+		return Double.isNaN(ticks) ? UnitLookup.NANOSECOND.quantity(Double.NaN)
+				: UnitLookup.NANOSECOND.quantity(ticksConverter.toNanos(ticks));
 	}
 
 	IRange<IQuantity> getChunkRange() {
 		return QuantityRange.createWithExtent(UnitLookup.EPOCH_NS.quantity(startTimeNanos),
-				UnitLookup.TIMESPAN.getUnit(DecimalPrefix.NANO).quantity(durationNanos));
+				UnitLookup.NANOSECOND.quantity(durationNanos));
 	}
 
 	long getStartTimeNanos() {

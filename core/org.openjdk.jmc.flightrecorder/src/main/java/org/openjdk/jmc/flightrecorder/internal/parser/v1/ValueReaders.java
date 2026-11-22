@@ -250,22 +250,57 @@ class ValueReaders {
 
 		@Override
 		IQuantity quantity(long numericalValue) {
-			return header.ticsTimestamp(numericalValue);
+			return header.ticksTimestamp(numericalValue);
 		}
 
 		@Override
 		IQuantity quantity(Number numericalValue) {
+			if (numericalValue instanceof Double || numericalValue instanceof Float) {
+				return quantity(numericalValue.doubleValue());
+			}
 			return quantity(numericalValue.longValue());
 		}
 
 		@Override
 		IQuantity quantity(double numericalValue) {
-			return quantity((long) numericalValue);
+			return header.ticksTimestamp(numericalValue);
 		}
 
 		@Override
 		public ContentType<?> getContentType() {
 			return UnitLookup.TIMESTAMP;
+		}
+	}
+
+	/**
+	 * Reads a timespan in ticks as nanoseconds, converted the same way as tick timestamps, so that
+	 * a start time plus a duration is computed exactly.
+	 */
+	static class TicksTimespanReader extends QuantityReader {
+		private final ChunkStructure header;
+
+		TicksTimespanReader(String typeIdentifier, ChunkStructure header, boolean unsigned)
+				throws InvalidJfrFileException {
+			super(typeIdentifier, UnitLookup.NANOSECOND, unsigned);
+			this.header = header;
+		}
+
+		@Override
+		IQuantity quantity(long numericalValue) {
+			return header.ticksTimespan(numericalValue);
+		}
+
+		@Override
+		IQuantity quantity(Number numericalValue) {
+			if (numericalValue instanceof Double || numericalValue instanceof Float) {
+				return quantity(numericalValue.doubleValue());
+			}
+			return quantity(numericalValue.longValue());
+		}
+
+		@Override
+		IQuantity quantity(double numericalValue) {
+			return header.ticksTimespan(numericalValue);
 		}
 	}
 
